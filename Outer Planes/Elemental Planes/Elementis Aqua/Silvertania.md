@@ -1,0 +1,1 @@
+The city of [[Silvertania]] is built in the shell of a long abandoned city that is a giant glass dome. The city is half submerged in the ocean, the [[Aquasi]] live below, and the [[Dragonborn]] live above.

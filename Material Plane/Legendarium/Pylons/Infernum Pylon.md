@@ -1,0 +1,2 @@
+Location: [[Infernum]]
+Status: Offline

@@ -1,0 +1,1 @@
+As the house of inquisitors the [[House Medani]] are tasked with hunting out and finding cultists and rogue magic users within the [[Firebrand Empire]]. They defend the empire from the ever present threat that [[Ishna - The God Unborn]] and his followers ([[Souls of the Devourer]]) represent. 

@@ -1,0 +1,3 @@
+Lion’s Rest is the capital city of the [[Firebrand empire]]. This is the seat of the [[Firebrand Empire]]'s power. The ferocious nature, and resilience of many of the [[Leonin]] people allowed them to survive the harshness of the world after the [[Psychic Schism]]. [[Unimus]] lead a group of [[Human]], [[Orc]] and [[Leonin]] who would protect the lost that were found during the [[Night War]] and eventually founded the city as means of keeping people safe during the night.
+
+Their desire for structure, order, and lawful civilisation led them to expansion, and building the [[Vialux]].

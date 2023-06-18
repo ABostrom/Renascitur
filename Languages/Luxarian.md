@@ -1,0 +1,1 @@
+Luxarian is the language of the gods from the [[Pantheon Of Luxar]]

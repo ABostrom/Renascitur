@@ -1,0 +1,1 @@
+When [[Luxar]] and [[Noxar]] are found in equal parts they are said to be balanced and the phenomenon of [[Specular]] happens. Light mixes with shadow and a powerful state of energy is created.

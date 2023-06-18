@@ -1,0 +1,1 @@
+[[Vecna]] realised that he could infuse fragments of his soul into a device using [[Arcanometry]]. He was then able to imprint his thoughts, feelings and memories into the soulocron as a form of long term storage. Given the great many lives he lived, and the vast amount of knowledge he collected, the only way to maintain a competent grasp of all that he learned.

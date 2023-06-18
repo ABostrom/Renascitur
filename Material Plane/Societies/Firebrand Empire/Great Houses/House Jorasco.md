@@ -1,0 +1,1 @@
+As the house of healers they are responsible the well being and safety of both the citizens of the empire, and the fighting forces of the military. Jorasco members are often split into civilian and military duties, with the more martial oriented members being directly enlisted as combat medics. 
