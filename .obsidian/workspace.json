@@ -25,7 +25,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "docs/Material Plane/Timeline/Events/Psychic Schism.md",
+                "file": "docs/index.md",
                 "mode": "source",
                 "source": false
               }
@@ -98,7 +98,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "docs/Material Plane/Timeline/Events/Psychic Schism.md",
+                "file": "docs/index.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -115,7 +115,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "docs/Material Plane/Timeline/Events/Psychic Schism.md",
+                "file": "docs/index.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -138,7 +138,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "docs/Material Plane/Timeline/Events/Psychic Schism.md"
+                "file": "docs/index.md"
               }
             }
           }
@@ -161,6 +161,7 @@
   },
   "active": "34082ee95791630b",
   "lastOpenFiles": [
+    "docs/Material Plane/Timeline/Events/Psychic Schism.md",
     "docs/Corruption/Ishna - The God Unborn.md",
     "docs/Material Plane/Timeline/Events/The Forge Wars.md",
     "docs/Corruption/Aberrations.md",
