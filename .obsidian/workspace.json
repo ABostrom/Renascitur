@@ -13,7 +13,7 @@
             "state": {
               "type": "localgraph",
               "state": {
-                "file": "Gods, Cosmic and Primal Forces/Umbralyn.md",
+                "file": "Outer Planes/Imperium Deorum.md",
                 "options": {
                   "collapse-filter": true,
                   "search": "",
@@ -46,11 +46,14 @@
             "id": "9302ae69f6bc174d",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "canvas",
               "state": {
-                "file": "Gods, Cosmic and Primal Forces/Umbralyn.md",
-                "mode": "source",
-                "source": false
+                "file": "Cosmology/Planar Structure.canvas",
+                "viewState": {
+                  "x": 640,
+                  "y": 10,
+                  "zoom": -1.2518882041688593
+                }
               }
             }
           }
@@ -121,7 +124,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Gods, Cosmic and Primal Forces/Umbralyn.md",
+                "file": "Outer Planes/Imperium Deorum.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -138,7 +141,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Gods, Cosmic and Primal Forces/Umbralyn.md",
+                "file": "Outer Planes/Imperium Deorum.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -161,7 +164,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Gods, Cosmic and Primal Forces/Umbralyn.md"
+                "file": "Outer Planes/Imperium Deorum.md"
               }
             }
           },
@@ -174,7 +177,7 @@
             }
           },
           {
-            "id": "1a4bbce4e5e8b57a",
+            "id": "3b94b5aea336c9ff",
             "type": "leaf",
             "state": {
               "type": "smart-connections-view",
@@ -182,14 +185,15 @@
             }
           },
           {
-            "id": "d4a37dabf213bc6c",
+            "id": "20b115fb4354b9d3",
             "type": "leaf",
             "state": {
               "type": "smart-connections-chat-view",
               "state": {}
             }
           }
-        ]
+        ],
+        "currentTab": 6
       }
     ],
     "direction": "horizontal",
@@ -210,28 +214,29 @@
   },
   "active": "041c8059ffeeb483",
   "lastOpenFiles": [
+    "Material Plane/Legendarium/Gateways to the Outer Realms.md",
+    "Material Plane/Timeline/Epochs/The Age Twilight's Convergence.md",
+    "Material Plane/Timeline/Events/Breaking of the Hexweave Seal.md",
+    "Material Plane/Timeline/Events/Hexweave Binding.md",
+    "Material Plane/Timeline/Events/Night War.md",
+    "Material Plane/Timeline/Events/Psychic Schism.md",
+    "Material Plane/Timeline/Events/The Forge Wars.md",
+    "Material Plane/Timeline/Epochs/The Age of Twilight's Ascendancy.md",
+    "Material Plane/Timeline/Epochs/The Age of Twilight's Lament.md",
+    "Gods, Cosmic and Primal Forces/Umbralyn.md",
     "Gods, Cosmic and Primal Forces/The Last War.md",
     "Cosmology/Laws Of Nature/Noxar.md",
-    "Gods, Cosmic and Primal Forces/Umbralyn.md",
     "Material Plane/Legendarium/Chosen of the Twilight.md",
     "Languages/Noxarian.md",
     "Material Plane/Legendarium/Prophecies/Vecna's Prophecy.md",
-    "Material Plane/Timeline/Epochs/The Age of Twilight's Lament.md",
-    "Material Plane/Timeline/Epochs/The Age of Twilight's Ascendancy.md",
-    "Material Plane/Timeline/Epochs/The Age Twilight's Convergence.md",
     "Material Plane/Timeline.canvas",
-    "Material Plane/Timeline/Events/The Forge Wars.md",
     "Material Plane/Timeline",
     "Material Plane/Timeline/Epochs",
     "Races/Saurian.md",
     "Material Plane/Legendarium/Prophecies",
     "Outer Planes/Untitled.md",
-    "Material Plane/Timeline/Events/Psychic Schism.md",
     "Corruption/Ishna - The God Unborn.md",
-    "Material Plane/Timeline/Events/Breaking of the Hexweave Seal.md",
-    "Material Plane/Timeline/Events/Hexweave Binding.md",
     "Material Plane/Events/The Psychic Schism.md",
-    "Material Plane/Timeline/Events/Night War.md",
     "Cosmology/Planar Structure.canvas",
     "Gods, Cosmic and Primal Forces/Noxar Gods/Vecna.md",
     "Corruption/The God Hand/Arachne, The Matriarch of Pain.md",
@@ -240,7 +245,6 @@
     "Material Plane/Societies/Firebrand Empire/Emperor.md",
     "Material Plane/Societies/Firebrand Empire/Emperors/Septimus.md",
     "Material Plane/Societies/Firebrand Empire/Emperors/Duo.md",
-    "Material Plane/Societies/Firebrand Empire/Emperors/Octavian.md",
     "Material Plane/Societies/Firebrand Empire/Emperors",
     "Material Plane/Societies/Firebrand Empire/Great Houses",
     "Material Plane/Societies/Firebrand Empire/Characters",
