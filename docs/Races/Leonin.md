@@ -1,4 +1,4 @@
-### Imperial Leonin
+# Imperial Leonin
 
 Imperial Leonin are a race of humanoid felines who hail from the [[Firebrand Empire]]. They are known for their physical prowess, with powerful muscles and sharp claws that make them formidable fighters.
 

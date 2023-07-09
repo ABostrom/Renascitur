@@ -1,5 +1,6 @@
-## Imperial Orc
-Imperial orcs are a fierce and powerful race of the [[Firebrand Empire]]. They are known for their imposing size and strength, possessing muscles that seem to ripple with raw power.
+Orc's are strong and powerfully built race. They are known for their imposing size and strength, possessing muscles that seem to ripple with raw power.
+# Imperial Orc
+Imperial orcs are a fierce and powerful race of the [[Firebrand Empire]]. 
 
 Imperial orcs have rough, greyish-green skin, with prominent facial features that include a broad nose, jutting brow, and large, sharp teeth. They typically wear armour made from the hides of beasts they hunt, as well as metal plates and spikes to increase their intimidation factor in battle.
 

@@ -13,26 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "docs/Corruption/Ishna - The God Unborn.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "5d5627aec2446163",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "docs/Material Plane/Timeline/Events/Psychic Schism.md",
+                "file": "docs/Races/Forgeborn.md",
                 "mode": "source",
                 "source": false
               }
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -98,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "docs/Material Plane/Timeline/Events/Psychic Schism.md",
+                "file": "docs/Races/Forgeborn.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -115,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "docs/Material Plane/Timeline/Events/Psychic Schism.md",
+                "file": "docs/Races/Forgeborn.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -138,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "docs/Material Plane/Timeline/Events/Psychic Schism.md"
+                "file": "docs/Races/Forgeborn.md"
               }
             }
           }
@@ -159,38 +146,38 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "5d5627aec2446163",
+  "active": "dff75c301e0d7e41",
   "lastOpenFiles": [
+    "docs/Races/Elves.md",
+    "docs/Races/Elasi.md",
+    "docs/Races/Dwarf.md",
+    "docs/Races/Aquasi.md",
+    "docs/Races/Dragonborn.md",
+    "docs/Races/Ventasi.md",
+    "docs/Races/Umbrimar.md",
+    "docs/Races/Tiefling.md",
+    "docs/Races/Terrasi.md",
+    "docs/Races/Saurian.md",
+    "docs/Races/Orc.md",
+    "docs/Races/Forgeborn.md",
+    "docs/Races/Human.md",
+    "docs/Races/Ignasi.md",
+    "docs/Races/Goliath.md",
+    "docs/Outer Planes/Elemental Planes/Elementis Ignis/Elementis Ignis.md",
+    "docs/Outer Planes/Elemental Planes/Elementis Ignis/The City of Gold.md",
     "docs/Corruption/Ishna - The God Unborn.md",
-    "docs/Material Plane/Societies/Firebrand Empire/The 12 Great Houses.md",
-    "docs/Material Plane/Societies/Firebrand Empire/Firebrand Empire.md",
-    "docs/Cosmology/The Machinery of Death.md",
-    "docs/Cosmology/Souls.md",
+    "docs/Material Plane/Societies/Dwarven Holds/Mithralian Lightning Forgers/Mithral Hall.md",
+    "docs/Material Plane/Societies/Dwarven Holds/Mithralian Lightning Forgers/Mithralian Lightning Forgers.md",
+    "docs/Material Plane/Societies/Dwarven Holds/Uftine Icebreakers/Uftine Icebreakers.md",
+    "docs/Material Plane/Societies/Dwarven Holds/Magnesium Devouts/Magnesium Devouts.md",
+    "docs/Races/Luxtari.md",
+    "docs/Races/Lumisar.md",
+    "docs/Races/Leonin.md",
+    "docs/Material Plane/Timeline/Events/Psychic Schism.md",
     "docs/Cosmology/Planar Structure.canvas",
-    "docs/Material Plane/Legendarium/Characters/Ormr.md",
-    "docs/Material Plane/Legendarium/Characters/Larendrammagar.md",
-    "docs/Material Plane/Legendarium/Characters/Hephaestus.md",
-    "docs/Material Plane/Legendarium/Characters/Kasabian.md",
-    "docs/Material Plane/Legendarium/Characters/Glaurung.md",
-    "docs/Material Plane/Legendarium/Characters/Ferrousania.md",
-    "docs/Material Plane/Legendarium/Characters/Eddreict.md",
     "docs/Material Plane/Legendarium/Characters",
-    "docs/Material Plane/Legendarium/Artifacts/Time piece of travel.md",
     "docs/Material Plane/Legendarium/Artifacts",
-    "docs/Gods, Cosmic and Primal Forces/Noxar Gods/Vecna.md",
-    "docs/Gods, Cosmic and Primal Forces/Noxar Gods/Tiamat.md",
-    "docs/Gods, Cosmic and Primal Forces/Noxar Gods/Moloch.md",
-    "docs/Gods, Cosmic and Primal Forces/Noxar Gods/Morbus.md",
-    "docs/Gods, Cosmic and Primal Forces/Noxar Gods/Saul.md",
-    "docs/Gods, Cosmic and Primal Forces/Noxar Gods/Lillith.md",
-    "docs/Gods, Cosmic and Primal Forces/Noxar Gods/Isolde.md",
-    "docs/Gods, Cosmic and Primal Forces/Noxar Gods/Bael.md",
     "docs/Gods, Cosmic and Primal Forces/Noxar Gods",
-    "docs/Corruption/The God Hand/Typhon, The Archon of Death.md",
-    "docs/Corruption/The God Hand/Tau, Sin Manifest.md",
-    "docs/Corruption/The God Hand/Orthros, The Devourer.md",
-    "docs/Corruption/The God Hand/Hyperion, The Fallen.md",
-    "docs/Corruption/The God Hand/Cronus, The Endless.md",
     "docs/Corruption/The God Hand",
     "docs/Corruption",
     "mkdocs.yml",
