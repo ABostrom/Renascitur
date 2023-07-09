@@ -4,15 +4,19 @@
     "type": "split",
     "children": [
       {
-        "id": "14f684c648da67f1",
+        "id": "d62d1933ff4e0af5",
         "type": "tabs",
         "children": [
           {
-            "id": "63ebcc5ef100d6d8",
+            "id": "dff75c301e0d7e41",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {}
+              "type": "markdown",
+              "state": {
+                "file": "docs/Races/Forgeborn.md",
+                "mode": "source",
+                "source": false
+              }
             }
           }
         ]
@@ -81,6 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
+                "file": "docs/Races/Forgeborn.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -97,6 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
+                "file": "docs/Races/Forgeborn.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -118,14 +124,17 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {}
+              "state": {
+                "file": "docs/Races/Forgeborn.md"
+              }
             }
           }
         ]
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -137,21 +146,8 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "63ebcc5ef100d6d8",
+  "active": "dff75c301e0d7e41",
   "lastOpenFiles": [
-    "docs/Gods, Cosmic and Primal Forces/Luxar Gods/Magnus.md",
-    "docs/Gods, Cosmic and Primal Forces/Pantheon Of Luxar.md",
-    "docs/Gods, Cosmic and Primal Forces/Pantheon Of Noxar.md",
-    "docs/Gods, Cosmic and Primal Forces/The Last War.md",
-    "Pantheon Of Noxar.md",
-    "docs/Cosmology/The Machinery of Death.md",
-    "docs/Cosmology/Untitled.md",
-    "Pantheon Of Luxar.md",
-    "docs/Gods, Cosmic and Primal Forces/Umbralyn.md",
-    "docs/Cosmology/Laws Of Nature/Cosmic Construction.md",
-    "docs/Cosmology/Laws Of Nature/Chaor.md",
-    "docs/Outer Planes/Imperium Deorum.md",
-    "docs/Races/Forgeborn.md",
     "docs/Races/Elves.md",
     "docs/Races/Elasi.md",
     "docs/Races/Dwarf.md",
@@ -163,8 +159,21 @@
     "docs/Races/Terrasi.md",
     "docs/Races/Saurian.md",
     "docs/Races/Orc.md",
+    "docs/Races/Forgeborn.md",
     "docs/Races/Human.md",
     "docs/Races/Ignasi.md",
+    "docs/Races/Goliath.md",
+    "docs/Outer Planes/Elemental Planes/Elementis Ignis/Elementis Ignis.md",
+    "docs/Outer Planes/Elemental Planes/Elementis Ignis/The City of Gold.md",
+    "docs/Corruption/Ishna - The God Unborn.md",
+    "docs/Material Plane/Societies/Dwarven Holds/Mithralian Lightning Forgers/Mithral Hall.md",
+    "docs/Material Plane/Societies/Dwarven Holds/Mithralian Lightning Forgers/Mithralian Lightning Forgers.md",
+    "docs/Material Plane/Societies/Dwarven Holds/Uftine Icebreakers/Uftine Icebreakers.md",
+    "docs/Material Plane/Societies/Dwarven Holds/Magnesium Devouts/Magnesium Devouts.md",
+    "docs/Races/Luxtari.md",
+    "docs/Races/Lumisar.md",
+    "docs/Races/Leonin.md",
+    "docs/Material Plane/Timeline/Events/Psychic Schism.md",
     "docs/Cosmology/Planar Structure.canvas",
     "docs/Material Plane/Legendarium/Characters",
     "docs/Material Plane/Legendarium/Artifacts",
