@@ -2,5 +2,6 @@
   "alwaysUpdateLinks": true,
   "newFileLocation": "current",
   "useMarkdownLinks": false,
-  "newLinkFormat": "shortest"
+  "newLinkFormat": "shortest",
+  "promptDelete": false
 }

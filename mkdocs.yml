@@ -24,6 +24,9 @@ theme:
 # Extensions (https://squidfunk.github.io/mkdocs-material/setup/extensions/python-markdown-extensions/)
 markdown_extensions:
   - tables
+  - nl2br
+  - admonition
+  - pymdownx.details
   - pymdownx.superfences:
       custom_fences:
         - name: mermaid
@@ -35,6 +38,7 @@ markdown_extensions:
 plugins:
 - search
 - roamlinks 
+- callouts
 - ezlinks:
    wikilinks: true
    reference_links: true
