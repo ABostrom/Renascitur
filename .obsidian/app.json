@@ -2,5 +2,5 @@
   "alwaysUpdateLinks": true,
   "newFileLocation": "current",
   "useMarkdownLinks": false,
-  "newLinkFormat": "relative"
+  "newLinkFormat": "shortest"
 }

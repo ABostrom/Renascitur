@@ -3,10 +3,10 @@ Ishna - The God Unborn is an entity of , the foetus of an unborn god. He was con
 
 
 
-![The Forge Wars](../Material%20Plane/Timeline/Events/The%20Forge%20Wars.md)
+![[The Forge Wars]]
 
-![Hexweave Binding](../Material%20Plane/Timeline/Events/Hexweave%20Binding.md)
+![[Hexweave Binding]]
 
-![Breaking of the Hexweave Seal](../Material%20Plane/Timeline/Events/Breaking%20of%20the%20Hexweave%20Seal.md)
- ![Psychic Schism](../Material%20Plane/Timeline/Events/Psychic%20Schism.md)
+![[Breaking of the Hexweave Seal]]
+ ![[Psychic Schism]]
 
