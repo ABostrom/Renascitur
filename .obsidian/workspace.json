@@ -20,12 +20,24 @@
             }
           },
           {
-            "id": "34082ee95791630b",
+            "id": "dff75c301e0d7e41",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "docs/index.md",
+                "file": "docs/Material Plane/Timeline/Events/Psychic Schism.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "75f85efb4dba4aa3",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "docs/Material Plane/Legendarium/Minerals/Lux Lapis.md",
                 "mode": "source",
                 "source": false
               }
@@ -98,7 +110,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "docs/index.md",
+                "file": "docs/Material Plane/Timeline/Events/Psychic Schism.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -115,7 +127,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "docs/index.md",
+                "file": "docs/Material Plane/Timeline/Events/Psychic Schism.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -138,7 +150,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "docs/index.md"
+                "file": "docs/Material Plane/Timeline/Events/Psychic Schism.md"
               }
             }
           }
@@ -159,12 +171,14 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "34082ee95791630b",
+  "active": "4b063aedca0169d7",
   "lastOpenFiles": [
-    "docs/Material Plane/Timeline/Events/Psychic Schism.md",
-    "docs/Corruption/Ishna - The God Unborn.md",
-    "docs/Material Plane/Timeline/Events/The Forge Wars.md",
     "docs/Corruption/Aberrations.md",
+    "docs/Material Plane/Timeline/Events/Psychic Schism.md",
+    "docs/Material Plane/Legendarium/Minerals/Lux Lapis.md",
+    "docs/Corruption/Ishna - The God Unborn.md",
+    "docs/index.md",
+    "docs/Material Plane/Timeline/Events/The Forge Wars.md",
     "docs/Corruption/The God Hand/Cronus, The Endless.md",
     "docs/Corruption/The God Hand/Tau, Sin Manifest.md",
     "docs/Corruption/The God Hand/Typhon, The Archon of Death.md",
