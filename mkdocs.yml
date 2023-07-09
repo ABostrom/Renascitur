@@ -25,6 +25,7 @@ theme:
 markdown_extensions:
   - tables
   - nl2br
+  - callouts
   - admonition
   - pymdownx.details
   - pymdownx.superfences
