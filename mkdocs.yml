@@ -35,6 +35,9 @@ markdown_extensions:
 plugins:
 - search
 - roamlinks 
+- ezlinks:
+   wikilinks: true
+   reference_links: true
 
 extra_javascript:
 - https://polyfill.io/v3/polyfill.min.js?features=es6
