@@ -1,0 +1,11 @@
+{
+	"nodes":[
+		{"id":"191012d293059328","x":720,"y":-100,"width":480,"height":580,"type":"file","file":"Material Plane/Timeline/Epochs/The Age of Twilight's Lament.md"},
+		{"id":"727daef84fdca48c","x":1400,"y":-110,"width":2080,"height":600,"type":"file","file":"Material Plane/Timeline/Epochs/The Age Twilight's Convergence.md"},
+		{"id":"10cf57f09beb6f2c","x":-1360,"y":-92,"width":1840,"height":564,"type":"file","file":"Material Plane/Timeline/Epochs/The Age of Twilight's Ascendancy.md"}
+	],
+	"edges":[
+		{"id":"6c0d473fd9c3c501","fromNode":"191012d293059328","fromSide":"right","toNode":"727daef84fdca48c","toSide":"left"},
+		{"id":"d20d30392c1adec2","fromNode":"10cf57f09beb6f2c","fromSide":"right","toNode":"191012d293059328","toSide":"left"}
+	]
+}

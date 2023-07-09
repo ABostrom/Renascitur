@@ -1,0 +1,258 @@
+{
+  "main": {
+    "id": "a499aedcfa100323",
+    "type": "split",
+    "children": [
+      {
+        "id": "c74d018c52394a0c",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "9d69df2d42c4596f",
+            "type": "leaf",
+            "state": {
+              "type": "localgraph",
+              "state": {
+                "file": "Outer Planes/Imperium Deorum.md",
+                "options": {
+                  "collapse-filter": true,
+                  "search": "",
+                  "localJumps": 1,
+                  "localBacklinks": true,
+                  "localForelinks": true,
+                  "localInterlinks": false,
+                  "showTags": false,
+                  "showAttachments": false,
+                  "hideUnresolved": false,
+                  "collapse-color-groups": true,
+                  "colorGroups": [],
+                  "collapse-display": true,
+                  "showArrow": false,
+                  "textFadeMultiplier": 0,
+                  "nodeSizeMultiplier": 1,
+                  "lineSizeMultiplier": 1,
+                  "collapse-forces": true,
+                  "centerStrength": 0.518713248970312,
+                  "repelStrength": 10,
+                  "linkStrength": 1,
+                  "linkDistance": 250,
+                  "scale": 1,
+                  "close": false
+                }
+              }
+            }
+          },
+          {
+            "id": "9302ae69f6bc174d",
+            "type": "leaf",
+            "state": {
+              "type": "canvas",
+              "state": {
+                "file": "Cosmology/Planar Structure.canvas",
+                "viewState": {
+                  "x": 640,
+                  "y": 10,
+                  "zoom": -1.2518882041688593
+                }
+              }
+            }
+          }
+        ],
+        "currentTab": 1
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "bca6b4c2ac5941fd",
+    "type": "split",
+    "children": [
+      {
+        "id": "502450d3bfb24100",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "041c8059ffeeb483",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "795ed39ff93a29df",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "4d6a15268733c592",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "4e07e71f09c895d5",
+    "type": "split",
+    "children": [
+      {
+        "id": "7227c57b796d82a6",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "71ed4a9bf556e448",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Outer Planes/Imperium Deorum.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": false
+              }
+            }
+          },
+          {
+            "id": "aea11c4dea1133d3",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Outer Planes/Imperium Deorum.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "76a7949168d50134",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "2da282692db6ac48",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Outer Planes/Imperium Deorum.md"
+              }
+            }
+          },
+          {
+            "id": "3bd2746e5968aecb",
+            "type": "leaf",
+            "state": {
+              "type": "FANTASY_CALENDAR",
+              "state": {}
+            }
+          },
+          {
+            "id": "3b94b5aea336c9ff",
+            "type": "leaf",
+            "state": {
+              "type": "smart-connections-view",
+              "state": {}
+            }
+          },
+          {
+            "id": "20b115fb4354b9d3",
+            "type": "leaf",
+            "state": {
+              "type": "smart-connections-chat-view",
+              "state": {}
+            }
+          }
+        ],
+        "currentTab": 6
+      }
+    ],
+    "direction": "horizontal",
+    "width": 200
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "fantasy-calendar:Open Large Fantasy Calendar": false,
+      "obsidian-textgenerator-plugin:Generate Text!": false,
+      "obsidian-textgenerator-plugin:Text Generator: Templates Packages Manager": false
+    }
+  },
+  "active": "041c8059ffeeb483",
+  "lastOpenFiles": [
+    "docs",
+    "New folder",
+    "Material Plane/Legendarium/Gateways to the Outer Realms.md",
+    "Material Plane/Timeline/Epochs/The Age Twilight's Convergence.md",
+    "Material Plane/Timeline/Events/Breaking of the Hexweave Seal.md",
+    "Material Plane/Timeline/Events/Hexweave Binding.md",
+    "Material Plane/Timeline/Events/Night War.md",
+    "Material Plane/Timeline/Events/Psychic Schism.md",
+    "Material Plane/Timeline/Events/The Forge Wars.md",
+    "Material Plane/Timeline/Epochs/The Age of Twilight's Ascendancy.md",
+    "Material Plane/Timeline/Epochs/The Age of Twilight's Lament.md",
+    "Gods, Cosmic and Primal Forces/Umbralyn.md",
+    "Gods, Cosmic and Primal Forces/The Last War.md",
+    "Cosmology/Laws Of Nature/Noxar.md",
+    "Material Plane/Legendarium/Chosen of the Twilight.md",
+    "Languages/Noxarian.md",
+    "Material Plane/Legendarium/Prophecies/Vecna's Prophecy.md",
+    "Material Plane/Timeline.canvas",
+    "Material Plane/Timeline",
+    "Material Plane/Timeline/Epochs",
+    "Races/Saurian.md",
+    "Material Plane/Legendarium/Prophecies",
+    "Outer Planes/Untitled.md",
+    "Corruption/Ishna - The God Unborn.md",
+    "Material Plane/Events/The Psychic Schism.md",
+    "Cosmology/Planar Structure.canvas",
+    "Gods, Cosmic and Primal Forces/Noxar Gods/Vecna.md",
+    "Corruption/The God Hand/Arachne, The Matriarch of Pain.md",
+    "Corruption/The God Hand/Cronus, The Endless.md",
+    "Material Plane/Regions/Pyrosia/Ashen Plains/Lion’s Rest.md",
+    "Material Plane/Societies/Firebrand Empire/Emperor.md",
+    "Material Plane/Societies/Firebrand Empire/Emperors/Septimus.md",
+    "Material Plane/Societies/Firebrand Empire/Emperors",
+    "Material Plane/Societies/Firebrand Empire/Great Houses",
+    "Material Plane/Societies/Firebrand Empire/Characters",
+    "Untitled.png",
+    "Material Plane/Legendarium/Pylons",
+    "Material Plane/Legendarium/Minerals",
+    "Material Plane/Regions/Pyrosia/Ember Peaks",
+    "Untitled.canvas"
+  ]
+}

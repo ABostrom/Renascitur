@@ -1,4 +1,5 @@
 {
-  "attachmentFolderPath": "Material Plane/Legenedary Artifacts",
-  "alwaysUpdateLinks": true
+  "alwaysUpdateLinks": true,
+  "newFileLocation": "current",
+  "useMarkdownLinks": true
 }
