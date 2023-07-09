@@ -28,10 +28,6 @@ markdown_extensions:
   - admonition
   - pymdownx.details
   - pymdownx.superfences:
-      # custom_fences:
-      #   - name: mermaid
-      #     class: mermaid
-      #     format: !!python/name:pymdownx.superfences.fence_code_format
   - toc:
       permalink: true
 
@@ -39,9 +35,9 @@ plugins:
 - search
 - roamlinks 
 - callouts
-- ezlinks:
-   wikilinks: true
-   reference_links: true
+#- ezlinks:
+#   wikilinks: true
+#   reference_links: true
 
 extra_javascript:
 - https://polyfill.io/v3/polyfill.min.js?features=es6
