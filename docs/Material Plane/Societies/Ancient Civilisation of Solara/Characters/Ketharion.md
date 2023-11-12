@@ -1,0 +1,6 @@
+# The Last Sun Speaker
+Ketharion is a towering figure, standing over 9 feet tall, with broad shoulders and a muscular build. His skin is a deep, rich brown, and his eyes are a piercing golden hue that seem to glow in the right light. He has a bald head with a long, thick beard that hangs down to his chest, giving him an almost regal appearance.
+
+Ketharion is adorned in the traditional robes of the Solaran priesthood, with a long, flowing white robe that drapes down to his feet and a golden sash tied around his waist. He carries with him a staff, adorned with intricate, golden symbols, which serves as a symbol of his position as a high priest and as a tool for channeling his magical abilities.
+
+Despite his imposing size, Ketharion is known for his gentle demeanor and his calm, measured approach to problem-solving. He is highly intelligent and well-educated, with a deep understanding of Solaran culture, history, and magic. He is deeply respected by the Solaran people and is seen as a wise and just leader.

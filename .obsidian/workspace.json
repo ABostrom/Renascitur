@@ -13,7 +13,19 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "docs/Races/Forgeborn.md",
+                "file": "docs/Material Plane/Regions/Mokoweri/Solaran Research Complex.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "896f0a6430ead276",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "docs/Material Plane/Regions/Mokoweri/Embered Caverns.md",
                 "mode": "source",
                 "source": false
               }
@@ -69,7 +81,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 489.5
   },
   "right": {
     "id": "48dc074e42270c2a",
@@ -85,7 +97,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "docs/Races/Forgeborn.md",
+                "file": "docs/Material Plane/Regions/Mokoweri/Solaran Research Complex.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +114,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "docs/Races/Forgeborn.md",
+                "file": "docs/Material Plane/Regions/Mokoweri/Solaran Research Complex.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +137,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "docs/Races/Forgeborn.md"
+                "file": "docs/Material Plane/Regions/Mokoweri/Solaran Research Complex.md"
               }
             }
           }
@@ -148,6 +160,23 @@
   },
   "active": "dff75c301e0d7e41",
   "lastOpenFiles": [
+    "docs/Material Plane/Regions/Mokoweri/Embered Caverns.md",
+    "docs/Material Plane/Regions/Mokoweri/Mokoweri.md",
+    "docs/Material Plane/Regions/Mokoweri/Solaran Research Complex.md",
+    "docs/Material Plane/Regions/Mokoweri/Irisandra.md",
+    "docs/Outer Planes/Planes.md",
+    "docs/Outer Planes/Renascitur.md",
+    "docs/Outer Planes/Woudum.md",
+    "docs/Outer Planes/Umbra Terra.md",
+    "docs/Cosmology/Planar Structure.canvas",
+    "docs/Material Plane/Societies/Ancient Civilisation of Solara/Ab Solara.md",
+    "docs/Material Plane/Societies/Ancient Civilisation of Solara/Characters/Iris Andras.md",
+    "docs/Material Plane/Legendarium/Minerals/Solaran Obsidian.md",
+    "docs/Material Plane/Legendarium/Forgeborn Prime.md",
+    "docs/Material Plane/Legendarium/Chosen of the Twilight.md",
+    "docs/Material Plane/Legendarium/Gateways to the Outer Realms.md",
+    "docs/Material Plane/Legendarium/Minerals/Storm Quartz.md",
+    "docs/Races/Forgeborn.md",
     "docs/Races/Elves.md",
     "docs/Races/Elasi.md",
     "docs/Races/Dwarf.md",
@@ -158,23 +187,6 @@
     "docs/Races/Tiefling.md",
     "docs/Races/Terrasi.md",
     "docs/Races/Saurian.md",
-    "docs/Races/Orc.md",
-    "docs/Races/Forgeborn.md",
-    "docs/Races/Human.md",
-    "docs/Races/Ignasi.md",
-    "docs/Races/Goliath.md",
-    "docs/Outer Planes/Elemental Planes/Elementis Ignis/Elementis Ignis.md",
-    "docs/Outer Planes/Elemental Planes/Elementis Ignis/The City of Gold.md",
-    "docs/Corruption/Ishna - The God Unborn.md",
-    "docs/Material Plane/Societies/Dwarven Holds/Mithralian Lightning Forgers/Mithral Hall.md",
-    "docs/Material Plane/Societies/Dwarven Holds/Mithralian Lightning Forgers/Mithralian Lightning Forgers.md",
-    "docs/Material Plane/Societies/Dwarven Holds/Uftine Icebreakers/Uftine Icebreakers.md",
-    "docs/Material Plane/Societies/Dwarven Holds/Magnesium Devouts/Magnesium Devouts.md",
-    "docs/Races/Luxtari.md",
-    "docs/Races/Lumisar.md",
-    "docs/Races/Leonin.md",
-    "docs/Material Plane/Timeline/Events/Psychic Schism.md",
-    "docs/Cosmology/Planar Structure.canvas",
     "docs/Material Plane/Legendarium/Characters",
     "docs/Material Plane/Legendarium/Artifacts",
     "docs/Gods, Cosmic and Primal Forces/Noxar Gods",
