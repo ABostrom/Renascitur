@@ -33,6 +33,9 @@ Venturing deeper into the Solaran Research Complex, you find yourself within the
 **Challenge:** Navigating the biological study lab offers insight into the Solarans' reverence for nature. Here, you may uncover invaluable knowledge about the unique flora native to Mokoweri, its medicinal properties, or its potential applications in the world above. But amidst the tranquility lies a challenge—the need to decipher the Solaran wisdom and carefully avoid triggering dormant defense mechanisms that guard their botanical secrets.
 
 
+1. **Solaran Codex of Hybrid Species:** A meticulously illustrated tome detailing the creation of hybrid creatures through biological experimentation. This knowledge could be used to create unique allies or minions.
+2. **Bio-Arcane Enhancements:** Vials containing serums developed by Solaran bioengineers. When consumed, these serums grant temporary enhancements such as increased strength, resilience, or sensory perception.
+
 ### Fauna Alteration Chamber
 Venturing further into the enigmatic depths of the Solaran Research Complex, you find yourself within the Fauna Alteration Chamber—a testament to the Solarans' audacious experiments in reshaping life itself. This chamber pulsates with a sense of untamed vitality and boundless curiosity.
 
@@ -43,6 +46,9 @@ Venturing further into the enigmatic depths of the Solaran Research Complex, you
 **Residents:** Within this chamber, spectral echoes of Solaran scientists seem especially present, their actions frozen in time. You catch glimpses of them tending to peculiar hybrid creatures, each a testament to their scientific prowess and boundless imagination.
 
 **Challenge:** Navigating the Fauna Alteration Chamber poses both opportunity and peril. Here, you may uncover secrets about the Solarans' experiments, their goals, and the creatures they sought to create or manipulate. Yet, danger lurks as dormant experiments now roam free—a unique menagerie of altered beasts, their behavior unpredictable and potentially deadly. Exploring this chamber requires both courage and wisdom to decipher the Solaran legacy while safeguarding against threats from their creations.
+
+1. **Saurian Egg Crystals:** Glowing crystalline eggs containing the essence of ancient Solaran-engineered saurians. 
+2. **Anomaly Extractor:** A powerful device used by Solaran scientists to extract and purify aberrant energy from creatures. When wielded properly, it can weaken or even dispel aberrant entities.
 
 ### Tech Workshop
 Venturing deeper into the mysterious Solaran Research Complex, you find yourself standing at the threshold of the Tech Workshop—an astonishing display of the Solarans' mastery over both magic and machinery. Here, a symphony of gears, ethereal energies, and enigmatic devices play out a narrative of invention and exploration.
@@ -55,6 +61,8 @@ Venturing deeper into the mysterious Solaran Research Complex, you find yourself
 
 **Challenge:** The Tech Workshop presents a treasure trove of forgotten inventions, from arcano-mechanical devices to enigmatic energy sources. Navigating the workshop requires not only intelligence but also an understanding of Solaran technology. You must decipher their designs, repair or activate ancient devices, and potentially face the consequences of meddling with their creations. Here, the line between discovery and peril is often thin, demanding both wisdom and resourcefulness from those who dare to explore its depths.
 
+1. **Solaran Data Crystals:** Crystal shards containing vast repositories of Solaran knowledge, including advanced technological blueprints, magical insights, and historical records. Accessing these crystals could grant the players new skills or technological advancements.
+2. **Chrono-Stasis Sphere:** A mysterious orb with the power to slow the passage of time within a specific area. It could be a valuable tool for strategic planning or escaping dangerous situations.
 
 ### Crysallography Lab
 
@@ -67,6 +75,13 @@ As you step into the Crystallography Lab, you are enveloped in a world where the
 **Residents:** Wispy apparitions of Solaran crystallographers move gracefully about the lab, seemingly undisturbed by the passage of time. They meticulously examine and interact with the crystals, their gestures and expressions reflecting an unwavering commitment to their craft.
 
 **Challenge:** The Crystallography Lab holds the key to unlocking the secrets of Solaran crystal technology, which can include both marvelous discoveries and formidable challenges. To succeed in this chamber, one must navigate the intricacies of crystalline magic, decipher ancient records, and interact with the spectral inhabitants. It's a place where the boundaries between the arcane and the tangible blur, testing the intellect and magical prowess of those who explore its depths.
+
+1. **Solaran Crystal Lenses:** Exquisite crystal lenses that can be attached to weapons or goggles, allowing the wearer to perceive hidden arcane energies and vulnerabilities in their surroundings.
+2. **Charged Chrono-Crystal:** A crystalline artifact pulsating with temporal energy. When activated, it grants the ability to briefly manipulate time, either by speeding up the user's actions or slowing down opponents.
+
+These discoveries provide a blend of valuable resources, powerful artifacts, and knowledge that can enhance the players' abilities and further their understanding of Solaran science and magic.
+
+
 #### **Scientist in the Workshop**:
 
 - **Name**: Dr. Sylvaris Lunarsong
