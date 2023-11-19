@@ -1,6 +1,11 @@
 **Irisandra: The Great Sentinel Tree of Mokoweri**
 
-Irisandra, the colossal tree that graces the island of Mokoweri, stands as a monumental testament to the forgotten era of Solaran science and their struggle to control aberrant soul experiments. This majestic tree was crafted with care and purpose by the Solaran scientist, [[Iris Andras]], to serve
+Irisandra, the colossal tree that graces the island of Mokoweri, stands as a monumental testament to the forgotten era of Solaran science and their struggle to control aberrant soul experiments. This majestic tree was crafted with care and purpose by the Solaran scientist, [[Iris Andras]].
+
+
+### Grove Warden
+[[Iris Andras]] fused with the great tree as part of the final experiment to 
+
 
 **A Monument of Solaran Science:**
 
