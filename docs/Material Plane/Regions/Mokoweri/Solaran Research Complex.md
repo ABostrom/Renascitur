@@ -36,6 +36,10 @@ Venturing deeper into the Solaran Research Complex, you find yourself within the
 1. **Solaran Codex of Hybrid Species:** A meticulously illustrated tome detailing the creation of hybrid creatures through biological experimentation. This knowledge could be used to create unique allies or minions.
 2. **Bio-Arcane Enhancements:** Vials containing serums developed by Solaran bioengineers. When consumed, these serums grant temporary enhancements such as increased strength, resilience, or sensory perception.
 
+#### Things to find:
+- Data shards on developing the Saurian growth containment
+- Data shards on Life's Work - Irasandra
+
 
 ### Fauna Alteration Chamber
 Venturing further into the enigmatic depths of the Solaran Research Complex, you find yourself within the Fauna Alteration Chamber—a testament to the Solarans' audacious experiments in reshaping life itself. This chamber pulsates with a sense of untamed vitality and boundless curiosity.
@@ -51,6 +55,9 @@ Venturing further into the enigmatic depths of the Solaran Research Complex, you
 1. **Saurian Egg Crystals:** Glowing crystalline eggs containing the essence of ancient Solaran-engineered saurians. 
 2. **Anomaly Extractor:** A powerful device used by Solaran scientists to extract and purify aberrant energy from creatures. When wielded properly, it can weaken or even dispel aberrant entities.
 
+#### Things to find:
+-  Discovery of the Eversoul Grove
+
 ### Tech Workshop
 Venturing deeper into the mysterious Solaran Research Complex, you find yourself standing at the threshold of the Tech Workshop—an astonishing display of the Solarans' mastery over both magic and machinery. Here, a symphony of gears, ethereal energies, and enigmatic devices play out a narrative of invention and exploration.
 
@@ -58,12 +65,13 @@ Venturing deeper into the mysterious Solaran Research Complex, you find yourself
 
 **Terrain:** The workshop unfolds in a series of interconnected chambers, each dedicated to a different aspect of Solaran technology. Glistening conduits and arcane glyphs line the walls, and ethereal machinery hums with an eager readiness. Countless arcane interfaces and crystalline consoles dot the floors, inviting investigation.
 
-**Residents:** Despite the passage of millennia, spectral remnants of Solaran engineers and inventors can be seen attending to their unfinished projects. Their ghostly presence serves as a testament to their unwavering pursuit of knowledge and the secrets held within this chamber.
-
-**Challenge:** The Tech Workshop presents a treasure trove of forgotten inventions, from arcano-mechanical devices to enigmatic energy sources. Navigating the workshop requires not only intelligence but also an understanding of Solaran technology. You must decipher their designs, repair or activate ancient devices, and potentially face the consequences of meddling with their creations. Here, the line between discovery and peril is often thin, demanding both wisdom and resourcefulness from those who dare to explore its depths.
-
 1. **Solaran Data Crystals:** Crystal shards containing vast repositories of Solaran knowledge, including advanced technological blueprints, magical insights, and historical records. Accessing these crystals could grant the players new skills or technological advancements.
-2. **Chrono-Stasis Sphere:** A mysterious orb with the power to slow the passage of time within a specific area. It could be a valuable tool for strategic planning or escaping dangerous situations.
+
+#### Things to find:
+- **Tech Workshop Research Log Entry #128**
+- Data shards on developing the aberrant energy infusion
+- Iris Andras' personal log
+
 
 ### Crysallography Lab
 
@@ -73,15 +81,16 @@ As you step into the Crystallography Lab, you are enveloped in a world where the
 
 **Terrain:** The lab is divided into several interconnected sections, each dedicated to a different aspect of crystal research. Elaborate crystalline structures, some reaching from floor to ceiling, dominate the room. Arcane diagrams and inscriptions are etched into the floor, tracing pathways of magical energies between the crystals.
 
-**Residents:** Wispy apparitions of Solaran crystallographers move gracefully about the lab, seemingly undisturbed by the passage of time. They meticulously examine and interact with the crystals, their gestures and expressions reflecting an unwavering commitment to their craft.
-
-**Challenge:** The Crystallography Lab holds the key to unlocking the secrets of Solaran crystal technology, which can include both marvelous discoveries and formidable challenges. To succeed in this chamber, one must navigate the intricacies of crystalline magic, decipher ancient records, and interact with the spectral inhabitants. It's a place where the boundaries between the arcane and the tangible blur, testing the intellect and magical prowess of those who explore its depths.
-
-1. **Solaran Crystal Lenses:** Exquisite crystal lenses that can be attached to weapons or goggles, allowing the wearer to perceive hidden arcane energies and vulnerabilities in their surroundings.
-2. **Charged Chrono-Crystal:** A crystalline artifact pulsating with temporal energy. When activated, it grants the ability to briefly manipulate time, either by speeding up the user's actions or slowing down opponents.
+1. **Arcanometric Command Crystals** 
+2. Biosynthetic Trre Prototypes for the Tree containment system
 
 These discoveries provide a blend of valuable resources, powerful artifacts, and knowledge that can enhance the players' abilities and further their understanding of Solaran science and magic.
 
+#### Things to find
+- Data shards on Slaad command crystals
+- Data shards on Energy transmuation
+- Data shards on obsidian as an energy conductor
+- Data shards on harmonizing aberrant energy
 
 #### **Scientist in the Workshop**:
 
@@ -182,57 +191,7 @@ _Date: [Date]_
 _Findings: Preliminary findings show that Solaran technology may provide a pathway to harmonizing aberrant energy. Further research is necessary to perfect this technique._
 
 
-### Saurian Creation
 
-**Research Log Entry #12**
-
-Our pursuit of understanding the Saurians' remarkable resilience to aberrant energy continues. Preliminary experiments have provided intriguing insights into the unique physiological and magical traits that make them inherently resistant to the corrupting influence of abberant energy.
-
-In controlled exposure tests, we introduced Saurian specimens to concentrated aberrant energy sources. What we observed was nothing short of astounding. Unlike other living beings, the Saurians displayed an impressive ability to repel and neutralize the harmful effects of abberant energy.
-
-This resistance seems to be linked to their innate connection with the weave, as if the Saurians have a natural barrier that shields them from the aberrant forces seeking to corrupt their souls. This discovery holds immense promise, as it could potentially lead to the development of protective measures against abberant incursions in the future.
-
-However, it is crucial to proceed with caution. We must refrain from exploiting the Saurians' resilience for any destructive purposes. Their existence is deeply intertwined with the delicate balance of life on Mokoweri, and we must prioritize their preservation and well-being above all else.
-
-**Research Log Entry #17**
-
-Our ethical concerns regarding the experimentation on the Saurians have grown more pronounced as we delve deeper into the mysteries of their innate resilience. Despite the potential benefits for our society and the protection of Mokoweri, we cannot ignore the moral implications of our actions.
-
-Today's experiments took a disturbing turn as we conducted invasive procedures on a group of Saurian subjects to further investigate the source of their resistance to abberant energy. These procedures resulted in significant distress and suffering for the specimens, and the ethical committee overseeing our research has expressed grave concerns.
-
-While we have gained some insights into the Saurians' unique physiology and the role of their natural energy barriers, the toll on these noble beings is unacceptable. I must confront the moral dilemmas that our pursuit of knowledge has brought upon us. We must find alternative means to protect Mokoweri without subjecting the Saurians to further harm.
-
-**Research Log Entry #20**
-
-The weight of our actions in the name of scientific inquiry is becoming increasingly unbearable. We have reached a critical juncture in our research, where we must make difficult choices that will define our legacy.
-
-In our pursuit of knowledge and the development of protective measures against aberrant energy, we inadvertently subjected the Saurians to unspeakable suffering. Their innate resilience, a gift from nature and the weave, should not have come at the cost of their well-being and happiness.
-
-It is with a heavy heart that I acknowledge our failure in this regard. Our experiments have demonstrated the potential dangers of scientific ambition devoid of compassion. From this moment forward, our priority must shift to the welfare and conservation of the Saurians, our living guardians of Mokoweri.
-
-We will redouble our efforts to develop protective measures through ethical means, ensuring that the Saurians are never again subjected to harm in the name of progress. We owe them our deepest apologies and our commitment to a brighter, more responsible future for all inhabitants of Mokoweri.
-
-
-### Slaad Creation
-**Research Log Entry #34**
-
-The pursuit of understanding aberrant energy and its effects on living beings has taken a dark turn. As we delve deeper into the mysteries of the Saurians' resistance to abberant energy, some among us have become consumed by ambition. This has led to reckless experimentation that now threatens the balance of Mokoweri.
-
-In an attempt to harness the properties of abberant energy for potential defensive applications, we initiated a series of experiments involving forced exposure of Saurian specimens to concentrated abberant energy sources. The results have been horrifying. These once-noble creatures have been twisted and corrupted by the very energy we sought to understand.
-
-What we have created can only be described as aberrant Saurians, beings who have become conduits for abberant forces. Their existence is an affront to the natural order, and their aggression poses a dire threat to the inhabitants of Mokoweri.
-
-In our desperation to counter the abberant incursions, we may have inadvertently unleashed a new kind of menace upon our world. It is imperative that we find a way to control or reverse this corruption before it spreads further.
-
-**Research Log Entry #37**
-
-The consequences of our ill-fated experiments have grown even more dire. The aberrant Saurians, which we now colloquially refer to as "Slaads," have multiplied beyond our control. Their aggressive behavior and destructive tendencies are wreaking havoc on the fragile ecosystems of Mokoweri.
-
-To counter this threat, we have developed arcanometric obsidian crystals capable of exerting a form of control over the Slaads. These crystals emit resonant frequencies that pacify and, to some extent, command the Slaads. We have deployed these crystals in strategic locations to mitigate the chaos caused by these corrupted beings.
-
-However, it is important to note that this is not a solution but a temporary measure. The Slaads remain an unpredictable and dangerous presence on Mokoweri. We must redouble our efforts to find a way to reverse the aberration and restore the Saurians to their noble nature.
-
-Our actions have consequences, and it is our responsibility to rectify the mistakes we have made. The Slaads serve as a haunting reminder of the ethical boundaries we must uphold in our pursuit of knowledge and protection.
 
 
 ### Life's Work - Irasandra
@@ -292,3 +251,15 @@ Today marks a turning point in my research. After months of meticulous study and
 As I stand in the presence of the ancient tree, I can sense its connection to the weave, the pulse of life that flows through it. This is more than a scientific endeavor; it is a calling, a destiny. To create the Eversoul Grove, I must become one with the weave.
 
 This decision is not made lightly, for it is an irreversible transformation. Yet, the fate of the Solaran people hangs in the balance. I must embrace this path, binding myself to the heart of Mokoweri's life force. Only then can I hope to protect the souls of my people for all eternity.
+
+
+
+**Tech Workshop Research Log Entry #128**
+
+The gateways we have been developing in the tech workshop are showing promise as tools for instant transportation across Mokoweri. By employing arconometric crystals and intricate calibrations, we have successfully created a network of interconnected gateways that span key locations on the island. This achievement is a testament to the ingenuity of solaran technology.
+
+These gateways not only facilitate rapid travel but also enhance our ability to respond to aberrant incursions swiftly. We have fortified them with arcanometric security measures to prevent unauthorized access. Additionally, they serve as a crucial means of evacuating vulnerable communities in the event of a large-scale aberrant assault.
+
+Our machinery for constructing experiments involving aberrant energy has reached a level of sophistication that allows for controlled and repeatable testing. This is of paramount importance as we seek to unravel the mysteries of abberant energy and develop countermeasures to protect Mokoweri and its inhabitants.
+
+The synergy of our research endeavors in the tech workshop promises to fortify our island against the ever-encroaching threat of aberrant forces. We remain vigilant in our pursuit of knowledge and innovation to safeguard our homeland.
