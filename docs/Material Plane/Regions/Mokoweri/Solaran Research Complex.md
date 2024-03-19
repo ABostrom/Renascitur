@@ -28,16 +28,12 @@ Venturing deeper into the Solaran Research Complex, you find yourself within the
 
 **Terrain:** The lab's layout consists of elevated platforms and meandering pathways, all meticulously designed to provide the perfect conditions for nurturing and observing a wide array of botanical specimens. Vines adorned with bioluminescent flowers drape gracefully from the ceiling, offering both beauty and illumination.
 
-**Residents:** While no living beings remain, the essence of life seems to linger. You occasionally glimpse faint, spectral images of Solaran researchers tending to the vibrant flora. These apparitions diligently maintain the lab's pristine condition, ensuring the continued prosperity of the precious specimens.
-
-**Challenge:** Navigating the biological study lab offers insight into the Solarans' reverence for nature. Here, you may uncover invaluable knowledge about the unique flora native to Mokoweri, its medicinal properties, or its potential applications in the world above. But amidst the tranquility lies a challenge—the need to decipher the Solaran wisdom and carefully avoid triggering dormant defense mechanisms that guard their botanical secrets.
-
-
 1. **Solaran Codex of Hybrid Species:** A meticulously illustrated tome detailing the creation of hybrid creatures through biological experimentation. This knowledge could be used to create unique allies or minions.
 2. **Bio-Arcane Enhancements:** Vials containing serums developed by Solaran bioengineers. When consumed, these serums grant temporary enhancements such as increased strength, resilience, or sensory perception.
 
 #### Things to find:
 - Data shards on developing the Saurian growth containment
+- Data shards on developing the slaads and saurians
 - Data shards on Life's Work - Irasandra
 
 
@@ -48,9 +44,6 @@ Venturing further into the enigmatic depths of the Solaran Research Complex, you
 
 **Terrain:** The chamber's central feature is a vast, domed enclosure filled with diverse, interconnected ecosystems. Lush jungles, arid deserts, and serene lakes coexist side by side, separated by shimmering barriers of energy. Elevated catwalks and platforms afford visitors a vantage point from which to observe the intricate dance of life within.
 
-**Residents:** Within this chamber, spectral echoes of Solaran scientists seem especially present, their actions frozen in time. You catch glimpses of them tending to peculiar hybrid creatures, each a testament to their scientific prowess and boundless imagination.
-
-**Challenge:** Navigating the Fauna Alteration Chamber poses both opportunity and peril. Here, you may uncover secrets about the Solarans' experiments, their goals, and the creatures they sought to create or manipulate. Yet, danger lurks as dormant experiments now roam free—a unique menagerie of altered beasts, their behavior unpredictable and potentially deadly. Exploring this chamber requires both courage and wisdom to decipher the Solaran legacy while safeguarding against threats from their creations.
 
 1. **Saurian Egg Crystals:** Glowing crystalline eggs containing the essence of ancient Solaran-engineered saurians. 
 2. **Anomaly Extractor:** A powerful device used by Solaran scientists to extract and purify aberrant energy from creatures. When wielded properly, it can weaken or even dispel aberrant entities.
@@ -87,7 +80,6 @@ As you step into the Crystallography Lab, you are enveloped in a world where the
 These discoveries provide a blend of valuable resources, powerful artifacts, and knowledge that can enhance the players' abilities and further their understanding of Solaran science and magic.
 
 #### Things to find
-- Data shards on Slaad command crystals
 - Data shards on Energy transmuation
 - Data shards on obsidian as an energy conductor
 - Data shards on harmonizing aberrant energy
@@ -240,7 +232,7 @@ My exploration of the underground chamber continues to yield extraordinary resul
 
 The essence of this place resonates with the weave, creating an environment where life flourishes in harmony. I've collected numerous samples of the bioluminescent flora and have conducted experiments to understand their unique properties. The potential for soul protection is immense.
 
-The tree at the heart of the grove is unlike any other. Its roots extend deep into the weave, and I suspect it holds the key to unlocking the secrets of soul preservation. I've gathered samples from this ancient tree, which I believe will serve as the blueprint for the creation of the Eversoul Grove.
+The tree at the heart of the grove is unlike any other. Its roots extend deep into the weave, and I suspect it holds the key to unlocking the secrets of soul preservation. I've gathered samples from this ancient tree, which I believe will serve as the blueprint for the creation of the world Gaian tree.
 
 My research here has been nothing short of transformative, and I am filled with a sense of purpose. The Eversoul Grove may well be the key to ensuring the eternal protection of Solaran souls.
 

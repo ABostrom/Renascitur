@@ -12,5 +12,3 @@ In this wild expanse, [[Titus]] and [[Rexaris]] lead their clan with vigilance a
 
 Thus, deep in the heart of the [[Mokoweri]] jungle, the Tyrannosaurs under [[Titus]]'s and [[Rexaris]]'s leadership stand as a testament to the enduring spirit of these ancient creatures, holding steadfast against the relentless march of time. Their legacy endures, etched into the very fabric of this untamed land.
 
-
-## Trials 

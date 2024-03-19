@@ -6,3 +6,5 @@ Over the centuries, as Iris Andras' deeds were passed down in legends and lore, 
 Legends and folklore tend to embellish and reinterpret historical figures, and Iris Andras' name would have been no exception. The Solaran people held her in high regard, attributing magical and divine qualities to her achievements. Thus, her name took on more mystical variations, until eventually was known as "Irisandra," hinting at her connection to the sun and the stars
 
 With the passage of time and the influence of various cultures, her name might have spread across different lands, further diversifying its renditions. Tales of Iris Andras' legacy would continue to inspire generations, with each telling adding a unique cultural touch, making her name a symbol of ingenuity, brilliance, and wonder throughout the ages.
+
+
