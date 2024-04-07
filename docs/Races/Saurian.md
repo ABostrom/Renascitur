@@ -1,11 +1,25 @@
-The Saurians are a reptilian humanoid species that inhabit the jungles and swamps of the Isle of [[Mokoweri]]. Long ago, they were part of a highly intelligent and technologically advanced civilization with a deep respect for nature and the natural world, now they live much simpler naturalistic lives
+The Saurians are a deeply spiritual and resilient reptilian humanoid race, inhabiting the lush, uncharted depths of the jungles on the Isle of Mokoweri. With their tall, muscular frames, scaly skin in hues of green, brown, and grey, and adorned with bright markings, they are a testament to the diverse and vibrant life that thrives in their secluded world. Once servants of the technologically advanced Solaran civilization, the Saurians have, over generations, distanced themselves from their origins as biological weapons against cosmic corruption, choosing instead a path of harmony with nature and dedication to their deity, Irasandra.
 
-Physically, they are tall, muscular creatures with scaly skin, long tails, and sharp claws. They have a range of skin colours, including green, brown, and grey, and some individuals have bright markings or patterns on their scales.
+**Cultural Foundations** 
+Saurian culture is built around a profound respect for the natural world, a legacy of their creation and transformation. Their society values community, family, and the collective well-being above individual desires. This sense of unity is reflected in their communal dwellings high among the treetops of Mokoweri's dense jungles, where the Saurians have mastered the art of living in balance with their environment, with minimal impact on the natural world.
 
-The Saurians have a complex society with a strong emphasis on family and community. They live in large, communal dwellings and work together to gather food and resources, build structures, and advance their technology.
+**Spiritual Beliefs** 
+Central to Saurian life is their worship of Irasandra, the island goddess who, according to legend, shielded them from the brink of extinction and guided them to a new purpose beyond the intentions of their creators. Irasandra represents the heart of the island's life force, embodying the beauty and ferocity of nature. Her worship involves elaborate rituals and offerings, conducted in sacred groves and at altars scattered throughout their territory, aimed at preserving the balance of the natural world and seeking guidance.
 
-The Saurians have a deep spiritual connection to the natural world, and their religious practices reflect this. They worship a pantheon of deities that represent various aspects of nature, and their rituals often involve offerings to these gods and spirits.
+**The Treetop City: The Heart of Saurian Civilization** 
+The pinnacle of Saurian architecture and community life is their treetop city, a marvel of organic design and sustainable living. Built within the canopy of giant ancient trees, the city is a network of platforms, bridges, and dwellings, all constructed from renewable resources and designed to blend seamlessly into the jungle. This hidden metropolis is not only a refuge from the dangers of the jungle floor but also a center of learning, spirituality, and governance.
 
+**The Elders' Council and Governance** 
+The governance of the Saurian people is overseen by an Elders' Council, composed of the most wise and respected elder druids who have survived the rite of passage and carry the knowledge of their origins and purpose. This council ensures that the Saurians' actions remain in harmony with their beliefs, guiding them in matters of spirituality, conflict resolution, and interactions with the outside world, albeit cautiously.
+
+**Rite of Passage** 
+The rite of passage into the Elders' Council is a sacred tradition, marking both the spiritual maturity of an individual and their readiness to bear the weight of the Saurian legacy. It is during this rite that the truth of their creation and the depth of their connection to Irasandra and the natural world are revealed, a knowledge that comes with great responsibility and often, a heavy heart.
+
+**Daily Life and Practices**
+Daily life for a Saurian revolves around the community and the care of their environment. Agriculture, hunting, and gathering are conducted with great respect for the jungle's bounty, ensuring sustainability and minimal waste. Their diet is varied, consisting of fruits, vegetables, and proteins, sourced from the jungle and prepared in communal kitchens.
+
+**Arts and Expression** 
+Saurian art, music, and dance are deeply intertwined with their spiritual beliefs and the natural rhythms of their environment. Their cultural expressions are often communal, with festivals and ceremonies that celebrate the cycles of life, honor Irasandra, and recount the stories of their ancestors through elaborate costumes, body paint, and masked performances.
 
 ### [[Saurian]] Creation
 
