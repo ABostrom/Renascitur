@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "docs/Story/Blackiron Collective/Trial by Steel.md",
+                "file": "docs/Cosmology/Aethergylphs.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Trial by Steel"
+              "title": "Aethergylphs"
             }
           }
         ]
@@ -151,8 +151,8 @@
             "state": {
               "type": "copilot-chat-view",
               "state": {},
-              "icon": "message-square",
-              "title": "Copilot"
+              "icon": "lucide-file",
+              "title": "Plugin no longer active"
             }
           }
         ],
@@ -171,12 +171,21 @@
       "daily-notes:Open today's daily note": false,
       "templates:Insert template": false,
       "command-palette:Open command palette": false,
-      "publish:Publish changes...": false,
-      "copilot:Copilot Chat": false
+      "publish:Publish changes...": false
     }
   },
   "active": "8fa9b8b5d1112feb",
   "lastOpenFiles": [
+    "docs/Cosmology/Laws Of Nature/The Weave.md",
+    "docs/Cosmology/Laws Of Nature/Concorda.md",
+    "docs/Cosmology/Laws Of Nature/Chaor.md",
+    "docs/Cosmology/Laws Of Nature/Cosmic Construction.md",
+    "docs/Cosmology/Laws Of Nature/Luxar.md",
+    "docs/Cosmology/Laws Of Nature/Noxar.md",
+    "docs/Cosmology/Laws Of Nature/Ordar.md",
+    "docs/Material Plane/Societies/The Blackiron Collective/Rusted Reliquary.md",
+    "docs/Material Plane/Regions/Qethusiyya/Thelassia.md",
+    "docs/Story/Blackiron Collective/Trial by Steel.md",
     "docs/Races/Ventasi.md",
     "docs/Races/Umbrimar.md",
     "docs/Races/Tiefling.md",
@@ -193,17 +202,7 @@
     "docs/Races/Human.md",
     "docs/Races/Goliath.md",
     "docs/Races/Dwarf.md",
-    "docs/Races/Forgeborn.md",
-    "docs/Races/Elves.md",
-    "docs/Races/Elasi.md",
-    "docs/Races/Dragonborn.md",
-    "docs/Races/Aquasi.md",
     "docs/Races",
-    "docs/Cosmology/Laws Of Nature/Specular.md",
-    "docs/Cosmology/Laws Of Nature/Noxar.md",
-    "docs/Cosmology/Laws Of Nature/Cosmic Construction.md",
-    "docs/Cosmology/Laws Of Nature/The Weave.md",
-    "docs/Cosmology/Laws Of Nature/Ordar.md",
     "docs/Cosmology/Planar Structure.canvas",
     "docs/Cosmology/Laws Of Nature",
     "docs/Cosmology",
