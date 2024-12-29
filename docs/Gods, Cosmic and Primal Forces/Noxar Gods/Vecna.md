@@ -15,7 +15,7 @@ He resides in the realm of [[Nihilum]]
 
 
 
-## Binding [[Ishna - The God Unborn]]
+## Binding [[Ishna]]
 During Vecna’s prime he became aware of the eldritch entity and the power he represented. The magician waged war on the god unborn and his eldritch aberrations. Realising the powers that he wielded, he turned to necromancy and engineering to construct an army of warforged and the undead. Afterall, these constructs were the only entities he couldn’t corrupt. 
 
 Still the army of flesh and steel wasn’t enough. Kas and Vecna fought over the proposed solutions and there fall to darkness. Eventually the Hexweave pylons were constructed and they bound the god unborn to the negative energy plane. 

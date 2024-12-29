@@ -14,4 +14,4 @@ The concept of the Machinery of Death is deeply intertwined with the beliefs and
 
 In the grand tapestry of Renascitur, the Machinery of Death stands as a fundamental aspect of the universe, a mysterious and essential force that shapes the destiny of souls and ensures the continuous cycle of life, death, and rebirth. It is a concept that evokes both awe and reverence, inviting contemplation of the profound mysteries that lie beyond the mortal realm.
 
-Known in select circles as the Animus Machina in the [[Firebrand Empire]] and among the [[Elves]] and [[Tiefling]] of [[Thaysian Magocracy]] it is called Alat Altanasukh and among the ancient people of [[Solaran]] it was called “Ra-Horakhty” - The Endless Sun.
+Known in select circles as the Animus Machina in the [[Firebrand Empire]] and among the [[Elves]] and [[Tiefling]] of [[Thaysian Magocracy]] it is called Alat Altanasukh and among the ancient people of [[docs/Races/Solaran]] it was called - The Divine Sun.

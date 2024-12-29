@@ -1,4 +1,4 @@
-The empire is ruled by the [[Emperor]] but he is advised by the council of great houses within the city. Each house represents an area of expertise within the empire.
+The empire is ruled by the [[Emperors]] but he is advised by the council of great houses within the city. Each house represents an area of expertise within the empire.
 
 ![[House Medani]]
 

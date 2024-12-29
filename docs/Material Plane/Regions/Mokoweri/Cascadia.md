@@ -1,3 +1,5 @@
+The city lies underneath [[Waterfall City]] - and is connected to [[The World Beneath (Underdark)]]
+
 Deep within the lush jungles of Mokoweri lies a lost city, hidden from the rest of the world. The city is said to be ancient, dating back to the time when the Mokoweri and the Saurians lived in harmony in a technological utopia. The city is shrouded in mystery, with tales of strange lights and sounds emanating from within.
 
 The city itself is a marvel of advanced technology, powered by a rare and powerful gemstone known as Sun Topaz. The buildings are made of a strange, metallic material that seems to shift and change in the light, and are covered in intricate patterns and symbols. The streets are lined with strange devices and machinery, some of which still hum with a faint energy.
