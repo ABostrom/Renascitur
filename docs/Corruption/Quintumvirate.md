@@ -1,4 +1,4 @@
-The god hand is a quintumvirate of aberration sovereigns who act as executors of the [[Ishna - The God Unborn |Ishna's]] will.
+The god hand is a quintumvirate of aberration sovereigns who act as executors of the [[Ishna|Ishna's]] will.
 After [[Tau, Sin Manifest]] was slain by [[Unimus]]
  
 ![[Arachne, The Matriarch of Pain]]
@@ -7,7 +7,7 @@ After [[Tau, Sin Manifest]] was slain by [[Unimus]]
 ![[Typhon, The Archon of Death]]
 
 
-![[Orthros, The Devourer]]
+![[Syuul, The Devourer]]
 
 
 ![[Cronus, The Endless]]

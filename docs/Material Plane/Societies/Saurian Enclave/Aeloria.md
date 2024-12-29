@@ -25,11 +25,11 @@ Nestled in a quieter, more secluded part of Aeloria, the Hatchery is a warm, hum
 
 A repository of knowledge, the Archives of the Ancients are hidden away in a natural cavern behind a waterfall. Inside, scrolls, books, and artifacts are carefully preserved, cataloging the Saurians' history, from their origins as creations of the Solarans to the present day. The archives are a place of study and research, where Saurians come to learn about their past and scholars work to decipher the secrets of their ancestors.
 
-## The Training Grounds
+## The Warrior's Grove
 
 Located on one of the lower levels of Aeloria, the Training Grounds are where young Saurians learn the arts of combat and survival. The grounds are equipped with obstacles, dummies, and areas designed to simulate various environments, from dense jungle to open water. Here, warriors and guardians of Aeloria hone their skills under the watchful eyes of seasoned instructors, preparing to defend their home from any threat.
 
-## The Artisan Quarters
+## The Artisan Walk
 
 A vibrant and creative hub, the Artisan Quarters are where Aeloria's craftsmen, artists, and creators gather to work their magic. Workshops open into the treetops are filled with the sounds of hammering, chiseling, and soft singing, as artisans create everything from jewelry and clothing to tools and art. The quarters are also a place for teaching, with masters passing on their skills to apprentices eager to learn the traditional crafts of their people.
 

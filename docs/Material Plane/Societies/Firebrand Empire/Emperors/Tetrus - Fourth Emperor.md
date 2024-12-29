@@ -1,0 +1,4 @@
+- **Appearance**: Tetrus is depicted as a stern and imposing Leonin with a dark brown mane streaked with silver. His green eyes are sharp and calculating, and he wears heavy, battle-worn armor, symbolizing his military prowess and relentless pursuit of victory.
+- **Quote**: "Peace is the prize of war, but war is the path to peace."
+- **Life Achievement**: Tetrus was a military genius who fortified the empire's borders and led numerous successful campaigns to secure its dominance. His reign was marked by numerous victories and the establishment of strong fortifications across the empire.
+- **Spouse**: **Lady Maris** - A Leonin noblewoman known for her grace and diplomacy, Lady Maris was instrumental in forging alliances with neighboring kingdoms and ensuring the stability of the empire during Tetrus's numerous campaigns.

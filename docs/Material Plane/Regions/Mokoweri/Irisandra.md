@@ -9,7 +9,7 @@ Irisandra, the colossal tree that graces the island of Mokoweri, stands as a mon
 
 **A Monument of Solaran Science:**
 
-Irisandra was not a product of nature but a marvel of [[Solaran]] artifice, representing the zenith of their scientific and magical prowess. Constructed with both botanical and arcanometric precision, this towering sentinel was formed to fulfill a dual role: to maintain a sanctuary on Mokoweri and to protect the rest of the world from the dangerous experiments conducted there.
+Irisandra was not a product of nature but a marvel of [[docs/Races/Solaran]] artifice, representing the zenith of their scientific and magical prowess. Constructed with both botanical and arcanometric precision, this towering sentinel was formed to fulfill a dual role: to maintain a sanctuary on Mokoweri and to protect the rest of the world from the dangerous experiments conducted there.
 
 **The Quest for Understanding:**
 
@@ -58,3 +58,4 @@ While the Solarans originally sought to understand and rectify the aberrations i
 **A Silent Guardian:**
 
 Unbeknownst to the island's inhabitants, Irisandra continues to weave its unique anomalies, gently affecting the souls that venture onto Mokoweri's shores. It is an unwitting protector of the anomalous, a silent guardian of the enigmas of the universe.
+

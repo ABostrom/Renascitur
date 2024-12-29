@@ -4,31 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "d62d1933ff4e0af5",
+        "id": "8d526f5f8ca36cfb",
         "type": "tabs",
         "children": [
           {
-            "id": "dff75c301e0d7e41",
+            "id": "8fa9b8b5d1112feb",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "docs/Material Plane/Regions/Mokoweri/Solaran Research Complex.md",
+                "file": "docs/Story/Blackiron Collective/Trial by Steel.md",
                 "mode": "source",
                 "source": false
-              }
-            }
-          },
-          {
-            "id": "896f0a6430ead276",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "docs/Material Plane/Regions/Mokoweri/Embered Caverns.md",
-                "mode": "source",
-                "source": false
-              }
+              },
+              "icon": "lucide-file",
+              "title": "Trial by Steel"
             }
           }
         ]
@@ -51,7 +41,9 @@
               "type": "file-explorer",
               "state": {
                 "sortOrder": "alphabetical"
-              }
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
             }
           },
           {
@@ -66,7 +58,9 @@
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical"
-              }
+              },
+              "icon": "lucide-search",
+              "title": "Search"
             }
           },
           {
@@ -74,14 +68,16 @@
             "type": "leaf",
             "state": {
               "type": "bookmarks",
-              "state": {}
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
             }
           }
         ]
       }
     ],
     "direction": "horizontal",
-    "width": 489.5
+    "width": 400.5
   },
   "right": {
     "id": "48dc074e42270c2a",
@@ -97,7 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "docs/Material Plane/Regions/Mokoweri/Solaran Research Complex.md",
+                "file": "docs/Story/Blackiron Collective/Trial by Steel.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -105,7 +101,9 @@
                 "searchQuery": "",
                 "backlinkCollapsed": false,
                 "unlinkedCollapsed": true
-              }
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for Trial by Steel"
             }
           },
           {
@@ -114,10 +112,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "docs/Material Plane/Regions/Mokoweri/Solaran Research Complex.md",
+                "file": "docs/Story/Blackiron Collective/Trial by Steel.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
-              }
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from Trial by Steel"
             }
           },
           {
@@ -128,7 +128,9 @@
               "state": {
                 "sortOrder": "frequency",
                 "useHierarchy": true
-              }
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
             }
           },
           {
@@ -137,15 +139,28 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "docs/Material Plane/Regions/Mokoweri/Solaran Research Complex.md"
-              }
+                "file": "docs/Story/Blackiron Collective/Trial by Steel.md"
+              },
+              "icon": "lucide-list",
+              "title": "Outline of Trial by Steel"
+            }
+          },
+          {
+            "id": "f273558189478721",
+            "type": "leaf",
+            "state": {
+              "type": "copilot-chat-view",
+              "state": {},
+              "icon": "message-square",
+              "title": "Copilot"
             }
           }
-        ]
+        ],
+        "currentTab": 4
       }
     ],
     "direction": "horizontal",
-    "width": 300,
+    "width": 200,
     "collapsed": true
   },
   "left-ribbon": {
@@ -155,50 +170,64 @@
       "canvas:Create new canvas": false,
       "daily-notes:Open today's daily note": false,
       "templates:Insert template": false,
-      "command-palette:Open command palette": false
+      "command-palette:Open command palette": false,
+      "publish:Publish changes...": false,
+      "copilot:Copilot Chat": false
     }
   },
-  "active": "dff75c301e0d7e41",
+  "active": "8fa9b8b5d1112feb",
   "lastOpenFiles": [
-    "docs/Material Plane/Regions/Mokoweri/Embered Caverns.md",
-    "docs/Material Plane/Regions/Mokoweri/Mokoweri.md",
-    "docs/Material Plane/Regions/Mokoweri/Solaran Research Complex.md",
-    "docs/Material Plane/Regions/Mokoweri/Irisandra.md",
-    "docs/Outer Planes/Planes.md",
-    "docs/Outer Planes/Renascitur.md",
-    "docs/Outer Planes/Woudum.md",
-    "docs/Outer Planes/Umbra Terra.md",
-    "docs/Cosmology/Planar Structure.canvas",
-    "docs/Material Plane/Societies/Ancient Civilisation of Solara/Ab Solara.md",
-    "docs/Material Plane/Societies/Ancient Civilisation of Solara/Characters/Iris Andras.md",
-    "docs/Material Plane/Legendarium/Minerals/Solaran Obsidian.md",
-    "docs/Material Plane/Legendarium/Forgeborn Prime.md",
-    "docs/Material Plane/Legendarium/Chosen of the Twilight.md",
-    "docs/Material Plane/Legendarium/Gateways to the Outer Realms.md",
-    "docs/Material Plane/Legendarium/Minerals/Storm Quartz.md",
-    "docs/Races/Forgeborn.md",
-    "docs/Races/Elves.md",
-    "docs/Races/Elasi.md",
-    "docs/Races/Dwarf.md",
-    "docs/Races/Aquasi.md",
-    "docs/Races/Dragonborn.md",
     "docs/Races/Ventasi.md",
     "docs/Races/Umbrimar.md",
     "docs/Races/Tiefling.md",
     "docs/Races/Terrasi.md",
+    "docs/Races/Slaad.md",
+    "docs/Races/Solaran.md",
     "docs/Races/Saurian.md",
-    "docs/Material Plane/Legendarium/Characters",
-    "docs/Material Plane/Legendarium/Artifacts",
-    "docs/Gods, Cosmic and Primal Forces/Noxar Gods",
-    "docs/Corruption/The God Hand",
-    "docs/Corruption",
-    "mkdocs.yml",
+    "docs/Races/Orc.md",
+    "docs/Races/Luxtari.md",
+    "docs/Races/Ilithid.md",
+    "docs/Races/Lumisar.md",
+    "docs/Races/Leonin.md",
+    "docs/Races/Ignasi.md",
+    "docs/Races/Human.md",
+    "docs/Races/Goliath.md",
+    "docs/Races/Dwarf.md",
+    "docs/Races/Forgeborn.md",
+    "docs/Races/Elves.md",
+    "docs/Races/Elasi.md",
+    "docs/Races/Dragonborn.md",
+    "docs/Races/Aquasi.md",
     "docs/Races",
-    "docs/Outer Planes/Elemental Planes/Elementis Ventus",
+    "docs/Cosmology/Laws Of Nature/Specular.md",
+    "docs/Cosmology/Laws Of Nature/Noxar.md",
+    "docs/Cosmology/Laws Of Nature/Cosmic Construction.md",
+    "docs/Cosmology/Laws Of Nature/The Weave.md",
+    "docs/Cosmology/Laws Of Nature/Ordar.md",
+    "docs/Cosmology/Planar Structure.canvas",
+    "docs/Cosmology/Laws Of Nature",
+    "docs/Cosmology",
+    "tumblr_2818760f2b2024456ad10eac13f77d5d_740c5d64_1280.jpg",
+    "mkdocs.yml",
+    "f84287e4-8a75-4647-9970-57749cecdc4e.webp",
+    "docs/Story/Mokoweri",
+    "docs/Story/Blackiron Collective",
+    "docs/Story",
     "docs/Outer Planes/Elemental Planes/Elementis Terra",
+    "docs/Outer Planes/Elemental Planes/Elementis Ventus",
     "docs/Outer Planes/Elemental Planes/Elementis Ignis",
     "docs/Material Plane/Timeline.canvas",
-    "assets/images/favicon.png",
+    "ab1c303d-4fd8-4cfa-8b01-3d32812442e4.webp",
+    "ab1c303d-4fd8-4cfa-8b01-3d32812442e4 1.webp",
+    "Untitled.canvas",
+    "Untitled 2.canvas",
+    "Untitled 1.canvas",
+    "DALL·E 2024-05-27 20.24.12 - A schematic style render of a small Solaran airship named 'The Radiant Dawn,' suitable for a crew of 10 persons max, in a broken and damaged state. Th.webp",
+    "DALL·E 2024-05-27 20.24.12 - A schematic style render of a small Solaran airship named 'The Radiant Dawn,' suitable for a crew of 10 persons max, in a broken and damaged state. Th 1.webp",
+    "9b7d3d1b-9f8f-4f19-9593-54b7a1666a19-1.webp",
+    "82b7136b-20d5-4612-8e41-b8c46f8b43fa.webp",
+    "18b61091-6670-4168-8cf4-aaba54060847.webp",
+    "0744ebd3-db41-44bd-b9f9-592ee36a808b.webp",
     "Material Plane/Timeline.canvas",
     "Cosmology/Planar Structure.canvas"
   ]

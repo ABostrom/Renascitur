@@ -1,0 +1,9 @@
+### Elder Thrasuun
+
+**Appearance:** Elder Thrasuun is a towering figure, his scales a deep emerald that shimmers with specks of gold when he moves. His eyes, wise and penetrating, glint with a hint of mirth that belies his otherwise stoic appearance. His robes are richly textured, dyed in shades of forest green and adorned with intricate beadwork depicting the Tree of Life, a symbol of continuity and growth.
+
+**Greeting:** As the players approach, Thrasuun rises slowly, his presence commanding silence. "Welcome, brave souls," he begins, his voice deep and resonant like distant thunder. "You have journeyed through darkness and light to stand before us today. Let us see if your spirits have grown as deep as the roots of our great Aeloria."
+
+## Corruption
+- **Corruption Manifestation**: As the corruption deepens, Thrasuun’s wisdom turns into rigid stubbornness. His emerald scales, once vibrant, darken, and the gold specks lose their luster. His penetrating eyes become cold and calculating, as the once subtle mirth is replaced by a grim sense of finality. Thrasuun becomes obsessed with enforcing his vision of order, no matter the sacrifices required.
+- **Erratic Behavior**: Thrasuun may start imposing harsh and unyielding laws, believing that only through strict control and discipline can the island be saved. He might become ruthless in rooting out those he believes are weak or dissenting, interpreting even minor deviations as threats to the island's survival. His obsession with continuity may push him to make morally questionable choices, such as forcing others to merge with the island's natural energies or sacrificing lives to preserve his vision of "order."
