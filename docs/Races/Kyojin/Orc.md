@@ -1,3 +1,9 @@
+---
+aliases:
+  - Orcs
+---
+
+
 Orc's are strong and powerfully built race. They are known for their imposing size and strength, possessing muscles that seem to ripple with raw power.
 # Imperial Orc
 Imperial orcs are a fierce and powerful race of the [[Firebrand Empire]]. 

@@ -1,3 +1,9 @@
+---
+aliases:
+  - Solarans
+---
+
+
 
 The Solarans, an ancient and advanced civilization, were a people deeply connected to the celestial energies and the mysteries of the sun. Their culture was a harmonious blend of science, magic, and spirituality, guided by the belief that every individual possessed a small sun within them, bestowing life and purpose.
 

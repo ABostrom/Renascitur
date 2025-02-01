@@ -1,3 +1,10 @@
+---
+aliases:
+  - Dwarves
+---
+
+
+
 As the world was collapsing. The dwarves retreated to their holds and closed the doors. Ever the isolationist, they set to work shoring up defences, and consolidating what they had. The only dwarven stronghold to survive the schism, was [[Mithral Hall]], and this was thanks in large part to the dragon [[Ormr]]
 # [[Magnesium Devouts|Magnesium]] Dwarves
 

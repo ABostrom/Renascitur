@@ -1,3 +1,10 @@
+---
+aliases:
+  - Saurians
+---
+
+
+
 The Saurians are a deeply spiritual and resilient reptilian humanoid race, inhabiting the lush, uncharted depths of the jungles on the Isle of Mokoweri. With their tall, muscular frames, scaly skin in hues of green, brown, and grey, and adorned with bright markings, they are a testament to the diverse and vibrant life that thrives in their secluded world. Once servants of the technologically advanced Solaran civilization, the Saurians have, over generations, distanced themselves from their origins as biological weapons against cosmic corruption, choosing instead a path of harmony with nature and dedication to their deity, Irasandra.
 
 **Cultural Foundations** 

@@ -1,3 +1,10 @@
+---
+aliases:
+  - Tieflings
+---
+
+
+
 Tiefling's are a demonic race. 
 # Thaysian Tiefling
 

@@ -1,3 +1,9 @@
+---
+aliases:
+  - Humans
+---
+
+
 
 Humans are a broad and diverse race and span almost all of the world. Highly adaptable, and capable of adapting to any environment - there are very few places humans cannot thrive.
 

@@ -1,6 +1,7 @@
-
-
-The God unborn
+---
+aliases:
+  - The God Unborn
+---
 
 
 ![[The Forge Wars]]

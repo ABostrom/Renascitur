@@ -1,3 +1,11 @@
+---
+aliases:
+  - Alat Altanauskh
+  - The Divine Sun
+---
+
+
+# Machinary of Death
 The machinery of death. The cogs turn and whur, this is the cycle that ensures the souls in the universe are reincarnated. All souls were created at the dawn of the universe, and when no more souls exist, the animus machina will cease to function, and time and the universe will end. 
 
 In the world of Renascitur, the concept of the Machinery of Death represents the intricate system that governs the journey of souls in the afterlife. It is a cosmic mechanism that ensures the cycle of life and death, maintaining balance and allowing for the continuation of existence.

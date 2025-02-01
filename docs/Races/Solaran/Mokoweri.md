@@ -1,3 +1,6 @@
+
+
+
 # Mokoweri
 
 Mokoweri are descendants of Solarans who turned their backs on the Endless Sun and embraced the life-giving force of Nature. Fleeing to forests and wilderness, they sought solace in the natural world. Over generations, they harmonized with their environment, rejecting the trappings of technology in favor of a simpler, more primal existence. They see themselves as stewards of life, protecting the balance of their surroundings.
