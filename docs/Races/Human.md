@@ -9,7 +9,7 @@ Imperial humans are proud and dignified, and they place a high value on honor an
 
 Overall, imperial humans are a disciplined and proud people who value [[Ordar]] and structure above all else. They are skilled fighters and have a deep respect for tradition and authority
 
-# [[Mokoweri]] Humans
+# [[docs/Material Plane/Regions/Mokoweri/Mokoweri]] Humans
 
 The Mokoweri are a tribal people who live in harmony with nature on their island home. They are typically shorter in stature and have lean, muscular builds that are well-suited for their jungle environment. Their skin ranges from dark to light brown, with intricate tattoos and markings that denote their tribal affiliations and personal achievements.
 

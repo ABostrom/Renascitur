@@ -5,11 +5,11 @@ Magnus’ Rest was the town founded by Magnus shortly after the schism, he led a
 
 Magnus' Rest is a marvel of dwarven engineering and architecture, built deep beneath a mountain range in the western Firebrand Empire. The entrance to the city is concealed behind a waterfall that tumbles down from a sheer cliff face, and only those who know the secret path can find it.
 
-Once inside, visitors are greeted by a vast cavern, the ceiling of which is adorned with a constellation of glowing crystals that light up the entire space with a gentle blue glow. The walls of the cavern are carved with intricate designs and motifs that pay tribute to [[Gods, Cosmic and Primal Forces/Luxar Gods/Moradin]] and [[Magnus|Magnus Hammerfell]], the founder of the city.
+Once inside, visitors are greeted by a vast cavern, the ceiling of which is adorned with a constellation of glowing crystals that light up the entire space with a gentle blue glow. The walls of the cavern are carved with intricate designs and motifs that pay tribute to [[Muradin]] and [[Magnus|Magnus Hammerfell]], the founder of the city.
 
 The streets of Magnus' Rest are wide and well-lit, with towering buildings and sprawling marketplaces that are home to some of the finest craftsmen and artisans in the world. The dwarves of Magnus' Rest are skilled in a variety of trades, from mining and smithing to engineering and architecture, and their handiwork is visible throughout the city.
 
-At the heart of Magnus' Rest lies the Temple of [[Gods, Cosmic and Primal Forces/Luxar Gods/Moradin]], a magnificent structure that serves as the centre of religious life for the dwarves of the city. The temple is a soaring edifice of stone and crystal, with stained glass windows that depict scenes from the history of [[Gods, Cosmic and Primal Forces/Luxar Gods/Moradin]] and Magnus Hammerfell.
+At the heart of Magnus' Rest lies the Temple of [[Muradin]], a magnificent structure that serves as the centre of religious life for the dwarves of the city. The temple is a soaring edifice of stone and crystal, with stained glass windows that depict scenes from the history of [[Muradin]] and Magnus Hammerfell.
 
 The city is also home to a vast network of tunnels and chambers that connect Magnus' Rest to the other two dwarven cities of Renascitur, [[Uftine]] and [[Mithral Hall]] These tunnels are patrolled by automatons and other devices that were built to defend against the night terrors that roam the world, ensuring the safety of the dwarves who call Magnus' Rest home.
 

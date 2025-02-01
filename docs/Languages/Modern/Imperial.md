@@ -1,0 +1,1 @@
+The language spoken in the [[Firebrand Empire]]

@@ -8,7 +8,7 @@ At the heart of Aeloria's bustling life is the Canopy Commons, a sprawling platf
 
 ## The Temple of Irisandra
 
-A marvel of organic architecture, the Temple of [[Irisandra]] is built around and within one of the largest trees in Aeloria. Its walls are alive, composed of the tree's roots and branches, with spaces open to the sky where light filters through dense foliage. Inside, altars of natural stone and wood hold sacred relics and offerings to [[Irisandra]]. The air is heavy with incense and the sound of quiet prayers or chants during worship. It's not just a place for religious rituals but also a sanctuary for those seeking solace and guidance from the goddess.
+A marvel of organic architecture, the Temple of [[Mokoruuth]] is built around and within one of the largest trees in Aeloria. Its walls are alive, composed of the tree's roots and branches, with spaces open to the sky where light filters through dense foliage. Inside, altars of natural stone and wood hold sacred relics and offerings to [[Mokoruuth]]. The air is heavy with incense and the sound of quiet prayers or chants during worship. It's not just a place for religious rituals but also a sanctuary for those seeking solace and guidance from the goddess.
 
 ## The Elders' Sanctum
 

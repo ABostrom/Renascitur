@@ -1,4 +1,10 @@
-**Irisandra: The Great Sentinel Tree of Mokoweri**
+- **Cultural Influence**: Named by the [[docs/Races/Solaran/Solaran]]'s, whose pursuit of knowledge and enlightenment shaped their civilization.
+- **Meaning**:
+    - _Moko_: Derived from Mokoweri, symbolizing the land it resides in.
+    - _Ruuth_: A Solaran term for "illumination" or "insight."
+- **Alternate Names**:
+    - **Irasandra**: A name used in modern times after Iris Andras merged with the tree.
+    - **The Luminous Grove**: A poetic name used by scholars.
 
 Irisandra, the colossal tree that graces the island of Mokoweri, stands as a monumental testament to the forgotten era of Solaran science and their struggle to control aberrant soul experiments. This majestic tree was crafted with care and purpose by the Solaran scientist, [[Iris Andras]].
 
@@ -9,7 +15,7 @@ Irisandra, the colossal tree that graces the island of Mokoweri, stands as a mon
 
 **A Monument of Solaran Science:**
 
-Irisandra was not a product of nature but a marvel of [[docs/Races/Solaran]] artifice, representing the zenith of their scientific and magical prowess. Constructed with both botanical and arcanometric precision, this towering sentinel was formed to fulfill a dual role: to maintain a sanctuary on Mokoweri and to protect the rest of the world from the dangerous experiments conducted there.
+Irisandra was not a product of nature but a marvel of [[docs/Races/Solaran/Solaran]] artifice, representing the zenith of their scientific and magical prowess. Constructed with both botanical and arcanometric precision, this towering sentinel was formed to fulfill a dual role: to maintain a sanctuary on Mokoweri and to protect the rest of the world from the dangerous experiments conducted there.
 
 **The Quest for Understanding:**
 
@@ -21,7 +27,7 @@ While they had not created these aberrant souls, the Solarans were baffled by th
 
 **Sealing the Island:**
 
-Under the careful guidance of Iris Andras, the Great Sentinel Tree was infused with Solaran Obsidian, making it an entity of remarkable arcanometric power. Its primary function was to create a mystical barrier that sealed the island of Mokoweri from the rest of the world. With Irisandra's intervention, the island became a haven within which the Solarans could explore and rectify their transgressions without the risk of spreading the contamination further.
+Under the careful guidance of Iris Andras, the Great Sentinel Tree was infused with [[Solaran Obsidian]], making it an entity of remarkable arcanometric power. Its primary function was to create a mystical barrier that sealed the island of Mokoweri from the rest of the world. With Irisandra's intervention, the island became a haven within which the Solarans could explore and rectify their transgressions without the risk of spreading the contamination further.
 
 **Guardian of Mokoweri:**
 

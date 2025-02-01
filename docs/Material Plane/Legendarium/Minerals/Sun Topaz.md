@@ -7,4 +7,4 @@ When exposed to sunlight, Sun Topaz can absorb enormous amounts of energy, stori
 The process of charging Sun Topaz is simple: one need only expose the gemstone to direct sunlight for a period of time. The longer it is exposed, the more energy it will absorb. Once charged, Sun Topaz can be used to power devices ranging from simple machines to complex systems.
 
   
-Sun Topaz was created and used by the Ancient [[Solaran]] people long ago to power all manner of machines built to aid their civilization.
+Sun Topaz was created and used by the Ancient [[docs/Races/Solaran/Solaran]] people long ago to power all manner of machines built to aid their civilization.

@@ -16,5 +16,5 @@ The obsidian tablet, standing nearly ten feet tall and polished to a mirror-like
 - **Carvings**: Depictions of engineers building the [[Coalforge Engine]], crafting mechanical limbs, and reforging their society in the glow of molten metal. Figures are adorned with tools and prosthetics, standing amidst a sea of gears and steam.
 
 ## A Warning and a Hope
-- **Text**: The final panel issues a solemn warning about the consequences of hubris and the dangers of aberrant corruption. It speaks cryptically of the need to balance the pillars of [[Solaran]] culture to avoid repeating the past. It also calls for vigilance, innovation, and unity to defend against the darkness.
+- **Text**: The final panel issues a solemn warning about the consequences of hubris and the dangers of aberrant corruption. It speaks cryptically of the need to balance the pillars of [[docs/Races/Solaran/Solaran]] culture to avoid repeating the past. It also calls for vigilance, innovation, and unity to defend against the darkness.
 - **Carvings**: A split image of a thriving industrial city on one side and a crumbling, corrupted ruin on the other. In the center, a radiant crystal shines faintly, hinting at the enduring power of Solaran legacy.

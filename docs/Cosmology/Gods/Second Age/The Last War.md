@@ -8,19 +8,19 @@ Some Aberrations were cold, calculating and entered into uneasy pacts with their
 
 The losses weighed heavy on his mind, and Vecna began to experiment with Necromancy and Soul magic. Vecna sought for a way to prevent his son from becoming that which all Oerthians had sworn to destroy. Vecna, experimenting with himself and his son, discovered the secret to immortality. He bound his soul to a phylactery and became a Lich.
 
-With the absence of a body, Vecna could not resurrect his son, instead he chose to bind him to a soul kristal [[Nox Lapis]] and house him in a machine of war. [[Hephaestus]]]] became the first of the Forgeborn  and this signalled the turning point in the Last War.
+With the absence of a body, Vecna could not resurrect his son, instead he chose to bind him to a soul kristal [[Nox Lapis]] and house him in a machine of war. [[Hephaestus]] became the first of the [[Forgeborn]]  and this signalled the turning point in the Last War.
 
-With an army of immortal steel warriors, and those whose souls could not be bound would soon be reborn again as the undead. Vecna realised those whose souls were already claimed by Noxarian magic can not be corrupted by the god unborn.
+With an army of immortal steel warriors, and those whose souls could not be bound would soon be reborn again as the undead. Vecna realised those whose souls were already claimed by Noxarian magic can not be corrupted by [[Ishna]]
 
-“For only the light can be consumed by the shadows” – Vecna
+“For only the light can be consumed by the shadows” – [[Vecna]]
 
-“Only those who are trapped in the darkness can truly appreciate the light” – Hephaestus.  
+“Only those who are trapped in the darkness can truly appreciate the light” – [[Hephaestus]].  
 
- Vecna summoned his war council, some of whom could not comprehend what he had done to himself. Kasabian, his most trusted general and friend, at first was horrified, he spoke with Vecna and was vehemently against the trajectory the war effort was going, Vecna forged for Kas a Necro sword of immense power, which he presented to Kas. Feeling the blade in his hands, the weight of the task ahead weighed heavily on his mind. The sword hungered for the souls of the fallen, even those twisted into aberrations.
+ [[Vecna]] summoned his war council, some of whom could not comprehend what he had done to himself. [[Kasabian]], his most trusted general and friend, at first was horrified, he spoke with Vecna and was vehemently against the trajectory the war effort was going, Vecna forged for Kas a Necro sword of immense power, which he presented to Kas. Feeling the blade in his hands, the weight of the task ahead weighed heavily on his mind. The sword hungered for the souls of the fallen, even those twisted into aberrations.
 
-Eventually the army of flesh and steel drove back the god unborn’s assault. Unrelenting, Vecna pressed on, consumed in his 1000 year war to rid the Universe of the god unborn he could not stop. He pursued the god unborn’s forces across the cosmos. Eventually devising a plan to seal him away.
+Eventually the army of flesh and steel drove back [[Ishna]]'s assault. Unrelenting, [[Vecna]] pressed on, consumed in his 1000 year war to rid the Universe of [[Ishna]] he could not stop. He pursued [[Ishna]]' forces across the cosmos. Eventually devising a plan to seal her away.
 
-Vecna presented his plan to the war council again. Vecna revealed that in order to construct the hexweave pylons, each pylon would need the souls of a billion mortals on every world. Not enough to render a world devoid of life, but a serious toll on its inhabitants. Vecna argued that inorder to save trillions, they must kill billions. This level of sacrifice was a hefty toll. The council argued for weeks and deliberated. Vecna assured them all there was no other way. 
+[[Vecna]] presented his plan to the war council again. Vecna revealed that in order to construct the hexweave pylons, each pylon would need the souls of a billion mortals on every world. Not enough to render a world devoid of life, but a serious toll on its inhabitants. Vecna argued that inorder to save trillions, they must kill billions. This level of sacrifice was a hefty toll. The council argued for weeks and deliberated. Vecna assured them all there was no other way. 
 
 Kasabian had grown weary, his trust in Vecna wavering. He stormed off in a rage vowing to Vecna that he had gone too far. “You are not a god, this is not your decision to make”. “Some prices are too steep, there must be a better way”.
 

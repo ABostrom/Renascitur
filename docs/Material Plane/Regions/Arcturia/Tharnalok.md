@@ -1,0 +1,7 @@
+- **Cultural Influence**: Named by the [[docs/Races/Grundthain/Grundthain]], reflecting their reverence for the primal forces of nature and their rune-based mastery.
+- **Meaning**:
+    - _Tharn_: From a Grundthain term meaning "earth’s core" or "foundation."
+    - _Alok_: Symbolizing "power" or "primordial energy."
+- **Alternate Names**:
+    - **The Heartforge**: A modern name among dwarves and [[Ferrun]].
+    - **The Rooted Flame**: Used in myths about its connection to fire and elemental harmony.

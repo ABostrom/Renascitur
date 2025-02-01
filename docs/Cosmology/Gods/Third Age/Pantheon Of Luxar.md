@@ -1,5 +1,5 @@
 
-![[Luxarian]]
+![[Luxan]]
 
 ![[Magnus]]
 

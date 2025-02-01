@@ -65,12 +65,12 @@ As you make your way along this precarious path, each step echoes with the reali
 
 # The Magmae Chamber - Cradle of Fire and Power
 
-The Obsidian Causeway eventually leads you to a vast chamber known as the Magma Chamber. This eerie, scorching expanse is a testament to the [[docs/Races/Solaran]] mastery of harnessing raw elemental energy, even from the heart of a volcanic mountain. A glowing aura permeates the chamber, casting eerie, fiery shadows across every surface. Here, the warmth of molten rock meets the cold sterility of ancient [[docs/Races/Solaran]] technology, creating an otherworldly juxtaposition.
+The Obsidian Causeway eventually leads you to a vast chamber known as the Magma Chamber. This eerie, scorching expanse is a testament to the [[docs/Races/Solaran/Solaran]] mastery of harnessing raw elemental energy, even from the heart of a volcanic mountain. A glowing aura permeates the chamber, casting eerie, fiery shadows across every surface. Here, the warmth of molten rock meets the cold sterility of ancient [[docs/Races/Solaran/Solaran]] technology, creating an otherworldly juxtaposition.
 
 **Points of Interest:**
 
 - **Magma Reservoirs:** Embedded within the chamber's walls are several reservoirs of molten lava, each contained within ornate, rune-etched channels of obsidian. These reservoirs provide both a testament to Solaran engineering and a source of power for their arcane creations. Stepping too close risks injury from the intense heat.
-- **Solaran Apparatuses:** Scattered throughout the Magma Chamber are remnants of [[docs/Races/Solaran]] technology. Large, mysterious machines with intricate controls and displays reveal the Solarans' fascination with fire-based energy. Though some devices are dormant, others continue to pulse with fiery energy, illuminating this chamber with a warm, fiery glow.
+- **Solaran Apparatuses:** Scattered throughout the Magma Chamber are remnants of [[docs/Races/Solaran/Solaran]] technology. Large, mysterious machines with intricate controls and displays reveal the Solarans' fascination with fire-based energy. Though some devices are dormant, others continue to pulse with fiery energy, illuminating this chamber with a warm, fiery glow.
 - **Infernoforged Relics:** Beside the Solaran machinery, you can find scattered relics and weapons infused with the energy of the Magma Chamber. These Infernoforged artifacts are highly sought after for their potency, and your party may stumble upon remnants of Solaran experiments that grant powers over fire and lava.
 - **Research Logs:** Hidden within the magma-resistant chambers, you might uncover logs and documents containing detailed observations of the local creatures, primarily those who once inhabited the Embered Caverns. These records suggest the Solarans were experimenting with infusing elemental powers into creatures, marking the beginnings of the Saurian race.
 

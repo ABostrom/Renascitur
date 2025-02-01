@@ -1,0 +1,1 @@
+The language spoken by the [[Giant]]'s
