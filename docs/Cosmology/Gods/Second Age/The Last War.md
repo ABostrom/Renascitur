@@ -30,9 +30,9 @@ The plan was set, all 6 hexweave pylons would need to be activated at once. Haep
 
 The god unborn was sealed in the space between planes – where his power was diminished and the Hexweave pylons could contain his essence and prevent him from impacting the mortal worlds again.
 
-The god unborn’s servants staged a retaliatory assault on the forge of souls, hoping to learn the locations of the pylons, and undo the binding of their master. A large force of aberrations and bound Slaads made their way into the forge and destroyed a large proportion of the machinery. Vecna managed to arrive in the nick of time, and save his son from certain death. It was in this moment of weakness Kasabian struck, killing Vecna and finishing off his son. 
+The god unborn’s servants staged a retaliatory assault on the forge of souls, hoping to learn the locations of the pylons, and undo the binding of their master. A large force of aberrations and bound [[Slaad|Slaads]] made their way into the forge and destroyed a large proportion of the machinery. Vecna managed to arrive in the nick of time, and save his son from certain death. It was in this moment of weakness [[Kasabian]] struck, killing Vecna and finishing off his son. 
 
-Many of his worshippers came and went. Seeking to release the god unborn and bring about his return. All failed. Vecna’s undead servants bound to the mortal realm through necromantic magic have sought to protect humanity from his agents (The souls of the devourer). To them, the unending oblivion the god unborn offers is all they seek.
+Many of his worshippers came and went. Seeking to release the god unborn and bring about his return. All failed. Vecna’s undead servants bound to the mortal realm through necromantic magic have sought to protect humanity from his agents ([[Souls of the Devourer|The Souls of the Devourer]]). To them, the unending oblivion [[Ishna]] offers is all they seek.
 
 “What is darkness, but the absence of light” – Vecna
 
