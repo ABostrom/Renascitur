@@ -1,3 +1,8 @@
+---
+aliases:
+  - Tharamos, The Worldforger
+---
+
 # [[Tharamos]], The Worldforger
 
 ## Overview
@@ -14,7 +19,7 @@ He is the master of creation through hardship, believing that all things must be
 ## Link to [[Machinery of Death]]
 [[Tharamos]] ensured that [[soul]]s would not simply vanish into oblivion but would instead be reforged, reshaped, and sent back into the cycle stronger than before. His philosophy is one of endurance through suffering, seeing the trials of existence as the process of refinement.
 
-## Relationship with [[The Aeternum]]
+## Relationship with [[Aeternum|The Aeternum]]
 - [[Aelion]] provided light, but [[Tharamos]] gave it form.
 - [[Sylara]] softened his rigid designs, ensuring life could flourish within them.
 - [[Valtor]] tested his structures, introducing motion and erosion to prevent stagnation.

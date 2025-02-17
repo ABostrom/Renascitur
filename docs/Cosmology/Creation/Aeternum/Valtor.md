@@ -2,8 +2,6 @@
 aliases:
   - Valtor, The Unfettered Wind
 ---
-
-
 # [[Valtor|Valtor, The Unfettered Wind]]
 
 ## Overview

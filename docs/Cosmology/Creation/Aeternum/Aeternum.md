@@ -1,3 +1,9 @@
+---
+aliases:
+  - The Aeternum
+---
+
+
 # [[Aeternum]], The Cosmic Architects
 
 ## Overview

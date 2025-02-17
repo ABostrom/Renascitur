@@ -14,7 +14,7 @@ She is the great weaver, the spirit of balance and renewal. In her presence, all
 ## Link to [[Machinery of Death]]
 [[Sylara]] viewed the [[Machinery of Death]] as a sacred cycle, one that should not be tampered with. To her, death was never a punishment but a necessary transformation, allowing [[soul]]s to shed their burdens and rejoin the world anew.
 
-## Relationship with [[The Aeternum]]
+## Relationship with [[Aeternum|The Aeternum]]
 - [[Aelion]] provided the light for life to grow.
 - [[Tharamos]] crafted the land upon which her forests could root.
 - [[Valtor]] ensured that life would never stagnate, introducing migration, storms, and adaptation.
