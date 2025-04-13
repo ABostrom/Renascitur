@@ -14,7 +14,7 @@
 
 **The Endless Sun**: In their quest to ensure universal balance, the Solarans created the [[The Endless Sun]] a colossal machine orbiting the sun as an artificial moon. Its purpose was to maintain the natural cycle of birth, life, and death by sustaining the finite number of souls in existence. However, the Endless Sun ultimately fell to corruption due to the malevolent influence of Ishna and the betrayal of Hyperion, a prominent Solaran leader.
 
-**Downfall and Corruption**: Ishna's influence twisted the energies of the Endless Sun, transforming it into a source of aberrant power. [[Hyperion]], played a crucial role in this corruption. Aligning with Ishna, he manipulated the core energy systems of the Endless Sun, allowing [[Ishna]] to infuse it with his dark power. This betrayal led to the collapse of Solaran civilization, initiating Ishna's conquest across the stars and resulting in the catastrophic [[The Forge Wars]].
+**Downfall and Corruption**: Ishna's influence twisted the energies of the Endless Sun, transforming it into a source of aberrant power. [[Hyperion, The Fallen]], played a crucial role in this corruption. Aligning with Ishna, he manipulated the core energy systems of the Endless Sun, allowing [[Ishna]] to infuse it with his dark power. This betrayal led to the collapse of Solaran civilization, initiating Ishna's conquest across the stars and resulting in the catastrophic [[The Forge Wars]].
 
 **Splinter Groups**: Following the fall of their civilization, the surviving Solarans fragmented into various splinter groups, each adapting to new environments and circumstances:
 

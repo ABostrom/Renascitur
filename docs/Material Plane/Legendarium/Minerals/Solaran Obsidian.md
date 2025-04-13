@@ -1,4 +1,10 @@
-Solaran Obsidian is a unique and highly prized material that played a central role in the culture and technology of the ancient Solarans. This distinctive type of obsidian, infused with arcanometric energy and considered a product of Solaran artifice, holds a place of reverence in their history and mystique. Here is the lore surrounding Solaran Obsidian:
+---
+aliases:
+  - Obsidian
+---
+
+
+[[Solaran]] Obsidian is a unique and highly prized material that played a central role in the culture and technology of the ancient Solarans. This distinctive type of obsidian, infused with [[arcanometric]] energy and considered a product of Solaran artifice, holds a place of reverence in their history and mystique. Here is the lore surrounding Solaran Obsidian:
 
 **Creation and Properties:**
 

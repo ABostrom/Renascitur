@@ -1,4 +1,4 @@
-The city lies underneath [[Waterfall City]] - and is connected to [[The World Beneath (Underdark)]]
+The city lies underneath [[Waterfall City]] - and is connected to [[The World Beneath]]
 
 Deep within the lush jungles of Mokoweri lies a lost city, hidden from the rest of the world. The city is said to be ancient, dating back to the time when the Mokoweri and the Saurians lived in harmony in a technological utopia. The city is shrouded in mystery, with tales of strange lights and sounds emanating from within.
 

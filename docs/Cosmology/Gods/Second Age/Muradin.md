@@ -32,7 +32,7 @@ The battle raged for weeks. The defenders of Runehart, armed with rune-forged we
 
 #### **The Ascension of Muradin**
 
-In a final confrontation with [[Typhon]], Muradin wielded the **Anvil of Eternity** as both a weapon and a conduit. Channeling his divine essence into the anvil, Muradin used its immense power to bind Typhon’s soul into a cursed weapon, trapping the Archon of Death and his malevolent essence within. This act sealed the fate of Runehart, causing the mountain to quake and the hold to collapse, burying the Anvil, Typhon’s weapon, and much of the hold’s treasures beneath the earth.
+In a final confrontation with [[Typhon, The Archon of Death]], Muradin wielded the **Anvil of Eternity** as both a weapon and a conduit. Channeling his divine essence into the anvil, Muradin used its immense power to bind Typhon’s soul into a cursed weapon, trapping the Archon of Death and his malevolent essence within. This act sealed the fate of Runehart, causing the mountain to quake and the hold to collapse, burying the Anvil, Typhon’s weapon, and much of the hold’s treasures beneath the earth.
 
 Muradin’s mortal body could not withstand the strain of this divine act. As the light of the Anvil surged, Muradin ascended, transcending mortality to become the **God of Metal and Craftsmanship**. His people, left without their leader, took solace in their faith, believing that Muradin’s spirit lived on, guiding them through the resonance of their forges and the power of their runes.
 

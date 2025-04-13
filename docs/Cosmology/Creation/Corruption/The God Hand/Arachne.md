@@ -1,1 +1,0 @@
-## Arachne, The Matriarch of Pain
