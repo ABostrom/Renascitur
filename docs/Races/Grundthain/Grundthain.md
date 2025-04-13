@@ -18,12 +18,12 @@ Muradin’s departure marked the first great schism in Grundthain society. His f
 
 The remaining Grundthain clans, loyal to their elemental patrons, viewed Muradin’s path with disdain, considering it a betrayal of their ancestral heritage. They entrenched themselves deeper into their elemental worship, forming the great clans of giants:
 
-- **Frost and Sea**: Loyal to **Leviathan**, the Frost Giants built icy fortresses along frozen coasts, channeling the primal power of water and cold.
-- **Fire and Mountain**: Revering **Phenos**, the Fire Giants constructed vast forges within volcanic mountains, wielding the destructive and creative force of fire.
-- **Cloud and Storm**: Devoted to **Tempus**, the Storm Giants raised skyborne citadels, commanding the winds and lightning from their lofty domains.
-- **Stone and Hill**: Under **Zaratan**, the Hill Giants dwelled in the vast plains and rolling hills, embodying the enduring strength of the earth.
+- **Frost and Sea**: Loyal to [[Leviathan]], the Frost Giants built icy fortresses along frozen coasts, channeling the primal power of water and cold.
+- **Fire and Mountain**: Revering [[Phenos]], the Fire Giants constructed vast forges within volcanic mountains, wielding the destructive and creative force of fire.
+- **Cloud and Storm**: Devoted to [[Tempus]], the Storm Giants raised skyborne citadels, commanding the winds and lightning from their lofty domains.
+- **Stone and Hill**: Under [[Zaratan]], the Hill Giants dwelled in the vast plains and rolling hills, embodying the enduring strength of the earth.
 
-Though they sought to protect their sacred elemental nexuses, the clans struggled to maintain unity in the face of Ishna’s growing influence. Some giants, seduced by Ishna’s power, fell into corruption, becoming twisted aberrations of their former selves.
+Though they sought to protect their sacred elemental nexuses, the clans struggled to maintain unity in the face of [[Ishna|Ishna's]] growing influence. Some giants, seduced by [[Ishna|Ishna's]] power, fell into corruption, becoming twisted aberrations of their former selves.
 
 ---
 

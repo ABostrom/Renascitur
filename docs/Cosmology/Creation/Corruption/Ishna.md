@@ -1,6 +1,7 @@
 ---
 aliases:
   - The God Unborn
+  - Ishna's
 ---
 
 
