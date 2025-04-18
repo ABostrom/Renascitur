@@ -46,11 +46,11 @@ Draumhavn’s unique craft, salt-tempered and rune-bound:
 See: [[Tideforging]]
 
 ### Salt-Blessed
-Some Tidebound return from the deep changed:
+Some [[The Salt-Blessed|Tidebound]] return from the deep changed:
 
 - Gills, glowing veins, barnacle growths
 - Deepwater vision, storm-sense, abyssal influence
-- Feared and honored; many serve in the silent order known as the [[Abysswatch]]
+- Feared and honoured; many serve in the silent order known as the [[Abysswatch]]
 See: [[The Salt-Blessed]]
 
 ## Locations of Note

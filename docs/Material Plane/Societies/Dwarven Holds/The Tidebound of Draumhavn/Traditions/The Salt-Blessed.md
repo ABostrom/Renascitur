@@ -1,3 +1,7 @@
+---
+aliases:
+  - Tidebound
+---
 # The Salt-Blessed
 
 ## Overview
