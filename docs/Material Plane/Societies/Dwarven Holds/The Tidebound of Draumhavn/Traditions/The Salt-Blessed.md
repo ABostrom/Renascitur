@@ -1,8 +1,5 @@
 ---
-aliases:
-  - Tidebound
+aliases: []
 ---
-# The Salt-Blessed
-
 ## Overview
-The **Salt-Blessed** are Tidebound dwarves who return from the deep changed...
+The **Salt-Blessed** are [[Draumhavn|Tidebound]] dwarves who return from the deep changed...

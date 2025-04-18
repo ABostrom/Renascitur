@@ -27,13 +27,9 @@ Before the divergence of dwarves and giants, the **Grundthain** were a single pe
 The **Grundthain Tree** was the source of **Aetherglyphs**, the runes that formed the original language of the universe. It was from this tree that the first **Runesmiths** learned how to inscribe reality itself into stone and metal. The **Dwarves** inherited this tradition when Muradin led his people into the depths to forge **Runehart**, while the **Giants** scattered, each clan binding itself to one of the Four Great Elementals:
 
 - **[[Leviathan]]** (Frost and Sea)
-    
 - **[[Phenos]]** (Fire and Mountain)
-    
 - **[[Tempus]]** (Cloud and Storm)
-    
 - **[[Zaratan]]** (Stone and Hill)
-    
 
 The destruction of **[[Runehart]]** marked the end of the [[Grundthain]] as a united race, but their legacy remains in **[[The Codex of Iron]], the lost fragments of Muradin’s teachings.
 
