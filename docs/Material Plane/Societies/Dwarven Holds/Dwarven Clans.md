@@ -1,11 +1,10 @@
-# Dwarven Clans
-
+## Overview
 Each dwarven city is descended from the ancient Grundthain and shaped by an elemental tradition tied unknowingly to a Great Elemental:
 
-- **Tidebound** of Draumhavn – Linked to Leviathan (Tide)
-- **Icebound** of Uftine – Linked to Zaratan (Stone/Ice)
-- **Stormbound** of Mithral Hall – Linked to Tempus (Storm)
-- **Flamebound** of Magnus' Rest – Linked to Phenos (Flame)
+- **[[Tidebound]]** of [[Draumhavn]] – Linked to [[Leviathan]]
+- **[[Icebound]]** of [[Uftine]] – Linked to [[Zaratan]]
+- **[[Stormbound]]** of [[Thundrakar]]] – Linked to [[Tempus]]
+- **[[Flamebound]]** of [[Magnus' Rest]] – Linked to [[Phenos]]
 
 Each dwarven city is also built atop a sealed corruption of that elemental, entombed by Muradin.
 

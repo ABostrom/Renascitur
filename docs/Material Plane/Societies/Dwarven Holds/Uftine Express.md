@@ -4,7 +4,7 @@ The **Uftine Express** is one of the most closely guarded secrets of the dwarven
 
 The Uftine Express connects several key locations across the known world:
 
-- [[Mithral Hall]] – A legendary dwarven stronghold located far in the northeast, known for its vast mithral deposits and formidable warriors.
+- [[Thundrakar]] – A legendary dwarven stronghold located far in the northeast, known for its vast mithral deposits and formidable warriors.
 - [[Uftine]] – The namesake of the Express, this city is a major dwarven settlement in the northwest of **Arcturia**, renowned for its metallurgical advancements and deep mining operations.
 - [[Magnus' Rest]] – Located on the continent of **Pyrosia**, Magnus’ Rest is a city of great historical significance, named after a fallen dwarven hero. It serves as a vital trading post and military stronghold.
 - [[Draumhavn]] – A free city that serves as the underground hub of the Express, acting as a central terminal where the tunnels from all three dwarven holds converge. 

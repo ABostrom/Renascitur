@@ -1,15 +1,15 @@
 ---
 aliases:
-  - Stormglass
   - Storm Quartz
+  - Madness Quartz
 ---
 
   
 ## Location  
-Formed in the upper peaks around the [[Stormspire]], [[Madness Quartz]] is grown within storm-scarred geodes where thunder has split stone and rain has etched runes over centuries. It is often found in caverns where sound never dies and lightning echoes through the air like breath.
+Formed in the upper peaks around the [[Stormspire]], [[Storm Quartz]] is grown within storm-scarred geodes where thunder has split stone and rain has etched runes over centuries. It is often found in caverns where sound never dies and lightning echoes through the air like breath.
 
 ## Description  
-[[Madness Quartz]] is a translucent, bluish crystal threaded with jagged inclusions that flicker with dormant energy. When held, it vibrates faintly in rhythm with nearby voices, and can emit a sharp chime when exposed to pressure shifts. It is said to remember the winds that shaped it. Only the [[Stormbound]] can safely tune its resonance through the ritual of [[Stormforging]].
+[[Storm Quartz]] is a translucent, bluish crystal threaded with jagged inclusions that flicker with dormant energy. When held, it vibrates faintly in rhythm with nearby voices, and can emit a sharp chime when exposed to pressure shifts. It is said to remember the winds that shaped it. Only the [[Stormbound]] can safely tune its resonance through the ritual of [[Stormforging]].
 
 ## Properties  
 - Stores and refracts sound and kinetic energy.

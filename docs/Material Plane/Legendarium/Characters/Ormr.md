@@ -4,5 +4,5 @@ Ancient Bronze Dragon
 
 Taught the dwarves how to smith Mithral
 
-Location [[Mithral Hall]]
+Location [[Thundrakar]]
 Possesion: [[Rotor of return]]
