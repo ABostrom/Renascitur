@@ -5,7 +5,7 @@ aliases:
 # [[Aeternum]], The Cosmic Architects
 
 ## Overview
-[[Aeternum]] are the primordial cosmic forces that shaped existence itself. They are not gods but the architects of reality, each embodying a fundamental aspect of creation. It was through their combined will that the universe, the stars, and the [[Machinery of Death]] were forged. Their design was meant to be perfect, yet within it, an unseen flaw emerged—[[Ishna]], the unraveling force of entropy.
+[[Aeternum]] are the primordial cosmic forces that shaped existence itself. They are not gods but the architects of reality, each embodying a fundamental aspect of creation. It was through their combined will that the universe, the stars, and the [[Machinery of Death]] were forged. Their design was meant to be perfect, yet within it, an unseen flaw emerged—[[Ishna]], the unraveling force of [[Entropy]].
 
 ## The Four Cosmic Architects
 ### [[Aelion]], The First Dawn
