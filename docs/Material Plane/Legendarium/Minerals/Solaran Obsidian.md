@@ -4,34 +4,45 @@ aliases:
 ---
 
 
-[[Solaran]] Obsidian is a unique and highly prized material that played a central role in the culture and technology of the ancient Solarans. This distinctive type of obsidian, infused with [[arcanometric]] energy and considered a product of Solaran artifice, holds a place of reverence in their history and mystique. Here is the lore surrounding Solaran Obsidian:
+## Location
 
-**Creation and Properties:**
+[[Solaran Obsidian]] is no longer found in nature. It is a **refined material**, a product of Solaran artifice and divine metallurgy. Crafted originally from raw [[Radiant Obsidian]], it was forged in the starforges and sanctum-laboratories of the [[Solarans]], especially in the time of their alliance with [[Muradin]] during the First Age.
 
-Solaran Obsidian is not a naturally occurring mineral but is meticulously forged through the complex Solaran artifice. To create it, the Solarans harnessed their knowledge of arcanometric energy and applied it to raw obsidian, infusing it with radiant energies.
+Fragments and intact plates of it can still be found deep within ruined Solaran cities, forgotten vaults, or built into the latticework of containment fields and lightforges.
 
-1. **Energy Conduction:** Solaran Obsidian is known for its remarkable energy-conducting properties. It can absorb, store, and redirect arcanometric energy, making it a crucial component of many Solaran devices, including the Obsidian Causeway and the [[Hexweave Pylons]].
-    
-2. **Luminous Sheen:** When properly charged, Solaran Obsidian takes on a distinctive luminous sheen, radiating a soft, warm light that Solarans believed was reminiscent of the Solaran sun. This feature made it both practical and symbolic in their culture.
-    
+## Description
 
-**Cultural Significance:**
+Smooth and unnaturally precise, [[Solaran Obsidian]] glows faintly from within, pulsing with radiant amber and crimson light. Unlike its chaotic parent, it is **cold to the touch**, yet **thrums with restrained power**. [[Solaran]] geometric glyphs are often etched into its surface, some still active after millennia.
 
-Solaran Obsidian held deep cultural and spiritual significance for the Solaran civilization.
+## Properties
 
-1. **Symbol of the Sun:** To the Solarans, Solaran Obsidian was seen as a representation of their celestial connection, symbolizing the miniature suns within themselves. It was often incorporated into their religious ceremonies and revered as a sacred material.
-    
-2. **Artistic Medium:** Solaran artisans and craftsmen used Solaran Obsidian to create intricate sculptures, jewelry, and artifacts. These pieces often showcased the material's luminescent qualities and reflected the elegance of Solaran culture.
-    
-3. **Technology Catalyst:** In Solaran technology, Solaran Obsidian served as a vital catalyst. The material was integrated into various devices, ranging from energy generators to communication devices. It helped the Solarans channel and manipulate arcanometric energy.
-    
+- **Stabilized Radiance**: It channels divine or arcane energy with immense precision, resisting overload or aberrant corruption.
+- **Containment Matrix**: Frequently used to construct prisons, barriers, and null-fields capable of resisting psychic and planar intrusion.
 
-**Rare and Precious:**
+## Uses
 
-Solaran Obsidian is exceedingly rare, and the art of creating it was a closely guarded secret. The Solarans took great pride in their mastery of this craft, and the material was generally limited to their own use. Attempts by other civilizations to replicate it often met with limited success.
+- Core component of [[Solaran]] energy conduits, divine reactors, and sacred vaults.
+- Used in the construction of [[Hexweave Pylons]] and other aberrant-resistant latticework through [[Arcanometry]].  
 
-**Modern-Day Significance:**
+## Relationship to [[Radiant Obsidian]]
 
-In the present day, Solaran Obsidian has become a sought-after relic for collectors, scholars, and art enthusiasts. The knowledge of its creation has been largely lost with the fall of the Solaran civilization, making existing pieces highly valuable and enigmatic.
+[[Solaran Obsidian]] is **not a natural substance**, but the **refined and stabilized form** of [[Radiant Obsidian]].
 
-The beauty, symbolism, and technological significance of Solaran Obsidian continue to inspire intrigue and fascination, as the world seeks to unravel the enigma of this ancient, radiant material.
+> Where Radiant Obsidian burns with divine purpose, Solaran Obsidian harnesses that purpose.  
+> It is godflame made tool — sacred fury shaped into function.
+
+Crafting Solaran Obsidian required a unique fusion of Solaran solarforging and Muradin’s runes of containment. Its recipe has been lost to time, but its legacy lives on in the deepest bones of the world.
+
+
+## Relationship to [[Radiant Obsidian]]
+
+[[Solaran Obsidian]] is **not a natural substance**, but the **refined and stabilized form** of [[Radiant Obsidian]].
+
+> Where Radiant Obsidian burns with divine purpose, Solaran Obsidian harnesses that purpose.  
+> It is godflame made tool — sacred fury shaped into function.
+
+Crafting Solaran Obsidian required a unique fusion of Solaran solarforging and Muradin’s runes of containment. Its recipe has been lost to time, but its legacy lives on in the deepest bones of the world.
+
+
+## Lore
+In the present day, [[Solaran Obsidian]] has become a sought-after relic for collectors, scholars, and art enthusiasts. The knowledge of its creation has been largely lost with the fall of the [[Solaran]] civilization, making existing pieces highly valuable and enigmatic.

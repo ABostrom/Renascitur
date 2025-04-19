@@ -52,7 +52,8 @@ The third, missing fragment is a source of mystery and legend. Many believe that
 # Chapters
 
 - Chapter 1 : [[The Song of the World's Forging]]
-- Chapter 2 : [[The Song of the Sealed Wounds]]
+- Chapter 2 : [[The Song of Godfire and the Eternal Anvil]]
+- Chapter 3 : [[The Song of the Sealed Wounds]]
 
 A secret fourth Chapter found in [[Runehart]]
 - Chapter 4 : [[The Song of the Hammer That Waits]]
