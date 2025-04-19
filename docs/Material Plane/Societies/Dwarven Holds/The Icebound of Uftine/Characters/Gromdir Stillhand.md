@@ -16,6 +16,6 @@ Gromdir speaks rarely, but his words carry the weight of centuries. His leadersh
 As the Icebound Thane, Gromdir serves as both sovereign and spiritual anchor of the Icebound. He governs with the advice of the [[Fracturecast]], but his judgment is final. He alone walks the deepest halls of the [[The Pulsecore|Pulsecore]], where the corrupted progeny of [[Zaratan]] lies imprisoned.
 
 ## Legacy
-Though aging, Gromdir’s legacy is already being etched into crystal tablets. His reign is marked by a return to ancestral precision, a renewed emphasis on [[Coldsmithing]] purity, and the quiet containment of growing tremors from the deep.
+Though aging, Gromdir’s legacy is already being etched into crystal tablets. His reign is marked by a return to ancestral precision, a renewed emphasis on [[Iceforging]] purity, and the quiet containment of growing tremors from the deep.
 
 > “The glacier does not shout. It simply endures.” — Gromdir Stillhand

@@ -12,4 +12,4 @@ Forged deep beneath the [[The Pulsecore|Pulsecore]] by the [[Icebound]], [[Iceve
 ## Uses  
 - Used to forge weapons for ghostwalkers, iceguard, and tombbound sentinels.
 - Armor made from it suppresses noise and grants an eerie calm to the wearer.
-- When combined with [[Frost Glass]], it forms some of the most feared relic-blades of the [[Icebound]] — silent, perfect, and remorseless.
+- When combined with [[Frost Diamond]], it forms some of the most feared relic-blades of the [[Icebound]] — silent, perfect, and remorseless.

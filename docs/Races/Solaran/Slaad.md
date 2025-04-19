@@ -4,8 +4,6 @@ aliases:
 ---
 
 
-
-
 ### [[Slaad]] Creation
 **Research Log Entry #34**
 

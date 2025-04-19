@@ -7,7 +7,7 @@ aliases: []
 
 Uftine is the glacial capital of the [[Icebound]], a dwarven city-state carved from stone and ice deep in the northern reaches of the world. Built into a frozen mountainside and fortified by nature itself, Uftine is a bastion of cold precision, ancestral duty, and unbreakable engineering.
 
-The city is lit by ice-embedded glowcrystals, its buildings carved with runes of frost and stability. Despite the endless winter beyond its walls, Uftine thrives through mastery of rune-bound [[Coldsmithing]], powerful frost-infused forges, and a culture of unshakable resilience.
+The city is lit by ice-embedded glowcrystals, its buildings carved with runes of frost and stability. Despite the endless winter beyond its walls, Uftine thrives through mastery of rune-bound [[Iceforging]], powerful frost-infused forges, and a culture of unshakable resilience.
 
 Beneath its icy foundations lies the [[The Pulsecore|Pulsecore]], a sealed chamber containing the corrupted progeny of [[Zaratan]], the Great Elemental of Stone. This ancient burden, entombed by [[Muradin]], pulses faintly beneath the city—unseen by most, but felt in the stillness of the air and the weight of its silence.
 
@@ -37,7 +37,7 @@ Their rune magic embraces:
 
 ### Coldsmithing
 
-[[Coldsmithing]] is the sacred art of the Icebound:
+[[Iceforging]] is the sacred art of the Icebound:
 - Metals are tempered through frost-pressure rather than fire
 - Ice is used as both mold and medium for rune channeling
 - Their alloys are dense, crystalline, and nearly unbreakable
