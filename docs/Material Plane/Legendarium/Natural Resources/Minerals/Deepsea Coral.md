@@ -6,7 +6,7 @@ aliases:
 
 
 ## Location  
-Harvested from the trench-walls and deep reef caverns near [[the Wakened Trench]], [[Deepsea Coral]] grows only in lightless places where the water churns and whispers. It is drawn toward vibration, sound, and blood. The [[Tidebound]] say it feeds on memory, not flesh.
+Harvested from the trench-walls and deep reef caverns near [[The Wakened Trench]], [[Deepsea Coral]] grows only in lightless places where the water churns and whispers. It is drawn toward vibration, sound, and blood. The [[Tidebound]] say it feeds on memory, not flesh.
 
 ## Description  
 [[Deepsea Coral]] resembles branching black coral laced with streaks of crimson or deep violet. It grows in curling spires, and it moves — slowly — even after being severed. It reacts to nearby movement with faint pulses or a tightening of its structure. The coral is carefully cultivated in abyssal gardens, trimmed under ritual silence, and dried in salt-laced sanctums before it can be safely used in [[Tideforging]].

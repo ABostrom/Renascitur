@@ -74,7 +74,7 @@ This event ignited [[The Forge Wars]]—a cataclysmic conflict that shattered So
 ## Legacy and Splintering  
 As their empire fell, the Solarans fractured. Each surviving group clung to one of the Three Pillars:
 
-- [[Mokoweri]]: Embraced harmony with nature.  
+- [[docs/Races/Solaran/Mokoweri]]: Embraced harmony with nature.  
 - [[Ferrun]]: Retreated underground, becoming stewards of technology and industry.  
 - [[Arcanii]]: Turned inward to pure arcane pursuit, severing all other ties.
 

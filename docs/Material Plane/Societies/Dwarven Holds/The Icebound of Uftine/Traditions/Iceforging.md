@@ -6,7 +6,7 @@ It is not about bending metal — it is about teaching it to be **still**.
 ## Origins  
 The art of Iceforging was born from necessity. With fire difficult to sustain in the glacial halls of [[Uftine]], early smiths began to experiment with **pressure-hardening**, **cold-tempering**, and rune-etched freezing chambers. Over centuries, this developed into a unique and sacred form of metalwork.
 
-The presence of [[the Pulsecore]] — the sealed fragment of [[Zaratan]] — imbues the region with elemental stability and resonance, further influencing the shaping process.
+The presence of [[The Pulsecore]] — the sealed fragment of [[Zaratan]] — imbues the region with elemental stability and resonance, further influencing the shaping process.
 
 ## Process  
 In Iceforging, heat is used only in the earliest phase to shape the raw ore. Once the base form is created, it is submerged in glacial brine, compressed with rune-weighted presses, and **left to rest within Stillstone vaults**, where the natural resonance of the stone sings to the metal.
@@ -17,7 +17,7 @@ Forging songs are whispered in rhythmic breath — never louder than the frost�
 
 ## Materials Used  
 - [[Icevein Steel]] – Forged from iron and trace [[Stillstone Ore]], tempered through exposure to glacial silence and echo.
-- [[Stillstone Ore]] – A heavy, resonant ore found deep within the frostbound caverns near [[the Pulsecore]].
+- [[Stillstone Ore]] – A heavy, resonant ore found deep within the frostbound caverns near [[The Pulsecore]].
 - [[Frost Diamond]] – A rare, ice-veined crystal that stores sound and memory, often used to harmonize runes or imbue weapons with historic resonance.
 
 ## Properties of Iceforged Items  

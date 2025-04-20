@@ -1,4 +1,4 @@
-In the heart of the jungle on the island of [[docs/Material Plane/Regions/Mokoweri/Mokoweri]], where the dense foliage reaches toward the sky in the region known as the Canopy Heights, a formidable clan of colossal carnivorous dinosaurs roams freely. This territory, near the border of the ancient ruins, is ruled by none other than [[Titus]], the mighty and imposing Tyrannosaurus Rex, alongside his bold and audacious teenage son, [[Rexaris]].
+In the heart of the jungle on the island of [[docs/Material Plane/Regions/Mokoweri]], where the dense foliage reaches toward the sky in the region known as the Canopy Heights, a formidable clan of colossal carnivorous dinosaurs roams freely. This territory, near the border of the ancient ruins, is ruled by none other than [[Titus]], the mighty and imposing Tyrannosaurus Rex, alongside his bold and audacious teenage son, [[Rexaris]].
 
 Titus, a creature of immense power and age, stands as a symbol of authority and wisdom among the clan. With his towering frame, sharp teeth, and thunderous roar, he commands respect and loyalty from his subjects. His crimson eyes, wise and ancient, bear the weight of countless years of experience, and the scars etched into his thick, armored hide tell tales of battles fought and won.
 
@@ -10,5 +10,5 @@ The region they inhabit is a land of beauty and danger, where lush vegetation an
 
 In this wild expanse, [[Titus]] and [[Rexaris]] lead their clan with vigilance and protectiveness. They guard against intruders and ensure the clan's survival, forging a legacy of strength and endurance. Their rule embodies the ancient ways of the dinosaurs, where instincts, cooperation, and adaptability ensure their place as the undisputed rulers of the jungle.
 
-Thus, deep in the heart of the [[docs/Material Plane/Regions/Mokoweri/Mokoweri]] jungle, the Tyrannosaurs under [[Titus]]'s and [[Rexaris]]'s leadership stand as a testament to the enduring spirit of these ancient creatures, holding steadfast against the relentless march of time. Their legacy endures, etched into the very fabric of this untamed land.
+Thus, deep in the heart of the [[docs/Material Plane/Regions/Mokoweri]] jungle, the Tyrannosaurs under [[Titus]]'s and [[Rexaris]]'s leadership stand as a testament to the enduring spirit of these ancient creatures, holding steadfast against the relentless march of time. Their legacy endures, etched into the very fabric of this untamed land.
 

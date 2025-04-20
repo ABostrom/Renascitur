@@ -6,6 +6,6 @@ As the leader of the Tyrannosaurs, Titus commands respect and loyalty from his s
 
 Despite his fearsome reputation, Titus possesses a keen intellect and a sense of honor. He is known to be just and fair in his rule, making decisions for the betterment of his clan. Yet, the shadow of mistrust for outsiders looms large, as he believes their intentions may be to exploit the sacred knowledge hidden within the ruins.
 
-Titus' presence is a symbol of both strength and wisdom, and his role as guardian of the ancient ruins has made him a legend among the [[docs/Material Plane/Regions/Mokoweri/Mokoweri]] people. Those who have dared to cross paths with him know that, though fierce and imposing, he possesses a keen sense of judgment that cannot be taken lightly.
+Titus' presence is a symbol of both strength and wisdom, and his role as guardian of the ancient ruins has made him a legend among the [[docs/Material Plane/Regions/Mokoweri]] people. Those who have dared to cross paths with him know that, though fierce and imposing, he possesses a keen sense of judgment that cannot be taken lightly.
 
 

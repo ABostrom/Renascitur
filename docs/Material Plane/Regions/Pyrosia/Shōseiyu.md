@@ -1,7 +1,0 @@
-- **Cultural Influence**: Named by the [[docs/Races/Kyojin/Kyojin]], reflecting their spiritual philosophy and shamanistic traditions.
-- **Meaning**:
-    - _Shōsei_: "Life energy" or "vital essence."
-    - _Yu_: "Blossom" or "gentle spirit."
-- **Alternate Names**:
-    - **The Soulspire**: A name used in broader lore about its role in guiding souls.
-    - **The Eternal Loom**: A poetic name reflecting its connection to the cycle of life and death
