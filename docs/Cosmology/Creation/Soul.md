@@ -1,6 +1,0 @@
-
-## Divine Souls
-
-
-## Aberrant Souls
-

@@ -8,11 +8,11 @@ His radiance shaped the heavens, setting the stars in their eternal paths and es
 ## Role in Creation
 - Created the light of the cosmos and established the solar cycles.
 - Decreed the Laws of the Universe, which govern the flow of energy, matter, and time.
-- Conceived the [[Machinery of Death]], ensuring the eternal return of [[soul]]s through the cycle of rebirth.
+- Conceived the [[Machinery of Death]], ensuring the eternal return of [[Soul]]s through the cycle of rebirth.
 - Bestowed his blessing of longevity upon the [[Solaran]], granting them the wisdom to uphold his order.
 
 ## Link to [[Machinery of Death]]
-[[Aelion]] played a crucial role in the formation of the [[Machinery of Death]], ensuring that [[soul]] would not become stagnant but instead progress toward enlightenment. His influence created the concept of cosmic judgment, where the accumulation of [[Luminis]] determines a soul's place in the next cycle.
+[[Aelion]] played a crucial role in the formation of the [[Machinery of Death]], ensuring that [[Soul]] would not become stagnant but instead progress toward enlightenment. His influence created the concept of cosmic judgment, where the accumulation of [[Luminis]] determines a soul's place in the next cycle.
 
 ## Relationship with [[The Aeternum]]
 - [[Tharamos]] tempered the light of [[Aelion]] with form and foundation.

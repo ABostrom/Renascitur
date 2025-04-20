@@ -3,7 +3,7 @@
 **Used By**: [[Aeternum]]  
 **Resulted In**: The Four Forces + Time  
 **Consequences**: The unintentional creation of [[Entropy]]  
-**Tied To**: The foundation of [[The Weave]]
+**Tied To**: The foundation of [[Weave]]
 
 ---
 
@@ -29,7 +29,7 @@ The Aetherglyphs gave rise to **five foundational functions** of the universe:
 | **Chaor** | Motion, instinct, and change |
 | **Time**  | The constant that binds progression and sequence |
 
-> These five together form the **interwoven architecture** known as [[The Weave]].
+> These five together form the **interwoven architecture** known as [[Weave]].
 
 ---
 

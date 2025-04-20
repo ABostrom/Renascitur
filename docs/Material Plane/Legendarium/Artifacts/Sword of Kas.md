@@ -1,0 +1,4 @@
+---
+aliases:
+  - Blade of Typhon
+---

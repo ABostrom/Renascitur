@@ -16,7 +16,7 @@ He is the great storm, the rising tide, the ever-shifting currents of fate. To h
 - Ensured that the [[Machinery of Death]] would never become predictable or controlled.
 
 ## Link to [[Machinery of Death]]
-[[Valtor]] introduced the unpredictable nature of [[soul]], allowing them to choose their paths rather than be bound by rigid fate. This unpredictability is what allows true growth and transformation.
+[[Valtor]] introduced the unpredictable nature of [[Soul]], allowing them to choose their paths rather than be bound by rigid fate. This unpredictability is what allows true growth and transformation.
 
 ## The Flaw of [[Ishna]]
 To [[Valtor]], [[Ishna]] is not a flaw, but a consequence. A reminder that even the greatest creations must adapt or perish.

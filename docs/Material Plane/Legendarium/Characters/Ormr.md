@@ -2,7 +2,7 @@
 Ancient Bronze Dragon
 
 
-Taught the dwarves how to smith Mithral
+Taught the [[Stormbound|Stormbound Dwarves]] how to smith [[Skyforged Steel]] through [[Stormforging]]
 
-Location [[Thundrakar]]
+Location: [[Thundrakar]]
 Possesion: [[Rotor of return]]
