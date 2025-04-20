@@ -1,3 +1,7 @@
+---
+aliases:
+  - Lord Syuul
+---
 ## Syuul, The Devourer
 ## The First Ilithid
 
