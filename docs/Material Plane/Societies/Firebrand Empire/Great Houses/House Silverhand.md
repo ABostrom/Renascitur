@@ -1,1 +1,24 @@
-The silverhands are a pre-[[Psychic Schism]] family of great renown. Although much knowledge and history was either lost or destroyed from that era, their help to rebuild the empire, and shape its economy led to the rebuilding of civilization (in their favour of course). They are often at the forefront of trade negotiations with other civilisations, and are keen to re-establish trade routes. They’re particularly keen to expand the trade routes with the dwarven strongholds via the [[Deep Road]]s. 
+---
+aliases: [Silverhand]
+---
+
+## Domain
+*Hospitality*
+_Responsible for trade, inns, taverns, and diplomacy within the Firebrand Empire._
+
+## Leadership
+- **Current Head**: [[Yoren Silverhand]]
+- **Race**: [[Gnome]]
+
+## Headquarters
+- **City**: [[Lion’s Rest]]
+- **Primary Seat**: [[Gatherhold]]
+
+## Political Alignment
+- **Primary Faction(s)**: Stability Bloc
+- **Allied Houses**: [[House Cannith|Cannith]], [[House Jorasco|Jorasco]], [[House Orien|Orien]]
+- **Rival Houses**: None
+
+## Overview
+
+House Silverhand serves a critical role within the Firebrand Empire, overseeing trade, inns, taverns, and diplomacy. Known for their domain of hospitality, they are headquartered in [[Lion’s Rest]] at the [[Gatherhold]].

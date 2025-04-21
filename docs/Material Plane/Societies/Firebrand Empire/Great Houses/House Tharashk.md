@@ -1,3 +1,24 @@
-#### House Tharashk
+---
+aliases: [Tharashk]
+---
 
-As the house of hunters they often find themselves in conflict with house Medani. Brave and noble warriors, they are  responsible for capturing native beasts, removing supernatural threats both internally and externally to the cities of the empire. They have good knowledge of the lay of the land, and often are required to scout new regions of the world. 
+## Domain
+*Finding*
+_Responsible for hunting threats, scouting, and frontier operations within the Firebrand Empire._
+
+## Leadership
+- **Current Head**: [[Broxiz Tharashk]]
+- **Race**: [[Leonin]]
+
+## Headquarters
+- **City**: [[Lion’s Rest]]
+- **Primary Seat**: [[The Den]]
+
+## Political Alignment
+- **Primary Faction(s)**: Wild Front
+- **Allied Houses**: [[House Cannith|Cannith]], [[House Jorasco|Jorasco]], [[House Orien|Orien]], [[House Vadalis|Vadalis]]
+- **Rival Houses**: [[House Medani|Medani]], [[House Phiarlan|Phiarlan]]
+
+## Overview
+
+House Tharashk serves a critical role within the Firebrand Empire, overseeing hunting threats, scouting, and frontier operations. Known for their domain of finding, they are headquartered in [[Lion’s Rest]] at the [[The Den]].

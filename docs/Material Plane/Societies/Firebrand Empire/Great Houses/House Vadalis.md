@@ -1,3 +1,24 @@
-#### House Vadalis
+---
+aliases: [Vadalis]
+---
 
-As the house of animal handling they are responsible for rearing all manner of beasts to aid in the expansion of the empire. Horses for rapid travel along the via lux, and to training and rearing of a select few Griffons for house Tharashk.
+## Domain
+*Handling*
+_Responsible for animal husbandry and mounted logistics within the Firebrand Empire._
+
+## Leadership
+- **Current Head**: [[Dalin Vadalis]]
+- **Race**: [[Human]]
+
+## Headquarters
+- **City**: [[Old Westgate]]
+- **Primary Seat**: [[Foalswood]]
+
+## Political Alignment
+- **Primary Faction(s)**: Wild Front
+- **Allied Houses**: [[House Jorasco|Jorasco]], [[House Orien|Orien]], [[House Tharashk|Tharashk]]
+- **Rival Houses**: None
+
+## Overview
+
+House Vadalis serves a critical role within the Firebrand Empire, overseeing animal husbandry and mounted logistics. Known for their domain of handling, they are headquartered in [[Old Westgate]] at the [[Foalswood]].
