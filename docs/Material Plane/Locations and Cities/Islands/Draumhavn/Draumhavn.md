@@ -66,7 +66,7 @@ See: [[The Salt-Blessed]]
 A secret, rune-reinforced tunnel system that connects Draumhavn to:
 - [[Uftine]]
 - [[Thundrakar]]
-- [[Magnus' Rest]]
+- [[Magnus’ Rest]]
 - [[Thelassia]]
 
 No tunnel runs south. The earth there falls away into the void.

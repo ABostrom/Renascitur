@@ -47,7 +47,7 @@ Their rune magic embraces:
 An extension of the [[Deep Road]], the [[Uftine Express]] is a marvel of subterranean glacial engineering:
 - Heated rune-rails resist ice creep
 - Pressure valves and wind-vents harmonize tunnel flow
-- Regularly connects to [[Draumhavn]], [[Thundrakar]], and [[Magnus' Rest]]
+- Regularly connects to [[Draumhavn]], [[Thundrakar]], and [[Magnus’ Rest]]
 
 
 ## Beliefs
@@ -66,7 +66,7 @@ An extension of the [[Deep Road]], the [[Uftine Express]] is a marvel of subterr
 ## Relations
 
 - View the [[Draumhavn|Tidebound]] of [[Draumhavn]] as bold but reckless
-- Respect the silence of [[Magnus' Rest]], though find them overly insular
+- Respect the silence of [[Magnus’ Rest]], though find them overly insular
 - Collaborate closely with [[Thundrakar]] on rune engineering, though debate philosophy  
 
 > “Ice breaks slowly. That is its strength.”

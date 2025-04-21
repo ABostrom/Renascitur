@@ -4,7 +4,7 @@ Each dwarven city is descended from the ancient Grundthain and shaped by an elem
 - **[[Tidebound]]** of [[Draumhavn]] – Linked to [[Leviathan]]
 - **[[Icebound]]** of [[Uftine]] – Linked to [[Zaratan]]
 - **[[Stormbound]]** of [[Thundrakar]]] – Linked to [[Tempus]]
-- **[[Flamebound]]** of [[Magnus' Rest]] – Linked to [[Phenos]]
+- **[[Flamebound]]** of [[Magnus’ Rest]] – Linked to [[Phenos]]
 
 Each dwarven city is also built atop a sealed corruption of that elemental, entombed by Muradin.
 
