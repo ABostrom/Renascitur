@@ -138,8 +138,11 @@ def create_death_event(year: int, person: Person) -> Event:
 def create_widow_event(year: int, widow: Person, deceased: Person) -> Event:
     return Event(year, "Widowed", f"{widow.name} was widowed when {deceased.name} died", widow.house, {"widow": widow})
 
-def create_succession_event(year: int, person: Person, deceased) -> Event:
+def create_succession_event(year: int, person: Person, deceased : Person) -> Event:
     return Event(year, "Succession", f"{person.name} became Primarch of House {person.house.name} succeeding from Primarch {deceased}.", person.house, {"primarch": person})
+
+def create_house_change_event(year: int, person: Person, house : House) -> Event:
+    return Event(year, "Succession", f"{person.name} changed allegiance from House {person.house.name} to House {house.name}", person.house, {"house" : house})
 
 def create_founding_event(year: int, founder: Person) -> Event:
     return Event(year, "Founding", f"{founder.name} founded the House {founder.house.name}.", founder.house, {"founder": founder})
@@ -157,7 +160,6 @@ def found_house(house_name: str, race_profile: RaceProfile, start_year: int, maj
     return founder, house, create_founding_event(start_year, founder)
 
 def determine_dominant_house(p1: PersonView, p2: PersonView) -> str:
-    
     if p1.is_head and p2.is_head:
         return None  # Two Primarchs marrying? Forbidden politically
     if p1.is_head and not p2.is_head:
@@ -176,24 +178,27 @@ def determine_dominant_house(p1: PersonView, p2: PersonView) -> str:
         return p1.house
 
 
-def marry(p1: Person, p2: Person, year: int) -> Event:
+def marry(p1: Person, p2: Person, year: int) -> list[Event]:
+    events : list[Event] = []
     p1.marriage_year = year
     p2.marriage_year = year
     p1.spouse = p2
     p2.spouse = p1
 
     dominant_house = determine_dominant_house(p1.to_view(), p2.to_view())
-    event = create_marriage_event(year, p1, p2, dominant_house)
+    events.append(create_marriage_event(year, p1, p2, dominant_house))
 
     if p1.house != dominant_house:
+        events.append(create_house_change_event(year, p1, dominant_house))
         p1.maiden_house = p1.house
         p1.house = dominant_house
-
+        
     if p2.house != dominant_house:
+        events.append(create_house_change_event(year, p2, dominant_house))
         p2.maiden_house = p2.house
         p2.house = dominant_house
-    
-    return event
+        
+    return events
 
 def have_child(mother: Person, father: Person, year: int, house: House) -> tuple[Person, Event]:
     race = mother.race if mother.race == father.race else random.choice([mother.race, father.race])
@@ -257,9 +262,7 @@ def attempt_marriages(all_people: dict[str, Person], year: int) -> list[Event]:
             continue
 
         if can_marry(partner, spouse):
-            event = marry(partner, spouse, year)
-            events.append(event)
-
+            events += marry(partner, spouse, year)
             already_paired.add(partner)
             already_paired.add(spouse)
 
@@ -359,8 +362,6 @@ def find_closest_living_relative(deceased: Person) -> Person | None:
 def process_succession(death_events: list[Event], year: int) -> list[Event]:
     events : list[Event] = []
 
-    print(death_events)
-
     for death_event in death_events:
         deceased = death_event.payload["deceased"]
         
@@ -370,7 +371,17 @@ def process_succession(death_events: list[Event], year: int) -> list[Event]:
         if successor := find_closest_living_relative(deceased):
             successor.is_head = True
 
-            # TODO: Should your children and house change?
+            if successor.house != deceased.house:
+                events.append(create_house_change_event(year, successor, deceased.house))
+
+            successor.house = deceased.house
+
+            if successor.is_married:
+                if successor.spouse.house != deceased.house:
+                    events.append(create_house_change_event(year, successor.spouse, deceased.house))
+
+                successor.spouse.house = deceased.house
+
             events.append(create_succession_event(year, successor, deceased))
         else:
             #success crisis
