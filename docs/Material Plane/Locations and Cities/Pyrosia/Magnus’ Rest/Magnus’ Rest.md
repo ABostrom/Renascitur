@@ -1,6 +1,10 @@
 > *"We held the gates for a thousand nights, and in that furnace, the future was forged."*  
 > — [[Volgrin Flameward]], First [[Pyrethane]] of [[Magnus’ Rest]]
 
+
+## Province
+- [[Ashen Plains]]
+
 ---
 
 ![[Pasted image 20250419175621.png]]
@@ -11,6 +15,12 @@
 There, beside a smouldering caldera of [[Mt. Earthspur]], Magnus and his [[Forge Clerics]] defended the entrance to the nascent city for **a thousand nights**, waging endless battle against the horrors of the night. When at last the final stones were laid and the forges lit, the gates were sealed—not in retreat, but in preparation.
 
 Magnus’ Rest became a **beacon of radiant fire**, an **enclave for all who fled the darkness**, in the days before the rise of the [[Firebrand Empire]] or the coming of the [[Unimus|Lightbringer]].
+
+
+## Imperial Presence
+
+### Overseer
+- [[Hallen Cannith]]
 
 ---
 

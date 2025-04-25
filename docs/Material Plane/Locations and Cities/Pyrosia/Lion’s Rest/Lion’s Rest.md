@@ -1,5 +1,20 @@
+---
+aliases: [Lion’s Rest]
+tags: [city, location]
+---
 
-![[Pasted image 20250420164718.png]]
-Lion’s Rest is the capital city of the [[Firebrand empire]]. This is the seat of the [[Firebrand Empire]]'s power. The ferocious nature, and resilience of many of the [[docs/Races/Kyojin/Leonin]] people allowed them to survive the harshness of the world after the [[Psychic Schism]]. [[Unimus]] lead a group of [[Human]], [[Orc]] and [[docs/Races/Kyojin/Leonin]] who would protect the lost that were found during the [[Night War]] and eventually founded the city as means of keeping people safe during the night.
+## Province
+- [[Ashen Plains]]
 
-Their desire for structure, order, and lawful civilisation led them to expansion, and building the [[Vialux]].
+## Overseer
+- [[Kheros Medani]]
+
+## Description
+The proud capital of the Firebrand Empire, seat of the Emperor and the great council. A bastion of order, military discipline, and political intrigue. Its spires overlook wide imperial avenues and the central forum of judgment. Its coliseums host military parades and public trials, while golden statues of past emperors watch from the hilltops.
+
+## Notable Houses
+- [[House Medani]]
+- [[House Tharashk]]
+- [[House Jorasco]]
+- [[House Silverhand]]
+- [[House Deneith]]

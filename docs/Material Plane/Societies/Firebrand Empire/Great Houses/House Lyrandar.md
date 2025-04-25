@@ -11,7 +11,7 @@ _Responsible for weather control, navigation, and prophecy within the Firebrand 
 - **Race**: [[Human]]
 
 ## Headquarters
-- **City**: [[The Raining Bay]]
+- **City**: [[Raining Bay]]
 - **Primary Seat**: [[Stormhome]]
 
 ## Political Alignment
@@ -21,4 +21,4 @@ _Responsible for weather control, navigation, and prophecy within the Firebrand 
 
 ## Overview
 
-House Lyrandar serves a critical role within the Firebrand Empire, overseeing weather control, navigation, and prophecy. Known for their domain of storm, they are headquartered in [[The Raining Bay]] at the [[Stormhome]].
+House Lyrandar serves a critical role within the Firebrand Empire, overseeing weather control, navigation, and prophecy. Known for their domain of storm, they are headquartered in [[Raining Bay]] at the [[Stormhome]].

@@ -7,7 +7,7 @@ aliases: [The Serpentine Citadel]
 - [[House Phiarlan]]
 
 ## City
-- [[The Raining Bay]]
+- [[Raining Bay]]
 
 ## Description
-The Serpentine Citadel serves as the central stronghold or operational base of House Phiarlan. Situated in the city of [[The Raining Bay]], it reflects the culture and function of the house it represents.
+The Serpentine Citadel serves as the central stronghold or operational base of House Phiarlan. Situated in the city of [[Raining Bay]], it reflects the culture and function of the house it represents.

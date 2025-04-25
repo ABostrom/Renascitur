@@ -11,7 +11,7 @@ _Responsible for espionage, assassination, and manipulation within the Firebrand
 - **Race**: [[Leonin]]
 
 ## Headquarters
-- **City**: [[The Raining Bay]]
+- **City**: [[Raining Bay]]
 - **Primary Seat**: [[The Serpentine Citadel]]
 
 ## Political Alignment
@@ -21,4 +21,4 @@ _Responsible for espionage, assassination, and manipulation within the Firebrand
 
 ## Overview
 
-House Phiarlan serves a critical role within the Firebrand Empire, overseeing espionage, assassination, and manipulation. Known for their domain of shadow, they are headquartered in [[The Raining Bay]] at the [[The Serpentine Citadel]].
+House Phiarlan serves a critical role within the Firebrand Empire, overseeing espionage, assassination, and manipulation. Known for their domain of shadow, they are headquartered in [[Raining Bay]] at the [[The Serpentine Citadel]].
