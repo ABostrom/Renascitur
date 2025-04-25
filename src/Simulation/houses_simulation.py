@@ -24,7 +24,7 @@ class PersonView:
 
 @dataclass
 class RaceProfile:
-    name: str
+    name: Literal["Human", "Leonin", "Orc", "Dwarf", "Gnome"]
     marriage_age_range: tuple[int, int]
     lifespan_range: tuple[int, int]
     childbearing_range: tuple[int, int]
@@ -139,7 +139,7 @@ def create_widow_event(year: int, widow: Person, deceased: Person) -> Event:
     return Event(year, "Widowed", f"{widow.name} was widowed when {deceased.name} died", widow.house, {"widow": widow})
 
 def create_succession_event(year: int, person: Person, deceased : Person) -> Event:
-    return Event(year, "Succession", f"{person.name} became Primarch of House {person.house.name} succeeding from Primarch {deceased}.", person.house, {"primarch": person})
+    return Event(year, "Succession", f"Primarch {deceased} is succeeded by their {find_relationship(deceased, person)} {person.name} as the new Primarch of House {person.house.name}", person.house, {"primarch": person})
 
 def create_house_change_event(year: int, person: Person, house : House) -> Event:
     return Event(year, "Succession", f"{person.name} changed allegiance from House {person.house.name} to House {house.name}", person.house, {"house" : house})
@@ -153,13 +153,22 @@ def generate_person(race_profile: RaceProfile, birth_year: int, house: House | N
     sexuality = sexuality or "Heterosexual"
     return Person(str(uuid.uuid4()), first_name, gender, house, race_profile, birth_year, None, None, None, sexuality, [], is_mainline, is_head, False, father, mother)
 
-def found_house(house_name: str, race_profile: RaceProfile, start_year: int, major_house: bool = True, founder: Person | None = None) -> tuple[Person, House, Event]:
+def found_house(house_name: str, race_profile: RaceProfile, start_year: int, major_house: bool = True, founder: Person | None = None) -> tuple[list[Person], House, Event]:
+    # If a founder is pre-provided, use it
     founder = founder or generate_person(race_profile, start_year, is_mainline=True, is_head=True)
+
     house = House(house_name, start_year, founder, major_house)
     founder.house = house
-    return founder, house, create_founding_event(start_year, founder)
 
-def determine_dominant_house(p1: PersonView, p2: PersonView) -> str:
+    spouse_gender = "Male" if founder.gender == "Female" else "Female"
+    spouse = generate_person(race_profile, start_year, house=house, gender=spouse_gender)
+
+    marry(founder, spouse, start_year) # choosing not to record the marriage events, because this is just when history began.
+    event = create_founding_event(start_year, founder)
+    return [founder, spouse], house, event
+
+
+def determine_dominant_house(p1: PersonView, p2: PersonView) -> House | None:
     if p1.is_head and p2.is_head:
         return None  # Two Primarchs marrying? Forbidden politically
     if p1.is_head and not p2.is_head:
@@ -176,6 +185,46 @@ def determine_dominant_house(p1: PersonView, p2: PersonView) -> str:
         return p2.house
     else:
         return p1.house
+
+
+def find_relationship(deceased: Person, successor: Person) -> str:
+    if successor in deceased.children:
+        return "daughter" if successor.gender == "Female" else "son"
+
+    for child in deceased.children:
+        if successor in child.children:
+            return "grandchild"
+        
+    if deceased.father and successor.father == deceased.father:
+        return "sibling"
+    if deceased.mother and successor.mother == deceased.mother:
+        return "sibling"
+
+    if deceased.father:
+        for sibling in deceased.father.children:
+            if successor in sibling.children:
+                return "niece" if successor.gender == "Female" else "nephew"
+    if deceased.mother:
+        for sibling in deceased.mother.children:
+            if successor in sibling.children:
+                return "niece" if successor.gender == "Female" else "nephew"
+            
+    deceased_grandparents = set()
+    if deceased.father:
+        deceased_grandparents.update([deceased.father.father, deceased.father.mother])
+    if deceased.mother:
+        deceased_grandparents.update([deceased.mother.father, deceased.mother.mother])
+
+    successor_grandparents = set()
+    if successor.father:
+        successor_grandparents.update([successor.father.father, successor.father.mother])
+    if successor.mother:
+        successor_grandparents.update([successor.mother.father, successor.mother.mother])
+
+    if deceased_grandparents.intersection(successor_grandparents):
+        return "cousin"
+
+    return "distant relative"
 
 
 def marry(p1: Person, p2: Person, year: int) -> list[Event]:
@@ -458,9 +507,9 @@ namebanks = {
 
 # Create race profile objects
 race_profiles = {
-    "Human": RaceProfile("Human", (20, 35), (75, 90), (20, 45), 1.0, namebanks["Human"], ["Human","Leonin", "Orc"]),
-    "Leonin": RaceProfile("Leonin", (20, 35), (85, 100), (20, 45), 1.2, namebanks["Leonin"], ["Human","Leonin", "Orc"]),
-    "Orc": RaceProfile("Orc", (18, 30), (65, 80), (18, 40), 1.1, namebanks["Orc"], ["Human","Leonin", "Orc"]),
+    "Human": RaceProfile("Human", (20, 35), (75, 90), (20, 45), 0.8, namebanks["Human"], ["Human","Leonin", "Orc"]),
+    "Leonin": RaceProfile("Leonin", (20, 35), (85, 100), (20, 45), 0.8, namebanks["Leonin"], ["Human","Leonin", "Orc"]),
+    "Orc": RaceProfile("Orc", (18, 30), (65, 80), (18, 40), 0.8, namebanks["Orc"], ["Human","Leonin", "Orc"]),
     "Dwarf": RaceProfile("Dwarf", (50, 100), (300, 500), (50, 200), 0.4, namebanks["Dwarf"], ["Dwarf", "Gnome"]),
     "Gnome": RaceProfile("Gnome", (50, 120), (300, 450), (50, 220), 0.4, namebanks["Gnome"], ["Dwarf", "Gnome"]),
 }
@@ -499,9 +548,6 @@ base_names = [
     "Thessan", "Drelgar", "Nemorin", "Caraveth"
 ]
 
-
-
-
 random.seed(42)
 random.shuffle(base_names)
 
@@ -531,17 +577,19 @@ def simulate_years(start_year: int, end_year: int) -> list[Event]:
     #spawn the major houses
     for house_name, race in house_races.items():
         profile = race_profiles[race]
-        person, house, event = found_house(house_name, profile, start_year, True, founders[house_name])
+        (founder, spouse), house, event = found_house(house_name, profile, start_year, True, founders[house_name])
         all_houses[house.name] = house
-        all_people[person.id] = person
+        all_people[founder.id] = founder
+        all_people[spouse.id] = spouse
         events.append(event)
 
     # spawn the lesser houses.
     for race, house_name in zip(race_pool, base_names):
         profile = race_profiles[race]
-        person, house, event = found_house(house_name, profile, start_year, False)
+        (founder, spouse), house, event = found_house(house_name, profile, start_year, False)
         all_houses[house.name] = house
-        all_people[person.id] = person
+        all_people[founder.id] = founder
+        all_people[spouse.id] = spouse
         events.append(event)
 
 
@@ -587,7 +635,7 @@ def simulate_years(start_year: int, end_year: int) -> list[Event]:
 
     return events
 
-events : list[Event] =  simulate_years(0, 100)
+events : list[Event] =  simulate_years(0, 250)
 events.sort(key=lambda e: e.year)
 for event in events:
     #if event.house.name == "Deneith" and event.type in ("Succession", "Death"):
