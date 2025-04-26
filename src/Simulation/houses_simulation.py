@@ -4,33 +4,249 @@ from collections import defaultdict
 import random
 import uuid
 from dataclasses import dataclass, field, replace
-from typing import Literal, Callable
+from typing import Literal, Callable, Any
 from itertools import combinations
 from enum import Enum
 
 
+def eventlog(func):
+    def wrapper(self, *args, **kwargs):
+        event = func(self, *args, **kwargs)
+        self.events.append(event)
+        return event
+    return wrapper
+
+
+
 class EventBus:
     def __init__(self):
-        self.subscribers: dict[str, list[Callable[[Event], None]]] = {}
+        self.event_types: list[type[Event]] = []
 
-    def subscribe(self, event_type: str, handler: Callable[[Event], None]):
-        if event_type not in self.subscribers:
-            self.subscribers[event_type] = []
-        self.subscribers[event_type].append(handler)
+    def register_event_type(self, event_cls: type[Event]):
+        self.event_types.append(event_cls)
 
     def publish(self, event: Event):
-        handlers = self.subscribers.get(event.type, [])
-        for handler in handlers:
-            handler(event)
+        event.apply()
+
+        for event_cls in self.event_types:
+            new_event = event_cls.should_create_from(event)
+            if new_event:
+                self.publish(new_event)
 
 
 @dataclass
 class Event:
     year: int
-    type: Literal["Birth", "Death", "Marriage", "Succession", "Widowed", "Killed", "Founding"]
+    type: str
     description: str
+    world: World 
+
+    def __str__(self):
+        return self.type
+
+    def __repr__(self):
+        return str(self)
+
+    def apply(self):
+        pass
+
+    @classmethod
+    def should_create_from(cls, cause_event: Event) -> Event | None:
+        return None  
+
+@dataclass
+class DeathEvent(Event):
+    deceased : Person
+
+    def apply(self):
+        self.deceased.die(self.year)
+        print(f"[DeathEvent] {self.deceased} died in year {self.year}.")
+
+@dataclass
+class SuccessionEvent(Event):
+    successor : Person
+    deceased : Person
+
+    @classmethod
+    def should_create_from(cls, cause_event: DeathEvent) -> SuccessionEvent | None:
+        if cause_event.type != "Death":
+            return None
+        
+        deceased = cause_event.deceased
+        if not deceased.is_head:
+            return None
+
+        successor = SuccessionEvent.find_closest_living_relative(deceased)
+        if not successor:
+            return None
+
+        return world.create_succession_event(successor, deceased)
+
+    def apply(self):
+        self.successor.is_head = True
+
+    @staticmethod
+    def collect_ancestors(person: Person) -> list[Person]:
+        ancestors = []
+        stack = [person]
+
+        visited :set[Person] = set()
+        while stack:
+            current :Person = stack.pop()
+            if current in visited:
+                continue
+
+            visited.add(current)
+            ancestors.append(current)
+
+            if current.family.father:
+                stack.append(current.family.father)
+            if current.family.mother:
+                stack.append(current.family.mother)
+
+        return ancestors
+
+    @staticmethod
+    def is_eligible_successor(successor: Person, deceased : Person) -> bool:
+        if not successor.is_alive:
+            return False
+
+        if successor.is_head:
+            return False
+
+        if spouse := successor.spouse:
+            if spouse.is_head:
+                return False
+            
+            #Here we use a forward view of IF we changed to this house, and how that would affect the dominant house.
+            dominant_house = determine_dominant_house(successor.to_view(overrides={'house':deceased.house, 'is_head':True}), successor.spouse.to_view())
+            
+            # If successor would not dominate after succession, that's a problem
+            if dominant_house != deceased.house:
+                return False
+
+        return True
+
+    @staticmethod
+    def find_living_descendant(family: Family, deceased : Person) -> Person | None:
+        queue = family.get_children_age_sorted()  # eldest first
+
+        while queue:
+            child = queue.pop(0)
+
+            if child.is_alive and SuccessionEvent.is_eligible_successor(child, deceased):
+                return child
+
+            queue += child.family.get_children_age_sorted()  # expand down
+
+        return None
+
+    @staticmethod
+    def find_closest_living_relative(deceased : Person) -> Person | None:
+        if candidate := SuccessionEvent.find_living_descendant(deceased.family, deceased):
+            return candidate
+
+        return next((heir for ancestor in SuccessionEvent.collect_ancestors(deceased) if (heir := SuccessionEvent.find_living_descendant(ancestor.family, deceased))), None)
+
+@dataclass
+class WidowEvent(Event):
+    widow : Person
+
+    @classmethod
+    def should_create_from(cls, cause_event: DeathEvent) -> WidowEvent | None:
+        if cause_event.type != "Death":
+            return None
+
+        deceased: Person = cause_event.deceased
+        if deceased.spouse and deceased.spouse.is_alive:
+            return cause_event.world.create_widowed_event(deceased.spouse, deceased)
+
+        return None
+
+    def apply(self):
+        self.widow.marriage = None
+
+@dataclass
+class HouseChangeEvent(Event):
+    person : Person
     house : House
-    payload: dict[str, Person]
+
+    def apply(self):
+        self.person.maiden_house = self.person.house
+        self.person.house = self.house
+
+@dataclass
+class MarriageEvent(Event):
+    marriage : Marriage
+
+    def apply(self):       
+        partner1 = self.marriage.partner1
+        partner2 = self.marriage.partner2
+        dominant_house = self.marriage.dominant_house
+
+        partner1.marriage = self.marriage
+        partner2.marriage = self.marriage
+
+        if partner1.house != dominant_house:
+            self.world.event_bus.publish(self.world.create_house_change_event(partner1, dominant_house))
+
+        if partner2.house != dominant_house:
+            self.world.event_bus.publish(self.world.create_house_change_event(partner2, dominant_house))
+
+@dataclass
+class BirthEvent(Event):
+    child : Person 
+    mother: Person
+    father: Person
+    house : House
+
+    def apply(self):
+        child = self.child
+        self.mother.family.add_child(child)
+        self.father.family.add_child(child)
+        self.house.add_person(child)
+        self.world.add_person(child)
+
+@dataclass
+class FoundingEvent(Event):
+    house_name: str
+    race: Race
+    major_house: bool = True
+    founder: Person | None = None  # Optionally pre-specified
+    founder_age_range: tuple[int, int] = (18, 40)  # Default range for founder/spouse ages
+
+    def apply(self):
+        world = self.world
+
+        founder = self.founder or generate_person(
+            race=self.race,
+            life=Life(age=random.randint(*self.founder_age_range)),
+            is_mainline=True,
+            is_head=True
+        )
+
+        # 2. Create House
+        house = House(self.house_name, self.year, founder, self.major_house)
+        founder.house = house
+
+        # 3. Create Spouse
+        spouse_gender = founder.gender.get_opposite()
+        spouse = generate_person(
+            race=self.race,
+            life=Life(age=random.randint(*self.founder_age_range)),
+            house=house,
+            gender=spouse_gender
+        )
+
+        # 4. Quietly marry (no marriage event, just link internally)
+        marriage = Marriage(founder, spouse, self.year, house)
+        founder.marriage = marriage
+        spouse.marriage = marriage
+
+        # 5. Add people to world
+        world.add_people([founder, spouse])
+        world.add_house(house)
+
 
 
 @dataclass
@@ -67,7 +283,6 @@ class Race:
             return 1.0
         return (age - self.lifespan_range[0]) / (self.lifespan_range[1] - self.lifespan_range[0])
 
-
 class Gender(Enum):
     MALE = "Male"
     FEMALE = "Female"
@@ -83,8 +298,6 @@ class Gender(Enum):
 
     def __lt__(self, other: Gender) -> bool:
         return self.value < other.value
-
-
 
 @dataclass
 class Sexuality:
@@ -124,7 +337,6 @@ class Life:
         self.death_year = year
         self.is_alive = False
 
-
 @dataclass
 class Family:
     mother: Person | None = None
@@ -157,10 +369,10 @@ class Marriage:
     partner1: Person
     partner2: Person
     year_of_marriage: int
+    dominant_house : House
 
     def get_spouse(self, partner : Person) -> Person:
         return self.partner1 if partner == self.partner2 else self.partner2
-
 
 @dataclass
 class Person:
@@ -223,7 +435,6 @@ class Person:
             gender=overrides.get('gender', self.gender),
         )
 
-
 @dataclass
 class House:
     name: str
@@ -250,6 +461,14 @@ class World:
     people: dict[str, Person] = field(default_factory=dict)
     houses: dict[str, House] = field(default_factory=dict)
     events: list[Event] = field(default_factory=list)
+    event_bus: EventBus = field(default_factory=EventBus)
+
+    def __post_init__(self):
+        self.register_event_types()
+
+    def register_event_types(self):
+        self.event_bus.register_event_type(SuccessionEvent)
+        self.event_bus.register_event_type(WidowEvent)
 
     def advance_year(self):
         self.current_year += 1
@@ -270,70 +489,100 @@ class World:
 
     def get_alive_people(self) -> list[Person]:
         return [p for p in self.people.values() if p.is_alive]
+    
+     # --- Event Creation Methods ---
+    @eventlog
+    def create_birth_event(self, mother: Person, father: Person, house: House) -> Event:
+        if mother.race == father.race:
+            race = mother.race
+        else:
+            race = random.choice([mother.race, father.race])
 
+        child = generate_person(
+            race,
+            life=Life(birth_year=self.current_year),
+            house=house,
+            family=Family(father=father, mother=mother),
+            is_mainline=(mother.is_mainline or father.is_mainline)
+        )
 
-# --- EVENT CREATORS ---
-def create_birth_event(year: int, child: Person, mother: Person, father: Person) -> Event:
-    return Event(year, "Birth", f"{child.name} was born to {mother.name} and {father.name}.", child.house, {"mother": mother, "father": father, "child": child})
+        return BirthEvent(
+            year=self.current_year,
+            type="Birth",
+            description=f"{child.name} was born to {mother.name} and {father.name}.",
+            world=self,
+            mother=mother,
+            father=father,
+            child=child,
+            house=house,
+        )
+    
+    @eventlog
+    def create_death_event(self, person: Person) -> Event:
+        return DeathEvent(
+            year=self.current_year,
+            type="Death",
+            description=f"{person.name} died.",
+            world=self,
+            deceased=person,
+        )
+    
+    @eventlog
+    def create_marriage_event(self, marriage : Marriage) -> Event:
+        return MarriageEvent(
+            year=self.current_year,
+            type="Marriage",
+            description=f"{marriage.partner1} and {marriage.partner2} were married.",
+            world=self,
+            marriage=marriage
+        )
+    
+    @eventlog
+    def create_widowed_event(self, widow: Person, deceased: Person) -> Event:
+        return WidowEvent(
+            year=self.current_year,
+            type="Widowed",
+            description=f"{widow.name} became a widow after {deceased.name}'s death.",
+            world=self,
+            widow=widow
+        )
+    
+    @eventlog
+    def create_succession_event(self, successor: Person, deceased: Person) -> Event:
+        return SuccessionEvent(
+            year=self.current_year,
+            type="Succession",
+            description=f"Primarch {deceased} is succeeded by their {find_relationship(deceased.family, successor)} {successor} as the new Primarch of House {successor.house}",
+            world=self,
+            successor=successor,
+            deceased=deceased
+        )
+    
+    @eventlog
+    def create_house_change_event(self, person: Person, house: House) -> Event:
+        return HouseChangeEvent(
+            year=self.current_year,
+            type="HouseChange",
+            description=f"{person.name} joined House {house.name}.",
+            world=self,
+            house=house,
+            person=person,
+        )
 
-def create_marriage_event(year: int, marriage : Marriage, house: House) -> Event:
-    return Event(year, "Marriage", f"{marriage.partner1} married {marriage.partner2}.", house, {"marriage": marriage})
+    @eventlog
+    def create_founding_event(self, house_name: str, race: Race, start_year: int, major_house: bool = True, founder: Person | None = None) -> Event:
+        return FoundingEvent(
+            year=start_year,
+            type="Founding",
+            description=f"Founding of House {house_name}.",
+            world=self,
+            house_name=house_name,
+            race=race,
+            major_house=major_house,
+            founder=founder
+        )
 
-def create_death_event(year: int, person: Person) -> Event:
-    return Event(year, "Death", f"{'Primarch ' if person.is_head else ''}{person.name} died.", person.house, {"deceased": person})
-
-def create_widow_event(year: int, widow: Person, deceased: Person) -> Event:
-    return Event(year, "Widowed", f"{widow.name} was widowed when {deceased.name} died", widow.house, {"widow": widow})
-
-def create_succession_event(year: int, person: Person, deceased : Person) -> Event:
-    return Event(year, "Succession", f"Primarch {deceased} is succeeded by their {find_relationship(deceased.family, person)} {person.name} as the new Primarch of House {person.house.name}", person.house, {"primarch": person})
-
-def create_house_change_event(year: int, person: Person, house : House) -> Event:
-    return Event(year, "Succession", f"{person.name} changed allegiance from House {person.house.name} to House {house.name}", person.house, {"house" : house})
-
-def create_founding_event(year: int, founder: Person) -> Event:
-    return Event(year, "Founding", f"{founder.name} founded the House {founder.house.name}.", founder.house, {"founder": founder})
-
-
-def handle_birth(event: Event):
-    pass
-
-def handle_death(event: Event):
-    pass
-
-def handle_marriage(event: Event):
-    pass
-
-def handle_succession(event: Event):
-    pass
-
-def handle_widowed(event: Event):
-    pass
-
-
-
-def generate_person(race: Race, life: Life, house: House | None = None, first_name: str | None = None, gender: Gender | None = None, is_mainline: bool = False, is_head: bool = False, sexuality: Sexuality | None = None, family : Family | None = None) -> Person:
-    gender = gender or random.choice([Gender.MALE, Gender.FEMALE])
-    first_name = first_name or race.generate_first_name()
-    sexuality = sexuality or Sexuality() #TODO: fly-weight Sexuality.
-    family = family or Family()
-
-    return Person(id=str(uuid.uuid4()), first_name=first_name, gender=gender, house=house, race=race, life=life, sexuality=sexuality, is_mainline=is_mainline, is_head=is_head, family=family)
-
-def found_house(house_name: str, race: Race, start_year: int, major_house: bool = True, founder: Person | None = None) -> tuple[list[Person], House, Event]:
-    # If a founder is pre-provided, use it
-    # for founders and foudners spouse we don't give them a birth year just an age.
-    founder = founder or generate_person(race=race, life=Life(age=random.randint(*race.marriage_age_range)), is_mainline=True, is_head=True)
-
-    house = House(house_name, start_year, founder, major_house)
-    founder.house = house
-
-    spouse_gender = founder.gender.get_opposite()
-    spouse = generate_person(race=race, life=Life(age=random.randint(*race.marriage_age_range)), house=house, gender=spouse_gender)
-
-    marry(founder, spouse, start_year) # choosing not to record the marriage events, because this is just when history began.
-    event = create_founding_event(start_year, founder)
-    return [founder, spouse], house, event
+# Utils
 
 def determine_dominant_house(p1: PersonView, p2: PersonView) -> House | None:
     if p1.is_head and p2.is_head:
@@ -392,43 +641,6 @@ def find_relationship(deceased: Family, successor: Person) -> str:
 
     return "distant relative"
 
-def marry(p1: Person, p2: Person, year: int) -> list[Event]:
-    events : list[Event] = []
-
-    marriage = Marriage(p1, p2, year)
-    p1.marriage = marriage
-    p2.marriage = marriage
-
-    dominant_house = determine_dominant_house(p1.to_view(), p2.to_view())
-    events.append(create_marriage_event(year, marriage, dominant_house))
-
-    if p1.house != dominant_house:
-        events.append(create_house_change_event(year, p1, dominant_house))
-        p1.maiden_house = p1.house
-        p1.house = dominant_house
-        
-    if p2.house != dominant_house:
-        events.append(create_house_change_event(year, p2, dominant_house))
-        p2.maiden_house = p2.house
-        p2.house = dominant_house
-        
-    return events
-
-def have_child(mother: Person, father: Person, year: int, house: House) -> tuple[Person, Event]:
-    race = mother.race if mother.race == father.race else random.choice([mother.race, father.race])
-    child = generate_person(race, Life(birth_year=year), house=house, family=Family(father=father, mother=mother), is_mainline=(mother.is_mainline or father.is_mainline))
-
-    # TODO: think we can make this better.
-    mother.family.add_child(child)
-    father.family.add_child(child)
-    house.add_person(child)
-
-    return child, create_birth_event(year, child, mother, father)
-
-def process_death(person: Person, year: int) -> Event:
-    person.die(year)
-    return create_death_event(year, person)
-
 def get_eligible_singles(all_people: list[Person]) -> list[Person]:
     eligible: list[Person] = []
     for person in all_people:
@@ -448,6 +660,8 @@ def get_eligible_singles(all_people: list[Person]) -> list[Person]:
 
     return eligible
 
+
+# TODO: this could emite a Marriage object
 def can_marry(partner : Person, spouse : Person) -> bool:
     # if we can't find a dominant house, then they're not an eligible partner.
     if determine_dominant_house(partner.to_view(), spouse.to_view()) is None:
@@ -462,142 +676,6 @@ def can_marry(partner : Person, spouse : Person) -> bool:
         return False
 
     return True
-
-def generate_marriages(people: list[Person], year: int) -> list[Event]:
-    events: list[Event] = []
-
-    eligible_singles: list[Person] = get_eligible_singles(people)
-    random.shuffle(eligible_singles)
-
-    already_paired = set()
-
-    for partner, spouse in combinations(eligible_singles, 2):
-        if partner in already_paired or spouse in already_paired:
-            continue
-
-        if can_marry(partner, spouse):
-            events += marry(partner, spouse, year)
-            already_paired.add(partner)
-            already_paired.add(spouse)
-
-    return events
-
-def process_deaths(people: list[Person], year: int) -> list[Event]:
-    events: list[Event] = []
-    for person in people:
-        if person.is_immortal:
-            continue
-
-        chance = person.race.death_chance(person.age)
-        if random.random() < chance:
-            events.append(process_death(person, year))
-
-    return events
-
-def process_widows(death_events: list[Event]) -> list[Event]:
-    events: list[Event] = []
-    for death_event in death_events:
-        deceased: Person = death_event.payload["deceased"]
-
-        if not deceased.is_married or deceased.spouse.is_alive:
-            continue
-
-        spouse: Person = deceased.spouse
-        spouse.marriage = None # end the marriage.
-        events.append(create_widow_event(deceased.life.death_year, spouse, deceased))
-
-    return events
-
-def collect_ancestors(person: Person) -> list[Person]:
-    ancestors = []
-    stack = [person]
-
-    visited :set[Person] = set()
-    while stack:
-        current :Person = stack.pop()
-        if current in visited:
-            continue
-
-        visited.add(current)
-        ancestors.append(current)
-
-        if current.family.father:
-            stack.append(current.family.father)
-        if current.family.mother:
-            stack.append(current.family.mother)
-
-    return ancestors
-
-def is_eligible_successor(successor: Person, deceased : Person) -> bool:
-    if not successor.is_alive:
-        return False
-
-    if successor.is_head:
-        return False
-
-    if spouse := successor.spouse:
-        if spouse.is_head:
-            return False
-        
-        #Here we use a forward view of IF we changed to this house, and how that would affect the dominant house.
-        dominant_house = determine_dominant_house(successor.to_view(overrides={'house':deceased.house, 'is_head':True}), successor.spouse.to_view())
-        
-        # If successor would not dominate after succession, that's a problem
-        if dominant_house != deceased.house:
-            return False
-
-    return True
-
-def find_living_descendant(family: Family, deceased : Person) -> Person | None:
-    queue = family.get_children_age_sorted()  # eldest first
-
-    while queue:
-        child = queue.pop(0)
-
-        if child.is_alive and is_eligible_successor(child, deceased):
-            return child
-
-        queue += child.family.get_children_age_sorted()  # expand down
-
-    return None
-
-def find_closest_living_relative(deceased: Person) -> Person | None:
-    if candidate := find_living_descendant(deceased.family, deceased):
-        return candidate
-
-    return next((heir for ancestor in collect_ancestors(deceased) if (heir := find_living_descendant(ancestor.family, deceased))), None)
-
-def process_succession(death_events: list[Event]) -> list[Event]:
-    events : list[Event] = []
-
-    for death_event in death_events:
-        deceased = death_event.payload["deceased"]
-        
-        if not deceased.is_head:
-            continue  # Only process if the deceased was a Primarch
-        
-        if successor := find_closest_living_relative(deceased):
-            successor.is_head = True
-
-            if successor.house != deceased.house:
-                events.append(create_house_change_event(deceased.life.death_year, successor, deceased.house))
-
-            successor.house = deceased.house
-
-            if successor.is_married:
-                if successor.spouse.house != deceased.house:
-                    events.append(create_house_change_event(deceased.life.death_year, successor.spouse, deceased.house))
-
-                successor.spouse.house = deceased.house
-
-            events.append(create_succession_event(deceased.life.death_year, successor, deceased))
-        else:
-            # Could pick the oldest in the house - might not be related to the head.
-            #success crisis
-            # need to refactor the checks above in case the person we choose is somehow wrong.
-            print(f"House Death {deceased.house} {deceased.race}")
-
-    return events
 
 def fertility_chance(age: int, lower: int, upper: int, num_children: int) -> float:
     if age < lower or age > upper:
@@ -622,28 +700,54 @@ def fertility_chance(age: int, lower: int, upper: int, num_children: int) -> flo
 
     return base_chance
 
-def process_childbirths(people: list[Person], year: int) -> tuple[list[Person], list[Event]]:
+# Generators
+def generate_marriages(world : World):
+    eligible_singles: list[Person] = get_eligible_singles(world.get_alive_people())
+    random.shuffle(eligible_singles)
+
+    already_paired = set()
+
+    for partner, spouse in combinations(eligible_singles, 2):
+        if partner in already_paired or spouse in already_paired:
+            continue
+
+        if can_marry(partner, spouse):
+            world.event_bus.publish(world.create_marriage_event(Marriage(partner, spouse, world.current_year, determine_dominant_house(partner, spouse))))
+            already_paired.add(partner)
+            already_paired.add(spouse)
+            
+
+def generate_deaths(world: World):
+    for person in world.get_alive_people():
+        if person.is_immortal:
+            continue
+
+        if random.random() < person.race.death_chance(person.age):
+            world.event_bus.publish(world.create_death_event(person))
+
+def generate_births(world : World):
     couples: set[tuple[Person, Person]] = set()
 
-    for person in people:
+    for person in world.get_alive_people():
         if not person.can_have_children:
             continue
 
         couple = tuple(sorted([person, person.spouse], key=lambda e: e.gender))
         couples.add(couple)
 
-    events: list[Event] = []
-    children : list[Person] = []
     for mother, father in couples:
         if random.random() < fertility_chance(mother.age, mother.race.childbearing_range[0], mother.race.childbearing_range[1], len(mother.family.children)):
-            child, event = have_child(mother, father, year, mother.house)
-            events.append(event)
-            children.append(child)
+            world.event_bus.publish(world.create_birth_event(mother, father, mother.house))
 
-    return children, events
+def generate_person(race: Race, life: Life, house: House | None = None, first_name: str | None = None, gender: Gender | None = None, is_mainline: bool = False, is_head: bool = False, sexuality: Sexuality | None = None, family : Family | None = None) -> Person:
+    gender = gender or random.choice([Gender.MALE, Gender.FEMALE])
+    first_name = first_name or race.generate_first_name()
+    sexuality = sexuality or Sexuality() #TODO: fly-weight Sexuality.
+    family = family or Family()
 
+    return Person(id=str(uuid.uuid4()), first_name=first_name, gender=gender, house=house, race=race, life=life, sexuality=sexuality, is_mainline=is_mainline, is_head=is_head, family=family)
 
-def make_world(start_year : int) -> World:
+def generate_world(start_year : int) -> World:
     # Expanded namebanks for full-scale simulation
     namebanks = {
         "Human": [
@@ -693,21 +797,6 @@ def make_world(start_year : int) -> World:
         "Gnome":    Race("Gnome",   (50, 120),  (300, 450), (50, 220),  namebanks["Gnome"],     ["Dwarf", "Gnome"]),
     }
 
-    # House -> race mapping
-    house_races = {
-        "Medani": "Leonin",
-        "Tharashk": "Leonin",
-        "Vadalis": "Human",
-        "Jorasco": "Human",
-        "Silverhand": "Gnome",
-        "Cannith": "Human",
-        "Orien": "Orc",
-        "Sivis": "Human",
-        "Deneith": "Leonin",
-        "Phiarlan": "Leonin",
-        "Lyrandar": "Human",
-        "Kundarak": "Dwarf"
-    }
 
     # Distribution
     lesser_distribution = {
@@ -743,54 +832,49 @@ def make_world(start_year : int) -> World:
 
     founders = defaultdict(lambda: None)
     founders["Lyrandar"] = Esravash
+    
+    # House -> race mapping
+    house_races = {
+        "Medani": "Leonin",
+        "Tharashk": "Leonin",
+        "Vadalis": "Human",
+        "Jorasco": "Human",
+        "Silverhand": "Gnome",
+        "Cannith": "Human",
+        "Orien": "Orc",
+        "Sivis": "Human",
+        "Deneith": "Leonin",
+        "Phiarlan": "Leonin",
+        "Lyrandar": "Human",
+        "Kundarak": "Dwarf"
+    }
 
-    all_people : dict[str, Person] = {}
-    all_houses : dict[str, House] = {}
-    events : list[Event] = []
+
+    world = World(start_year)
+
 
     #spawn the major houses
     for house_name, race_name in house_races.items():
-        (founder, spouse), house, event = found_house(house_name, races[race_name], start_year, True, founders[house_name])
-        all_houses[house.name] = house
-        all_people[founder.id] = founder
-        all_people[spouse.id] = spouse
-        events.append(event)
+        world.event_bus.publish(world.create_founding_event(house_name, races[race_name], start_year, True, founders[house_name]))
 
     # spawn the lesser houses.
     for race_name, house_name in zip(race_pool, base_names):
-        (founder, spouse), house, event = found_house(house_name, races[race_name], start_year, False)
-        all_houses[house.name] = house
-        all_people[founder.id] = founder
-        all_people[spouse.id] = spouse
-        events.append(event)
+        world.event_bus.publish(world.create_founding_event(house_name, races[race_name], start_year, False, founders[house_name]))
 
-
-    return World(start_year, all_people, all_houses, events)
+    return world
 
 # --- Main Simulation Function ---
 def simulate_years(world : World, end_year: int):
     for year in range(world.current_year, end_year + 1):
         # make everyone one year older as the year is over
         world.advance_year()
-        living_people : list[Person] = world.get_alive_people()
+        # living_people : list[Person] = world.get_alive_people()
+        generate_deaths(world)
+        generate_births(world)
+        generate_marriages(world)
 
-        year_events  = []
-        death_events = process_deaths(living_people, year)
-        year_events += death_events
 
-        year_events += generate_marriages(living_people, year)
-
-        children, birth_events = process_childbirths(living_people, year)
-        world.add_people(children)
-        year_events += birth_events
-
-        year_events += process_widows(death_events)
-
-        year_events += process_succession(death_events)
-
-        world.events += year_events
-
-world = make_world(0)
+world = generate_world(0)
 simulate_years(world, 250)
 world.events.sort(key=lambda e: e.year)
 for event in world.events:
