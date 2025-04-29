@@ -69,7 +69,7 @@ class SuccessionEvent(Event):
 
     @classmethod
     def should_create_from(cls, cause_event: DeathEvent) -> SuccessionEvent | None:
-        if cause_event.type != "Death":
+        if not isinstance(cause_event, DeathEvent):
             return None
         
         deceased = cause_event.deceased
@@ -84,6 +84,12 @@ class SuccessionEvent(Event):
 
     def apply(self):
         self.successor.is_head = True
+
+        if self.successor.house != self.deceased.house:
+            self.world.event_bus.publish(self.world.create_house_change_event(self.successor, self.deceased.house))
+
+        if self.successor.is_married and self.successor.spouse.house != self.deceased.house:
+            self.world.event_bus.publish(self.world.create_house_change_event(self.successor.spouse, self.deceased.house))
 
     @staticmethod
     def collect_ancestors(person: Person) -> list[Person]:
@@ -129,7 +135,7 @@ class SuccessionEvent(Event):
 
     @staticmethod
     def find_living_descendant(family: Family, deceased : Person) -> Person | None:
-        queue = family.get_children_age_sorted()  # eldest first
+        queue : list[Person] = family.get_children_age_sorted()  # eldest first
 
         while queue:
             child = queue.pop(0)
@@ -154,7 +160,7 @@ class WidowEvent(Event):
 
     @classmethod
     def should_create_from(cls, cause_event: DeathEvent) -> WidowEvent | None:
-        if cause_event.type != "Death":
+        if not isinstance(cause_event, DeathEvent):
             return None
 
         deceased: Person = cause_event.deceased
@@ -552,7 +558,7 @@ class World:
         return SuccessionEvent(
             year=self.current_year,
             type="Succession",
-            description=f"Primarch {deceased} is succeeded by their {find_relationship(deceased.family, successor)} {successor} as the new Primarch of House {successor.house}",
+            description=f"Primarch {deceased} is succeeded by their {find_relationship(deceased.family, successor)} {successor} as the new Primarch of House {deceased.house}",
             world=self,
             successor=successor,
             deceased=deceased
@@ -683,7 +689,7 @@ def fertility_chance(age: int, lower: int, upper: int, num_children: int) -> flo
 
     total_years = upper - lower
     progress = (age - lower) / total_years
-    base_chance = 3 / total_years  # targeting 3 children per woman
+    base_chance = 4 / total_years  # targeting 4 children per woman
 
     if num_children == 1:
         base_chance *= 0.8
@@ -881,8 +887,11 @@ for event in world.events:
     print(f"{event.year} : {event.description}")
 
 
-# for person in world.people.values():
-#     if person.gender == Gender.FEMALE and person.is_married:
-#         print(person, person.age, len(person.family.children))
-# print(len(world.get_alive_people()))
+counts = defaultdict(int)
+for person in world.people.values():
+    if person.gender == Gender.FEMALE and person.is_married:
+        print(person, person.age, len(person.family.children))
+        counts[len(person.family.children)] +=1
+print(counts)
+print(len(world.get_alive_people()))
  
