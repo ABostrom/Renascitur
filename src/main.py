@@ -1,6 +1,5 @@
 from collections import defaultdict
 import random
-from renasci.events.generators import generate_births, generate_deaths, generate_marriages
 from renasci.events.house_events import FoundingEvent
 from renasci.person import Gender, Life
 from renasci.utils.helpers import create_person
@@ -150,10 +149,6 @@ def simulate_years(world : World, end_year: int):
     for year in range(world.current_year, end_year + 1):
         # make everyone one year older as the year is over
         world.advance_year()
-        # living_people : list[Person] = world.get_alive_people()
-        generate_deaths(world)
-        generate_births(world)
-        generate_marriages(world)
 
 
 world = generate_world(0)

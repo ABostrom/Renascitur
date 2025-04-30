@@ -4,7 +4,7 @@ from renasci.family import Family, Marriage
 from renasci.house import House
 from renasci.orientation import Gender, Sexuality
 from renasci.race import Race
-from renasci.stats import StatBlock, StatMixin
+from renasci.stats import StatBlock
 
 
 @dataclass

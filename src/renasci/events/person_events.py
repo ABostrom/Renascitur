@@ -211,8 +211,6 @@ class BirthEvent(Event):
         self.world.stats["prosperity"] += 1
 
 
-
-
 @dataclass
 class MarriageEvent(Event):
     marriage : Marriage

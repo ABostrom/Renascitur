@@ -1,9 +1,7 @@
 from __future__ import annotations
 from dataclasses import dataclass, field
-
 from typing import TYPE_CHECKING
-
-from renasci.stats import StatBlock, StatMixin
+from renasci.stats import StatBlock
 if TYPE_CHECKING:
     from renasci.person import Person
 
