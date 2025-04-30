@@ -1,0 +1,53 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+*.whl
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# pyproject.toml + modern setuptools cache
+*.egg-info/
+*.eggs/
+*.pyd
+
+# PyInstaller
+*.spec
+
+# Test cache
+.cache/
+.pytest_cache/
+.tox/
+
+# VSCode
+.vscode/
+
+# PyCharm
+.idea/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# MyPy / Coverage
+.mypy_cache/
+.coverage
+htmlcov/
+coverage.xml
+
+# System
+.DS_Store
+Thumbs.db
