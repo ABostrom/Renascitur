@@ -32,6 +32,9 @@ class DeathEvent(Event):
 
     def apply(self):
         self.deceased.die(self.year)
+        self.deceased.house.stats["prestige"] -= 1
+        self.world.stats["tension"] += 1
+        self.world.stats["prosperity"] -= 1
 
 @dataclass
 class SuccessionEvent(Event):
@@ -66,6 +69,8 @@ class SuccessionEvent(Event):
 
     def apply(self):
         self.successor.is_head = True
+        self.successor.house.stats["prestige"] += 2
+        self.world.stats["tension"] -= 2
 
         if self.successor.house != self.deceased.house:
             self.world.event_bus.publish(HouseChangeEvent.create(self.world, self.successor, self.deceased.house))
@@ -163,6 +168,8 @@ class WidowEvent(Event):
 
     def apply(self):
         self.widow.marriage = None
+        self.widow.stats["loyalty"] -= 10
+        self.widow.house.stats["unrest"] += 5
 
 
 @dataclass
@@ -200,6 +207,9 @@ class BirthEvent(Event):
         self.father.family.add_child(child)
         self.house.add_person(child)
         self.world.add_person(child)
+        self.house.stats["prestige"] += 1
+        self.world.stats["prosperity"] += 1
+
 
 
 
@@ -217,7 +227,12 @@ class MarriageEvent(Event):
             marriage=marriage
         )
 
-    def apply(self):       
+    def apply(self):
+
+        self.marriage.partner1.house.stats["prestige"] += 1
+        self.marriage.partner2.house.stats["prestige"] += 1
+        self.world.stats["stability"] += 1   
+
         partner1 = self.marriage.partner1
         partner2 = self.marriage.partner2
         dominant_house = self.marriage.dominant_house

@@ -4,6 +4,7 @@ from renasci.family import Family, Marriage
 from renasci.house import House
 from renasci.orientation import Gender, Sexuality
 from renasci.race import Race
+from renasci.stats import StatBlock, StatMixin
 
 
 @dataclass
@@ -29,8 +30,16 @@ class Life:
         self.death_year = year
         self.is_alive = False
 
+
+DEFAULT_PERSON_STATS = {
+            "reputation": (0, -100, 100),
+            "loyalty": (50, 0, 100),
+            "ambition": (30, 0, 100),
+            "health": (100, 0, 100),
+        }   
+
 @dataclass
-class Person:
+class Person():
     id: str
     first_name: str
     gender: Gender
@@ -44,6 +53,8 @@ class Person:
     is_head: bool = False
     is_immortal: bool = False
     maiden_house: House | None = None  # for marriage name changes
+    stats : StatBlock = field(default_factory=lambda : StatBlock.from_dict(DEFAULT_PERSON_STATS))
+
 
     @property
     def name(self) -> str:

@@ -4,15 +4,23 @@ from renasci.events.base import Event, EventBus
 from renasci.events.person_events import SuccessionEvent, WidowEvent
 from renasci.house import House
 from renasci.person import Person
+from renasci.stats import StatBlock, StatMixin
 
+DEFAULT_WORLD_STATS = {
+            "stability": (75, 0, 100),
+            "danger": (10, 0, 100),
+            "prosperity": (50, 0, 100),
+            "tension": (25, 0, 100),
+        }
 
 @dataclass
-class World:
+class World():
     current_year: int
     people: dict[str, Person] = field(default_factory=dict)
     houses: dict[str, House] = field(default_factory=dict)
     events: list[Event] = field(default_factory=list)
     event_bus: EventBus = field(default_factory=EventBus)
+    stats : StatBlock = field(default_factory=lambda : StatBlock.from_dict(DEFAULT_WORLD_STATS))
 
     def __post_init__(self):
         self.register_event_types()

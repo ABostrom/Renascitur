@@ -34,6 +34,7 @@ class HouseChangeEvent(Event):
 
         self.person.maiden_house = self.person.house
         self.person.house = self.house
+        self.house.stats["prestige"] += 1
 
 
 @dataclass
