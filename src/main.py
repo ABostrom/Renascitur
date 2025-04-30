@@ -1,7 +1,7 @@
 from collections import defaultdict
 import random
 from renasci.events.generators import generate_births, generate_deaths, generate_marriages
-from renasci.events.helpers import create_founding_event
+from renasci.events.house_events import FoundingEvent
 from renasci.person import Gender, Life
 from renasci.utils.helpers import create_person
 from renasci.world import World
@@ -114,11 +114,11 @@ def generate_world(start_year : int) -> World:
 
     #spawn the major houses
     for house_name, race_name in house_races.items():
-        world.event_bus.publish(create_founding_event(world, house_name, races[race_name], start_year, True, founders[house_name]))
+        world.event_bus.publish(FoundingEvent.create(world, house_name, races[race_name], start_year, True, founders[house_name]))
 
     # spawn the lesser houses.
     for race_name, house_name in zip(race_pool, base_names):
-        world.event_bus.publish(create_founding_event(world, house_name, races[race_name], start_year, False, founders[house_name]))
+        world.event_bus.publish(FoundingEvent.create(world, house_name, races[race_name], start_year, False, founders[house_name]))
 
     return world
 

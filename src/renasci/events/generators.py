@@ -2,6 +2,7 @@
 from __future__ import annotations
 from itertools import combinations
 import random
+from renasci.events.person_events import BirthEvent, DeathEvent, MarriageEvent
 from renasci.family import Marriage, determine_dominant_house
 from renasci.person import Person
 from renasci.world import World
@@ -78,8 +79,7 @@ def generate_marriages(world : World):
             continue
 
         if can_marry(partner, spouse):
-            from renasci.events.helpers import create_marriage_event
-            world.event_bus.publish(create_marriage_event(world, Marriage(partner, spouse, world.current_year, determine_dominant_house(partner, spouse))))
+            world.event_bus.publish(MarriageEvent.create(world, Marriage(partner, spouse, world.current_year, determine_dominant_house(partner, spouse))))
             already_paired.add(partner)
             already_paired.add(spouse)
             
@@ -90,8 +90,7 @@ def generate_deaths(world: World):
             continue
 
         if random.random() < person.race.death_chance(person.age):
-            from renasci.events.helpers import create_death_event
-            world.event_bus.publish(create_death_event(world, person))
+            world.event_bus.publish(DeathEvent.create(world, person))
 
 def generate_births(world : World):
     couples: set[tuple[Person, Person]] = set()
@@ -105,5 +104,4 @@ def generate_births(world : World):
 
     for mother, father in couples:
         if random.random() < fertility_chance(mother.age, mother.race.childbearing_range[0], mother.race.childbearing_range[1], len(mother.family.children)):
-            from renasci.events.helpers import create_birth_event
-            world.event_bus.publish(create_birth_event(world, mother, father, mother.house))
+            world.event_bus.publish(BirthEvent.create(world, mother, father, mother.house))

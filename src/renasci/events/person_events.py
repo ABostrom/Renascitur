@@ -1,10 +1,15 @@
 from __future__ import annotations
 from dataclasses import dataclass
+import random
 
 from renasci.events.base import Event
-from renasci.family import Family, Marriage, determine_dominant_house
+from renasci.events.house_events import HouseChangeEvent
+from renasci.family import Family, Marriage, determine_dominant_house, find_relationship
 
 from typing import TYPE_CHECKING
+
+from renasci.person import Life
+from renasci.utils.helpers import create_person
 if TYPE_CHECKING:
     from renasci.person import Person
     from renasci.house import House
@@ -14,6 +19,16 @@ if TYPE_CHECKING:
 class DeathEvent(Event):
     deceased : Person
 
+    @classmethod
+    def create(cls, world: World, person: Person) -> DeathEvent:
+        return cls(
+            year=world.current_year,
+            type="Death",
+            description=f"{person.name} died.",
+            world=world,
+            deceased=person,
+        )
+
     def apply(self):
         self.deceased.die(self.year)
 
@@ -21,6 +36,18 @@ class DeathEvent(Event):
 class SuccessionEvent(Event):
     successor : Person
     deceased : Person
+
+    @classmethod
+    def create(cls, world: World, successor: Person, deceased: Person) -> SuccessionEvent:
+        relation = find_relationship(deceased.family, successor)
+        return cls(
+            year=world.current_year,
+            type="Succession",
+            description=f"Primarch {deceased} is succeeded by their {relation} {successor} as the new Primarch of House {deceased.house}",
+            world=world,
+            successor=successor,
+            deceased=deceased
+        )
 
     @classmethod
     def should_create_from(cls, cause_event: DeathEvent) -> SuccessionEvent | None:
@@ -34,19 +61,16 @@ class SuccessionEvent(Event):
         successor = SuccessionEvent.find_closest_living_relative(deceased)
         if not successor:
             return None
-        from renasci.events.helpers import  create_succession_event
-        return create_succession_event(cause_event.world, successor, deceased) # TODO: not sure on this
+        return SuccessionEvent.create(cause_event.world, successor, deceased) # TODO: not sure on this
 
     def apply(self):
         self.successor.is_head = True
 
-
-        from renasci.events.helpers import  create_house_change_event
         if self.successor.house != self.deceased.house:
-            self.world.event_bus.publish(create_house_change_event(self.world, self.successor, self.deceased.house))
+            self.world.event_bus.publish(HouseChangeEvent.create(self.world, self.successor, self.deceased.house))
 
         if self.successor.is_married and self.successor.spouse.house != self.deceased.house:
-            self.world.event_bus.publish(create_house_change_event(self.world, self.successor.spouse, self.deceased.house))
+            self.world.event_bus.publish(HouseChangeEvent.create(self.world, self.successor.spouse, self.deceased.house))
 
     @staticmethod
     def collect_ancestors(person: Person) -> list[Person]:
@@ -116,14 +140,23 @@ class WidowEvent(Event):
     widow : Person
 
     @classmethod
+    def create(cls, world: World, widow: Person, deceased: Person) -> WidowEvent:
+        return cls(
+            year=world.current_year,
+            type="Widowed",
+            description=f"{widow.name} became a widow after {deceased.name}'s death.",
+            world=world,
+            widow=widow
+        )
+
+    @classmethod
     def should_create_from(cls, cause_event: DeathEvent) -> WidowEvent | None:
         if not isinstance(cause_event, DeathEvent):
             return None
 
         deceased: Person = cause_event.deceased
         if deceased.spouse and deceased.spouse.is_alive:
-            from renasci.events.helpers import create_widowed_event
-            return create_widowed_event(cause_event.world, deceased.spouse, deceased)
+            return WidowEvent.create(cause_event.world, deceased.spouse, deceased)
 
         return None
 
@@ -138,6 +171,28 @@ class BirthEvent(Event):
     father: Person
     house : House
 
+    @classmethod
+    def create(cls, world: World, mother: Person, father: Person, house: House) -> BirthEvent:
+        race = mother.race if mother.race == father.race else random.choice([mother.race, father.race])
+        child = create_person(
+            race,
+            life=Life(birth_year=world.current_year),
+            house=house,
+            family=Family(father=father, mother=mother),
+            is_mainline=(mother.is_mainline or father.is_mainline)
+        )
+        return cls(
+            year=world.current_year,
+            type="Birth",
+            description=f"{child.name} was born to {mother.name} and {father.name}.",
+            world=world,
+            mother=mother,
+            father=father,
+            child=child,
+            house=house,
+        )
+
+
     def apply(self):
         child = self.child
         self.mother.family.add_child(child)
@@ -151,6 +206,16 @@ class BirthEvent(Event):
 class MarriageEvent(Event):
     marriage : Marriage
 
+    @classmethod
+    def create(cls, world: World, marriage: Marriage) -> MarriageEvent:
+        return cls(
+            year=world.current_year,
+            type="Marriage",
+            description=f"{marriage.partner1} and {marriage.partner2} were married.",
+            world=world,
+            marriage=marriage
+        )
+
     def apply(self):       
         partner1 = self.marriage.partner1
         partner2 = self.marriage.partner2
@@ -159,9 +224,8 @@ class MarriageEvent(Event):
         partner1.marriage = self.marriage
         partner2.marriage = self.marriage
 
-        from renasci.events.helpers import  create_house_change_event
         if partner1.house != dominant_house:
-            self.world.event_bus.publish(create_house_change_event(self.world, partner1, dominant_house))
+            self.world.event_bus.publish(HouseChangeEvent.create(self.world, partner1, dominant_house))
 
         if partner2.house != dominant_house:
-            self.world.event_bus.publish(create_house_change_event(self.world, partner2, dominant_house))
+            self.world.event_bus.publish(HouseChangeEvent.create(self.world, partner2, dominant_house))

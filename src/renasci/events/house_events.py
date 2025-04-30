@@ -16,6 +16,17 @@ class HouseChangeEvent(Event):
     person : Person
     house : House
 
+    @classmethod
+    def create(cls, world: World, person: Person, house: House) -> HouseChangeEvent:
+        return cls(
+            year=world.current_year,
+            type="HouseChange",
+            description=f"{person.name} joined House {house.name}.",
+            world=world,
+            house=house,
+            person=person,
+        )
+
     def apply(self):
         super().apply()
 
@@ -30,6 +41,19 @@ class FoundingEvent(Event):
     major_house: bool = True
     founder: Person | None = None  # Optionally pre-specified
     founder_age_range: tuple[int, int] = (18, 40)  # Default range for founder/spouse ages
+
+    @classmethod
+    def create(cls, world: World, house_name: str, race: Race, start_year: int, major_house: bool = True, founder: Person | None = None) -> FoundingEvent:
+        return cls(
+            year=start_year,
+            type="Founding",
+            description=f"Founding of House {house_name}.",
+            world=world,
+            house_name=house_name,
+            race=race,
+            major_house=major_house,
+            founder=founder
+        )
 
     def apply(self):
         super().apply()
