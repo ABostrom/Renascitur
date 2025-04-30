@@ -10,42 +10,65 @@ from renasci.race import Race
 def generate_world(start_year : int) -> World:
     # Expanded namebanks for full-scale simulation
     namebanks = {
-        "Human": [
-            "Aerin", "Kaelen", "Mira", "Tavian", "Lira", "Galen", "Soren", "Vasha", "Dalia", "Ren",
-            "Lucan", "Selene", "Marcus", "Elandra", "Julen", "Anika", "Corwin", "Isolde", "Valen", "Neris",
-            "Darien", "Thalia", "Seren", "Cassian", "Lyra", "Elias", "Virel", "Arden", "Talwin", "Orlan",
-            "Jorah", "Nyra", "Caius", "Ilyana", "Quint", "Arista", "Delan", "Soraya", "Theron", "Mariel",
-            "Riven", "Erella", "Faelan", "Brynn", "Caelan", "Lucina", "Maelis", "Torren", "Alaric", "Vestra",
-            "Jasmin", "Dorian", "Kira", "Laziel", "Selar", "Viren", "Nalia", "Oryn", "Cerys", "Thalen"
-        ],
-        "Leonin": [
-            "Tharek", "Khera", "Roan", "Zarek", "Sahria", "Korren", "Nahlia", "Dravon", "Shael", "Varn",
-            "Jakar", "Marha", "Zareen", "Raskan", "Lareth", "Savra", "Harkan", "Yalira", "Braxis", "Noma",
-            "Karn", "Feris", "Rasha", "Dornak", "Varra", "Torken", "Sharai", "Lazhar", "Tharn", "Mirath",
-            "Torak", "Zemra", "Kassan", "Varek", "Rhakar", "Malra", "Dakar", "Narish", "Kovra", "Silrek",
-            "Yaren", "Tholkar", "Zharan", "Jurek", "Nashara", "Volrik", "Kavren", "Draska", "Orrek", "Zhara"
-        ],
-        "Orc": [
-            "Brakka", "Thok", "Urgra", "Zarn", "Mokha", "Draven", "Gorza", "Rok", "Drezza", "Volg",
-            "Karnok", "Sharga", "Thurz", "Grasha", "Borzak", "Murka", "Dorgul", "Varka", "Thrask", "Urna",
-            "Krog", "Zurka", "Blazra", "Togga", "Gorran", "Rugha", "Zugrak", "Brahz", "Thoga", "Kral",
-            "Murz", "Vashka", "Skarn", "Krutha", "Barzug", "Grotha", "Yargul", "Zarna", "Rugok", "Darza",
-            "Kurg", "Zharok", "Kazzak", "Drogna", "Sharn", "Grukk", "Bragha", "Thurg", "Rakha", "Zolrak"
-        ],
-        "Dwarf": [
-            "Thrain", "Gilda", "Korin", "Durra", "Brokk", "Marnin", "Thorek", "Helga", "Brand", "Orla",
-            "Harrek", "Brunna", "Dorgar", "Frida", "Grundin", "Sigrid", "Barik", "Elka", "Torgrim", "Inga",
-            "Kelda", "Hroth", "Mavrik", "Vala", "Balin", "Svala", "Drakka", "Eirik", "Ylva", "Drogan",
-            "Thrainor", "Falka", "Grunna", "Ralgar", "Tharnor", "Astrid", "Grom", "Gudrun", "Dagna", "Halrik",
-            "Orm", "Vigdis", "Kelgar", "Sigga", "Norrik", "Elda", "Thorig", "Ragnor", "Ketta", "Skarn"
-        ],
-        "Gnome": [
-            "Zimble", "Brassel", "Feigen", "Tinkel", "Fizzwick", "Wizzle", "Glim", "Rizzy", "Nim", "Bramble",
-            "Pindle", "Yoffa", "Snorri", "Miska", "Grindle", "Flora", "Voddle", "Nana", "Fibble", "Klem",
-            "Gilda", "Doffa", "Jorra", "Nackle", "Tilly", "Pizzen", "Lemmi", "Zurra", "Moppy", "Zevan",
-            "Wobble", "Gressel", "Jaxit", "Trilla", "Yana", "Bimble", "Tibbin", "Narla", "Quix", "Nixie",
-            "Zibble", "Yettel", "Krissa", "Dakka", "Loof", "Ravva", "Winni", "Fessel", "Droppi", "Zekka"
-        ]
+        "Human": {
+            Gender.MALE: [
+                "Aerin", "Kaelen", "Tavian", "Galen", "Soren", "Ren", "Lucan", "Marcus", "Julen", "Corwin",
+                "Valen", "Darien", "Cassian", "Elias", "Virel", "Arden", "Talwin", "Orlan", "Jorah", "Caius",
+                "Quint", "Delan", "Theron", "Riven", "Faelan", "Caelan", "Torren", "Alaric", "Dorian", "Selar",
+                "Viren", "Oryn", "Thalen"
+            ],
+            Gender.FEMALE: [
+                "Mira", "Lira", "Vasha", "Dalia", "Selene", "Elandra", "Anika", "Isolde", "Neris", "Thalia",
+                "Seren", "Lyra", "Nyra", "Ilyana", "Arista", "Soraya", "Mariel", "Erella", "Brynn", "Lucina",
+                "Maelis", "Vestra", "Jasmin", "Kira", "Laziel", "Nalia", "Cerys"
+            ]
+        },
+        "Leonin": {
+            Gender.MALE: [
+                "Tharek", "Roan", "Zarek", "Korren", "Dravon", "Varn", "Jakar", "Raskan", "Harkan", "Braxis",
+                "Karn", "Feris", "Dornak", "Torken", "Lazhar", "Tharn", "Torak", "Kassan", "Rhakar", "Dakar",
+                "Kovra", "Silrek", "Tholkar", "Zharan", "Jurek", "Volrik", "Kavren", "Orrek"
+            ],
+            Gender.FEMALE: [
+                "Khera", "Sahria", "Nahlia", "Shael", "Marha", "Zareen", "Lareth", "Savra", "Yalira", "Noma",
+                "Rasha", "Varra", "Sharai", "Mirath", "Zemra", "Malra", "Narish", "Yaren", "Nashara", "Draska", "Zhara"
+            ]
+        },
+        "Orc": {
+            Gender.MALE: [
+                "Brakka", "Thok", "Zarn", "Draven", "Rok", "Volg", "Karnok", "Thurz", "Borzak", "Dorgul",
+                "Varka", "Thrask", "Krog", "Togga", "Gorran", "Zugrak", "Brahz", "Thoga", "Kral", "Murz",
+                "Skarn", "Barzug", "Yargul", "Rugok", "Kurg", "Zharok", "Kazzak", "Drogna", "Grukk", "Thurg", "Rakha", "Zolrak"
+            ],
+            Gender.FEMALE: [
+                "Urgra", "Mokha", "Gorza", "Drezza", "Grasha", "Murka", "Urna", "Zurka", "Blazra", "Rugha",
+                "Vashka", "Krutha", "Grotha", "Zarna", "Darza", "Sharga", "Sharn", "Bragha"
+            ]
+        },
+        "Dwarf": {
+            Gender.MALE: [
+                "Thrain", "Korin", "Brokk", "Marnin", "Thorek", "Brand", "Harrek", "Dorgar", "Grundin", "Barik",
+                "Torgrim", "Balin", "Eirik", "Drogan", "Thrainor", "Ralgar", "Tharnor", "Grom", "Halrik", "Orm",
+                "Kelgar", "Norrik", "Thorig", "Ragnor", "Skarn"
+            ],
+            Gender.FEMALE: [
+                "Gilda", "Durra", "Helga", "Orla", "Brunna", "Frida", "Sigrid", "Elka", "Inga", "Kelda",
+                "Vala", "Svala", "Drakka", "Ylva", "Falka", "Grunna", "Astrid", "Gudrun", "Dagna", "Vigdis",
+                "Sigga", "Elda", "Ketta"
+            ]
+        },
+        "Gnome": {
+            Gender.MALE: [
+                "Zimble", "Brassel", "Feigen", "Tinkel", "Fizzwick", "Wizzle", "Glim", "Bramble", "Pindle", "Snorri",
+                "Grindle", "Voddle", "Fibble", "Klem", "Doffa", "Nackle", "Pizzen", "Lemmi", "Zurra", "Zevan",
+                "Wobble", "Gressel", "Jaxit", "Tibbin", "Quix", "Zibble", "Loof", "Fessel"
+            ],
+            Gender.FEMALE: [
+                "Rizzy", "Nim", "Yoffa", "Miska", "Flora", "Nana", "Gilda", "Jorra", "Tilly", "Moppy",
+                "Trilla", "Yana", "Bimble", "Narla", "Nixie", "Yettel", "Krissa", "Dakka", "Ravva", "Winni",
+                "Droppi", "Zekka"
+            ]
+        }
     }
 
     # Create race profile objects

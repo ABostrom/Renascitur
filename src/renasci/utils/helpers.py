@@ -8,7 +8,7 @@ from renasci.race import Race
 
 def create_person(race: Race, life: Life, house: House | None = None, first_name: str | None = None, gender: Gender | None = None, is_mainline: bool = False, is_head: bool = False, sexuality: Sexuality | None = None, family : Family | None = None) -> Person:
     gender = gender or random.choice([Gender.MALE, Gender.FEMALE])
-    first_name = first_name or race.generate_first_name()
+    first_name = first_name or race.generate_first_name(gender)
     sexuality = sexuality or Sexuality() #TODO: fly-weight Sexuality.
     family = family or Family()
 

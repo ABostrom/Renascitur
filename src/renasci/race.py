@@ -3,6 +3,8 @@ from dataclasses import dataclass, field
 import random
 from typing import Literal
 
+from renasci.orientation import Gender
+
 
 @dataclass
 class Race:
@@ -19,8 +21,8 @@ class Race:
     def __repr__(self) -> str:
         return self.name
     
-    def generate_first_name(self) -> str:
-        return random.choice(self.namebank)
+    def generate_first_name(self, gender : Gender) -> str:
+        return random.choice(self.namebank[gender])
     
     def valid_pairing(self, race : Race) -> bool:
         return race.name in self.valid_pairings
