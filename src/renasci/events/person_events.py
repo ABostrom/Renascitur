@@ -13,6 +13,7 @@ from renasci.utils.helpers import create_person
 if TYPE_CHECKING:
     from renasci.person import Person
     from renasci.house import House
+    from renasci.world import World
 
 
 @dataclass

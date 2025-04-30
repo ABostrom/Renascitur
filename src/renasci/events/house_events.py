@@ -9,7 +9,9 @@ from renasci.race import Race
 from renasci.utils.helpers import create_person
 
 
-
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from renasci.world import World
 
 @dataclass
 class HouseChangeEvent(Event):
