@@ -29,7 +29,6 @@ class Life:
         self.death_year = year
         self.is_alive = False
 
-
 @dataclass
 class Person:
     id: str
@@ -38,7 +37,7 @@ class Person:
     house: House
     race: Race
     life: Life
-    sexuality: Sexuality = field(default_factory=lambda: Sexuality("Heterosexual"))
+    sexuality: Sexuality = field(default_factory=Sexuality)
     family: Family = field(default_factory=Family)
     marriage: Marriage | None = None
     is_mainline: bool = False
