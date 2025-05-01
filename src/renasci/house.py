@@ -1,9 +1,12 @@
 from __future__ import annotations
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
+from uuid import uuid4
 from renasci.stats import StatBlock
+
+from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from renasci.person import Person
+    from renasci.world import World
 
 
 DEFAULT_HOUSE_STATS = {
@@ -15,10 +18,12 @@ DEFAULT_HOUSE_STATS = {
 
 @dataclass
 class House():
+    id: str
+    world : World
     name: str
     start_year: int
     founder: Person
-    major_house: bool = True
+    is_major_house: bool = True
     people: dict[str, Person] = field(default_factory=dict)
     stats : StatBlock = field(default_factory=lambda : StatBlock.from_dict(DEFAULT_HOUSE_STATS))
 

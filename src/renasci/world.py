@@ -1,5 +1,6 @@
 from dataclasses import dataclass, field
 
+from renasci.context import WorldContext
 from renasci.events.base import Event, EventBus
 from renasci.events.person_events import SuccessionEvent, WidowEvent
 from renasci.generators.base import EventGenerator
@@ -9,6 +10,7 @@ from renasci.generators.marriages import MarriageGenerator
 from renasci.house import House
 from renasci.person import Person
 from renasci.stats import StatBlock
+
 
 DEFAULT_WORLD_STATS = {
             "stability": (75, 0, 100),
@@ -43,6 +45,8 @@ class World():
         ])
 
     def advance_year(self):
+        self.current_context = WorldContext(year=self.current_year)
+
         for generator in self.generators:
             for event in generator.generate(self):
                 self.event_bus.publish(event)
@@ -58,7 +62,7 @@ class World():
         self.people[person.id] = person
 
     def add_house(self, house: House):
-        self.houses[house.name] = house
+        self.houses[house.id] = house
 
     def add_event(self, event: Event):
         self.events.append(event)

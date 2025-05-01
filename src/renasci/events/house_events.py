@@ -6,7 +6,7 @@ from renasci.family import Marriage
 from renasci.house import House
 from renasci.person import Life, Person
 from renasci.race import Race
-from renasci.utils.helpers import create_person
+from renasci.utils.helpers import create_person, create_house
 
 
 from typing import TYPE_CHECKING
@@ -64,26 +64,24 @@ class FoundingEvent(Event):
         world = self.world
 
         founder = self.founder or create_person(
+            world=world,
             race=self.race,
             life=Life(age=random.randint(*self.founder_age_range)),
             is_mainline=True,
             is_head=True
         )
 
-        # 2. Create House
-        house = House(self.house_name, self.year, founder, self.major_house)
-        founder.house = house
+        house = create_house(world=world, name=self.house_name, start_year=self.year, founder=founder, is_major_house=self.major_house)
 
-        # 3. Create Spouse
         spouse_gender = founder.gender.get_opposite()
         spouse = create_person(
+            world=world,
             race=self.race,
             life=Life(age=random.randint(*self.founder_age_range)),
             house=house,
             gender=spouse_gender
         )
 
-        # 4. Quietly marry (no marriage event, just link internally)
         marriage = Marriage(founder, spouse, self.year, house)
         founder.marriage = marriage
         spouse.marriage = marriage

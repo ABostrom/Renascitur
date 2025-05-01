@@ -55,9 +55,9 @@ def determine_dominant_house(p1: PersonView, p2: PersonView) -> House | None:
     if p2.is_head and not p1.is_head:
         return p2.house
 
-    if p1.house.major_house and not p2.house.major_house:
+    if p1.house.is_major_house and not p2.house.is_major_house:
         return p1.house
-    if p2.house.major_house and not p1.house.major_house:
+    if p2.house.is_major_house and not p1.house.is_major_house:
         return p2.house
 
     if p1.gender == Gender.FEMALE:

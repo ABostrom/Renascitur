@@ -6,6 +6,9 @@ from renasci.orientation import Gender, Sexuality
 from renasci.race import Race
 from renasci.stats import StatBlock
 
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from renasci.world import World
 
 @dataclass
 class PersonView:
@@ -35,12 +38,12 @@ DEFAULT_PERSON_STATS = {
             "reputation": (0, -100, 100),
             "loyalty": (50, 0, 100),
             "ambition": (30, 0, 100),
-            "health": (100, 0, 100),
         }   
 
 @dataclass
 class Person():
     id: str
+    world : World
     first_name: str
     gender: Gender
     house: House

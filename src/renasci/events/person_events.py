@@ -183,7 +183,8 @@ class BirthEvent(Event):
     def create(cls, world: World, mother: Person, father: Person, house: House) -> BirthEvent:
         race = mother.race if mother.race == father.race else random.choice([mother.race, father.race])
         child = create_person(
-            race,
+            world=world,
+            race=race,
             life=Life(birth_year=world.current_year),
             house=house,
             family=Family(father=father, mother=mother),

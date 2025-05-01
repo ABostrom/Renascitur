@@ -108,8 +108,10 @@ def generate_world(start_year : int) -> World:
 
     random.shuffle(race_pool)
 
+    world = World(start_year)
+
     # create Esravash because she's unique.
-    Esravash = create_person(race=races["Human"], life=Life(0, 30), gender=Gender.FEMALE, is_head=True, is_mainline=True, first_name="Esravash")
+    Esravash = create_person(world=world, race=races["Human"], life=Life(0, 30), gender=Gender.FEMALE, is_head=True, is_mainline=True, first_name="Esravash")
     Esravash.is_immortal = True
 
     founders = defaultdict(lambda: None)
@@ -131,8 +133,6 @@ def generate_world(start_year : int) -> World:
         "Kundarak": "Dwarf"
     }
 
-
-    world = World(start_year)
 
     #spawn the major houses
     for house_name, race_name in house_races.items():
