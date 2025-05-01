@@ -1,6 +1,5 @@
 from __future__ import annotations
 from dataclasses import dataclass, field
-from uuid import uuid4
 from renasci.stats import StatBlock
 
 from typing import TYPE_CHECKING
@@ -25,16 +24,21 @@ class House():
     founder: Person
     is_major_house: bool = True
     people: dict[str, Person] = field(default_factory=dict)
-    stats : StatBlock = field(default_factory=lambda : StatBlock.from_dict(DEFAULT_HOUSE_STATS))
+    stats : StatBlock = field(init=False)
+
+    def __post_init__(self):
+        self.add_person(self.founder)
+        self.founder.house = self
+        self.stats = StatBlock.from_dict(self, self.world, DEFAULT_HOUSE_STATS)
 
     def __str__(self) -> str:
         return self.name
 
     def __repr__(self) -> str:
         return str(self)
-    
-    def __post_init__(self):
-        self.add_person(self.founder)
-
+        
     def add_person(self, person: Person):
         self.people[person.id] = person
+
+    def __hash__(self) -> int:
+        return hash(self.id)

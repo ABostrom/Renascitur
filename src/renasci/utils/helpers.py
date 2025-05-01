@@ -21,6 +21,8 @@ def create_person(world : World, race: Race, life: Life, house: House | None = N
 
 
 def create_house(world : World, name : str, start_year : int, founder : Person, is_major_house : bool) -> House:
-    house = House(id=str(uuid.uuid4()), world=world, name=name, start_year=start_year, founder=founder, is_major_house=is_major_house)
-    founder.house = house
-    return house
+    return House(id=str(uuid.uuid4()), world=world, name=name, start_year=start_year, founder=founder, is_major_house=is_major_house)
+
+# def create_world(start_year : int) -> World:
+#     return World(id=str(uuid.uuid4()), start_year=start_year)
+   

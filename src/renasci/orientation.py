@@ -15,7 +15,7 @@ class Gender(Enum):
         return self.value
 
     def __repr__(self) -> str:
-        return self.vaule
+        return self.value
 
     def __lt__(self, other: Gender) -> bool:
         return self.value < other.value

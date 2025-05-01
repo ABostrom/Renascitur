@@ -56,8 +56,10 @@ class Person():
     is_head: bool = False
     is_immortal: bool = False
     maiden_house: House | None = None  # for marriage name changes
-    stats : StatBlock = field(default_factory=lambda : StatBlock.from_dict(DEFAULT_PERSON_STATS))
+    stats : StatBlock = field(init=False)
 
+    def __post_init__(self):
+        self.stats = StatBlock.from_dict(self,self.world,DEFAULT_PERSON_STATS)
 
     @property
     def name(self) -> str:

@@ -4,12 +4,14 @@ from typing import Iterator
 from renasci.generators.base import EventGenerator
 from renasci.events.person_events import BirthEvent
 from typing import TYPE_CHECKING
+
+from renasci.person import Person
 if TYPE_CHECKING:
     from renasci.world import World
 
 class BirthGenerator(EventGenerator):
     def generate(self, world: World) -> Iterator[BirthEvent]:
-        couples = set()
+        couples : set[tuple[Person, Person]] = set()
         for person in world.get_alive_people():
             if not person.can_have_children:
                 continue

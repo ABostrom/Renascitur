@@ -1,5 +1,7 @@
 from collections import defaultdict
 import random
+from uuid import UUID
+import uuid
 from renasci.events.house_events import FoundingEvent
 from renasci.person import Gender, Life
 from renasci.utils.helpers import create_person
@@ -108,7 +110,8 @@ def generate_world(start_year : int) -> World:
 
     random.shuffle(race_pool)
 
-    world = World(start_year)
+    # world = create_world(start_year)
+    world = World(id=str(uuid.uuid4()), current_year=start_year)
 
     # create Esravash because she's unique.
     Esravash = create_person(world=world, race=races["Human"], life=Life(0, 30), gender=Gender.FEMALE, is_head=True, is_mainline=True, first_name="Esravash")
@@ -153,9 +156,9 @@ def simulate_years(world : World, end_year: int):
 
 world = generate_world(0)
 simulate_years(world, 250)
-world.events.sort(key=lambda e: e.year)
-for event in world.events:
-    print(f"{event.year} : {event.description}")
+# world.events.sort(key=lambda e: e.year)
+# for event in world.events:
+#     print(f"{event.year} : {event.description}")
 
 
 # counts = defaultdict(int)

@@ -1,6 +1,7 @@
 from __future__ import annotations
 from dataclasses import dataclass
 import random
+import uuid
 from renasci.events.base import Event
 from renasci.family import Marriage
 from renasci.house import House

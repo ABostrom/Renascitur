@@ -21,15 +21,17 @@ DEFAULT_WORLD_STATS = {
 
 @dataclass
 class World():
+    id : str
     current_year: int
     people: dict[str, Person] = field(default_factory=dict)
     houses: dict[str, House] = field(default_factory=dict)
     events: list[Event] = field(default_factory=list)
     generators : list[EventGenerator] = field(default_factory=list)
     event_bus: EventBus = field(default_factory=EventBus)
-    stats : StatBlock = field(default_factory=lambda : StatBlock.from_dict(DEFAULT_WORLD_STATS))
+    stats : StatBlock = field(init=False)
 
     def __post_init__(self):
+        self.stats = StatBlock.from_dict(self,self,DEFAULT_WORLD_STATS)
         self.register_event_types()
         self.register_generator_types()
 
@@ -69,4 +71,13 @@ class World():
 
     def get_alive_people(self) -> list[Person]:
         return [p for p in self.people.values() if p.is_alive]
+    
+    def __hash__(self) -> int:
+        return hash(self.id)
+    
+    def __str__(self) -> str:
+        return str(f"year: {self.current_year}")
+
+    def __repr__(self) -> str:
+        return str(self)
     
