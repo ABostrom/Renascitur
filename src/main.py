@@ -156,9 +156,9 @@ def simulate_years(world : World, end_year: int):
 
 world = generate_world(0)
 simulate_years(world, 250)
-# world.events.sort(key=lambda e: e.year)
-# for event in world.events:
-#     print(f"{event.year} : {event.description}")
+world.events.sort(key=lambda e: e.year)
+for event in world.events:
+    print(f"{event.year} : {event.description}")
 
 
 # counts = defaultdict(int)

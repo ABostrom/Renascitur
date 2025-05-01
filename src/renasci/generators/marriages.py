@@ -2,7 +2,7 @@ from __future__ import annotations
 import random
 from itertools import combinations
 from typing import Iterator
-from renasci.generators.base import EventGenerator
+from renasci.generators.base import CoreEventGenerator
 from renasci.events.person_events import MarriageEvent
 from renasci.family import Marriage, determine_dominant_house
 from renasci.person import Person
@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 
 
 
-class MarriageGenerator(EventGenerator):
+class MarriageGenerator(CoreEventGenerator):
     def generate(self, world: World) -> Iterator[MarriageEvent]:
         eligible_singles = self.get_eligible_singles(world.get_alive_people())
         random.shuffle(eligible_singles)

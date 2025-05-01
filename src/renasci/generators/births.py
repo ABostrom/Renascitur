@@ -1,7 +1,7 @@
 from __future__ import annotations
 import random
 from typing import Iterator
-from renasci.generators.base import EventGenerator
+from renasci.generators.base import CoreEventGenerator
 from renasci.events.person_events import BirthEvent
 from typing import TYPE_CHECKING
 
@@ -9,7 +9,7 @@ from renasci.person import Person
 if TYPE_CHECKING:
     from renasci.world import World
 
-class BirthGenerator(EventGenerator):
+class BirthGenerator(CoreEventGenerator):
     def generate(self, world: World) -> Iterator[BirthEvent]:
         couples : set[tuple[Person, Person]] = set()
         for person in world.get_alive_people():

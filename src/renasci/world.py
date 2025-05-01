@@ -3,10 +3,11 @@ from dataclasses import dataclass, field
 from renasci.context import WorldContext
 from renasci.events.base import Event, EventBus
 from renasci.events.person_events import SuccessionEvent, WidowEvent
-from renasci.generators.base import EventGenerator
+from renasci.generators.base import CoreEventGenerator, EventGenerator, StatThresholdGenerator
 from renasci.generators.births import BirthGenerator
 from renasci.generators.deaths import DeathGenerator
 from renasci.generators.marriages import MarriageGenerator
+from renasci.generators.stats import GrumblingGenerator
 from renasci.house import House
 from renasci.person import Person
 from renasci.stats import StatBlock
@@ -44,18 +45,28 @@ class World():
             BirthGenerator(),
             MarriageGenerator(),
             DeathGenerator(),
+            GrumblingGenerator()
         ])
 
     def advance_year(self):
         self.current_context = WorldContext(year=self.current_year)
 
-        for generator in self.generators:
-            for event in generator.generate(self):
-                self.event_bus.publish(event)
-
-        self.current_year += 1
+        # 1. People age
         for person in self.get_alive_people():
             person.life.age += 1
+
+        for generator in self.generators:
+            if isinstance(generator, CoreEventGenerator):
+                for event in generator.generate(self):
+                    self.event_bus.publish(event)
+
+        for generator in self.generators:
+            if isinstance(generator, StatThresholdGenerator):
+                for event in generator.generate(self):
+                    self.event_bus.publish(event)
+
+        self.current_year += 1
+
 
     def add_people(self, people : list[Person]):
         for person in people : self.add_person(person)

@@ -90,3 +90,17 @@ class FoundingEvent(Event):
         # 5. Add people to world
         world.add_people([founder, spouse])
         world.add_house(house)
+
+@dataclass
+class GrumblingEvent(Event):
+    house : House
+
+    @classmethod
+    def create(cls, world: World, house: House) -> GrumblingEvent:
+        return cls(
+            year=world.current_year,
+            type="Grumbling",
+            description=f"House {house} is experiencing growing unrest among its members {house.stats["unrest"]}",
+            world=world,
+            house=house,
+        )
