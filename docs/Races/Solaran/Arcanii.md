@@ -7,4 +7,4 @@ The Arcanii are the direct inheritors of Solaran arcane mastery. They live in ma
 - **Abilities**: Exceptional spellcasters, with a natural affinity for manipulating raw magical energy.
 ## Thaysian Arcanii
 
-Arcanii in [[Thaysian Magocracy]] are a graceful and elegant people, known for their beauty and wisdom. They possess a natural grace and agility that sets them apart from other races, and they have a deep connection to the arcane world. 
+Arcanii in [[Thraysian Magocracy]] are a graceful and elegant people, known for their beauty and wisdom. They possess a natural grace and agility that sets them apart from other races, and they have a deep connection to the arcane world. 
