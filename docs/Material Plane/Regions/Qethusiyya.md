@@ -1,7 +1,7 @@
 Th# Thaysian Dominion
 
 
-# The Dead Sands (Al-Raml Al-Mahit)
+# The Dead Sands (Al-Raml)
 
 
 # Iron Mountains

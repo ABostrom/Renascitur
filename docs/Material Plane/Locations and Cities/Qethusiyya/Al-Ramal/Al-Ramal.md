@@ -1,0 +1,1 @@
+Al-Ramal is a vast, arid wasteland to the north of Qethusiyya. Once the heart of a forgotten Solaran civilization, it is now a grave of memory, haunted by glyphstorms and buried relics. Few return from its depths with their minds intact.
