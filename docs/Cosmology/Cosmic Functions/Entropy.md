@@ -2,6 +2,7 @@
 aliases:
   - Aberrant
   - Aberrant Energy
+  - Aberrant Corruption
 ---
 **Aspect**: Unmaking, Dissolution, Void  
 **Opposes**: [[Weave]] itself  

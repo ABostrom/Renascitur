@@ -1,3 +1,7 @@
+---
+aliases:
+  - Schism
+---
 After the psychic schism, great swathes of the population were killed. The world reacted in utter terror at the devastation and destruction of civilization as they knew it. 
 
 Kingdom’s fell, and civilization crumbled. Humanity regressed into small homesteads that barely communicated. Travel between neighbouring villages was all but impossible as during the night the creatures descend on travellers far from light sources.

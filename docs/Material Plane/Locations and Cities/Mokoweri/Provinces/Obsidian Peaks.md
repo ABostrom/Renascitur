@@ -1,0 +1,1 @@
+This region is dominated by a towering mountain range, whose jagged peaks pierce the sky. The Obsidian Peaks are a formidable challenge for any adventurer, with treacherous cliffs and steep inclines that require skill and endurance to navigate. The peaks are also home to many rare and valuable minerals, making them a popular destination for miners and prospectors.
