@@ -11,13 +11,13 @@ written-language: [[Common Script]]
 # Uftine Humans
 
 **Summary:**  
-The Uftine are hardy humans adapted to the frozen, harsh northern regions. They have developed thick builds and a resilience born of endless winters.
+The [[docs/Material Plane/Locations and Cities/Arcturia/Cities/Uftine/Uftine|Uftine]] are hardy [[Terran|Terrans]] adapted to the frozen, harsh northern regions. They have developed thick builds and a resilience born of endless winters.
 
 ---
 
 ## Origins
 
-- Descendants of Terran humans who settled the icy north.
+- Descendants of [[Terran|Terrans]] who settled the icy north.
 
 ---
 

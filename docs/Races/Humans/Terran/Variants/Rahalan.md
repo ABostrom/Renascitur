@@ -17,7 +17,7 @@ The Rahalan are nomadic desert tribes descended from Terran humans. Known for th
 
 ## Origins
 
-- Exiles and wanderers who adapted to the deserts surrounding the [[Firebrand Empire]].
+- Exiles and wanderers who adapted to the [[Al-Ramal]] desert to the north of the [[Qethusiyya]].
 
 ---
 

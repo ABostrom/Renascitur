@@ -1,5 +1,5 @@
 ---
-aliases: [Humans]
+aliases: [Humans, Terrans]
 tags: [race, mortal, adaptable]
 lineage: Mortal Race
 origin-plane: [[Material Plane]]

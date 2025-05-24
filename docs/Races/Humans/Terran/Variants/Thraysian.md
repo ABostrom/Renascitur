@@ -17,7 +17,7 @@ Thraysian Humans are desert dwellers from the [[Thraysian Magocracy]], known for
 
 ## Origins
 
-- Descended from Terran humans adapted to desert and arid lands.
+- Descended from [[Terran|Terrans]] adapted to desert and arid lands.
 
 ---
 

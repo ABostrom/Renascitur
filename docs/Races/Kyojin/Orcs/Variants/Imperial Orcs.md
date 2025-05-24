@@ -11,7 +11,7 @@ written-language: [[Orcish Script]], [[Common Script]]
 # Imperial Orcs
 
 **Summary:**  
-Imperial Orcs are a martial and disciplined branch of Orcs who serve the [[Firebrand Empire]]. They combine traditional orcish strength with imperial military discipline.
+Imperial Orcs are a martial and disciplined branch of [[Orc|Orcs]] who serve the [[Firebrand Empire]]. They combine traditional orcish strength with imperial military discipline.
 
 ---
 

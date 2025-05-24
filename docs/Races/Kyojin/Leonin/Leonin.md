@@ -18,13 +18,13 @@ written-language: Natsugen Script, [[Leonin Script]]
 # Leonin
 
 **Summary:**  
-The Leonin are a noble and proud race descended from the Kyojin, known for their feline features, wisdom, and prowess in combat.
+The Leonin are a noble and proud race descended from the [[Kyojin]], known for their feline features, wisdom, and prowess in combat.
 
 ---
 
 ## Origins
 
-- Descended from Kyojin clans who developed refined culture and martial traditions.
+- Descended from [[Kyojin]] clans who developed refined culture and martial traditions.
 
 ---
 

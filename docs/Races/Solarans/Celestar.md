@@ -11,14 +11,14 @@ written-language: [[Celestari Script]]
 # Celestar
 
 **Summary:**  
-The Celestar, formerly known as Aerlai, are a distinct race evolved from Solarans. Known for their radiant appearance and powerful celestial magic, they serve as shining beacons in the cosmos.
+The Celestar, are a distinct race evolved from [[Solaran|Solarans]]. Known for their radiant appearance and powerful celestial magic, they serve as shining beacons in the cosmos.
 
 ---
 
 ## Origins
 
-- Diverged from Solarans during the First Age to embrace pure celestial magic.  
-- Known for their flame-forged dialect, Zytherin.
+- Diverged from [[Solaran|Solarans]] during the First Age to embrace pure celestial magic.  
+- Known for their flame-forged dialect, [[Zytherin|Zytherin]].
 
 ---
 

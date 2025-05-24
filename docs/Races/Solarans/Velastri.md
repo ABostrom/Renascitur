@@ -11,7 +11,7 @@ written-language: [[Velastri Script]]
 # Velastri
 
 **Summary:**  
-The Velastri are a distinct and fearsome race descended from Solarans who became corrupted and twisted by the harsh environment of [[Infernum]]. They embody infernal might and arcane power.
+The Velastri are a distinct and fearsome race descended from [[Solaran|Solarans]] who became corrupted and twisted by the harsh environment of [[Infernum]]. They embody infernal might and arcane power.
 
 ---
 

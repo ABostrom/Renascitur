@@ -11,7 +11,7 @@ written-language: [[Natsugen Script]], [[Orcish Script]]
 # Orcs
 
 **Summary:**  
-Orcs are a fierce and powerful race descended from the primal Kyojin. They are known for their strength, resilience, and spiritual traditions.
+Orcs are a fierce and powerful race descended from the primal [[Kyojin]]. They are known for their strength, resilience, and spiritual traditions.
 
 ---
 
