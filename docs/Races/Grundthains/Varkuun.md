@@ -11,7 +11,7 @@ written-language: [[Karathic Script]]
 # Varkuun
 
 **Summary:**  
-The Varkuun are a proud elemental race descended from the Grundthain, embodying the raw power of the primal forces. They are often seen as mystical giants with deep ties to the elements.
+The Varkuun are a proud elemental race descended from the [[Grundthain]], embodying the raw power of the primal forces. They are often seen as mystical giants with deep ties to the elements.
 
 ---
 
@@ -32,7 +32,7 @@ The Varkuun are a proud elemental race descended from the Grundthain, embodying 
 ## Culture
 
 - Deeply spiritual, with rituals honoring the elemental gods.  
-- Hold sacred sites throughout [[Onderweld]].
+- Hold sacred sites throughout [[Thargrun]].
 
 ---
 

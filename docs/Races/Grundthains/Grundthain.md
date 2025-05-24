@@ -17,7 +17,7 @@ The Grundthain are towering beings of elemental power and harmony, intrinsically
 
 ## Origins
 
-- Born in the plane of [[Onderweld]], connected deeply to primal elemental forces.  
+- Born in the plane of [[Thargrun]], connected deeply to primal elemental forces.  
 - Divided into elemental clans: Frost, Fire, Storm, and Hill Giants.
 
 ---

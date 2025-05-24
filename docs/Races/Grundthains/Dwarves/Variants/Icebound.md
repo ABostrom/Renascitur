@@ -11,7 +11,7 @@ written-language: [[Dwarven Script]]
 # Icebound Dwarves
 
 ## Overview  
-The [[Icebound Dwarves]] are a stoic and enduring clan who dwell in the frost-veined city of [[docs/Races/Humans/Terran/Variants/Uftine]], nestled amid the glaciers and frozen peaks of the far North. They are the wardens of the **Pulsecore**, a slumbering wound where [[Zaratan]] — the elemental of earth and endurance — was fractured by corruption in the First Age and sealed by [[Muradin]].
+The [[Icebound|Icebound Dwarves]] are a stoic and enduring clan who dwell in the frost-veined city of [[docs/Races/Humans/Terran/Variants/Uftine]], nestled amid the glaciers and frozen peaks of the far North. They are the wardens of the **Pulsecore**, a slumbering wound where [[Zaratan]] — the elemental of earth and endurance — was fractured by corruption in the First Age and sealed by [[Muradin]].
 
 Their hearts beat slow, like the mountains they inhabit.  
 They do not rage. They endure — and remember.
