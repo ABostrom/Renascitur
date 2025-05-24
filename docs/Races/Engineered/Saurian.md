@@ -1,34 +1,62 @@
 ---
-aliases:
-  - Saurians
+aliases: [Saurians]
+tags: [race, engineered, reptilian, spiritual]
+lineage: Engineered Race
+origin-plane: [[Material Plane]]
+aat-race-tier: engineered
+spoken-language: [[Denisovan]], [[Mokoweran]]
+written-language: Denisovan Script, Mokoweran Script
 ---
 
+# Saurians
 
+**Summary:**  
+The Saurians are a deeply spiritual, reptilian humanoid race engineered by the ancient [[Solarans]] to resist aberrant energy. They inhabit the jungles of [[Mokoweri]], living in harmony with nature and their deity [[Irasandra]].
 
-The Saurians are a deeply spiritual and resilient reptilian humanoid race, inhabiting the lush, uncharted depths of the jungles on the Isle of Mokoweri. With their tall, muscular frames, scaly skin in hues of green, brown, and grey, and adorned with bright markings, they are a testament to the diverse and vibrant life that thrives in their secluded world. Once servants of the technologically advanced Solaran civilization, the Saurians have, over generations, distanced themselves from their origins as biological weapons against cosmic corruption, choosing instead a path of harmony with nature and dedication to their deity, Irasandra.
+---
 
-**Cultural Foundations** 
-Saurian culture is built around a profound respect for the natural world, a legacy of their creation and transformation. Their society values community, family, and the collective well-being above individual desires. This sense of unity is reflected in their communal dwellings high among the treetops of Mokoweri's dense jungles, where the Saurians have mastered the art of living in balance with their environment, with minimal impact on the natural world.
+## Origins
 
-**Spiritual Beliefs** 
-Central to Saurian life is their worship of Irasandra, the island goddess who, according to legend, shielded them from the brink of extinction and guided them to a new purpose beyond the intentions of their creators. Irasandra represents the heart of the island's life force, embodying the beauty and ferocity of nature. Her worship involves elaborate rituals and offerings, conducted in sacred groves and at altars scattered throughout their territory, aimed at preserving the balance of the natural world and seeking guidance.
+- Created by the Solarans as bio-engineered guardians against aberrant corruption.  
+- Distanced themselves from their creators to embrace nature and spirituality.
 
-**The Treetop City: The Heart of Saurian Civilization** 
-The pinnacle of Saurian architecture and community life is their treetop city, a marvel of organic design and sustainable living. Built within the canopy of giant ancient trees, the city is a network of platforms, bridges, and dwellings, all constructed from renewable resources and designed to blend seamlessly into the jungle. This hidden metropolis is not only a refuge from the dangers of the jungle floor but also a center of learning, spirituality, and governance.
+---
 
-**The Elders' Council and Governance** 
-The governance of the Saurian people is overseen by an Elders' Council, composed of the most wise and respected elder druids who have survived the rite of passage and carry the knowledge of their origins and purpose. This council ensures that the Saurians' actions remain in harmony with their beliefs, guiding them in matters of spirituality, conflict resolution, and interactions with the outside world, albeit cautiously.
+## Appearance
 
-**Rite of Passage** 
-The rite of passage into the Elders' Council is a sacred tradition, marking both the spiritual maturity of an individual and their readiness to bear the weight of the Saurian legacy. It is during this rite that the truth of their creation and the depth of their connection to Irasandra and the natural world are revealed, a knowledge that comes with great responsibility and often, a heavy heart.
+- Tall, muscular, with scaly skin in green, brown, and grey tones.  
+- Adorned with bright markings symbolizing spiritual and clan identity.
 
-**Daily Life and Practices**
-Daily life for a Saurian revolves around the community and the care of their environment. Agriculture, hunting, and gathering are conducted with great respect for the jungle's bounty, ensuring sustainability and minimal waste. Their diet is varied, consisting of fruits, vegetables, and proteins, sourced from the jungle and prepared in communal kitchens.
+---
 
-**Arts and Expression** 
-Saurian art, music, and dance are deeply intertwined with their spiritual beliefs and the natural rhythms of their environment. Their cultural expressions are often communal, with festivals and ceremonies that celebrate the cycles of life, honor Irasandra, and recount the stories of their ancestors through elaborate costumes, body paint, and masked performances.
+## Culture
 
-### [[Saurian]] Creation
+- Community-focused and deeply connected to the natural world.  
+- Governed by an Elders’ Council and guided by spiritual rites.
+
+---
+
+## Abilities
+
+- Innate resistance to aberrant energy.  
+- Skilled hunters, warriors, and spiritual mediums.
+
+---
+
+## Languages
+
+- Speak [[Denisovan]] and [[Mokoweran]], a unique jungle dialect mixing ancient roots.
+
+---
+
+## Notes
+
+- Their existence is vital to maintaining the balance on [[Mokoweri]].  
+- Their resilience and spiritual nature make them formidable guardians.
+
+---
+
+## Creation
 
 **Research Log Entry #12**
 
@@ -57,3 +85,7 @@ In our pursuit of knowledge and the development of protective measures against a
 It is with a heavy heart that I acknowledge our failure in this regard. Our experiments have demonstrated the potential dangers of scientific ambition devoid of compassion. From this moment forward, our priority must shift to the welfare and conservation of the Saurians, our living guardians of Mokoweri.
 
 We will redouble our efforts to develop protective measures through ethical means, ensuring that the Saurians are never again subjected to harm in the name of progress. We owe them our deepest apologies and our commitment to a brighter, more responsible future for all inhabitants of Mokoweri.
+
+---
+
+> “Guardians of the jungle’s heart.”

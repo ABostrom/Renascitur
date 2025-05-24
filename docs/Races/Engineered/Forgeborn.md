@@ -1,9 +1,59 @@
-As the first of the Forgeborn, Forgeborn Prime [[Hephaestus]] was created with a unique purpose - to lead the charge against the forces of [[Entropy]]. With his advanced technology and mastery of the Soul Forge, he created an army of loyal warriors to aid him in his mission.
+---
+aliases: [Forgeborn]
+tags: [race, engineered, undead, constructs]
+lineage: Engineered Race
+origin-plane: [[Material Plane]]
+aat-race-tier: engineered
+spoken-language: None (communication via Arcanometric Protocols)
+written-language: Arcanometric Script (written-only)
+---
 
-[[Hephaestus]] as the son of [[Vecna]]
+# Forgeborn
 
-Over the centuries, the Forgeborn have developed their own culture and society, with [[Hephaestus]] serving as their patriarch and guiding light. They see themselves as protectors of the universe and are fiercely loyal to their creator and to each other.
+**Summary:**  
+The Forgeborn are souldbound constructs created by [[Vecna]] in the Second Age, forged by binding souls into mechanical bodies powered by dark magic and arcane technology. Their mission is to eradicate entropy and aberrations from the multiverse.
 
-Despite their origins, many Forgeborn have developed a sense of independence and free will, questioning their place in the world and the nature of their existence. Some have even rebelled against their creator, seeking their own path and purpose.
+---
 
-But for the most part, the Forgeborn remain devoted to their prime directive - the destruction of [[Entropy|Aberrant]] and [[Ishna]] and all that threatens the balance of the universe. And with [[Hephaestus]] as their leader, they will stop at nothing to achieve their goal.
+## Origins
+
+- Created by [[Vecna]] from his son [[Hephaestus]]’s soul, becoming the Forgeborn Prime.  
+- Mass-produced during the [[Forge Wars]] as unstoppable legions.
+
+---
+
+## Appearance
+
+- Mechanical and skeletal, with arcane runes and crystal cores glowing with dark energy.  
+- Varying designs from humanoid to monstrous war machines.
+
+---
+
+## Culture
+
+- No culture; operate on strict protocols and directives.  
+- Communication limited to arcane pulse signals and mage scholars’ commands.
+
+---
+
+## Abilities
+
+- Immune to corruption and entropy.  
+- Possess immense strength, resilience, and arcane weaponry.
+
+---
+
+## Languages
+
+- Use **Arcanometric Protocols**, a pulse-based written-only language used by mage scholars and arcane engineers.
+
+---
+
+## Notes
+
+- Serve as tools of [[Vecna]]’s vision to restore order through eradication of chaos.  
+- Fearless and relentless in their mission, devoid of mercy or free will.
+
+---
+
+> “Souls bound in steel, the hammer of order.”
