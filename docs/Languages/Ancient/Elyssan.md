@@ -25,7 +25,6 @@ spoken-by: [[Solarans]], [[Arcanii]], [[Ferrun]], [[Aerlai]], [[Velastri]]
 
 - Elyssan is considered the **language of cosmic law and balance**.
 - Used in rites, contracts, and ceremonies — especially among [[Arcanii]], [[Aerlai]], and [[Velastri]].
-- Many [[Luxan]] dialects and scripts derive directly from Elyssan’s phonetics and syntax.
 
 ---
 
