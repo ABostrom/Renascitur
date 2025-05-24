@@ -4,7 +4,7 @@ tags: [race, engineered, reptilian, spiritual]
 lineage: Engineered Race
 origin-plane: [[Material Plane]]
 aat-race-tier: engineered
-spoken-language: [[Denisovan]], [[Mokoweran]]
+spoken-language: [[Denisovan Mokoweran]]
 written-language: Denisovan Script, Mokoweran Script
 ---
 

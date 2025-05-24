@@ -4,8 +4,8 @@ tags: [race, elemental, grundthain, crafts]
 lineage: [[Grundthain]]
 origin-plane: [[Onderweld]]
 aat-race-tier: elder
-spoken-language: [[Karathic]], [[Dwarven]]
-written-language: [[Karathic Script]], [[Dwarven Script]]
+spoken-language: [[Karathic Dwarven]]
+written-language: [[Karathic Script Dwarven Script]]
 ---
 
 # Dwarves
