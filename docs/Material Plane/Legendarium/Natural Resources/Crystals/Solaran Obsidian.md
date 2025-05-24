@@ -6,7 +6,7 @@ aliases:
 
 ## Location
 
-[[Solaran Obsidian]] is no longer found in nature. It is a **refined material**, a product of Solaran artifice and divine metallurgy. Crafted originally from raw [[Radiant Obsidian]], it was forged in the starforges and sanctum-laboratories of the [[Solarans]], especially in the time of their alliance with [[Muradin]] during the First Age.
+[[Solaran Obsidian]] is no longer found in nature. It is a **refined material**, a product of Solaran artifice and divine metallurgy. Crafted originally from raw [[Radiant Obsidian]], it was forged in the starforges and sanctum-laboratories of the [[Solaran]], especially in the time of their alliance with [[Muradin]] during the First Age.
 
 Fragments and intact plates of it can still be found deep within ruined Solaran cities, forgotten vaults, or built into the latticework of containment fields and lightforges.
 

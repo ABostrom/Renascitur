@@ -2,7 +2,7 @@ Owner: [Breona](https://docs.google.com/document/d/17UBeTKd3Fl4TwHLNa-uxBUu0vXz8
 
 This tavern is a roadside tavern along the [[Vialux]] between [[Lion’s Rest]] and [[Lux Oescus]].
 
-The tavern is owned by a [[human]] woman named: [[Breona]]. She is a strong tempered woman, who will take no nonsense.
+The tavern is owned by a [[Human]] woman named: [[Breona]]. She is a strong tempered woman, who will take no nonsense.
 
   
 

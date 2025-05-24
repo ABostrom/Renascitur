@@ -1,2 +1,2 @@
-Location: [[Libertum]]
+Location: [[Solirion]]
 Status: Online

@@ -1,1 +1,1 @@
-# The Infernal Diplomat
+![[Pasted image 20250524191346.png]]

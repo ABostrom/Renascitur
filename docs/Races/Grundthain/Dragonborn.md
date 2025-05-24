@@ -1,1 +1,0 @@
-During [[Psychic Schism]] the [[Dragonborn]] fled the material plane along with the [[Elasi]]

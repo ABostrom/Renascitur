@@ -64,7 +64,7 @@ See: [[The Salt-Blessed]]
 
 ## The Deep Road
 A secret, rune-reinforced tunnel system that connects Draumhavn to:
-- [[Uftine]]
+- [[docs/Races/Humans/Terran/Variants/Uftine]]
 - [[Thundrakar]]
 - [[Magnus’ Rest]]
 - [[Thelassia]]

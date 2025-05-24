@@ -1,9 +1,0 @@
----
-aliases:
-  - Ilithids
----
- 
-
-
-
-![[Lord Syuul]]

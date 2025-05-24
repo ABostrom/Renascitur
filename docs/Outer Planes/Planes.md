@@ -1,23 +1,23 @@
 
 
 ## Planes of [[Luxar]]
-![[Imperium Deorum]]
-![[Libertum]]
+![[Imperium]]
+![[Solirion]]
 ![[Woudum]]
 
 ## Planes of [[Noxar]]
 ![[Infernum]]
-![[Umbra Terra]]
+![[Veltharyn]]
 ![[Nihilum]]
 
 ## Planes of [[Ordar]]
-![[Imperium Deorum]]
-![[Mechanum]]
+![[Imperium]]
+![[Sigmora]]
 ![[Infernum]]
 
 ## Planes of [[Chaor]]
 ![[Woudum]]
-![[Onderweld]]
+![[Thargrun]]
 ![[Nihilum]]
 
 

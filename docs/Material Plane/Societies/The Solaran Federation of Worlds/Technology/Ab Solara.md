@@ -3,7 +3,7 @@
 ---
 
 ## Overview  
-The **Ab Solara** were the primary transportation and communication infrastructure of the [[Solarans]]—a vast, arcano-mechanical network of gates that allowed near-instantaneous travel across continents, planes, and even distant worlds. Each gate harnessed solar and planar energy to fold the [[Weave]] itself, forming temporary corridors through reality.
+The **Ab Solara** were the primary transportation and communication infrastructure of the [[Solaran]]—a vast, arcano-mechanical network of gates that allowed near-instantaneous travel across continents, planes, and even distant worlds. Each gate harnessed solar and planar energy to fold the [[Weave]] itself, forming temporary corridors through reality.
 
 To the Solarans, the Ab Solara were more than mere logistics—they were a testament to their mastery of both arcane theory and cosmic mechanics.
 
@@ -29,7 +29,7 @@ Activating an Ab Solara required vast amounts of magical energy and precise alig
 
 - **Transit Hubs**: Major Ab Solara rings were used like **train stations**, moving people and goods between key cities and regions.
 - **Industrial Pipelines**: Smaller gates existed near mines, research sites, and arcanofactories to rapidly transport resources to processing centers.
-- **Planar Access Points**: Some specialized Ab Solara were attuned to the **Elemental Planes**, [[Mechanum]], and even the now-severed paths to [[Onderweld]].
+- **Planar Access Points**: Some specialized Ab Solara were attuned to the **Elemental Planes**, [[Sigmora]], and even the now-severed paths to [[Thargrun]].
 
 ---
 
@@ -66,8 +66,8 @@ The Ab Solara network included connections to:
 - [[Arcane Observatory]] (geostationary research station)
 - [[docs/Races/Solaran/Mokoweri]] (sealed within Irisandra’s influence)
 - [[Elementis Ignis]], [[Elementis Aqua]], [[Elementis Terra]], [[Elementis Ventus]] (Elemental planes)
-- [[Onderweld]] (pre-severance)
-- [[Mechanum]] (plane of order, maintained only by automated gate-cycles)
+- [[Thargrun]] (pre-severance)
+- [[Sigmora]] (plane of order, maintained only by automated gate-cycles)
 
 ![[Planar Connections – Ab Solara]]
 

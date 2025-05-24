@@ -18,4 +18,4 @@ The **LifeThread Matrix** represents a profound concept within Solaran culture, 
 
 **Symbolic Representation:** Visually, the LifeThread Matrix is often depicted as a luminous, ever-shifting lattice, with nodes of light representing life events, genetic milestones, or spiritual awakenings. These representations can be seen in Solaran art, holographic displays, and even in the architectural designs of their spaces, reflecting their deep-rooted belief in the interconnectedness of all existence.
 
-This concept of the LifeThread Matrix thus encapsulates the [[Solarans]]' advanced understanding of genetics, their deep spirituality, and their reverential connection to their ancestors, illustrating a holistic approach to the cosmos and their place within it.
+This concept of the LifeThread Matrix thus encapsulates the [[Solaran]]' advanced understanding of genetics, their deep spirituality, and their reverential connection to their ancestors, illustrating a holistic approach to the cosmos and their place within it.

@@ -13,4 +13,4 @@ aliases: [Sivis, Lux Oescus Overseer]
 - [[Human]]
 
 ## Description
-Archivist Rymelle Sivis is the appointed Overseer of [[Lux Oescus]], a prominent [[human]] noble and cousin of [[Lysse Lyrruman Sivis]]. They govern the city in service to the regional Imperator and maintain the delicate balance between imperial mandate and local power.
+Archivist Rymelle Sivis is the appointed Overseer of [[Lux Oescus]], a prominent [[Human]] noble and cousin of [[Lysse Lyrruman Sivis]]. They govern the city in service to the regional Imperator and maintain the delicate balance between imperial mandate and local power.

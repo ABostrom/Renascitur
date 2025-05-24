@@ -12,4 +12,4 @@ Despite his vast knowledge and power, Dorian is a relatively reclusive god. He p
 
 Dorian is also the patron deity of the city of Arcanum, which is known throughout the land for its renowned magical academy. The wizards and sorcerers of Arcanum offer prayers and sacrifices to Dorian in exchange for his blessings and guidance.
 
-He resides in the realm of [[Mechanum]]
+He resides in the realm of [[Sigmora]]

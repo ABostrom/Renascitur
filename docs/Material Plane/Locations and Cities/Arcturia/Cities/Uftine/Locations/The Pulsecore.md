@@ -4,7 +4,7 @@ aliases:
 ---
 ## Overview
 
-Beneath the glacial city of [[Uftine]] lies a place of ancient silence and terrible weight: **The Pulsecore**. Carved into the ice-veined bedrock of the mountain itself, it is both a vault and a warning—a chamber where the dwarves unknowingly keep vigil over the fractured soul of a god.
+Beneath the glacial city of [[docs/Races/Humans/Terran/Variants/Uftine]] lies a place of ancient silence and terrible weight: **The Pulsecore**. Carved into the ice-veined bedrock of the mountain itself, it is both a vault and a warning—a chamber where the dwarves unknowingly keep vigil over the fractured soul of a god.
 
   
 

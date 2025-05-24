@@ -1,8 +1,0 @@
-![[Ignasi]]
-
-![[Aquasi]]
-
-![[Terrasi]]
-
-![[Ventasi]]
-

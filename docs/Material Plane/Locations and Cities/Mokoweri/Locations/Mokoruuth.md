@@ -1,4 +1,4 @@
-- **Cultural Influence**: Named by the [[docs/Races/Solaran/Solaran]]'s, whose pursuit of knowledge and enlightenment shaped their civilization.
+- **Cultural Influence**: Named by the [[Solaran]]'s, whose pursuit of knowledge and enlightenment shaped their civilization.
 - **Meaning**:
     - _Moko_: Derived from Mokoweri, symbolizing the land it resides in.
     - _Ruuth_: A Solaran term for "illumination" or "insight."
@@ -15,7 +15,7 @@ Irisandra, the colossal tree that graces the island of Mokoweri, stands as a mon
 
 **A Monument of Solaran Science:**
 
-Irisandra was not a product of nature but a marvel of [[docs/Races/Solaran/Solaran]] artifice, representing the zenith of their scientific and magical prowess. Constructed with both botanical and arcanometric precision, this towering sentinel was formed to fulfill a dual role: to maintain a sanctuary on Mokoweri and to protect the rest of the world from the dangerous experiments conducted there.
+Irisandra was not a product of nature but a marvel of [[Solaran]] artifice, representing the zenith of their scientific and magical prowess. Constructed with both botanical and arcanometric precision, this towering sentinel was formed to fulfill a dual role: to maintain a sanctuary on Mokoweri and to protect the rest of the world from the dangerous experiments conducted there.
 
 **The Quest for Understanding:**
 

@@ -1,3 +1,3 @@
-Location [[Mechanum]]
+Location [[Sigmora]]
 Status: Online
 

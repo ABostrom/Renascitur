@@ -189,7 +189,7 @@ _Findings: Preliminary findings show that Solaran technology may provide a pathw
 ### Life's Work - Irasandra
 **Experiment Log 437: Uniting Essence**
 
-Today's experiment involved infusing the newly developed life-generating matrix with a synthesized blend of [[docs/Races/Solaran/Solaran]] energy signatures. Despite the significant advances we've made in harnessing elemental energy, the matrix remains stubbornly inert. Each time, the result is the same—no discernible response. The matrix lacks a vital component.
+Today's experiment involved infusing the newly developed life-generating matrix with a synthesized blend of [[Solaran]] energy signatures. Despite the significant advances we've made in harnessing elemental energy, the matrix remains stubbornly inert. Each time, the result is the same—no discernible response. The matrix lacks a vital component.
 
 In my pursuit of this mysterious missing link, I have reviewed countless Solaran texts, delving deep into the annals of ancient wisdom. It becomes increasingly evident that the matrix requires more than just energy; it yearns for a soul—an essence to bind its potential to the essence of life. Such a revelation is both daunting and exhilarating. The fusion of our Solaran science with the essence of Mokoweri itself beckons as a profound undertaking. I will proceed cautiously.
 
