@@ -1,11 +1,15 @@
 ---
-aliases: [Saurians]
-tags: [race, engineered, reptilian, spiritual]
+aliases:
+  - Saurians
+tags:
+  - race
+  - engineered
+  - reptilian
+  - spiritual
 lineage: Engineered Race
-origin-plane: [[Material Plane]]
+origin-plane: "[[Renascita]]"
 aat-race-tier: engineered
-spoken-language: [[Denisovan Mokoweran]]
-written-language: Denisovan Script, Mokoweran Script
+spoken-language: "[[Denisovan]]"
 ---
 
 # Saurians

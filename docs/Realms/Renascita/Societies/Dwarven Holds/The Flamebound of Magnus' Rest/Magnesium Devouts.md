@@ -59,7 +59,7 @@ They answer only to the [[Volgrin Flameward|High Pyrethane]].
 - **Sacrifice is sanctity**: Creation is paid for in hardship  
 - **Radiance defies entropy**: Flame is the promise that the dark does not win
 
-They do not worship **Magnus** as a god, but honor him as a **flame-bearer**, a mortal who *became worthy of the flame*.
+They do not worship **[[Magnus]]** as a god, but honor him as a **flame-bearer**, a mortal who *became worthy of the flame*.
 
 ---
 

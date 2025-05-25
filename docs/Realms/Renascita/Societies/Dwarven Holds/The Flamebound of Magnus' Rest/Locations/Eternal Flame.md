@@ -17,7 +17,7 @@ In the twilight of the [[First Age]], as [[Ishna]]’s entropy began to corrupt 
 
 There the flame remained hidden and protected, its power untouched by corruption.
 
-After the [[Psychic Schism]], it was the **dying will of [[Muradin]]** that guided [[Magnus]] to the mountain. He built Magnus’ Rest atop the seal, vowing to protect the flame—and the world—from what might come if it were ever extinguished… or unbound.
+After the [[Psychic Schism]], it was the **dying will of [[Muradin]]** that guided [[Magnus]] to the mountain. He built [[Magnus’ Rest]] atop the seal, vowing to protect the flame—and the world—from what might come if it were ever extinguished… or unbound.
 
 ---
 
@@ -69,7 +69,7 @@ Some fear that **if the seal fails**, [[Phenos]] will awaken—but whether he re
 
 ## Cultural Significance
 
-To the people of Magnus’ Rest, the Eternal Flame is not just protection—it is **purpose**.
+To the people of [[Magnus’ Rest]], the Eternal Flame is not just protection—it is **purpose**.
 
 - It is the **divine legacy of [[Muradin]]**  
 - The **spiritual compass of the Pyrethane**  

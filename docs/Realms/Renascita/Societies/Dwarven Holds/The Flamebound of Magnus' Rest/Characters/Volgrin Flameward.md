@@ -4,7 +4,7 @@ aliases:
   - High Pyrethane Volgrin Flameward
 ---
 
-> *"I was a child when the night came. Magnus gave me fire. I have never let it go."*
+> *"I was a child when the night came. [[Magnus]] gave me fire. I have never let it go."*
 
 ---
 
@@ -24,7 +24,7 @@ Volgrin was born in the outer foothills of [[Pyrosia]], in a minor dwarven settl
 
 He was found days later, trapped beneath scorched stone, his eyes burned raw from psychic light.
 
-Magnus lifted him from the ruin.
+[[Magnus]] lifted him from the ruin.
 
 He never left his side again.
 
@@ -34,21 +34,21 @@ He never left his side again.
 
 Volgrin grew up with the [[Forge Clerics]] during the building of [[Magnus’ Rest]], learning to wield hammer and shield while the walls rose. Though still young, he fought during the **Thousand Nights of Flamegate**, defending the mountain pass from endless waves of aberrant horrors.
 
-It was during this siege that he received his soulmark and forged the first [[Everburn Blade]], guided by the hand of Magnus.
+It was during this siege that he received his soulmark and forged the first [[Everburn Blade]], guided by the hand of [[Magnus]].
 
 By the end of the siege, he was no longer a boy.  
-He was **Volgrin Flameward**—named by Magnus himself, for the way he stood before the gates, refusing to fall.
+He was **Volgrin Flameward**—named by [[Magnus]] himself, for the way he stood before the gates, refusing to fall.
 
 ---
 
 ## Rise as Pyrethane
 
-After the gates were sealed, Magnus retreated into the [[Eternal Flame]], leaving behind a final command:  
+After the gates were sealed, [[Magnus]] retreated into the [[Eternal Flame]], leaving behind a final command:  
 > *“You are what I was. Guard what I leave.”*
 
 Volgrin was anointed the first **[[Pyrethane]]**, Keeper of the Living Flame and leader of the city. He reluctantly accepted, believing himself unworthy—but as years became decades, and then centuries, Volgrin endured.
 
-He forged new warriors. He refined [[Radiant Forging]]. He passed judgment with mercy, and fought with wrath. He did not ascend like Magnus.  
+He forged new warriors. He refined [[Radiant Forging]]. He passed judgment with mercy, and fought with wrath. He did not ascend like [[Magnus]].  
 He *remained*.
 
 ---
@@ -80,7 +80,7 @@ Forged by Volgrin during the Flamegate siege. A radiant greatsword of living fir
 
 ## Quotes
 
-> *"Magnus lit the fire. Volgrin made it burn."*  
+> *"[[Magnus]] lit the fire. Volgrin made it burn."*  
 > — [[Maerra Vulkess]], High Devout
 
 > *"He’s not a dwarf. He’s a mountain with a beard and unfinished business."*  

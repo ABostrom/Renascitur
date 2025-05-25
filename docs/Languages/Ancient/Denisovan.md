@@ -1,14 +1,21 @@
 ---
-aliases: [Denisovan, Saurian Tongue]
-tags: [language, saurian, ancient]
-aat-language-family: Saurian
+aliases:
+  - Denisovan
+  - Saurian Tongue
+tags:
+  - language
+  - saurian
+  - ancient
+aat-language-family:
+  - Saurian
 aat-language-tier: root
-spoken-by: [[Saurians]]
+spoken-by:
+  - "[[Saurian]]"
 ---
 
 # Denisovan
 
-**Denisovan** is the spiritual and biological language of the [[Saurians]], combining harmonic tones with guttural growls and clicks.
+**Denisovan** is the spiritual and biological language of the [[Saurian|Saurians]], combining harmonic tones with guttural growls and clicks.
 
 ---
 

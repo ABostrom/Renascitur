@@ -8,9 +8,9 @@ The **Tomb of Emperors** is an ancient, sacred site where the last seven [[Emper
 
 ### Individual Emperor Chambers
 
-1. **Chamber of Unimus, the First Emperor**
+1. **Chamber of [[Unimus]], the First Emperor**
     
-    - **Description**: Unimus’ chamber is the oldest and most austere, reflecting the foundation of the empire. The walls are lined with carved reliefs depicting the early conquests and unification of the lands under his rule.
+    - **Description**: [[Unimus]]’ chamber is the oldest and most austere, reflecting the foundation of the empire. The walls are lined with carved reliefs depicting the early conquests and unification of the lands under his rule.
     - **Security**: This chamber is guarded by a pair of **Stone Sentinels**, massive statues that animate if anyone approaches the sarcophagus without proper authorization. The room also features a **Temporal Lock**, which can freeze intruders in time for a brief period.
 2. **Chamber of Duo, the Second Emperor**
     
@@ -43,4 +43,4 @@ The **Tomb of Emperors** is an ancient, sacred site where the last seven [[Emper
 - **Security**: The stargate itself is protected by a **Dimensional Lock**, preventing unauthorized teleportation or planar travel within the tomb. A **Guardian Spirit**, a powerful entity bound to the service of the empire, watches over the stargate and can summon reinforcements from any of the other chambers if needed.
 
 
-## Avatar of Unimus
+## Avatar of [[Unimus]]
