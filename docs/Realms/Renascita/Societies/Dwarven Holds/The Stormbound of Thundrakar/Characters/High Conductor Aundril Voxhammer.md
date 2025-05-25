@@ -7,7 +7,7 @@ aliases:
 Interpreter of the Storm. Voice of the Sky.
 
 ## Overview  
-[[Aundril Voxhammer]] is the spiritual and political leader of the [[Stormbound]] dwarves of [[Thundrakar]]. Chosen not by lineage, but by resonance, she holds her title as one who can listen — truly listen — to the will of [[Tempus]], the storm god whose fragment is bound atop the [[Stormspire]].
+[[Aundril Voxhammer]] is the spiritual and political leader of the [[Stormbound]] [[Dwarf|dwarves]] of [[Thundrakar]]. Chosen not by lineage, but by resonance, she holds her title as one who can listen — truly listen — to the will of [[Tempus]], the storm god whose fragment is bound atop the [[Stormspire]].
 
 Her words shape rites, her tone aligns the pylons, and her presence calms even the most turbulent forgefire.
 

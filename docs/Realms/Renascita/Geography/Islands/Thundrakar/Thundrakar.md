@@ -4,7 +4,7 @@ aliases:
 ---
 ![[Pasted image 20250419175154.png]]
 ## Overview  
-[[Thundrakar]] is the mountain city of the [[Stormbound]], carved into and around the base of the colossal [[Stormspire]] — the tallest peak in the world. Here, the dwarves live suspended between earth and sky — their towers crowned with lightning rods and their halls echoing with the voice of the storm.
+[[Thundrakar]] is the mountain city of the [[Stormbound]], carved into and around the base of the colossal [[Stormspire]] — the tallest peak in the world. Here, the [[Dwarf|dwarves]] live suspended between earth and sky — their towers crowned with lightning rods and their halls echoing with the voice of the storm.
 
 Bridges arc between peaks. Wind tunnels sing through open-arched halls. The air is always charged, the sky never still.
 

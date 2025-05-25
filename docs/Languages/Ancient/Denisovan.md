@@ -23,7 +23,7 @@ spoken-by:
 
 - Combines tonal calls with body language.
 - Used in ritual and everyday communication.
-- Integral to Saurian identity and spirituality.
+- Integral to [[Saurian]] identity and spirituality.
 
 ---
 

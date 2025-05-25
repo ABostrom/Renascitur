@@ -13,7 +13,7 @@ spoken-by:
   - "[[Kyojin]]"
   - "[[Orc]]"
   - "[[Leonin]]"
-  - "[[docs/Races/Humans/Terran/Variants/Mokoweri|Mokoweri]]"
+  - "[[Mokoweri Humans|Mokoweri Humans]]"
 ---
 
 # Natsugen

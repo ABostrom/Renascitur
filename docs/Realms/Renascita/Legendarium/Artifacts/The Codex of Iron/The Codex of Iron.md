@@ -43,7 +43,7 @@ The **Codex of Iron** is said to include:
 
 #### **Modern Significance**
 
-The fragmented Codex remains a symbol of unity and hope for both dwarves and the **Ferrun**. Its pieces, scattered across the world, represent a bridge between [[Muradin]]’s followers and their shared legacy. The **Ferrun**, who revere [[Muradin]] in his original **Grundthain** form, guard their fragment as a sacred relic, while the dwarves preserve their fragment as a cornerstone of their culture.
+The fragmented Codex remains a symbol of unity and hope for both [[Dwarf|dwarves]] and the **Ferrun**. Its pieces, scattered across the world, represent a bridge between [[Muradin]]’s followers and their shared legacy. The **Ferrun**, who revere [[Muradin]] in his original **[[Grundthain]]** form, guard their fragment as a sacred relic, while the [[Dwarf|dwarves]] preserve their fragment as a cornerstone of their culture.
 
 The third, missing fragment is a source of mystery and legend. Many believe that reclaiming it—and reuniting the Codex—would unlock the full potential of [[Muradin]]’s teachings, allowing the creation of artifacts and machines that could rival those of [[the First Age]].
 

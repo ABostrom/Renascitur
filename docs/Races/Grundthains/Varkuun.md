@@ -21,7 +21,7 @@ The Varkuun are a proud elemental race descended from the [[Grundthain]], embody
 
 ## Origins
 
-- A branch of Grundthain who embraced a fusion of elemental power.  
+- A branch of [[Grundthain]] who embraced a fusion of elemental power.  
 - Keepers of ancient elemental rites and knowledge.
 
 ---
@@ -50,7 +50,7 @@ The Varkuun are a proud elemental race descended from the [[Grundthain]], embody
 ## Notes
 
 - Speak the [[Titanic]] tongue.  
-- Related to other elemental Grundthain descendants.
+- Related to other elemental [[Grundthain]] descendants.
 
 ---
 

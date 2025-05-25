@@ -1,4 +1,4 @@
-Iris Andras, the esteemed Solaran scientist, is renowned for her pioneering work in bio-engineering Saurians into sentient creatures, breathing intelligence into their ancient forms. Her legacy echoes through the annals of Solaran history.
+Iris Andras, the esteemed Solaran scientist, is renowned for her pioneering work in bio-engineering [[Saurian|Saurians]] into sentient creatures, breathing intelligence into their ancient forms. Her legacy echoes through the annals of Solaran history.
 
 ## Mythos
 Over the centuries, as Iris Andras' deeds were passed down in legends and lore, her name transformed and evolved with each retelling. In ancient texts, she may have been referred to as "Isara Andira," emphasizing the importance of her role as a master bio-engineer. As time went on, her name might have morphed into "Isaraundra," invoking a sense of mystery and reverence. In later tales, she could have been known as "Isarandria," symbolizing the depth of her knowledge and wisdom.

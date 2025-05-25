@@ -7,7 +7,7 @@ aat-race-tier: variant
 spoken-language: "[[Dwarven]]"
 ---
 
-# Tidebound Dwarves
+# Tidebound [[Dwarf|Dwarves]]
 
 ## Overview  
 The [[Tidebound|Tidebound Dwarves]] are the seafaring clan of dwarvenkind who dwell in the fortified island-city of [[Draumhavn]], nestled between the continents of [[Pyrosia]] and [[Qethusiyya]]. Hardened by salt, storm, and deepwater dread, they are guardians of the **Wakened Trench** — the bound wound of [[Leviathan]] sealed by [[Muradin]] in [[the First Age]].

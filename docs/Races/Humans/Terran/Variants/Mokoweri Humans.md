@@ -39,7 +39,7 @@ The Mokoweri are tribal [[Terran|Terrans]] living in harmony with the natural wo
 
 ## Culture
 
-- Deeply connected to nature and the Saurians.  
+- Deeply connected to nature and the [[Saurian|Saurians]].  
 - Communal and spiritual, with strong traditions in hunting and crafting.
 
 ---

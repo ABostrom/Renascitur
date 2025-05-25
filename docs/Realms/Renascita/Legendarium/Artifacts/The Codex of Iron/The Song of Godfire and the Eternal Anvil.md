@@ -1,7 +1,7 @@
 
 ---
 
-In the days before Runehart, when the Grundthain still knelt at the feet of the elemental gods, [[Muradin]] stood apart. He had seen the pacts unravel. He had watched as [[Phenos]] burned without boundary, as [[Zaratan]] grew still with sorrow, as [[Tempus]] roared with madness, and [[Leviathan]] hungered without end.
+In the days before Runehart, when the [[Grundthain]] still knelt at the feet of the elemental gods, [[Muradin]] stood apart. He had seen the pacts unravel. He had watched as [[Phenos]] burned without boundary, as [[Zaratan]] grew still with sorrow, as [[Tempus]] roared with madness, and [[Leviathan]] hungered without end.
 
 He spoke of change. They called him a heretic. He preached restraint. They called him weak.
 
@@ -9,7 +9,7 @@ But [[Muradin]] was not broken. He was awakening.
 
 And so he cast off his station. He set down his crown, his name, his lineage. With nothing but an unmarked hammer and a satchel of raw, unscribed runes, he walked into the world—not to shape it, but to **listen**.
 
-He would leave behind the rituals of the Grundthain and seek the deeper truth, the forge beneath all others.
+He would leave behind the rituals of the [[Grundthain]] and seek the deeper truth, the forge beneath all others.
 
 
 ---

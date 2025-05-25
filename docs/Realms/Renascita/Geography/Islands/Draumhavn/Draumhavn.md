@@ -9,16 +9,16 @@ Draumhavn is a dwarven island-state nestled in a perilous cluster of volcanic is
 
 Its lifeline lies beneath the earth: the **Deep Road**, a vast subterranean rail and tunnel network connecting it to the mainland dwarven cities—**Uftine**, **Mithral Hall**, **[[Magnus]]' Rest**—and, more recently, the Ferrun stronghold of **Thelassia**. But no Deep Road runs south. There lies only the **Wakened Trench**, a chasm of unspeakable depth and hungering darkness.
 
-## The Tidebound
+## The [[Tidebound]]
 
-The dwarves of Draumhavn are known as the **Tidebound**. They are not mountain-folk but sea-dwellers, their lives shaped by storm and salt. Rather than religion, they follow a **Creed**—a philosophy of survival, discipline, and bond.
+The [[Dwarf|dwarves]] of Draumhavn are known as the **[[Tidebound]]**. They are not mountain-folk but sea-dwellers, their lives shaped by storm and salt. Rather than religion, they follow a **Creed**—a philosophy of survival, discipline, and bond.
 
 They revere the elemental forces of the sea without worshipping them, naming them:
 
 - He Who Hungers ([[Leviathan]]): hunger, darkness, pressure
 - She Who Wakes ([[Tempus]]): fury, rebirth, awakening
 
-> _“We do not pray. We endure.”_ —Tidebound Saying
+> _“We do not pray. We endure.”_ —[[Tidebound]] Saying
 
 ## Government: Naval Hierarchy
 Draumhavn is ruled like a fleet, not a kingdom.
@@ -64,7 +64,7 @@ See: [[The Salt-Blessed]]
 
 ## The Deep Road
 A secret, rune-reinforced tunnel system that connects Draumhavn to:
-- [[docs/Races/Humans/Terran/Variants/Uftine]]
+- [[Uftine Humans]]
 - [[Thundrakar]]
 - [[Magnus’ Rest]]
 - [[Thelassia]]

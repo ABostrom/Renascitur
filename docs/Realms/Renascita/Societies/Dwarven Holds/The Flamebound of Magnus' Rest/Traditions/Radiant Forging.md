@@ -5,7 +5,7 @@
 
 ## Overview
 
-**Radiant Forging** is the sacred forging tradition of the [[Flamebound]] dwarves of [[Magnus’ Rest]]. Unlike other elemental forging arts, Radiant Forging is not merely a method of shaping metal—it is a **spiritual rite**, a means of purifying, binding, and preserving intention through fire.
+**Radiant Forging** is the sacred forging tradition of the [[Flamebound]] [[Dwarf|dwarves]] of [[Magnus’ Rest]]. Unlike other elemental forging arts, Radiant Forging is not merely a method of shaping metal—it is a **spiritual rite**, a means of purifying, binding, and preserving intention through fire.
 
 Only those who have undergone the **Rite of Emberbinding**—a trial overseen by the [[Magnesium Devouts]]—may wield the Eternal Flame in the act of creation. These master smiths are known as **Radiant Forgers**.
 

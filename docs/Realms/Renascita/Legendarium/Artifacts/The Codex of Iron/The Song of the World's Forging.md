@@ -46,7 +46,7 @@ Now the world had form. It had strength, it had motion, it had fire, and it had 
 
 ### **The Birth of the Keepers**
 
-So **[[Tharamos]] took up his hammer once more**, and upon his anvil, he forged the **first of the Grundthain**.
+So **[[Tharamos]] took up his hammer once more**, and upon his anvil, he forged the **first of the [[Grundthain]]**.
 
 From stone, he carved them, their backs broad and their hands strong, their hearts filled with the fire of the forge. **To them, he gave knowledge of the runes, so they might shape the world as he had.**
 

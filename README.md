@@ -11,7 +11,7 @@ Welcome to **Renascitur**, a high-fantasy worldbuilding project years in the mak
 **Renascitur** is a mythic world where ancient civilizations, broken divine machinery, and eldritch corruption shape the fate of its peoples. Drawing from cosmic horror, fallen empires, and ancestral legacy, the world is filled with:
 
 - 🌞 Lost Solarans and the ruined Endless Sun
-- 🧬 Bioengineered races like the Saurians
+- 🧬 Bioengineered races like the [[Saurian|Saurians]]
 - ⚙️ Rune magic and divine forges
 - 🕯️ Spirits trapped in the broken [[Machinery of Death]]
 - 🛐 Mortal-born gods and aberrant horrors
@@ -20,8 +20,8 @@ Welcome to **Renascitur**, a high-fantasy worldbuilding project years in the mak
 
 ## 🧬 Major Cultures & Factions of Renascitur
 
-### 🔩 Dwarves
-Descendants of the Grundthain, divided into three major holds:
+### 🔩 [[Dwarf|Dwarves]]
+Descendants of the [[Grundthain]], divided into three major holds:
 - **Magnus' Rest**
 - **Mithral Hall**
 - **Uftine**
@@ -29,13 +29,13 @@ Descendants of the Grundthain, divided into three major holds:
 All three are linked by a subterranean railway and allied with the Ferrun.
 
 ### ⚙️ Ferrun
-Descendants of the Solarans, embracing science and rune-smithing. Centered in **Thelassia**, they revere **[[Muradin]]** in his original Grundthain form and preserve the **Sanctuary of Iron**.
+Descendants of the Solarans, embracing science and rune-smithing. Centered in **Thelassia**, they revere **[[Muradin]]** in his original [[Grundthain]] form and preserve the **Sanctuary of Iron**.
 
 ### 🔥 Firebrand Empire
 A human empire. Ruled by an Emperor and **The Twelve Great Houses**, citizenship is earned through service. Anti-magic, yet technologically advanced. Society is divided between citizens and the oppressed **Stained** class. Massive **lux lapis** walls protect the empire from aberrant horrors.
 
-### 🧬 Saurians
-Bio-engineered guardians of the island of Mokoweri, created by the Solarans to resist aberrant corruption. Spiritually bonded with the land and the **Mokoweri** people, some have mutated into Slaad-like aberrant forms.
+### 🧬 [[Saurian|Saurians]]
+Bio-engineered guardians of the island of Mokoweri, created by the Solarans to resist aberrant corruption. Spiritually bonded with the land and the **Mokoweri** people, some have mutated into [[Slaad]]-like aberrant forms.
 
 ### 🌿 Rahalan
 Matriarchal desert nomads who sail living **Gaia-ships**, guided by visions and rites. Their society is spiritually rooted and structured around roles such as Dreamweavers, Grove Shapers, and Battle Sisters.

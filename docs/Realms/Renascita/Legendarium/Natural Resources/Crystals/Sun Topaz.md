@@ -1,7 +1,7 @@
 ## Location  
 [[Sun Topaz]] occurs **naturally in the land surrounding [[the Eternal Flame]]**, crystallized from molten stone infused with divine radiance. These raw stones are embedded in the obsidian veins and golden faults of the region, glowing faintly even underground.
 
-The [[Solaran]] were the first to recognize its potential, mining and refining [[Sun Topaz]] for use across their civilization. Today, it is most often found in **Solaran ruins**, embedded in broken latticework, containment cores, or lightforged devices — but its **origin is the sacred heart of the Flamebound homeland**.
+The [[Solaran]] were the first to recognize its potential, mining and refining [[Sun Topaz]] for use across their civilization. Today, it is most often found in **Solaran ruins**, embedded in broken latticework, containment cores, or lightforged devices — but its **origin is the sacred heart of the [[Flamebound]] homeland**.
 
 ## Description  
 A luminous gold gemstone that retains a subtle inner warmth, even in shadow. When exposed to direct sunlight, it glows brighter, and pulses slowly — almost like breath. Fully charged Sun Topaz radiates a steady light and is warm to the touch, emitting soft solar harmonics when set in arcane devices.

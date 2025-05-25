@@ -10,11 +10,11 @@ aliases:
 
 ## Overview
 
-**Volgrin Flameward**, First [[Pyrethane]] of [[Magnus’ Rest]], was not born a leader, warrior, or prophet. He was a frightened young dwarf—barely into his second decade—when the [[Psychic Schism]] shattered his home and stole his family. He would have died in the dark, if not for a stranger wreathed in flame who pulled him from the rubble.
+**Volgrin Flameward**, First [[Pyrethane]] of [[Magnus’ Rest]], was not born a leader, warrior, or prophet. He was a frightened young [[dwarf]]—barely into his second decade—when the [[Psychic Schism]] shattered his home and stole his family. He would have died in the dark, if not for a stranger wreathed in flame who pulled him from the rubble.
 
 That stranger was [[Magnus]].
 
-In the centuries since, Volgrin has become a **grizzled, enduring legend**—a master [[Radiant Forger]], living bulwark, and the only dwarf alive who remembers the founding of the city firsthand. He is **the [[soul]] of the Flamebound**, shaped not by birthright, but by fire, loss, and an unbreakable promise.
+In the centuries since, Volgrin has become a **grizzled, enduring legend**—a master [[Radiant Forger]], living bulwark, and the only [[dwarf]] alive who remembers the founding of the city firsthand. He is **the [[soul]] of the [[Flamebound]]**, shaped not by birthright, but by fire, loss, and an unbreakable promise.
 
 ---
 
@@ -83,7 +83,7 @@ Forged by Volgrin during the Flamegate siege. A radiant greatsword of living fir
 > *"[[Magnus]] lit the fire. Volgrin made it burn."*  
 > — [[Maerra Vulkess]], High Devout
 
-> *"He’s not a dwarf. He’s a mountain with a beard and unfinished business."*  
+> *"He’s not a [[dwarf]]. He’s a mountain with a beard and unfinished business."*  
 > — [[Korran Deepnail]], [[Scorchguard]] Commander
 
 ---

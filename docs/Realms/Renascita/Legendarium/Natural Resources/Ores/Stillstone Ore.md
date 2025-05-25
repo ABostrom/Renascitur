@@ -12,4 +12,4 @@ Mined from beneath the ancient glacial veins surrounding [[The Pulsecore]], [[St
 ## Uses  
 - Smelted into [[Icevein Steel]], where it enhances silence and resilience.
 - Crushed into dust and used in coldwarding enchantments and armor linings.
-- Kept raw and carved into echo-dampening talismans or grave-seals in Icebound tombs.
+- Kept raw and carved into echo-dampening talismans or grave-seals in [[Icebound]] tombs.

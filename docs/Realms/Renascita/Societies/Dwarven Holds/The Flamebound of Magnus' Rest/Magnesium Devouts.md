@@ -5,14 +5,14 @@
 
 ## Overview
 
-The **Magnesium Devouts** are the spiritual order of the [[Flamebound]] dwarves of [[Magnus’ Rest]]. Founded by [[Magnus]] and entrusted to [[Volgrin Flameward]], they are not simply priests—they are **guardians, artisans, and witnesses** to the Eternal Flame.
+The **Magnesium Devouts** are the spiritual order of the [[Flamebound]] [[Dwarf|dwarves]] of [[Magnus’ Rest]]. Founded by [[Magnus]] and entrusted to [[Volgrin Flameward]], they are not simply priests—they are **guardians, artisans, and witnesses** to the Eternal Flame.
 
 Their creed is not one of dogma, but of duty:  
  - *Preserve the Eternal Flame.*  
  - *Refine the [[soul]] through hardship.*  
  - *Temper creation with truth.*  
 
-They oversee sacred rites, train Radiant Forgers, tend to the [[Everburn Forges]], and stand as the moral and mystical backbone of Flamebound society.
+They oversee sacred rites, train Radiant Forgers, tend to the [[Everburn Forges]], and stand as the moral and mystical backbone of [[Flamebound]] society.
 
 ---
 

@@ -20,11 +20,11 @@ Though their empire is gone, remnants of the Solarans remain scattered throughou
 
 **Blessing:** Might, endurance, mastery of stone and metal  
 **[[Aeternum]] Patron:** [[Tharamos]], The Unyielding Stone  
-**World Tree Connection:** **The Grundthain Tree** (Power and Primal Forces)
+**World Tree Connection:** **The [[Grundthain]] Tree** (Power and Primal Forces)
 
-Before the divergence of dwarves and giants, the **Grundthain** were a single people, mighty beings who shaped the mountains and forged the world’s foundations. [[Tharamos]], the **[[Aeternum]] of Earth**, blessed them with resilience, strength, and a deep bond with the elements.
+Before the divergence of [[Dwarf|dwarves]] and giants, the **[[Grundthain]]** were a single people, mighty beings who shaped the mountains and forged the world’s foundations. [[Tharamos]], the **[[Aeternum]] of Earth**, blessed them with resilience, strength, and a deep bond with the elements.
 
-The **Grundthain Tree** was the source of **[[Aetherglyphs]]**, the runes that formed the original language of the universe. It was from this tree that the first **Runesmiths** learned how to inscribe reality itself into stone and metal. The **Dwarves** inherited this tradition when [[Muradin]] led his people into the depths to forge **Runehart**, while the **Giants** scattered, each clan binding itself to one of the Four Great Elementals:
+The **[[Grundthain]] Tree** was the source of **[[Aetherglyphs]]**, the runes that formed the original language of the universe. It was from this tree that the first **Runesmiths** learned how to inscribe reality itself into stone and metal. The **[[Dwarf|Dwarves]]** inherited this tradition when [[Muradin]] led his people into the depths to forge **Runehart**, while the **Giants** scattered, each clan binding itself to one of the Four Great Elementals:
 
 - **[[Leviathan]]** (Frost and Sea)
 - **[[Phenos]]** (Fire and Mountain)
@@ -53,7 +53,7 @@ Their devotion to the balance of life led them to clash with those who sought to
 **[[Aeternum]] Patron:** [[Valtor]], The Endless Tide  
 **World Tree Connection:** None directly, but influenced by all
 
-Unlike the other Elder Races, **Humans** were not bound to a single tree or a single path. Instead, **[[Valtor]], [[Aeternum|the Aeternum]] of Change**, granted them **potential**—the ability to shape their own destinies, for better or worse. They did not have the longevity of the Solarans, the endurance of the Grundthain, or the spiritual attunement of the Kyojin, but they possessed the ability to grow beyond their limitations.
+Unlike the other Elder Races, **Humans** were not bound to a single tree or a single path. Instead, **[[Valtor]], [[Aeternum|the Aeternum]] of Change**, granted them **potential**—the ability to shape their own destinies, for better or worse. They did not have the longevity of the Solarans, the endurance of the [[Grundthain]], or the spiritual attunement of the Kyojin, but they possessed the ability to grow beyond their limitations.
 
 This blessing made humans both **versatile and dangerous**. They adapted quickly, learning from the ruins of fallen civilizations and shaping new empires upon their bones. They became **kings, conquerors, scholars, and savages**—a race that could rise to celestial heights or fall into ruin, dictated only by their own choices.
 

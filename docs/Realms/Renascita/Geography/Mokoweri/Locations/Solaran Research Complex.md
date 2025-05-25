@@ -32,8 +32,8 @@ Venturing deeper into the Solaran Research Complex, you find yourself within the
 2. **Bio-Arcane Enhancements:** Vials containing serums developed by Solaran bioengineers. When consumed, these serums grant temporary enhancements such as increased strength, resilience, or sensory perception.
 
 #### Things to find:
-- Data shards on developing the Saurian growth containment
-- Data shards on developing the slaads and saurians
+- Data shards on developing the [[Saurian]] growth containment
+- Data shards on developing the [[Slaad|slaads]] and [[Saurian|saurians]]
 - Data shards on Life's Work - [[Irasandra]]
 
 
@@ -45,7 +45,7 @@ Venturing further into the enigmatic depths of the Solaran Research Complex, you
 **Terrain:** The chamber's central feature is a vast, domed enclosure filled with diverse, interconnected ecosystems. Lush jungles, arid deserts, and serene lakes coexist side by side, separated by shimmering barriers of energy. Elevated catwalks and platforms afford visitors a vantage point from which to observe the intricate dance of life within.
 
 
-1. **Saurian Egg Crystals:** Glowing crystalline eggs containing the essence of ancient Solaran-engineered saurians. 
+1. **[[Saurian]] Egg Crystals:** Glowing crystalline eggs containing the essence of ancient Solaran-engineered [[Saurian|saurians]]. 
 2. **Anomaly Extractor:** A powerful device used by Solaran scientists to extract and purify aberrant energy from creatures. When wielded properly, it can weaken or even dispel aberrant entities.
 
 #### Things to find:
@@ -116,13 +116,13 @@ Iris Andras, a name of legend among the Solaran scholars and explorers. As the o
 [[Iris Andras]] is not only a guardian of knowledge but also a bridge between the past and the future of Solaran civilization, guiding the scientists in their quest to harness the boundless potential of Mokoweri. Her legacy will forever be entwined with the secrets of the jungle and the noble pursuit of enlightenment.
 
 #### research logs
-_Subject: Saurian Growth Enhancement_
+_Subject: [[Saurian]] Growth Enhancement_
 
-_Objective: To experiment with the augmentation of indigenous Saurian species for increased intelligence and resilience._
+_Objective: To experiment with the augmentation of indigenous [[Saurian]] species for increased intelligence and resilience._
 
-_Procedure: A group of juvenile Saurians was selected as subjects. A blend of genetic modification and arcanometric infusion was applied to stimulate neural development and physical resilience._
+_Procedure: A group of juvenile [[Saurian|Saurians]] was selected as subjects. A blend of genetic modification and arcanometric infusion was applied to stimulate neural development and physical resilience._
 
-_Findings: The initial results are promising. Augmented Saurians exhibit increased intelligence, faster learning, and resilience to environmental challenges. Long-term monitoring is necessary._
+_Findings: The initial results are promising. Augmented [[Saurian|Saurians]] exhibit increased intelligence, faster learning, and resilience to environmental challenges. Long-term monitoring is necessary._
 
 **Research Log #1 - Dr. Lorian Althari - Solaran Energy Transmutation**
 
@@ -148,15 +148,15 @@ _Findings: Aberrant [[soul]] infusion results in accelerated growth and unpredic
 
 ---
 
-**Research Log #3 - Elsira Thorne - Saurian Augmentation and Reversal**
+**Research Log #3 - Elsira Thorne - [[Saurian]] Augmentation and Reversal**
 
 _Date: [Date]_
 
-*Objective: To develop a method to reverse aberrant [[soul]]-infused alterations in Saurians.
+*Objective: To develop a method to reverse aberrant [[soul]]-infused alterations in [[Saurian|Saurians]].
 
-*Procedure: Augmented Saurians were subjected to controlled arcanometric energy extraction procedures. The effects of these extractions on the reversal of aberrant alterations were observed.
+*Procedure: Augmented [[Saurian|Saurians]] were subjected to controlled arcanometric energy extraction procedures. The effects of these extractions on the reversal of aberrant alterations were observed.
 
-_Findings: Significant obstacles persist in reversing aberrant alterations. We must explore alternative methods to restore Saurians to their natural state._
+_Findings: Significant obstacles persist in reversing aberrant alterations. We must explore alternative methods to restore [[Saurian|Saurians]] to their natural state._
 
 ---
 

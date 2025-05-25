@@ -10,14 +10,14 @@ spoken-language: "[[Dwarven]]"
 # Dwarves
 
 **Summary:**  
-The Dwarves are descendants of the Grundthain who embraced Metal as a fifth element, forging a new path of craftsmanship and resilience. Known for their stout builds and expert rune-smithing, they form four major clans guarding elemental legacies.
+The Dwarves are descendants of the [[Grundthain]] who embraced Metal as a fifth element, forging a new path of craftsmanship and resilience. Known for their stout builds and expert rune-smithing, they form four major clans guarding elemental legacies.
 
 ---
 
 ## Origins
 
 - Forged by [[Muradin]]’s vision to combat corruption with metal and innovation.  
-- Transformed from elemental Grundthain into stout, resilient beings.
+- Transformed from elemental [[Grundthain]] into stout, resilient beings.
 
 ---
 

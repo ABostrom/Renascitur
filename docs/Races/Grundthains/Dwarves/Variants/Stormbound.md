@@ -7,7 +7,7 @@ aat-race-tier: variant
 spoken-language: "[[Dwarven]]"
 ---
 
-# Stormbound Dwarves
+# Stormbound [[Dwarf|Dwarves]]
 
 ## Overview  
 The [[Stormbound|Stormbound Dwarves]] are a proud and austere branch of dwarvenkind who dwell in [[Thundrakar]], the lightning-wreathed city carved into the heights and depths of the [[Stormspire]]. They are shaped — body and [[soul]] — by the unceasing storm that roars above and the sacred burden they carry: the **custodianship of the sealed fragment of [[Tempus]]**, the elemental god of storm and sky.

@@ -7,10 +7,10 @@ aat-race-tier: variant
 spoken-language: "[[Dwarven]]"
 ---
 
-# Flamebound Dwarves
+# Flamebound [[Dwarf|Dwarves]]
 
 ## Overview  
-The [[Flamebound|Flamebound Dwarves]] are the fiery clan of dwarves who dwell in the city of [[Magnus’ Rest]]. They guard the sacred embers and the flame-fragment sealed by [[Muradin]] in [[the First Age]], channelling the power of [[Phenos]], the elemental god of fire and renewal.
+The [[Flamebound|Flamebound Dwarves]] are the fiery clan of [[Dwarf|dwarves]] who dwell in the city of [[Magnus’ Rest]]. They guard the sacred embers and the flame-fragment sealed by [[Muradin]] in [[the First Age]], channelling the power of [[Phenos]], the elemental god of fire and renewal.
 
 Their spirits burn bright, fuelled by both creation and destruction.
 

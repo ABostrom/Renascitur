@@ -10,7 +10,7 @@
 ![[Pasted image 20250419175621.png]]
 ## Overview
 
-[[Magnus’ Rest]] was the city founded by the god-forged hero [[Magnus]] shortly after the [[Psychic Schism]]. In the chaos that followed, he gathered a band of dwarves, humans, and other refugees and led them into the volcanic mountains of southern [[Pyrosia]].
+[[Magnus’ Rest]] was the city founded by the god-forged hero [[Magnus]] shortly after the [[Psychic Schism]]. In the chaos that followed, he gathered a band of [[Dwarf|dwarves]], humans, and other refugees and led them into the volcanic mountains of southern [[Pyrosia]].
 
 There, beside a smouldering caldera of [[Mt. Earthspur]], [[Magnus]] and his [[Forge Clerics]] defended the entrance to the nascent city for **a thousand nights**, waging endless battle against the horrors of the night. When at last the final stones were laid and the forges lit, the gates were sealed—not in retreat, but in preparation.
 
@@ -24,13 +24,13 @@ Magnus’ Rest became a **beacon of radiant fire**, an **enclave for all who fle
 
 ---
 
-## Cultural Themes – The [[Flamebound]] Dwarves
+## Cultural Themes – The [[Flamebound]] [[Dwarf|Dwarves]]
 
-The dwarves of Magnus’ Rest are known as the **[[Flamebound]]**, and they live by the creed of **rebirth through fire**. Fire is more than a tool—it is a crucible of the [[soul]]. Through radiant heat, they believe that all things are tested, all weakness burned away.
+The [[Dwarf|dwarves]] of Magnus’ Rest are known as the **[[Flamebound]]**, and they live by the creed of **rebirth through fire**. Fire is more than a tool—it is a crucible of the [[soul]]. Through radiant heat, they believe that all things are tested, all weakness burned away.
 
 They revere [[Magnus]] not only as a divine protector but as the living embodiment of radiant defiance. His doctrine, passed down through the [[Magnesium Devouts]], teaches that in the face of overwhelming night, the only righteous answer is to burn brighter.
 
-The Flamebound value:
+The [[Flamebound]] value:
 - **Sacrifice through hardship**
 - **Perseverance under pressure**
 - **Creation as a sacred act**
@@ -81,7 +81,7 @@ Millennia later, in the chaos following the [[Psychic Schism]], it was the dying
 
 The Eternal Flame:
 - Burns with **divine radiance**, purifying [[aberrations]] and shielding the city from corruption  
-- **Empowers the [[Everburn Forges]]**, allowing the Flamebound to craft weapons of [[Radiant Obsidian]] and [[Sun Topaz]]  
+- **Empowers the [[Everburn Forges]]**, allowing the [[Flamebound]] to craft weapons of [[Radiant Obsidian]] and [[Sun Topaz]]  
 - Serves as a **spiritual anchor** for the [[Magnesium Devouts]], who tend its heart and preserve its song  
 
 > “We are not its masters. We are its stewards. And should the Flame ever fall… the last hope of the world may fall with it.”  
@@ -89,11 +89,11 @@ The Eternal Flame:
 
 ---
 
-## Radiant Forging – Sacred Craft of the Flamebound
+## Radiant Forging – Sacred Craft of the [[Flamebound]]
 
-The Flamebound are masters of **Radiant Forging**, a sacred and arduous discipline that merges divine heat, volcanic material, and dwarven craftsmanship.
+The [[Flamebound]] are masters of **Radiant Forging**, a sacred and arduous discipline that merges divine heat, volcanic material, and dwarven craftsmanship.
 
-All true Radiant Forging is performed within the [[Everburn Forges]], which are powered directly by the [[Eternal Flame]]. The process requires not only metallurgical skill but spiritual worthiness—flame, in Flamebound belief, reveals the truth of all things.
+All true Radiant Forging is performed within the [[Everburn Forges]], which are powered directly by the [[Eternal Flame]]. The process requires not only metallurgical skill but spiritual worthiness—flame, in [[Flamebound]] belief, reveals the truth of all things.
 
 Radiant-forged weapons and armor:
 
@@ -111,7 +111,7 @@ Some relics of the First Flame, like the [[Sunforged Anvil]] and the sacred **Ev
 
 ## Hidden Legacy – [[Solaran]] Stone and the Buried Gate
 
-Long before the founding of Magnus’ Rest—before even the rise of the dwarves—this mountain was a site of **intense [[Solaran]] activity**.
+Long before the founding of Magnus’ Rest—before even the rise of the [[Dwarf|dwarves]]—this mountain was a site of **intense [[Solaran]] activity**.
 
 Drawn by the rich veins of [[Radiant Obsidian]] and [[Sun Topaz]], Solaran researchers and architects carved deep into the volcanic rock, shaping vaults and cathedrals of fire-channeling crystal. Their purpose is lost to time, but some speculate they sought to **harvest and weaponize the primal flame** they discovered sealed beneath the earth—perhaps even [[Phenos]] himself.
 
@@ -119,7 +119,7 @@ Over millennia, their works collapsed, melted, and became twisted by time and te
 
 Among the deepest chambers of Magnus’ Rest—beyond the [[Ember Veins]] and sealed by forgotten sigils—lie fragments of [[Solaran]] stonework, half-melded into basalt, the light of the topaz long extinguished. The walls whisper, the metal sings, and the old glyphs pulse faintly when the [[Eternal Flame]] flares.
 
-Most dwarves dismiss it as residual magic or old forge echoes.
+Most [[Dwarf|dwarves]] dismiss it as residual magic or old forge echoes.
 
 But the [[Magnesium Devouts]] know better.
 

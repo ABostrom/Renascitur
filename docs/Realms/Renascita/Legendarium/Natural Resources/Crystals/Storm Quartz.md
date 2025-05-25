@@ -19,7 +19,7 @@ Formed in the upper peaks around the [[Stormspire]], [[Storm Quartz]] is grown w
 ## Uses  
 - Set into [[Skyforged Steel]] weapons and armor to allow silent communication during battle.
 - Inlaid into pylons and storm beacons as passive signal conduits.
-- Shards are sometimes embedded into the palms of Stormbound initiates, allowing them to “feel” the wind’s memory and detect shifting sky patterns.
+- Shards are sometimes embedded into the palms of [[Stormbound]] initiates, allowing them to “feel” the wind’s memory and detect shifting sky patterns.
 
 
 ## Lore

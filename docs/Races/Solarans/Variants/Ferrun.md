@@ -25,7 +25,7 @@ The Ferrun are descendants of the Solarans who rejected the arcane and natural p
 ## Origins
 
 - Splintered from Solarans post-Solara collapse, focusing on science and industry.  
-- Deep respect for [[Muradin]] in his original Grundthain form.
+- Deep respect for [[Muradin]] in his original [[Grundthain]] form.
 
 ---
 
@@ -52,7 +52,7 @@ The Ferrun are descendants of the Solarans who rejected the arcane and natural p
 
 ## Notes
 
-- Rekindled ties with dwarves via underground railroads.  
+- Rekindled ties with [[Dwarf|dwarves]] via underground railroads.  
 - Their city [[Thelassia]] hums with steam, gears, and innovation.
 
 ---

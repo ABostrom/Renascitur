@@ -18,7 +18,7 @@ spoken-by:
 ## Overview
 
 - A tonal language with guttural and deep sounds, reflecting the elemental forces.
-- Used primarily in ritual, religion, and rune inscriptions by the dwarves and other descendants.
+- Used primarily in ritual, religion, and rune inscriptions by the [[Dwarf|dwarves]] and other descendants.
 - Known for its runic alphabet, still in use among [[Dwarf]].
 
 ---

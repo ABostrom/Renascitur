@@ -37,7 +37,7 @@ The [[docs/Realms/Renascita/Locations and Cities/Arcturia/Cities/Uftine/Uftine|U
 ## Culture
 
 - Practical and community-focused, skilled in survival and craftsmanship.  
-- Strong bonds with nearby Icebound Dwarves.
+- Strong bonds with nearby [[Icebound]] [[Dwarf|Dwarves]].
 
 ---
 

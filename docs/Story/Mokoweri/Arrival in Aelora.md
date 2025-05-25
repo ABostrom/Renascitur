@@ -1,5 +1,5 @@
 
-As the dense jungle gradually gives way, the first glimpses of Aeloria begin to materialize through the mists—a vast network of treetop dwellings, connected by winding bridges and spiraling platforms that ascend into the heavens. Sunlight filters through the lush canopy, casting dappled patterns on the forest floor and illuminating the city in an ethereal glow. The air is rich with the scents of flowering vines and fresh sap, mingling with the distant sounds of the Saurian city life: the rhythmic beating of drums, the soft murmur of voices, and the occasional call of a native bird echoing through the trees.
+As the dense jungle gradually gives way, the first glimpses of Aeloria begin to materialize through the mists—a vast network of treetop dwellings, connected by winding bridges and spiraling platforms that ascend into the heavens. Sunlight filters through the lush canopy, casting dappled patterns on the forest floor and illuminating the city in an ethereal glow. The air is rich with the scents of flowering vines and fresh sap, mingling with the distant sounds of the [[Saurian]] city life: the rhythmic beating of drums, the soft murmur of voices, and the occasional call of a native bird echoing through the trees.
 
 The path narrows as it approaches the city, bordered by towering ferns and ancient trees whose trunks are broader than houses. Suddenly, the ground trembles subtly underfoot—a sensation that grows more pronounced with each step. The players pause, sensing the approach of something vast.
 
@@ -9,11 +9,11 @@ Emerging from the dense foliage, Lord Titus appears like a colossus carved from 
 
 With a low and rumbling growl that resonates in the chest more than it is heard, Lord Titus regards the players with eyes that gleam with intelligence and ancient wisdom. “So, the brave return,” his voice booms, deep and resonant. “Your journey has led you back to us, sooner than the leaves of the Healing Fern turn.”
 
-His massive head lowers to their level, an unmistakable gesture of recognition and respect among the Saurians. “You walk again upon the sacred roots of Aeloria,” Titus continues, his tone now imbued with a solemnity befitting the gravity of their return. “The city watches, the Elders wait, and the jungle whispers of your deeds.”
+His massive head lowers to their level, an unmistakable gesture of recognition and respect among the [[Saurian|Saurians]]. “You walk again upon the sacred roots of Aeloria,” Titus continues, his tone now imbued with a solemnity befitting the gravity of their return. “The city watches, the Elders wait, and the jungle whispers of your deeds.”
 
 ### Entry into the City
 
-Lord Titus turns, beckoning the party to follow him on the final stretch of the path that leads directly into Aeloria. As they walk, the canopy above parts occasionally, revealing glimpses of the city’s life: young Saurians swinging agilely from branch to branch, artisans crafting intricate carvings into the bark of their homes, and healers tending to the vibrant flora.
+Lord Titus turns, beckoning the party to follow him on the final stretch of the path that leads directly into Aeloria. As they walk, the canopy above parts occasionally, revealing glimpses of the city’s life: young [[Saurian|Saurians]] swinging agilely from branch to branch, artisans crafting intricate carvings into the bark of their homes, and healers tending to the vibrant flora.
 
 The guardian leads them to the city’s grand entrance, a towering archway marked with symbols of protection and welcome, overgrown with flowers that release a calming fragrance as they pass. “Each step through Aeloria is a step through history, through the lifeblood of our people,” Titus explains, his voice now a gentle rumble. “You carry the future with you, as surely as the river carries water to the sea.”
 
@@ -45,7 +45,7 @@ Leaving the bustling market, they transition into the Artisan's Walk, an area kn
 
 Leaving the Artisan's walk behind, Elder Kirex leads the group toward the Warriors' Grove, an integral part of Aeloria that reflects the city's dedication to strength, skill, and the protection of its people. As they approach, the sounds of the market fade, replaced by the rhythmic sounds of training—the clack of wood on wood, the thud of strikes against training dummies, and the occasional shout of an instructor.
 
-The Warriors' Grove is strategically positioned within a natural clearing surrounded by towering trees, whose vast branches form a protective canopy overhead. This natural coliseum-like setting is not only practical for training but symbolic, representing the Saurian belief in strength under the shelter of nature.
+The Warriors' Grove is strategically positioned within a natural clearing surrounded by towering trees, whose vast branches form a protective canopy overhead. This natural coliseum-like setting is not only practical for training but symbolic, representing the [[Saurian]] belief in strength under the shelter of nature.
 
 ### Architectural and Functional Aspects
 
@@ -53,7 +53,7 @@ The grove is segmented into various areas designated for different types of mart
 
 Directly ahead, archery ranges are cleverly integrated into the grove, with targets placed at varying distances and heights. Trainees practice here, their arrows whispering through the air to thud into targets that mimic the colors and textures of potential jungle threats.
 
-To the right, the more advanced combatants engage with advanced training constructs—magically enhanced dummies that can move and react to simulate real enemies. These constructs are a testament to the combined prowess of Saurian magic and martial skill, providing a dynamic training experience that prepares warriors for the unpredictable dangers of the jungle and beyond.
+To the right, the more advanced combatants engage with advanced training constructs—magically enhanced dummies that can move and react to simulate real enemies. These constructs are a testament to the combined prowess of [[Saurian]] magic and martial skill, providing a dynamic training experience that prepares warriors for the unpredictable dangers of the jungle and beyond.
 
 ### Kirex's Involvement
 
@@ -63,9 +63,9 @@ Kirex stops beside a particularly intense training session where a seasoned warr
 
 ### Cultural Significance
 
-At intervals around the grove, statues of legendary Saurian warriors stand guard, each carved from the wood of fallen trees and adorned with symbols of valor and protection. These statues serve as both memorials and inspiration, a reminder of the heroes who have shaped the city's history.
+At intervals around the grove, statues of legendary [[Saurian]] warriors stand guard, each carved from the wood of fallen trees and adorned with symbols of valor and protection. These statues serve as both memorials and inspiration, a reminder of the heroes who have shaped the city's history.
 
-As they pass a central gathering area, a group of younger Saurians sits cross-legged, listening intently to an elder warrior recount tales of past battles and the lessons learned. "History teaches us, stories inspire us," Kirex remarks, indicating the gathering. "Every tale told here under the shade of our ancestors' trees weaves another thread into the fabric of our community."
+As they pass a central gathering area, a group of younger [[Saurian|Saurians]] sits cross-legged, listening intently to an elder warrior recount tales of past battles and the lessons learned. "History teaches us, stories inspire us," Kirex remarks, indicating the gathering. "Every tale told here under the shade of our ancestors' trees weaves another thread into the fabric of our community."
 
 ### Leaving the Grove
 
@@ -77,13 +77,13 @@ As they walk, the path becomes lined with soft, moss-covered stones that gradual
 
 The temple is constructed around a colossal tree, its roots and branches intricately intertwined with the stonework, creating archways and walls that pulse with life. Vines drape over the edges, blooming with flowers that release a gentle, soothing fragrance, believed to be blessings from [[Irasandra]] herself.
 
-The entrance is flanked by statues of Saurian heroes of old, their figures carved from the same living wood as the temple, standing guard and watching over all who enter. Soft chants can be heard from within, where devotees engage in continuous prayer, ensuring that the spiritual heart of Aeloria remains vibrant and active.
+The entrance is flanked by statues of [[Saurian]] heroes of old, their figures carved from the same living wood as the temple, standing guard and watching over all who enter. Soft chants can be heard from within, where devotees engage in continuous prayer, ensuring that the spiritual heart of Aeloria remains vibrant and active.
 
 Kirex pauses briefly at the entrance, allowing the group a moment to take in the serene beauty of the place. "This is the Temple of [[Irasandra]]," he explains, his voice lower, reverent. "It is here that we seek guidance from the divine, where we celebrate our victories and seek comfort in our defeats. The presence of the goddess is strongest within these walls."
 
 Inside, the temple's interior opens up into a vast, circular chamber. The ceiling soars high above, with branches woven into a lattice that allows rays of sunlight to filter through, casting patterns on the floor that shift with the movement of the sun. At the center, a large, open basin filled with clear water reflects the light, symbolizing [[Irasandra]]'s life-giving essence.
 
-Around the basin, Saurians of various ages and roles within their society come and go, some stopping to offer prayers, others to meditate quietly by the water's edge. The atmosphere is one of profound peace and community, with each individual connected by their shared faith and collective hopes.
+Around the basin, [[Saurian|Saurians]] of various ages and roles within their society come and go, some stopping to offer prayers, others to meditate quietly by the water's edge. The atmosphere is one of profound peace and community, with each individual connected by their shared faith and collective hopes.
 
 Kirex gestures towards a path that leads out from the opposite side of the temple. "Our path continues through here," he indicates, leading the way. "The Council awaits, and while the peace of this place is comforting, our duties must not be delayed."
 
@@ -104,7 +104,7 @@ At the center of the room, a large, round table of dark wood is surrounded by hi
 
 ### The Greeting by the Council
 
-As the players enter the Council Chambers, they are met with a tableau of distinct and powerful personalities, each Elder embodying unique aspects of Saurian culture and wisdom. The room's atmosphere is thick with the scent of ancient wood and the subtle tang of resin, while light streams through the lattice of leaves above, creating a serene yet solemn ambiance.
+As the players enter the Council Chambers, they are met with a tableau of distinct and powerful personalities, each Elder embodying unique aspects of [[Saurian]] culture and wisdom. The room's atmosphere is thick with the scent of ancient wood and the subtle tang of resin, while light streams through the lattice of leaves above, creating a serene yet solemn ambiance.
 
 ![[Elder Thrasuun]]
 
