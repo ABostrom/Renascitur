@@ -34,7 +34,7 @@ Venturing deeper into the Solaran Research Complex, you find yourself within the
 #### Things to find:
 - Data shards on developing the Saurian growth containment
 - Data shards on developing the slaads and saurians
-- Data shards on Life's Work - Irasandra
+- Data shards on Life's Work - [[Irasandra]]
 
 
 ### Fauna Alteration Chamber
@@ -186,7 +186,7 @@ _Findings: Preliminary findings show that Solaran technology may provide a pathw
 
 
 
-### Life's Work - Irasandra
+### Life's Work - [[Irasandra]]
 **Experiment Log 437: Uniting Essence**
 
 Today's experiment involved infusing the newly developed life-generating matrix with a synthesized blend of [[Solaran]] energy signatures. Despite the significant advances we've made in harnessing elemental energy, the matrix remains stubbornly inert. Each time, the result is the same—no discernible response. The matrix lacks a vital component.

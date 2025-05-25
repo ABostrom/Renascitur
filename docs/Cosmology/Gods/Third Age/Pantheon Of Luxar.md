@@ -3,7 +3,7 @@
 
 ![[Magnus]]
 
-![[Irisandra]]
+![[Irasandra]]
 
 ![[Fernando]]
 

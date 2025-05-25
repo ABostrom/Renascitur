@@ -1,9 +1,19 @@
 ---
-aliases: [Natsugen, Kyojin Tongue]
-tags: [language, kyojin, ancient]
-aat-language-family: Kyojin
+aliases:
+  - Natsugen
+  - Kyojin Tongue
+tags:
+  - language
+  - kyojin
+  - ancient
+aat-language-family:
+  - "[[Kyojin]]"
 aat-language-tier: root
-spoken-by: [[Kyojin]], [[Orcs]], [[Leonin]], [[Mokoweran]]
+spoken-by:
+  - "[[Kyojin]]"
+  - "[[Orc]]"
+  - "[[Leonin]]"
+  - "[[docs/Races/Humans/Terran/Variants/Mokoweri|Mokoweri]]"
 ---
 
 # Natsugen

@@ -1,9 +1,9 @@
 ---
 aliases: [Imperial, Common Trade Tongue]
 tags: [language, trade, common]
-aat-language-family: Common
-aat-language-tier: universal
-spoken-by: Most mortal races
+aat-language-family: 
+- "[[Valeshi]]"
+aat-language-tier: derived
 ---
 
 # Imperial

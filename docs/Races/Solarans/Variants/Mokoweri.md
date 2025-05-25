@@ -1,11 +1,20 @@
 ---
-aliases: [Mokoweri]
-tags: [race, cultural-variant, solarans, nature]
-lineage: [[Solarans]]
-origin-plane: [[Libertum]]
+aliases:
+  - Mokoweri
+tags:
+  - race
+  - cultural-variant
+  - solarans
+  - nature
+lineage:
+  - "[[Solaran]]"
+origin-plane:
+  - "[[Renascita]]"
 aat-race-tier: cultural variant
-spoken-language: [[Mokoweran]], [[Common]]
-written-language: [[Mokoweran Script]]
+spoken-language:
+  - "[[Mokoweran]]"
+  - "[[Imperial Common]]"
+  - "[[Thraysian Common]]"
 ---
 
 # Mokoweri

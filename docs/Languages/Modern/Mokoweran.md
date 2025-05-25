@@ -1,14 +1,17 @@
 ---
 aliases: [Mokoweran, Hybrid Solaran-Saurian]
 tags: [language, mokoweran, derived]
-aat-language-family: Elyssan Denisovan
+aat-language-family: 
+- "[[Elyssan]]"
+- "[[Denisovan]]"
 aat-language-tier: derived
-spoken-by: [[Mokoweri]]
+spoken-by: 
+- "[[Mokoweri]]"
 ---
 
 # Mokoweran
 
-**Mokoweran** is a unique hybrid dialect blending the ancient [[Elyssan]] of the [[Solaran]] with the harmonic and spiritual tones of [[Denisovan]], spoken by the [[docs/Races/Solarans/Variants/Mokoweri]] people. It reflects their deep connection to nature and ancestral spirits.
+**Mokoweran** is a unique hybrid dialect blending the ancient [[Elyssan]] of the [[Solaran]] with the harmonic and spiritual tones of [[Denisovan]], spoken by the [[Saurian]] people. It reflects their deep connection to nature and ancestral spirits.
 
 ---
 

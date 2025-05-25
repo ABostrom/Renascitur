@@ -1,9 +1,11 @@
 ---
 aliases: [Dwarven, Modern Karathic]
 tags: [language, dwarven, derived]
-aat-language-family: [[Karathic]]
+aat-language-family: 
+- "[[Karathic]]"
 aat-language-tier: derived
-spoken-by: [[Dwarves]]
+spoken-by: 
+- "[[Dwarves]]"
 ---
 
 # Dwarven

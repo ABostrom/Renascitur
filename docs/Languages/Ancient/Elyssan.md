@@ -1,14 +1,18 @@
 ---
-aliases: [Elyssan, Solaran Root Tongue]
+aliases: [Elyssan]
 tags: [language, solaran, root, ancient]
-aat-language-family: Solaran
+aat-language-family: "[[Solaran]]"
 aat-language-tier: root
-spoken-by: [[Solarans]], [[Arcanii]], [[Ferrun]], [[Aerlai]], [[Velastri]]
+spoken-by: 
+- "[[Solaran]]"
+- "[[Arcanii]]"
+- "[[Ferrun]]"
+- "[[Celestar]]"
+- "[[Velastri]]"
 ---
 
-# Elyssan
 
-**Elyssan** is the ancient and sacred root language of the [[Solaran]], the first race of [[the First Age]]. Once the spoken tongue of a radiant civilization, Elyssan now survives primarily as a **liturgical, scholarly, and written language**, forming the basis for various dialects that evolved over millennia.
+Elyssan is the ancient and sacred root language of the [[Solaran]], the first race of [[the First Age]]. Once the spoken tongue of a radiant civilization, Elyssan now survives primarily as a **liturgical, scholarly, and written language**, forming the basis for various dialects that evolved over millennia.
 
 ---
 

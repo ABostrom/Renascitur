@@ -71,17 +71,17 @@ As they pass a central gathering area, a group of younger Saurians sits cross-le
 
 Leaving the Warriors' Grove, the atmosphere shifts subtly from the focus and intensity of martial training to the broader pathways leading to the city's heart. The sounds of training fade into the background, replaced by the natural sounds of Aeloria's vibrant life. Kirex's stride is purposeful, each step a reflection of the discipline and responsibility that define his role as the guardian of Aeloria's defense.
 
-### Passage through the Temple of Irasandra
+### Passage through the Temple of [[Irasandra]]
 
-As they walk, the path becomes lined with soft, moss-covered stones that gradually give way to an open area bathed in sunlight. Here lies the Temple of Irasandra, a breathtaking structure that seems to grow naturally from the ground itself.
+As they walk, the path becomes lined with soft, moss-covered stones that gradually give way to an open area bathed in sunlight. Here lies the Temple of [[Irasandra]], a breathtaking structure that seems to grow naturally from the ground itself.
 
-The temple is constructed around a colossal tree, its roots and branches intricately intertwined with the stonework, creating archways and walls that pulse with life. Vines drape over the edges, blooming with flowers that release a gentle, soothing fragrance, believed to be blessings from Irasandra herself.
+The temple is constructed around a colossal tree, its roots and branches intricately intertwined with the stonework, creating archways and walls that pulse with life. Vines drape over the edges, blooming with flowers that release a gentle, soothing fragrance, believed to be blessings from [[Irasandra]] herself.
 
 The entrance is flanked by statues of Saurian heroes of old, their figures carved from the same living wood as the temple, standing guard and watching over all who enter. Soft chants can be heard from within, where devotees engage in continuous prayer, ensuring that the spiritual heart of Aeloria remains vibrant and active.
 
-Kirex pauses briefly at the entrance, allowing the group a moment to take in the serene beauty of the place. "This is the Temple of Irasandra," he explains, his voice lower, reverent. "It is here that we seek guidance from the divine, where we celebrate our victories and seek comfort in our defeats. The presence of the goddess is strongest within these walls."
+Kirex pauses briefly at the entrance, allowing the group a moment to take in the serene beauty of the place. "This is the Temple of [[Irasandra]]," he explains, his voice lower, reverent. "It is here that we seek guidance from the divine, where we celebrate our victories and seek comfort in our defeats. The presence of the goddess is strongest within these walls."
 
-Inside, the temple's interior opens up into a vast, circular chamber. The ceiling soars high above, with branches woven into a lattice that allows rays of sunlight to filter through, casting patterns on the floor that shift with the movement of the sun. At the center, a large, open basin filled with clear water reflects the light, symbolizing Irasandra's life-giving essence.
+Inside, the temple's interior opens up into a vast, circular chamber. The ceiling soars high above, with branches woven into a lattice that allows rays of sunlight to filter through, casting patterns on the floor that shift with the movement of the sun. At the center, a large, open basin filled with clear water reflects the light, symbolizing [[Irasandra]]'s life-giving essence.
 
 Around the basin, Saurians of various ages and roles within their society come and go, some stopping to offer prayers, others to meditate quietly by the water's edge. The atmosphere is one of profound peace and community, with each individual connected by their shared faith and collective hopes.
 

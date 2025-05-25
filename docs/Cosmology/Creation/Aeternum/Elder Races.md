@@ -7,11 +7,11 @@ The Elder Races were the first mortal civilizations shaped by the divine forces 
 
 **Blessing:** Longevity, mastery of light and celestial energy  
 **[[Aeternum]] Patron:** [[Aelion]], The Everburning Light  
-**World Tree Connection:** **[[Irisandra]], the Solaran Tree** (Knowledge and Understanding)
+**World Tree Connection:** **[[Irasandra]], the Solaran Tree** (Knowledge and Understanding)
 
 The **Solarans** were the first and greatest civilization of [[the First Age]], chosen by **[[Aelion]]** to be the bearers of wisdom, innovation, and celestial power. Their mastery over **solar energy** and arcane technology allowed them to build vast cities that touched the stars. However, their ambition led to the creation of the **Endless Sun**, a failed attempt to restore the celestial order after [[Ishna]]’s corruption of the **Primal Forces**.
 
-Their connection to [[Mokoruuth]], the Tree of Knowledge, symbolized their endless pursuit of enlightenment. When their civilization fell[[Iris Andras]] a Solaran scientist merged with the tree ascneding to godhood as [[Irisandra]].
+Their connection to [[Mokoruuth]], the Tree of Knowledge, symbolized their endless pursuit of enlightenment. When their civilization fell[[Iris Andras]] a Solaran scientist merged with the tree ascneding to godhood as [[Irasandra]].
 
 Though their empire is gone, remnants of the Solarans remain scattered throughout the world—some hiding in the ruins of their lost cities, others living among the High Elves, still carrying the flickering embers of their once-glorious knowledge.
 

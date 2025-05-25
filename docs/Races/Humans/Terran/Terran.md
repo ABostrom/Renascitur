@@ -1,11 +1,13 @@
 ---
-aliases: [Humans, Terrans]
-tags: [race, mortal, adaptable]
-lineage: Mortal Race
-origin-plane: [[Material Plane]]
-aat-race-tier: mortal
-spoken-language: [[Common]], [[Terran Dialect]]
-written-language: [[Common Script]]
+aliases:
+  - Humans
+  - Terrans
+tags:
+  - race
+  - mortal
+  - adaptable
+origin-plane: "[[Renascita]]"
+spoken-language: "[[Imperial Common|Imperial]]"
 ---
 
 # Terran Humans

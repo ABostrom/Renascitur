@@ -2,10 +2,10 @@
 aliases: [Forgeborn]
 tags: [race, engineered, undead, constructs]
 lineage: Engineered Race
-origin-plane: [[Material Plane]]
+origin-plane: "[[Renascita]]"
 aat-race-tier: engineered
-spoken-language: None (communication via Arcanometric Protocols)
-written-language: Arcanometric Script (written-only)
+spoken-language: 
+- "[[Valeshi]]"
 ---
 
 # Forgeborn

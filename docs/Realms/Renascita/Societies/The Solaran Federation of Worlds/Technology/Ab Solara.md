@@ -64,7 +64,7 @@ The Ab Solara network included connections to:
 - [[Solara]] (Capital Core)
 - [[Cascadia]] (Sun Topaz refinery near the Eternal Flame)
 - [[Arcane Observatory]] (geostationary research station)
-- [[docs/Races/Solaran/Mokoweri]] (sealed within [[Irisandra]]’s influence)
+- [[docs/Races/Solaran/Mokoweri]] (sealed within [[Irasandra]]’s influence)
 - [[Elementis Ignis]], [[Elementis Aqua]], [[Elementis Terra]], [[Elementis Ventus]] (Elemental planes)
 - [[Thargrun]] (pre-severance)
 - [[Sigmora]] (plane of order, maintained only by automated gate-cycles)

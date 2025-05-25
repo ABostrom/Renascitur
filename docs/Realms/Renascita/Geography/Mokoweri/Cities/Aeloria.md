@@ -6,7 +6,7 @@
 
 At the heart of Aeloria's bustling life is the Canopy Commons, a sprawling platform that serves as the city's main gathering place. Supported by a network of interlocking branches high above the ground, it is a testament to Saurian engineering and their ability to live in harmony with nature. The Commons is the venue for market days, where traders from all over Aeloria come to sell exotic fruits, handcrafted items, and rare materials gathered from the jungle below. At its center stands the Community Totem, a towering sculpture adorned with symbols representing each family unit within Aeloria, symbolizing unity and collective identity.
 
-## The Temple of [[Irisandra]]
+## The Temple of [[Irasandra]]
 
 A marvel of organic architecture, the Temple of [[Mokoruuth]] is built around and within one of the largest trees in Aeloria. Its walls are alive, composed of the tree's roots and branches, with spaces open to the sky where light filters through dense foliage. Inside, altars of natural stone and wood hold sacred relics and offerings to [[Mokoruuth]]. The air is heavy with incense and the sound of quiet prayers or chants during worship. It's not just a place for religious rituals but also a sanctuary for those seeking solace and guidance from the goddess.
 
@@ -47,7 +47,7 @@ Each of these locations within Aeloria plays a vital role in the life of the Sau
     
 - **Elder Vellara**: Vellara is the keeper of the Archives of the Ancients and a scholar of Solaran technology. She bridges the gap between the past and present, advocating for the integration of ancient wisdom with contemporary practices.
     
-- **Elder Marn**: An elder druid with a profound connection to the spirits of the land, Marn is the spiritual heart of the Council. His insights and visions guide the Saurians in matters of faith and their relationship with Irasandra.
+- **Elder Marn**: An elder druid with a profound connection to the spirits of the land, Marn is the spiritual heart of the Council. His insights and visions guide the Saurians in matters of faith and their relationship with [[Irasandra]].
     
 
 These elders, each with their unique strengths and wisdom, govern Aeloria with a collective dedication to the prosperity and preservation of their people and the jungle that cradles their civilization. Together, they navigate the complexities of a world that is both beautiful and perilous, ensuring the legacy of the Saurians endures for generations to come.
@@ -70,7 +70,7 @@ The hatching of an egg is a celebrated event, marked by the Ceremony of Claiming
 
 **The Sacred Pool**
 
-At the center of the Hatchery is the Sacred Pool, a natural spring believed to be blessed by Irasandra herself. The water from this pool is used in the final ritual before an egg is placed in the Hatchery, symbolizing the life-giving essence of the goddess. After hatching, the newborns are gently bathed in the pool, signifying their official entry into the Saurian community.
+At the center of the Hatchery is the Sacred Pool, a natural spring believed to be blessed by [[Irasandra]] herself. The water from this pool is used in the final ritual before an egg is placed in the Hatchery, symbolizing the life-giving essence of the goddess. After hatching, the newborns are gently bathed in the pool, signifying their official entry into the Saurian community.
 
 **Educational Role**
 

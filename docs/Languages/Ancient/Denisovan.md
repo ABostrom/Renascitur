@@ -7,7 +7,7 @@ tags:
   - saurian
   - ancient
 aat-language-family:
-  - Saurian
+  - "[[Saurian]]"
 aat-language-tier: root
 spoken-by:
   - "[[Saurian]]"

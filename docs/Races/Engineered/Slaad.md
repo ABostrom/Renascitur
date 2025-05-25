@@ -2,16 +2,15 @@
 aliases: [Slaads]
 tags: [race, aberrant, corrupted]
 lineage: Aberrant Mutation
-origin-plane: [[Material Plane]]
+origin-plane: "[[Renascita]]"
 aat-race-tier: aberrant
-spoken-language: None (chaotic vocalizations)
-written-language: None
+spoken-language: "[[Denisovan]]"
 ---
 
 # Slaads
 
 **Summary:**  
-Slaads are aberrant mutations of the [[Saurians]], corrupted and twisted by exposure to aberrant energies. They embody chaos and destruction, threatening the fragile balance of the jungles of [[docs/Races/Solarans/Variants/Mokoweri]].
+Slaads are aberrant mutations of the [[Saurian|Saurians]], corrupted and twisted by exposure to aberrant energies. They embody chaos and destruction, threatening the fragile balance of the jungles of [[docs/Races/Solarans/Variants/Mokoweri]].
 
 ---
 

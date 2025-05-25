@@ -5,7 +5,7 @@ The prophecy of the "golden" child is a profound element within the tapestry of 
 
 The prophecy speaks of a time when the world is shrouded in darkness, beset by threats both from within and beyond—corruption spreading its tendrils through the heart of nature, and shadows of old wars threatening to erupt anew. It is during this period of turmoil that the "golden" child, marked by iridescent golden scales that shimmer like the first light of dawn, will be born into the Saurian community.
 
-This child is said to possess an unparalleled connection to the natural world, embodying the essence of life and the purity of the Saurians' deity, Irasandra, herself. Their birth will signal the beginning of a new age, a time of profound transformation and healing for the scars inflicted upon the land and its inhabitants.
+This child is said to possess an unparalleled connection to the natural world, embodying the essence of life and the purity of the Saurians' deity, [[Irasandra]], herself. Their birth will signal the beginning of a new age, a time of profound transformation and healing for the scars inflicted upon the land and its inhabitants.
 
 # Signs and Omens
 

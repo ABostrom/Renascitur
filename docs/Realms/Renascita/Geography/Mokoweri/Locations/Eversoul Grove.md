@@ -22,7 +22,7 @@ The natural formation of the runes on the Eversoul Tree has led many to pilgrima
 In essence, the Eversoul Tree is more than a source of magic; it is a sacred entity that embodies the intricate dance between the material and the mystical. Its roots delve into the mysteries of the earth, while its branches stretch into the infinite possibilities of the cosmos, making it a symbol of unity and the enduring power of life itself.
 
 
-# Meeting Irasandra
+# Meeting [[Irasandra]]
 In the heart of the Eversoul Grove, where the ancient magic is most potent and the air thrums with the life force of the world, the players find themselves in a clearing dominated by the majestic Eversoul Tree. Here, the atmosphere is thick with anticipation, a sense of profound tranquility and power enveloping everything.
 
 As the players approach, the ambient light subtly shifts, drawing their attention to the base of the Eversoul Tree. There, from the ethereal glow and the whispered secrets of the grove, thousands of tiny, firefly-like creatures begin to converge. Each creature glows with a soft, otherworldly light, their movements synchronized in a mesmerizing dance of light and shadow.
@@ -31,7 +31,7 @@ Gradually, these luminous beings coalesce into a form both grand and ethereal. T
 
 Her form, though made of countless individual lights, conveys expressions of kindness and wisdom, her eyes pools of deep, ancient knowledge. The firefly-like creatures that compose her being flutter around her, their light casting intricate patterns on the ground and illuminating the faces of the players with a warm glow.
 
-Emerging from the ethereal glow of the tree, thousands of tiny, firefly-like creatures begin to converge, swirling in a mesmerizing dance of light. You all watch in awe as these luminescent beings act in unison, gradually forming the visage of Irasandra. Her manifestation is both otherworldly and comforting, a luminous figure composed entirely of these tiny, glowing entities. Her presence is gentle, a soft light in the dimness of the grove, and her voice resonates with a warmth that seems to echo the life all around them.
+Emerging from the ethereal glow of the tree, thousands of tiny, firefly-like creatures begin to converge, swirling in a mesmerizing dance of light. You all watch in awe as these luminescent beings act in unison, gradually forming the visage of [[Irasandra]]. Her manifestation is both otherworldly and comforting, a luminous figure composed entirely of these tiny, glowing entities. Her presence is gentle, a soft light in the dimness of the grove, and her voice resonates with a warmth that seems to echo the life all around them.
 
 ## Her words
 
@@ -63,13 +63,13 @@ Irsasandra's form brightens, casting a radiant glow that seems to touch each adv
 
 "You have been brought together by forces greater than yourselves, united in a purpose that spans the breadth of time. The challenges ahead will test you, the truths you uncover may shake you, but remember—within this grove, under the watchful gaze of the Eversoul Tree, you are never truly alone. Your paths are intertwined, a tapestry woven from the very fabric of the cosmos."
 
-"In my union with the Eversoul Tree, I was bestowed with visions beyond the confines of our realm, insights into the foundational fabric of existence," Irasandra shares, her voice imbued with a mixture of wonder and burden. "It was within this profound communion that I beheld the existence of two other trees, siblings to the Eversoul, each rooted in the depths of [[Weave|the Weave]] itself."
+"In my union with the Eversoul Tree, I was bestowed with visions beyond the confines of our realm, insights into the foundational fabric of existence," [[Irasandra]] shares, her voice imbued with a mixture of wonder and burden. "It was within this profound communion that I beheld the existence of two other trees, siblings to the Eversoul, each rooted in the depths of [[Weave|the Weave]] itself."
 
-The adventurers listen intently as Irasandra elaborates on her discovery and its significance.
+The adventurers listen intently as [[Irasandra]] elaborates on her discovery and its significance.
 
 "These trees, much like the Eversoul, are conduits of immense power, pivotal to the balance and flow of [[Weave|the Weave]] across Renascitur. Their existence is a testament to the intricate design of our universe, a design that, until now, has been marred by the broken [[Machinery of Death]] and the encroaching Aberrant plague."
 
-Irasandra's form pulses with a newfound intensity as she unveils her plan.
+[[Irasandra]]'s form pulses with a newfound intensity as she unveils her plan.
 
 "By connecting the Eversoul with its kin, we can forge a triad of stability, a harmonious link that can reinforce [[Weave|the Weave]]'s integrity. This won't mend the [[Machinery of Death]] in its entirety, nor will it eradicate the Aberrant plague. However, it will create a sanctuary within [[Weave|the Weave]], a haven where mortal souls can traverse safely, shielded from the voracious appetite of the [[aberrations]]."
 
@@ -77,7 +77,7 @@ The gravity of her words settles among the adventurers, a mixture of hope and da
 
 "This endeavor is not without its perils. The paths to these trees are veiled in secrecy, guarded by trials that will test your mettle, your wisdom, and the very fibers of your souls. Yet, the reward is beyond measure—the safeguarding of countless souls, the preservation of the natural order, and a step towards healing the rifts that have scarred our world."
 
-Irasandra's gaze sweeps across the faces of the adventurers, imparting a silent plea for courage and resolve.
+[[Irasandra]]'s gaze sweeps across the faces of the adventurers, imparting a silent plea for courage and resolve.
 
 "I have chosen you not only for the roles you are destined to play but for your ability to face the darkness with unwavering light. Together, with the Eversoul as our anchor, we can [[weave]] a new fate for Renascitur, one where life and death find their rightful passage once more."
 
@@ -103,9 +103,9 @@ Irsasandra's presence begins to wane, her message nearly complete.
 
 "Your path is fraught with peril, and the road ahead is unknown. But within you burns the light of potential, the courage to face the darkness. Take these devices, find the sister trees, and restore balance to [[Weave|the weave]]."
 
-As her form dissipates entirely, leaving the adventurers in the silent, sacred heart of the Eversoul Grove, they are left with a sense of purpose. Irasandra's trust in them, her belief in their ability to navigate the challenges ahead, imbues them with a resolve to venture forth, to seek the sister trees and play their part in the grand tapestry of the cosmos.
+As her form dissipates entirely, leaving the adventurers in the silent, sacred heart of the Eversoul Grove, they are left with a sense of purpose. [[Irasandra]]'s trust in them, her belief in their ability to navigate the challenges ahead, imbues them with a resolve to venture forth, to seek the sister trees and play their part in the grand tapestry of the cosmos.
 
-As the final echoes of Irasandra's voice fade into the serene quiet of the Eversoul Grove, a soft, ethereal light begins to envelop the adventurers. It's gentle at first, a mere whisper of luminescence that caresses their skin, warm and comforting. But quickly, the light grows in intensity, swirling around them in a radiant vortex that seems to pulse with the life force of the grove itself. The air is filled with the scent of ancient magic, a fragrance that speaks of timelessness and the essence of creation.
+As the final echoes of [[Irasandra]]'s voice fade into the serene quiet of the Eversoul Grove, a soft, ethereal light begins to envelop the adventurers. It's gentle at first, a mere whisper of luminescence that caresses their skin, warm and comforting. But quickly, the light grows in intensity, swirling around them in a radiant vortex that seems to pulse with the life force of the grove itself. The air is filled with the scent of ancient magic, a fragrance that speaks of timelessness and the essence of creation.
 
 The adventurers, standing united in the heart of the grove, feel an overwhelming sense of peace and purpose suffuse their being. There's no fear, only a profound acceptance of the journey that lies ahead and the roles they are to play in the unfolding tapestry of the universe. The light, now blinding in its brilliance, reaches a crescendo, a tangible force of magic and energy that seems to resonate with the very core of their souls.
 
@@ -113,4 +113,4 @@ And then, in the blink of an eye, the world shifts.
 
 The light recedes as quickly as it had appeared, leaving the adventurers blinking against the sudden change in their surroundings. Gone are the verdant tranquility and the ancient majesty of the Eversoul Grove. In its place stands the entrance to a ruin, a threshold carved from stone, weathered by time and adorned with symbols that whisper of a forgotten era. The air here is cooler, tinged with the scent of dust and the faint, lingering traces of magic long dormant.
 
-The adventurers find themselves at the very cusp of an ancient ruin, the first step on a journey that will take them across realms and through the fabric of reality itself. The light that had transported them here fades away completely, but its warmth lingers, a reassuring presence that reminds them of their purpose and the trust Irasandra has placed in them.
+The adventurers find themselves at the very cusp of an ancient ruin, the first step on a journey that will take them across realms and through the fabric of reality itself. The light that had transported them here fades away completely, but its warmth lingers, a reassuring presence that reminds them of their purpose and the trust [[Irasandra]] has placed in them.

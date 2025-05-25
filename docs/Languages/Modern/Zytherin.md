@@ -1,10 +1,11 @@
 ---
 aliases: [Zytherin, Velastri Tongue]
 tags: [language, solaran, dialect, infernal]
-aat-language-family: [[Elyssan]]
+aat-language-family: 
+- "[[Elyssan]]"
 aat-language-tier: dialect
-spoken-by: [[Velastri]]
-parent-language: [[Elyssan]]
+spoken-by: 
+- "[[Velastri]]"
 ---
 
 # Zytherin
@@ -25,7 +26,7 @@ parent-language: [[Elyssan]]
 ## Cultural Role
 
 - Used primarily in ceremonial, legal, and arcane contexts.
-- Velastri common folk may speak [[Common]] for trade but revert to Zytherin in formal situations.
+- Velastri common folk may speak [[Thraysian Common|Thraysian]] for trade but revert to Zytherin in formal situations.
 - Magic and binding contracts are almost always performed in Zytherin.
 
 ---

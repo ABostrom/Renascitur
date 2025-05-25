@@ -1,9 +1,11 @@
 ---
 aliases: [Orcish, Spiritual Natsugen]
 tags: [language, orcish, derived]
-aat-language-family: [[Natsugen]]
+aat-language-family: 
+- "[[Natsugen]]"
 aat-language-tier: derived
-spoken-by: [[Orcs]]
+spoken-by: 
+- "[[Orc]]"
 ---
 
 # Orcish
