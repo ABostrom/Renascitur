@@ -1,11 +1,10 @@
 ---
 aliases: [Dwarves]
 tags: [race, elemental, grundthain, crafts]
-lineage: [[Grundthain]]
-origin-plane: [[Onderweld]]
-aat-race-tier: elder
-spoken-language: [[Karathic Dwarven]]
-written-language: [[Karathic Script Dwarven Script]]
+lineage: "[[Dwarf|Dwarves]]"
+origin-plane: "[[Thargrun]]"
+aat-race-tier: distinct
+spoken-language: "[[Dwarven]]"
 ---
 
 # Dwarves

@@ -6,13 +6,11 @@ tags:
   - cultural-variant
   - kyojin
   - primal
-lineage:
-  - - Kyojin
-origin-plane:
-  - - Woudum
-aat-race-tier: cultural variant
-spoken-language: Natsugen, Leonin
-written-language: Natsugen Script, [[Leonin Script]]
+lineage: "[[docs/Races/Kyojin/Leonin/Leonin|Leonin]]"
+origin-plane: "[[Renascita]]"
+aat-race-tier: distinct
+spoken-language: 
+- "[[docs/Languages/Modern/Leonin|Leonin]]"
 ---
 
 # Leonin

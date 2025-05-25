@@ -1,11 +1,11 @@
 ---
 aliases: [Orcs]
 tags: [race, cultural-variant, kyojin, primal]
-lineage: [[Kyojin]]
-origin-plane: [[Woudum]]
-aat-race-tier: cultural variant
-spoken-language: [[Natsugen]], [[Orcish]]
-written-language: [[Natsugen Script]], [[Orcish Script]]
+lineage: "[[docs/Races/Kyojin/Leonin/Leonin|Leonin]]"
+origin-plane: "[[Renascita]]"
+aat-race-tier: distinct
+spoken-language: 
+- "[[Orcish]]"
 ---
 
 # Orcs

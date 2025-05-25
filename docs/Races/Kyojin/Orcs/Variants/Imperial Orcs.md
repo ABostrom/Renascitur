@@ -1,11 +1,12 @@
 ---
 aliases: [Imperial Orcs]
 tags: [race, cultural-variant, orcs, imperial]
-lineage: [[Orcs]]
-origin-plane: [[Woudum]]
-aat-race-tier: cultural variant
-spoken-language: [[Orcish]], [[Common]]
-written-language: [[Orcish Script]], [[Common Script]]
+lineage: [[Orc]]
+origin-plane: "[[Renascita]]"
+aat-race-tier: variant
+spoken-language: 
+- "[[Imperial Common]]"
+- "[[Orcish]]"
 ---
 
 # Imperial Orcs

@@ -1,11 +1,10 @@
 ---
 aliases: [Solarans]
 tags: [race, elder, celestial]
-lineage: Elder Race
-origin-plane: [[Libertum]]
+lineage: "[[Elder Races]]"
+origin-plane: "[[Solirion]]"
 aat-race-tier: elder
-spoken-language: [[Luxan]]
-written-language: [[Luxan Script]]
+spoken-language: "[[Elyssan]]"
 ---
 
 # Solaran

@@ -1,11 +1,11 @@
 ---
 aliases: [Kyojin]
 tags: [race, elder, primal]
-lineage: Elder Race
-origin-plane: [[Woudum]]
+lineage: "[[Elder Races]]"
+origin-plane: "[[Veltharyn]]"
 aat-race-tier: elder
-spoken-language: [[Natsugen]]
-written-language: [[Natsugen Script]]
+spoken-language: 
+- "[[Natsugen]]"
 ---
 
 # Kyojin

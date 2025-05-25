@@ -1,11 +1,11 @@
 ---
-aliases: [Celestar, Aerlai]
+aliases: [Celestars]
 tags: [race, distinct, solarans, celestial]
-lineage: [[Solarans]]
-origin-plane: [[Libertum]]
+lineage: "[[Solaran]]"
+origin-plane: "[[Imperium]]"
 aat-race-tier: distinct
-spoken-language: [[Luxan]], [[Celestari]]
-written-language: [[Celestari Script]]
+spoken-language: 
+- "[[Serethi]]"
 ---
 
 # Celestar
@@ -18,7 +18,6 @@ The Celestar, are a distinct race evolved from [[Solaran|Solarans]]. Known for t
 ## Origins
 
 - Diverged from [[Solaran|Solarans]] during [[the First Age]] to embrace pure celestial magic.  
-- Known for their flame-forged dialect, [[Zytherin|Zytherin]].
 
 ---
 

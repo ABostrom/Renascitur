@@ -1,11 +1,9 @@
 ---
 aliases: [Grundthain]
 tags: [race, elder, elemental]
-lineage: Elder Race
-origin-plane: [[Onderweld]]
-aat-race-tier: elder
-spoken-language: [[Karathic]]
-written-language: [[Karathic Script]]
+origin-plane: "[[Thargrun]]"
+aat-race-tier: "[[Elder Races]]"
+spoken-language: "[[Karathic]]"
 ---
 
 # Grundthain

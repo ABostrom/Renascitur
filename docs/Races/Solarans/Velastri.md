@@ -1,11 +1,11 @@
 ---
 aliases: [Velastri]
 tags: [race, distinct, solarans, infernal]
-lineage: [[Solarans]]
-origin-plane: [[Infernum]]
+lineage: "[[Solaran]]"
+origin-plane: "[[Infernum]]"
 aat-race-tier: distinct
-spoken-language: [[Velastri Dialect]]
-written-language: [[Velastri Script]]
+spoken-language: 
+- "[[Zytherin]]"
 ---
 
 # Velastri

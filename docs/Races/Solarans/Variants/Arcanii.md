@@ -1,11 +1,11 @@
 ---
 aliases: [Arcanii]
 tags: [race, cultural-variant, solarans, arcane]
-lineage: [[Solarans]]
-origin-plane: [[Libertum]]
+lineage: "[[Solarans]]"
+origin-plane: "[[Renascita]]"
 aat-race-tier: cultural variant
-spoken-language: [[Luxan]], [[Thraysian]]
-written-language: [[Luxan Script]], [[Thraysian Script]]
+spoken-language: 
+- "[[Thraysian Common]]"
 ---
 
 # Arcanii

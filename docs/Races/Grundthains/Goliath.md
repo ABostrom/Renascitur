@@ -1,11 +1,13 @@
 ---
 aliases: [Goliaths]
 tags: [race, elemental, grundthain, nomadic]
-lineage: [[Grundthain]]
-origin-plane: [[Onderweld]]
-aat-race-tier: elder
-spoken-language: [[Titanic]]
-written-language: [[Karathic Script]]
+lineage: "[[Dwarf|Dwarves]]"
+origin-plane: "[[Renascita]]"
+aat-race-tier: distinct
+spoken-language: 
+- "[[Karathic]]"
+- "[[Titanic]]"
+- "[[Imperial Common]]"
 ---
 
 # Goliaths

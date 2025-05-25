@@ -1,11 +1,10 @@
 ---
 aliases: [Tidebound Dwarves]
 tags: [race, variant, dwarves, elemental]
-lineage: [[Dwarves]]
-origin-plane: [[Onderweld]]
-aat-race-tier: clan variant
-spoken-language: [[Dwarven]]
-written-language: [[Dwarven Script]]
+lineage: "[[Dwarf|Dwarves]]"
+origin-plane: "[[Thargrun]]"
+aat-race-tier: variant
+spoken-language: "[[Dwarven]]"
 ---
 
 # Tidebound Dwarves

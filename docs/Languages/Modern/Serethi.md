@@ -9,7 +9,7 @@ spoken-by:
 
 # Serethi
 
-**Serethi** is the **radiant dialect** of [[Elyssan]] spoken by the [[Aerlai]], the celestial descendants of the [[Solaran]] who remained within [[Imperium]]. It preserves the elegance and harmonic purity of [[Elyssan]], suffused with the grace and discipline of the celestial plane.
+**Serethi** is the **radiant dialect** of [[Elyssan]] spoken by the [[Celestar]], the celestial descendants of the [[Solaran]] who remained within [[Imperium]]. It preserves the elegance and harmonic purity of [[Elyssan]], suffused with the grace and discipline of the celestial plane.
 
 ---
 

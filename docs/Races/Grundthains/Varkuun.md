@@ -5,10 +5,11 @@ tags:
   - race
   - elemental
   - grundthain
-lineage: "[[Grundthain]]"
+lineage: "[[Dwarf|Dwarves]]"
 origin-plane: "[[Thargrun]]"
-aat-race-tier: elder
-spoken-language: "[[Titanic]]"
+aat-race-tier: distinct
+spoken-language: 
+- "[[Titanic]]"
 ---
 
 # Varkuun

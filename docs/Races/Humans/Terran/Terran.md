@@ -7,7 +7,8 @@ tags:
   - mortal
   - adaptable
 origin-plane: "[[Renascita]]"
-spoken-language: "[[Imperial Common|Imperial]]"
+spoken-language: 
+- "[[Imperial Common|Imperial]]"
 ---
 
 # Terran Humans

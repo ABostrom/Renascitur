@@ -1,11 +1,11 @@
 ---
 aliases: [Ferrun]
 tags: [race, cultural-variant, solarans, industrial]
-lineage: [[Solarans]]
-origin-plane: [[Libertum]]
+lineage: "[[Solaran]]"
+origin-plane: "[[Renascita]]"
 aat-race-tier: cultural variant
-spoken-language: [[Luxan]], [[Dwarven]]
-written-language: [[Luxan Script]], [[Dwarven Script]]
+spoken-language: 
+- "[[Thraysian Common]]"
 ---
 
 # Ferrun

@@ -1,11 +1,12 @@
 ---
 aliases: [Imperial Leonin]
 tags: [race, cultural-variant, leonin, imperial]
-lineage: [[Leonin]]
-origin-plane: [[Woudum]]
-aat-race-tier: cultural variant
-spoken-language: Leonin Common
-written-language: [[Leonin Script Common Script]]
+lineage: "[[docs/Races/Kyojin/Leonin/Leonin|Leonin]]"
+origin-plane: "[[Renascita]]"
+aat-race-tier: variant
+spoken-language: 
+- "[[Imperial Common]]"
+- "[[docs/Languages/Modern/Leonin|Leonin]]"
 ---
 
 # Imperial Leonin
