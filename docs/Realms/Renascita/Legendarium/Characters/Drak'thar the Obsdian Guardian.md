@@ -4,13 +4,13 @@ _Age_: Millennia-old
 
 _Appearance_: Drak'thar is a colossal creature with gleaming, obsidian-black scales that shimmer like polished onyx. Its eyes emit an otherworldly glow, appearing like twin stars amidst the darkness of its countenance. The dragon's wings, each spanning the length of a small ship, are formidable in their own right. Jagged spines adorn its back and tail, giving it a fearsome yet regal appearance.
 
-_Personality_: Drak'thar is a guardian of great wisdom and solemn duty. Its demeanor is reserved, and it exudes an air of ancient authority. While initially cautious and protective, the dragon is not devoid of compassion. It values the well-being of Mokoweri and possesses a deep understanding of its role in preserving the island from aberrant threats.
+_Personality_: Drak'thar is a guardian of great wisdom and solemn duty. Its demeanor is reserved, and it exudes an air of ancient authority. While initially cautious and protective, the dragon is not devoid of compassion. It values the well-being of [[Mokoweri]] and possesses a deep understanding of its role in preserving the island from aberrant threats.
 
 _Background_: Drak'thar's history is intertwined with that of the [[Solaran]] civilization. Millennia ago, the [[Solaran|Solarans]] entrusted this ancient obsidian dragon with the sacred duty of guarding the [[Solaran]] research facility. Over countless generations, Drak'thar has stood sentinel, ensuring that the secrets contained within remain safe.
 
 _Abilities_: Drak'thar possesses formidable physical and magical abilities. Its breath weapon, a torrent of obsidian flames, can decimate foes with its fiery intensity. The dragon's immense strength and durability make it a nearly unbeatable adversary in combat. Additionally, Drak'thar commands ancient, arcane powers that hint at its deep connection to [[Solaran]] magic.
 
-_Alliance_: Despite its initially guarded disposition, Drak'thar has formed an alliance with a group of adventurers seeking to protect Mokoweri and prevent the release of an imprisoned mind flayer within the [[Solaran]] research facility. This partnership is built on mutual trust and a shared goal of safeguarding the island from aberrant incursions.
+_Alliance_: Despite its initially guarded disposition, Drak'thar has formed an alliance with a group of adventurers seeking to protect [[Mokoweri]] and prevent the release of an imprisoned mind flayer within the [[Solaran]] research facility. This partnership is built on mutual trust and a shared goal of safeguarding the island from aberrant incursions.
 
 _Purpose_: Drak'thar's primary purpose is to safeguard the [[Solaran]] research facility and ensure that the ancient mind flayer remains sealed within. Its sense of duty is unwavering, and it understands the dire consequences that could arise should the mind flayer be set free.
 

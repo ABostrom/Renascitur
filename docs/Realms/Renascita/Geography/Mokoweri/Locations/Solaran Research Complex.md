@@ -9,7 +9,7 @@ you arrive at the heart of the obsidian labyrinth—an extraordinary place known
 
 **Challenge:** The [[Solaran]] Research Complex is a place of mystery and danger. It holds secrets that may offer great rewards to those who dare to explore, but it also presents challenges that demand wit and bravery. Deciphering the forgotten lore of the [[Solaran|Solarans]] and navigating the complex's ever-shifting pathways are tasks that test both your intellect and courage.
 
-1.: One of the first laboratories you come across contains preserved samples of ancient flora from Mokoweri, encased in crystalline cylinders. These samples represent the rich biodiversity of the jungle. Enigmatic diagrams, notes, and holographic displays litter the room, showcasing the [[Solaran|Solarans]]' fascination with understanding the jungle's secrets.
+1.: One of the first laboratories you come across contains preserved samples of ancient flora from [[Mokoweri]], encased in crystalline cylinders. These samples represent the rich biodiversity of the jungle. Enigmatic diagrams, notes, and holographic displays litter the room, showcasing the [[Solaran|Solarans]]' fascination with understanding the jungle's secrets.
     
 2. **Fauna Alteration Chamber**: Another laboratory is fitted with imposing containment chambers, the size of which suggests that large creatures were once subjected to experiments. Large tables with straps for restraints hint at the kinds of experiments carried out here. In the corners of the room, you find ancient data slates detailing attempts to enhance the abilities of local wildlife.
     
@@ -94,26 +94,26 @@ These discoveries provide a blend of valuable resources, powerful artifacts, and
 
 - **Name**: Anara Elmsong
 - **Appearance**: Anara is a graceful and agile [[Solaran]], her skin a shimmering iridescent green. Her bright eyes reflect the colors of the crystal prisms she works with. Her hair is braided with intricately woven flora. Her robes are adorned with small, sparkling gemstones.
-- **Personality**: Anara is a contemplative scientist, dedicated to harnessing the power of Mokoweri's energy. She possesses an almost spiritual reverence for the jungle's essence. She is known for her deep insights into crystallography and her ability to manipulate the raw energy that flows within the jungle, making her a key figure in the exploration of [[Solaran]] power sources.
+- **Personality**: Anara is a contemplative scientist, dedicated to harnessing the power of [[Mokoweri]]'s energy. She possesses an almost spiritual reverence for the jungle's essence. She is known for her deep insights into crystallography and her ability to manipulate the raw energy that flows within the jungle, making her a key figure in the exploration of [[Solaran]] power sources.
 
 **Scientist in the Fauna Alteration Chamber**:
 
 - **Name**: Voran Blackclaw
 - **Appearance**: Voran is a stout and imposing [[Solaran]], his skin a deep brown with golden stripes. His formidable presence often masks his gentle nature. He wears robust, reinforced attire suitable for hands-on work in the alteration chamber.
-- **Personality**: Voran is a compassionate scientist who has dedicated his life to understanding and enhancing Mokoweri's fauna. He often spent time bonding with the creatures he worked with, which set him apart from his peers. He is renowned for his work in unlocking the latent potential of the jungle's wildlife, making them more resilient and formidable.
+- **Personality**: Voran is a compassionate scientist who has dedicated his life to understanding and enhancing [[Mokoweri]]'s fauna. He often spent time bonding with the creatures he worked with, which set him apart from his peers. He is renowned for his work in unlocking the latent potential of the jungle's wildlife, making them more resilient and formidable.
 
-These scientists were once at the forefront of [[Solaran]] experimentation, driven by their collective pursuit of knowledge and innovation. Their unique personalities and expertise were instrumental in the progress of the [[Solaran]] civilization's understanding of Mokoweri and its boundless potential.
+These scientists were once at the forefront of [[Solaran]] experimentation, driven by their collective pursuit of knowledge and innovation. Their unique personalities and expertise were instrumental in the progress of the [[Solaran]] civilization's understanding of [[Mokoweri]] and its boundless potential.
 
-Iris Andras, a name of legend among the [[Solaran]] scholars and explorers. As the overseer of the entire research complex deep in the heart of Mokoweri, she stands as a paragon of [[Solaran]] intellect and discovery. Here's a detailed description of Iris Andras:
+Iris Andras, a name of legend among the [[Solaran]] scholars and explorers. As the overseer of the entire research complex deep in the heart of [[Mokoweri]], she stands as a paragon of [[Solaran]] intellect and discovery. Here's a detailed description of Iris Andras:
 
 #### Iris Andras, Overseer of [[Solaran]] Research Complex:
 
 - **Appearance**: Iris possesses an aura of grace and wisdom. Her skin is a vibrant shade of emerald green, reflecting her deep connection to the jungle. Her striking yellow eyes radiate a sense of unyielding determination, often reflecting the spark of enlightenment that comes with each discovery. Her hair, a blend of verdant hues, is intricately woven with leaves and blossoms, denoting her position.
 - **Attire**: She dons robes of nature-inspired colors, embroidered with intricate [[Solaran]] patterns that tell the stories of her many journeys and findings. Around her neck, she wears a pendant that shimmers like the sun, an emblem of her status.
-- **Personality**: Iris Andras is a woman of profound intellect and curiosity. She is passionate about the mysteries that shroud the jungle, and her scientific zeal is tempered by a profound reverence for the life that inhabits Mokoweri. She's both a mentor and a guide to the scientists under her leadership, fostering an environment of collaboration and innovation.
+- **Personality**: Iris Andras is a woman of profound intellect and curiosity. She is passionate about the mysteries that shroud the jungle, and her scientific zeal is tempered by a profound reverence for the life that inhabits [[Mokoweri]]. She's both a mentor and a guide to the scientists under her leadership, fostering an environment of collaboration and innovation.
 - **Leadership**: As the overseer, she holds the collective wisdom of the [[Solaran]] civilization. She is known for her ability to blend the ancient knowledge with the ever-evolving discoveries, driving progress while respecting the values and traditions of her ancestors. Iris Andras seeks to protect and nurture the secrets of the [[Solaran|Solarans]], even as she unlocks new doors to understanding.
 
-[[Iris Andras]] is not only a guardian of knowledge but also a bridge between the past and the future of [[Solaran]] civilization, guiding the scientists in their quest to harness the boundless potential of Mokoweri. Her legacy will forever be entwined with the secrets of the jungle and the noble pursuit of enlightenment.
+[[Iris Andras]] is not only a guardian of knowledge but also a bridge between the past and the future of [[Solaran]] civilization, guiding the scientists in their quest to harness the boundless potential of [[Mokoweri]]. Her legacy will forever be entwined with the secrets of the jungle and the noble pursuit of enlightenment.
 
 #### research logs
 _Subject: [[Saurian]] Growth Enhancement_
@@ -191,17 +191,17 @@ _Findings: Preliminary findings show that [[Solaran]] technology may provide a p
 
 Today's experiment involved infusing the newly developed life-generating matrix with a synthesized blend of [[Solaran]] energy signatures. Despite the significant advances we've made in harnessing elemental energy, the matrix remains stubbornly inert. Each time, the result is the same—no discernible response. The matrix lacks a vital component.
 
-In my pursuit of this mysterious missing link, I have reviewed countless [[Solaran]] texts, delving deep into the annals of ancient wisdom. It becomes increasingly evident that the matrix requires more than just energy; it yearns for a [[soul]]—an essence to bind its potential to the essence of life. Such a revelation is both daunting and exhilarating. The fusion of our [[Solaran]] science with the essence of Mokoweri itself beckons as a profound undertaking. I will proceed cautiously.
+In my pursuit of this mysterious missing link, I have reviewed countless [[Solaran]] texts, delving deep into the annals of ancient wisdom. It becomes increasingly evident that the matrix requires more than just energy; it yearns for a [[soul]]—an essence to bind its potential to the essence of life. Such a revelation is both daunting and exhilarating. The fusion of our [[Solaran]] science with the essence of [[Mokoweri]] itself beckons as a profound undertaking. I will proceed cautiously.
 
 **Experiment Log 442: Ethereal Resonance**
 
 After days of tireless contemplation, I have devised a novel approach to imbuing the life-generating matrix with the essence it craves. Utilizing an array of crystals attuned to the harmonics of the world itself, I have endeavored to create a resonant field—a bridge between the tangible and the ethereal.
 
-The experiment is underway, and the room is aglow with an otherworldly radiance. The crystals, harmonizing with the deep energies of Mokoweri, appear to respond to my endeavors. However, the matrix remains obstinately passive. The resonance I seek eludes me, slipping away like a fleeting memory.
+The experiment is underway, and the room is aglow with an otherworldly radiance. The crystals, harmonizing with the deep energies of [[Mokoweri]], appear to respond to my endeavors. However, the matrix remains obstinately passive. The resonance I seek eludes me, slipping away like a fleeting memory.
 
 **Experiment Log 446: Pioneering the Ineffable**
 
-Every experiment brings me closer to understanding, yet the essence remains beyond my grasp. Frustration gnaws at my resolve, but I must persist. The world tree that Mokoweri deserves—no, requires—cannot be left to languish as an unfinished dream.
+Every experiment brings me closer to understanding, yet the essence remains beyond my grasp. Frustration gnaws at my resolve, but I must persist. The world tree that [[Mokoweri]] deserves—no, requires—cannot be left to languish as an unfinished dream.
 
 The key lies not only in the science of [[Solaran]] design but also in the wisdom of the natural world. Forging the final connection requires a profound sacrifice—a union of [[soul]] and essence, of mortal and immortal. I cannot evade the truth any longer; it has become a resolute certainty. I alone must bind with the world tree. My essence must become its essence, and our destinies will intertwine as one.
 
@@ -209,18 +209,18 @@ The key lies not only in the science of [[Solaran]] design but also in the wisdo
 
 Today marks the culmination of my life's work—a sacrifice of self for the sake of the world. With a heavy heart but an unwavering determination, I stand before the life-generating matrix. It shimmers with an ethereal light, welcoming me, understanding the gravity of the choice we both make.
 
-As I step into the resonance field, the crystals hum in a harmonious chorus. The matrix awakens, pulsing with newfound vitality. My essence merges with its intricate lattice, and I am filled with an indescribable sense of unity. The world tree accepts my sacrifice, and I become the guardian of Mokoweri, the eternal Grove Shaper.
+As I step into the resonance field, the crystals hum in a harmonious chorus. The matrix awakens, pulsing with newfound vitality. My essence merges with its intricate lattice, and I am filled with an indescribable sense of unity. The world tree accepts my sacrifice, and I become the guardian of [[Mokoweri]], the eternal Grove Shaper.
 
-Through this sacrifice, we achieve a connection unattainable through science alone. I will safeguard Mokoweri with my boundless devotion, ensuring the harmony between [[Solaran]] knowledge and the sanctity of this island's life. Our destinies are now inseparable, forever entwined in a tapestry of existence that transcends time and understanding.
+Through this sacrifice, we achieve a connection unattainable through science alone. I will safeguard [[Mokoweri]] with my boundless devotion, ensuring the harmony between [[Solaran]] knowledge and the sanctity of this island's life. Our destinies are now inseparable, forever entwined in a tapestry of existence that transcends time and understanding.
 
 
 
 ### Discovery of the Eversoul Grove
 **Scientific Log Entry #1**
 
-Remarkable progress today! Deep within the embered caverns of Mokoweri, I've stumbled upon a subterranean chamber of untold beauty and significance. The bioluminescent flora here pulsates with a vibrant, otherworldly energy, their roots extending deep into the essence of the world itself.
+Remarkable progress today! Deep within the embered caverns of [[Mokoweri]], I've stumbled upon a subterranean chamber of untold beauty and significance. The bioluminescent flora here pulsates with a vibrant, otherworldly energy, their roots extending deep into the essence of the world itself.
 
-This is the heart of Mokoweri, a place where life and [[Weave|the weave]] coalesce in a harmonious symphony. The plants here are unlike any I've ever encountered—imbued with the very essence of the world. Their existence is a testament to the intricate balance that binds all living things.
+This is the heart of [[Mokoweri]], a place where life and [[Weave|the weave]] coalesce in a harmonious symphony. The plants here are unlike any I've ever encountered—imbued with the very essence of the world. Their existence is a testament to the intricate balance that binds all living things.
 
 But what captivates me most is the ancient tree at the center of this chamber. It radiates a serene aura, its roots extending into [[Weave|the weave]] itself. This tree, a natural wonder, seems to hold the key to understanding the profound connection between life, [[Weave|the weave]], and the [[machinery of death]].
 
@@ -242,16 +242,16 @@ Today marks a turning point in my research. After months of meticulous study and
 
 As I stand in the presence of the ancient tree, I can sense its connection to [[Weave|the weave]], the pulse of life that flows through it. This is more than a scientific endeavor; it is a calling, a destiny. To create the Eversoul Grove, I must become one with [[Weave|the weave]].
 
-This decision is not made lightly, for it is an irreversible transformation. Yet, the fate of the [[Solaran]] people hangs in the balance. I must embrace this path, binding myself to the heart of Mokoweri's life force. Only then can I hope to protect the souls of my people for all eternity.
+This decision is not made lightly, for it is an irreversible transformation. Yet, the fate of the [[Solaran]] people hangs in the balance. I must embrace this path, binding myself to the heart of [[Mokoweri]]'s life force. Only then can I hope to protect the souls of my people for all eternity.
 
 
 
 **Tech Workshop Research Log Entry #128**
 
-The gateways we have been developing in the tech workshop are showing promise as tools for instant transportation across Mokoweri. By employing arconometric crystals and intricate calibrations, we have successfully created a network of interconnected gateways that span key locations on the island. This achievement is a testament to the ingenuity of [[solaran]] technology.
+The gateways we have been developing in the tech workshop are showing promise as tools for instant transportation across [[Mokoweri]]. By employing arconometric crystals and intricate calibrations, we have successfully created a network of interconnected gateways that span key locations on the island. This achievement is a testament to the ingenuity of [[solaran]] technology.
 
 These gateways not only facilitate rapid travel but also enhance our ability to respond to aberrant incursions swiftly. We have fortified them with arcanometric security measures to prevent unauthorized access. Additionally, they serve as a crucial means of evacuating vulnerable communities in the event of a large-scale aberrant assault.
 
-Our machinery for constructing experiments involving aberrant energy has reached a level of sophistication that allows for controlled and repeatable testing. This is of paramount importance as we seek to unravel the mysteries of abberant energy and develop countermeasures to protect Mokoweri and its inhabitants.
+Our machinery for constructing experiments involving aberrant energy has reached a level of sophistication that allows for controlled and repeatable testing. This is of paramount importance as we seek to unravel the mysteries of abberant energy and develop countermeasures to protect [[Mokoweri]] and its inhabitants.
 
 The synergy of our research endeavors in the tech workshop promises to fortify our island against the ever-encroaching threat of aberrant forces. We remain vigilant in our pursuit of knowledge and innovation to safeguard our homeland.

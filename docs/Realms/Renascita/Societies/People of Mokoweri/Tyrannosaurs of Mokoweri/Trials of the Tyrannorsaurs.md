@@ -5,7 +5,7 @@ Titus regards them silently for a moment before nodding, his expression softened
 
 He steps back, giving them a nod of approval. "Prove yourselves in the trials, and perhaps you will earn the right to be considered allies of the Tyrannosaurs and guardians of the ancient ruins."
 
-With that, he turns and leads them deeper into the jungle, where the trials await. The players walk with determination, knowing that they carry the weight of their words and actions in the sacred lands of Mokoweri. They understand that the road ahead will challenge not only their magical prowess but also their hearts and souls, as they seek to prove themselves worthy of the [[Solaran]] legacy.
+With that, he turns and leads them deeper into the jungle, where the trials await. The players walk with determination, knowing that they carry the weight of their words and actions in the sacred lands of [[Mokoweri]]. They understand that the road ahead will challenge not only their magical prowess but also their hearts and souls, as they seek to prove themselves worthy of the [[Solaran]] legacy.
 
 
 ## Trial of Courage
@@ -29,6 +29,6 @@ The Trial of Courage is a test of bravery and valor. To face this trial, one mus
 The Trial of Intellect assesses one's problem-solving skills and resourcefulness. In the Enigmatic Gardens, a place of lush vegetation and cunningly hidden traps, candidates must decipher complex riddles, solve intricate puzzles, and unlock hidden pathways. Each step brings them closer to the center of the gardens, where a great test of intellect awaits, and the wise use of knowledge is paramount to succeed.
 
 ## Trial of Wisdom
-The Trial of Wisdom focuses on understanding and the capacity to learn from the past. In the Ancient Grove, candidates encounter ancient, wise creatures who guard the secrets of Mokoweri's history. To pass this trial, they must learn from these wise beings, understand the intricacies of the jungle, and show respect for the ancient knowledge of the Tyrannosaurs.
+The Trial of Wisdom focuses on understanding and the capacity to learn from the past. In the Ancient Grove, candidates encounter ancient, wise creatures who guard the secrets of [[Mokoweri]]'s history. To pass this trial, they must learn from these wise beings, understand the intricacies of the jungle, and show respect for the ancient knowledge of the Tyrannosaurs.
 
 

@@ -34,7 +34,7 @@ Beyond the Luminescent Foyer lies the Obsidian Causeway, a treacherous and forbi
 
 _Narration:_
 
-As you venture deeper into the subterranean realm of Mokoweri, you find yourself on the Obsidian Causeway, a marvel of [[Solaran]] craftsmanship and a perilous path suspended above the abyss. The causeway stretches ahead of you, its winding obsidian pathways glistening faintly in the sporadic glow of bioluminescent fungi clinging to the cavern walls.
+As you venture deeper into the subterranean realm of [[Mokoweri]], you find yourself on the Obsidian Causeway, a marvel of [[Solaran]] craftsmanship and a perilous path suspended above the abyss. The causeway stretches ahead of you, its winding obsidian pathways glistening faintly in the sporadic glow of bioluminescent fungi clinging to the cavern walls.
 
 **Atmosphere:** The air is heavy and filled with a palpable sense of darkness, and the faint echoes of your footsteps seem to resonate through the obsidian expanse. Shadows, elusive and mysterious, flicker across the walls, as if they're alive and watching your every move.
 

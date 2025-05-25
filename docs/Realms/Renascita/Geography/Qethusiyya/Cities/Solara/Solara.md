@@ -3,14 +3,14 @@
 ---
 ![[Pasted image 20250420163303.png]]
 ## Overview  
-At the height of the [[Solaran]] civilization, **Solara** was the greatest city the world had ever known—a living monument to cosmic harmony, arcane mastery, and technological wonder. Situated at the center of what is now known as the **Dead Sands**, Solara once thrived in a cradle of vibrant life and radiant energy, its towers gleaming with the light of the sun and the hum of the [[Weave]].
+At the height of the [[Solaran]] civilization, **Solara** was the greatest city the world had ever known—a living monument to cosmic harmony, arcane mastery, and technological wonder. Situated at the center of what is now known as the **[[Al-Ramal|Dead Sands]]**, Solara once thrived in a cradle of vibrant life and radiant energy, its towers gleaming with the light of the sun and the hum of the [[Weave]].
 
 Every spire, plaza, and street was a reflection of the Three Pillars: [[Arcane]], [[Science]], and [[Nature]]. It was a city where wisdom was currency, invention a spiritual act, and every citizen a thread in a grand tapestry of cosmic purpose.
 
 ---
 
 ## Location and Terrain  
-Solara was built atop the **Celestine Convergence**, a nexus of ley lines and solar harmonics that naturally amplified energy flow and [[Weave]] stability. The surrounding region was once a fertile basin—lush, sun-drenched, and teeming with magically enhanced life. After the city's fall, this land became the **Dead Sands**, as the collapse of the [[Endless Sun]] and the unraveling of the [[soul]]-cycle drained the region of vitality.
+Solara was built atop the **Celestine Convergence**, a nexus of ley lines and solar harmonics that naturally amplified energy flow and [[Weave]] stability. The surrounding region was once a fertile basin—lush, sun-drenched, and teeming with magically enhanced life. After the city's fall, this land became the **[[Al-Ramal|Dead Sands]]**, as the collapse of the [[Endless Sun]] and the unraveling of the [[soul]]-cycle drained the region of vitality.
 
 ---
 
@@ -60,12 +60,12 @@ Though it orbited far above, the **Endless Sun** was calibrated and monitored fr
 
 ---
 
-## The Fall and the Dead Sands  
+## The Fall and [[Al-Ramal|the Dead Sands]]  
 When the Endless Sun was corrupted by [[Syuul]] and fell to [[Ishna]]’s influence, Solara bore the first and greatest consequences. The resulting energy cascade devastated the Celestine Convergence. Souls unraveled. Magic fractured. Entire districts blinked out of existence.
 
 What was once a beacon became a silent, buried wound.
 
-The land that once flourished around Solara withered into the **Dead Sands**, a wasteland haunted by broken echoes of [[Weave|the Weave]] and twisted remnants of [[Solaran]] brilliance.
+The land that once flourished around Solara withered into the **[[Al-Ramal|Dead Sands]]**, a wasteland haunted by broken echoes of [[Weave|the Weave]] and twisted remnants of [[Solaran]] brilliance.
 
 The ruins of Solara are said to lie beneath the sands still—sealed, cursed, waiting.
 

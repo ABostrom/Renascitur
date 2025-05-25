@@ -43,9 +43,7 @@ rivers:
 
 **Qethusiyya** is a continent of sweeping contrasts — blistering desert plains, lush river deltas, and coastal cities forged in the aftermath of Solaran collapse. The ancient city of [[Solara]] still casts its long shadow over [[Eltabarr]] and [[Thelassia]], while the fractured empires of [[Thraysia]] and [[Vasir]] vie for dominance across windswept trade routes.
 
-The [[Kaldar Range]] and [[Ravenspine Cliffs]] shape the continent’s arid interior, where [[Ferrun]] outposts and [[Arcanii]] sanctuaries cling to shaded ridges. Rivers such as the [[River Muzahir]] and [[Sul Vahir]] breathe life into desert-bound cities and ancient Solaran ruins alike, sustaining the enduring presence of the [[Velastri]] and the far-wandering [[Rahalan]] clans.
+The [[Kaldar Range]] and [[Ravenspine Cliffs]] shape the continent’s arid interior, where [[Ferrun]] outposts and [[Arcanii]] sanctuaries cling to shaded ridges. Rivers such as the [[River Muzahir]] and [[Sul Vahir]] breathe life into desert-bound cities and ancient [[Solaran]] ruins alike, sustaining the enduring presence of the [[Velastri]] and the far-wandering [[Rahalan]] clans.
 
 
-
-# The Dead Sands (Al-Raml)
 

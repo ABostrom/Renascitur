@@ -35,7 +35,7 @@ Descendants of the [[Solaran|Solarans]], embracing science and rune-smithing. Ce
 A human empire. Ruled by an Emperor and **The Twelve Great Houses**, citizenship is earned through service. Anti-magic, yet technologically advanced. Society is divided between citizens and the oppressed **Stained** class. Massive **lux lapis** walls protect the empire from aberrant horrors.
 
 ### 🧬 [[Saurian|Saurians]]
-Bio-engineered guardians of the island of Mokoweri, created by the [[Solaran|Solarans]] to resist aberrant corruption. Spiritually bonded with the land and the **Mokoweri** people, some have mutated into [[Slaad]]-like aberrant forms.
+Bio-engineered guardians of the island of [[Mokoweri]], created by the [[Solaran|Solarans]] to resist aberrant corruption. Spiritually bonded with the land and the **[[Mokoweri]]** people, some have mutated into [[Slaad]]-like aberrant forms.
 
 ### 🌿 Rahalan
 Matriarchal desert nomads who sail living **Gaia-ships**, guided by visions and rites. Their society is spiritually rooted and structured around roles such as Dreamweavers, Grove Shapers, and Battle Sisters.
@@ -46,7 +46,7 @@ Spiritual proto-[[Orc|orcs]] connected to the **Tree of Spirit**. First to disco
 ### 🌠 [[Solaran|Solarans]]
 Ancient star-born race whose civilization fell after the corruption of the **Endless Sun**. Splintered into:
 - **Arcanii**
-- **Mokoweri**
+- **[[Mokoweri]]**
 - **[[Ferrun]]**
 
 ### 🧝‍♂️ Thaysian Magocracy

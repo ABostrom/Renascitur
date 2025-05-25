@@ -87,7 +87,7 @@ Each retained fragments of [[Solaran]] culture, but none could recreate the harm
 - [[Ab Solara]] – Arcanometric gateways powered by [[Sun Topaz]], capable of planar and continental transport.  
 - [[LifeThread Matrix]] – A metaphysical map of the interwoven strands of ancestry, genetics, and [[soul]].  
 - [[Endless Sun]] – The [[soul]]-cycle stabilizer turned corrupted engine of entropy.  
-- [[Iris Andras]] and [[Irasandra]] – The scientist and Grove Warden who became one with [[Weave|the Weave]] to protect Mokoweri.
+- [[Iris Andras]] and [[Irasandra]] – The scientist and Grove Warden who became one with [[Weave|the Weave]] to protect [[Mokoweri]].
 
 ![[Life's Work – Irasandra]]
 
