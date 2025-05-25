@@ -59,9 +59,9 @@ The great plan of [[Aeternum|the Aeternum]], once a perfect mechanism, **was bre
 
 The [[Elder Races]], created as **stewards of existence**, each tell the story in their own way.
 
-- **The Solarans** say that _[[Ishna]] was a mistake_—a flaw that must be corrected, erased. They seek to **reignite the Endless Sun**, to banish darkness forever. Yet in their arrogance, they have **forgotten that fire consumes as easily as it warms**.
+- **The [[Solaran|Solarans]]** say that _[[Ishna]] was a mistake_—a flaw that must be corrected, erased. They seek to **reignite the Endless Sun**, to banish darkness forever. Yet in their arrogance, they have **forgotten that fire consumes as easily as it warms**.
 - **The [[Grundthain]]** say that _the forge must be reforged_—that only through **unmaking and remaking** can the world be **restored**. Yet they do not see that their hammer **shatters as much as it shapes**.
-- **The Kyojin** say that _balance must be restored_—that **[[aberrations]] must be purified**, their spirits guided back to the Cycle. Yet even they struggle with the truth that **some souls do not wish to return**.
+- **The [[Kyojin]]** say that _balance must be restored_—that **[[aberrations]] must be purified**, their spirits guided back to the Cycle. Yet even they struggle with the truth that **some souls do not wish to return**.
 - **The Humans**, the ever-changing, claim that _[[Ishna]] is neither flaw nor corruption, but consequence_—that the universe must **change or die**, that to resist is to **cling to the past**. And yet, even they do not see the full shape of what is to come.
 
 Thus, the races of the world do not stand united in purpose. Some **seek to preserve**, others **to rebuild**, others **to cleanse**, and others **to move forward**.

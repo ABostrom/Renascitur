@@ -113,7 +113,7 @@ Some relics of the First Flame, like the [[Sunforged Anvil]] and the sacred **Ev
 
 Long before the founding of Magnus’ Rest—before even the rise of the [[Dwarf|dwarves]]—this mountain was a site of **intense [[Solaran]] activity**.
 
-Drawn by the rich veins of [[Radiant Obsidian]] and [[Sun Topaz]], Solaran researchers and architects carved deep into the volcanic rock, shaping vaults and cathedrals of fire-channeling crystal. Their purpose is lost to time, but some speculate they sought to **harvest and weaponize the primal flame** they discovered sealed beneath the earth—perhaps even [[Phenos]] himself.
+Drawn by the rich veins of [[Radiant Obsidian]] and [[Sun Topaz]], [[Solaran]] researchers and architects carved deep into the volcanic rock, shaping vaults and cathedrals of fire-channeling crystal. Their purpose is lost to time, but some speculate they sought to **harvest and weaponize the primal flame** they discovered sealed beneath the earth—perhaps even [[Phenos]] himself.
 
 Over millennia, their works collapsed, melted, and became twisted by time and tectonic shifts. Yet **some remnants remain**.
 

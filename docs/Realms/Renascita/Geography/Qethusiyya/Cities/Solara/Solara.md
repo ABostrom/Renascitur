@@ -1,9 +1,9 @@
-*The Radiant Crown of the Solarans*
+*The Radiant Crown of the [[Solaran|Solarans]]*
 
 ---
 ![[Pasted image 20250420163303.png]]
 ## Overview  
-At the height of the Solaran civilization, **Solara** was the greatest city the world had ever known—a living monument to cosmic harmony, arcane mastery, and technological wonder. Situated at the center of what is now known as the **Dead Sands**, Solara once thrived in a cradle of vibrant life and radiant energy, its towers gleaming with the light of the sun and the hum of the [[Weave]].
+At the height of the [[Solaran]] civilization, **Solara** was the greatest city the world had ever known—a living monument to cosmic harmony, arcane mastery, and technological wonder. Situated at the center of what is now known as the **Dead Sands**, Solara once thrived in a cradle of vibrant life and radiant energy, its towers gleaming with the light of the sun and the hum of the [[Weave]].
 
 Every spire, plaza, and street was a reflection of the Three Pillars: [[Arcane]], [[Science]], and [[Nature]]. It was a city where wisdom was currency, invention a spiritual act, and every citizen a thread in a grand tapestry of cosmic purpose.
 
@@ -15,7 +15,7 @@ Solara was built atop the **Celestine Convergence**, a nexus of ley lines and so
 ---
 
 ## Architectural Style  
-Solara's architecture reflected Solaran ideology:
+Solara's architecture reflected [[Solaran]] ideology:
 
 - **Spiraling towers of crystal and obsidian**, infused with sunlight and singing with energy
 - **Floating terraces**, suspended by gentle gravitational harmonics
@@ -28,7 +28,7 @@ At its heart stood the **Harmonic Spire**, a massive crystalline structure that 
 ---
 
 ## Culture and Society  
-Solara was the origin point and apex of Solaran civilization. Its people were scholars, artisans, inventors, and visionaries. Social hierarchy was based not on wealth or power, but on:
+Solara was the origin point and apex of [[Solaran]] civilization. Its people were scholars, artisans, inventors, and visionaries. Social hierarchy was based not on wealth or power, but on:
 
 - **Contribution to harmony and balance**
 - **Legacy of knowledge shared**
@@ -65,7 +65,7 @@ When the Endless Sun was corrupted by [[Syuul]] and fell to [[Ishna]]’s influe
 
 What was once a beacon became a silent, buried wound.
 
-The land that once flourished around Solara withered into the **Dead Sands**, a wasteland haunted by broken echoes of [[Weave|the Weave]] and twisted remnants of Solaran brilliance.
+The land that once flourished around Solara withered into the **Dead Sands**, a wasteland haunted by broken echoes of [[Weave|the Weave]] and twisted remnants of [[Solaran]] brilliance.
 
 The ruins of Solara are said to lie beneath the sands still—sealed, cursed, waiting.
 

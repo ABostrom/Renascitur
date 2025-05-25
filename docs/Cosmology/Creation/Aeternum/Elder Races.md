@@ -7,13 +7,13 @@ The Elder Races were the first mortal civilizations shaped by the divine forces 
 
 **Blessing:** Longevity, mastery of light and celestial energy  
 **[[Aeternum]] Patron:** [[Aelion]], The Everburning Light  
-**World Tree Connection:** **[[Irasandra]], the Solaran Tree** (Knowledge and Understanding)
+**World Tree Connection:** **[[Irasandra]], the [[Solaran]] Tree** (Knowledge and Understanding)
 
-The **Solarans** were the first and greatest civilization of [[the First Age]], chosen by **[[Aelion]]** to be the bearers of wisdom, innovation, and celestial power. Their mastery over **solar energy** and arcane technology allowed them to build vast cities that touched the stars. However, their ambition led to the creation of the **Endless Sun**, a failed attempt to restore the celestial order after [[Ishna]]’s corruption of the **Primal Forces**.
+The **[[Solaran|Solarans]]** were the first and greatest civilization of [[the First Age]], chosen by **[[Aelion]]** to be the bearers of wisdom, innovation, and celestial power. Their mastery over **solar energy** and arcane technology allowed them to build vast cities that touched the stars. However, their ambition led to the creation of the **Endless Sun**, a failed attempt to restore the celestial order after [[Ishna]]’s corruption of the **Primal Forces**.
 
-Their connection to [[Mokoruuth]], the Tree of Knowledge, symbolized their endless pursuit of enlightenment. When their civilization fell[[Iris Andras]] a Solaran scientist merged with the tree ascneding to godhood as [[Irasandra]].
+Their connection to [[Mokoruuth]], the Tree of Knowledge, symbolized their endless pursuit of enlightenment. When their civilization fell[[Iris Andras]] a [[Solaran]] scientist merged with the tree ascneding to godhood as [[Irasandra]].
 
-Though their empire is gone, remnants of the Solarans remain scattered throughout the world—some hiding in the ruins of their lost cities, others living among the High Elves, still carrying the flickering embers of their once-glorious knowledge.
+Though their empire is gone, remnants of the [[Solaran|Solarans]] remain scattered throughout the world—some hiding in the ruins of their lost cities, others living among the High Elves, still carrying the flickering embers of their once-glorious knowledge.
 
 
 ### **The [[Grundthain]]: Chosen of [[Tharamos]]**
@@ -38,13 +38,13 @@ The destruction of **[[Runehart]]** marked the end of the [[Grundthain]] as a un
 
 **Blessing:** Connection to spirit, mastery of the cycle of life and death  
 **[[Aeternum]] Patron:** [[Sylara]], The Verdant [[Soul]]  
-**World Tree Connection:** **The Kyojin Tree** (Spirit and Harmony)
+**World Tree Connection:** **The [[Kyojin]] Tree** (Spirit and Harmony)
 
-The **Kyojin**, ancestors of the orcs, were the most spiritually attuned of the Elder Races. Chosen by **[[Sylara]]**, the **[[Aeternum]] of the Forest**, they understood the cycle of life and death better than any other race. Their **shamanistic traditions** allowed them to walk between the physical and spiritual realms, acting as **stewards of the [[soul]] cycle**.
+The **[[Kyojin]]**, ancestors of the [[Orc|orcs]], were the most spiritually attuned of the Elder Races. Chosen by **[[Sylara]]**, the **[[Aeternum]] of the Forest**, they understood the cycle of life and death better than any other race. Their **shamanistic traditions** allowed them to walk between the physical and spiritual realms, acting as **stewards of the [[soul]] cycle**.
 
-The **Kyojin Tree** was their sacred anchor, binding them to the natural flow of existence. Through its roots, the spirits of the dead could return to the earth, and from its branches, new souls were born.
+The **[[Kyojin]] Tree** was their sacred anchor, binding them to the natural flow of existence. Through its roots, the spirits of the dead could return to the earth, and from its branches, new souls were born.
 
-Their devotion to the balance of life led them to clash with those who sought to pervert death—namely **[[Vecna]]**, who sought to replace the broken **[[Machinery of Death]]** with his own dominion. The fall of the [[Kyojin]] civilization left the world vulnerable to the spread of undeath, and over time, their descendants—the orcs—lost much of their ancient wisdom. Yet, deep within the spiritual heartlands of their people, the last of the **[[Kyojin]] Shamans** still whisper the old songs of the Verdant [[Soul]].
+Their devotion to the balance of life led them to clash with those who sought to pervert death—namely **[[Vecna]]**, who sought to replace the broken **[[Machinery of Death]]** with his own dominion. The fall of the [[Kyojin]] civilization left the world vulnerable to the spread of undeath, and over time, their descendants—the [[Orc|orcs]]—lost much of their ancient wisdom. Yet, deep within the spiritual heartlands of their people, the last of the **[[Kyojin]] Shamans** still whisper the old songs of the Verdant [[Soul]].
 
 
 ### **The [[Terran|Humans]]: Chosen of [[Valtor]]**
@@ -53,7 +53,7 @@ Their devotion to the balance of life led them to clash with those who sought to
 **[[Aeternum]] Patron:** [[Valtor]], The Endless Tide  
 **World Tree Connection:** None directly, but influenced by all
 
-Unlike the other Elder Races, **Humans** were not bound to a single tree or a single path. Instead, **[[Valtor]], [[Aeternum|the Aeternum]] of Change**, granted them **potential**—the ability to shape their own destinies, for better or worse. They did not have the longevity of the Solarans, the endurance of the [[Grundthain]], or the spiritual attunement of the Kyojin, but they possessed the ability to grow beyond their limitations.
+Unlike the other Elder Races, **Humans** were not bound to a single tree or a single path. Instead, **[[Valtor]], [[Aeternum|the Aeternum]] of Change**, granted them **potential**—the ability to shape their own destinies, for better or worse. They did not have the longevity of the [[Solaran|Solarans]], the endurance of the [[Grundthain]], or the spiritual attunement of the [[Kyojin]], but they possessed the ability to grow beyond their limitations.
 
 This blessing made humans both **versatile and dangerous**. They adapted quickly, learning from the ruins of fallen civilizations and shaping new empires upon their bones. They became **kings, conquerors, scholars, and savages**—a race that could rise to celestial heights or fall into ruin, dictated only by their own choices.
 

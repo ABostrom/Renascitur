@@ -17,7 +17,7 @@ Orcs are a fierce and powerful race descended from the primal [[Kyojin]]. They a
 
 ## Origins
 
-- Descended from Kyojin clans, adapted to harsh environments and tribal life.
+- Descended from [[Kyojin]] clans, adapted to harsh environments and tribal life.
 
 ---
 

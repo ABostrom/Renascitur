@@ -7,4 +7,4 @@ timelines:
   - solaran
 ---
 
-The Endless Sun is corrupted by [[Ishna]]’s influence. What was meant to heal begins to unravel reality. Aberrant storms sweep across Solaran space. The age of collapse begins.
+The Endless Sun is corrupted by [[Ishna]]’s influence. What was meant to heal begins to unravel reality. Aberrant storms sweep across [[Solaran]] space. The age of collapse begins.

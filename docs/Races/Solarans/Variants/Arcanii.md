@@ -24,7 +24,7 @@ The Arcanii are the direct inheritors of [[Solaran]]’ arcane mastery. They liv
 
 ## Origins
 
-- Descended from Solarans who focused exclusively on arcane power and magical scholarship.  
+- Descended from [[Solaran|Solarans]] who focused exclusively on arcane power and magical scholarship.  
 - Most prominent in the [[Thraysian Magocracy]].
 
 ---
@@ -39,7 +39,7 @@ The Arcanii are the direct inheritors of [[Solaran]]’ arcane mastery. They liv
 ## Culture
 
 - Rigid and hierarchical, emphasizing magical education and scholarly pursuits.  
-- Consider themselves last bastions of Solaran glory and arcane purity.
+- Consider themselves last bastions of [[Solaran]] glory and arcane purity.
 
 ---
 
@@ -52,7 +52,7 @@ The Arcanii are the direct inheritors of [[Solaran]]’ arcane mastery. They liv
 ## Notes
 
 - Arcanii often serve as advisors and mages in the magocratic society of [[Thraysia]].  
-- They maintain strict traditions to preserve Solaran magical heritage.
+- They maintain strict traditions to preserve [[Solaran]] magical heritage.
 
 ---
 

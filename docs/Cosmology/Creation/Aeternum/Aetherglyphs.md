@@ -50,9 +50,9 @@ This is **[[Entropy]]**—the anti-pattern, the null response, the unraveling.
 
 ## Mystical Interpretations
 
-- Some Ferrun believe **the glyph for Time** created a loop that birthed Entropy—**the echo of the end before the beginning**.
-- Kyojin shamans describe Entropy as **the Breathless Word**—a sound never meant to be spoken.
-- Solarans once attempted to **rewrite the glyphs**, seeking to control or erase Entropy. Their failure led to the **Fall of Solara**.
+- Some [[Ferrun]] believe **the glyph for Time** created a loop that birthed Entropy—**the echo of the end before the beginning**.
+- [[Kyojin]] shamans describe Entropy as **the Breathless Word**—a sound never meant to be spoken.
+- [[Solaran|Solarans]] once attempted to **rewrite the glyphs**, seeking to control or erase Entropy. Their failure led to the **Fall of Solara**.
 
 ---
 

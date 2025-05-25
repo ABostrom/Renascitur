@@ -8,4 +8,4 @@
 
 Kirex begins to lash out at anyone he perceives as a threat, often resorting to violence even in situations where diplomacy would be more appropriate. His temper flares uncontrollably, and he seeks out confrontations at every opportunity. He may even start turning on the other council members, viewing their indecision or inaction as cowardice or betrayal. His need for battle consumes his, and he becomes obsessed with training and honing his skills, neglecting all other responsibilities.
 
-He might also start seeing visions of ancient Solaran warriors or avatars of war, whispering to his that only through conquest and domination can the corruption be stopped. His appearance reflects this shift: her movements become more aggressive, and her eyes, once sharp with focus, now burn with barely contained fury.
+He might also start seeing visions of ancient [[Solaran]] warriors or avatars of war, whispering to his that only through conquest and domination can the corruption be stopped. His appearance reflects this shift: her movements become more aggressive, and her eyes, once sharp with focus, now burn with barely contained fury.

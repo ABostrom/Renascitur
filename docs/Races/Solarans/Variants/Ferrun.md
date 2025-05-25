@@ -18,13 +18,13 @@ spoken-language:
 # Ferrun
 
 **Summary:**  
-The Ferrun are descendants of the Solarans who rejected the arcane and natural paths to embrace innovation and craftsmanship. They founded the industrial city of [[Thelassia]], mastering metallurgy, rune magic, and engineering.
+The Ferrun are descendants of the [[Solaran|Solarans]] who rejected the arcane and natural paths to embrace innovation and craftsmanship. They founded the industrial city of [[Thelassia]], mastering metallurgy, rune magic, and engineering.
 
 ---
 
 ## Origins
 
-- Splintered from Solarans post-Solara collapse, focusing on science and industry.  
+- Splintered from [[Solaran|Solarans]] post-Solara collapse, focusing on science and industry.  
 - Deep respect for [[Muradin]] in his original [[Grundthain]] form.
 
 ---

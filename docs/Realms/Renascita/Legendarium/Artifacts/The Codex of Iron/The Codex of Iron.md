@@ -21,7 +21,7 @@ The **Codex of Iron** was forged by [[Muradin]] and his most devoted followers d
 
 After the fall of **Runehart**, the **Codex of Iron** was divided into three parts to preserve its teachings:
 
-1. **The First Fragment**: Taken by a sect of **Solarans** who studied under [[Muradin]] during [[the First Age]]. They safeguarded it in their archives, believing it essential to preserving the connection between their people and [[Muradin]]’s wisdom.
+1. **The First Fragment**: Taken by a sect of **[[Solaran|Solarans]]** who studied under [[Muradin]] during [[the First Age]]. They safeguarded it in their archives, believing it essential to preserving the connection between their people and [[Muradin]]’s wisdom.
     
 2. **The Second Fragment**: Kept by the survivors of Runehart’s final battle, passed down through dwarven generations. This fragment became a cultural and spiritual cornerstone, ensuring [[Muradin]]’s teachings remained central to dwarven society.
     
@@ -43,7 +43,7 @@ The **Codex of Iron** is said to include:
 
 #### **Modern Significance**
 
-The fragmented Codex remains a symbol of unity and hope for both [[Dwarf|dwarves]] and the **Ferrun**. Its pieces, scattered across the world, represent a bridge between [[Muradin]]’s followers and their shared legacy. The **Ferrun**, who revere [[Muradin]] in his original **[[Grundthain]]** form, guard their fragment as a sacred relic, while the [[Dwarf|dwarves]] preserve their fragment as a cornerstone of their culture.
+The fragmented Codex remains a symbol of unity and hope for both [[Dwarf|dwarves]] and the **[[Ferrun]]**. Its pieces, scattered across the world, represent a bridge between [[Muradin]]’s followers and their shared legacy. The **[[Ferrun]]**, who revere [[Muradin]] in his original **[[Grundthain]]** form, guard their fragment as a sacred relic, while the [[Dwarf|dwarves]] preserve their fragment as a cornerstone of their culture.
 
 The third, missing fragment is a source of mystery and legend. Many believe that reclaiming it—and reuniting the Codex—would unlock the full potential of [[Muradin]]’s teachings, allowing the creation of artifacts and machines that could rival those of [[the First Age]].
 

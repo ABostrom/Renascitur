@@ -23,7 +23,7 @@ A serene and mystical place, the Grove of Whispers is a botanical wonderland wit
 Nestled in a quieter, more secluded part of Aeloria, the Hatchery is a warm, humid environment optimized for the incubation of [[Saurian]] eggs. The walls are lined with nests filled with eggs, each marked with the family's sigil. The center of the Hatchery holds the Sacred Pool, its waters used in rituals to bless the eggs. The atmosphere is one of gentle anticipation, with caretakers moving softly between the nests, ensuring each egg receives the care and attention it needs.
 ##  The Archives of the Ancients
 
-A repository of knowledge, the Archives of the Ancients are hidden away in a natural cavern behind a waterfall. Inside, scrolls, books, and artifacts are carefully preserved, cataloging the [[Saurian|Saurians]]' history, from their origins as creations of the Solarans to the present day. The archives are a place of study and research, where [[Saurian|Saurians]] come to learn about their past and scholars work to decipher the secrets of their ancestors.
+A repository of knowledge, the Archives of the Ancients are hidden away in a natural cavern behind a waterfall. Inside, scrolls, books, and artifacts are carefully preserved, cataloging the [[Saurian|Saurians]]' history, from their origins as creations of the [[Solaran|Solarans]] to the present day. The archives are a place of study and research, where [[Saurian|Saurians]] come to learn about their past and scholars work to decipher the secrets of their ancestors.
 
 ## The Warrior's Grove
 
@@ -45,7 +45,7 @@ Each of these locations within Aeloria plays a vital role in the life of the [[S
     
 - **Elder Kirex**: The youngest of the current elders, Kirex is a brilliant strategist and warrior, responsible for the defense of Aeloria and the training of its guardians. His innovative tactics and prowess in combat have earned him respect among the [[Saurian|Saurians]].
     
-- **Elder Vellara**: Vellara is the keeper of the Archives of the Ancients and a scholar of Solaran technology. She bridges the gap between the past and present, advocating for the integration of ancient wisdom with contemporary practices.
+- **Elder Vellara**: Vellara is the keeper of the Archives of the Ancients and a scholar of [[Solaran]] technology. She bridges the gap between the past and present, advocating for the integration of ancient wisdom with contemporary practices.
     
 - **Elder Marn**: An elder druid with a profound connection to the spirits of the land, Marn is the spiritual heart of the Council. His insights and visions guide the [[Saurian|Saurians]] in matters of faith and their relationship with [[Irasandra]].
     

@@ -15,7 +15,7 @@ Luxar is woven into the very fabric of the cosmos, acting in tension with [[Noxa
 - An open eye within a star.
 
 ## Cultural Notes
-- **Solarans** revered Luxar as part of their dual legacy with [[Noxar]].
+- **[[Solaran|Solarans]]** revered Luxar as part of their dual legacy with [[Noxar]].
 - In the [[Firebrand Empire]], Luxar is interpreted as the **Divine Purpose** that drives noble conquest.
 
 ## In Opposition

@@ -55,7 +55,7 @@ The Solarans are an ancient and advanced civilization deeply connected to celest
 ## Notes
 
 - Their legacy endures in relics and ruins scattered across the world.  
-- Descendants and cultural variants include [[Arcanii]], [[Ferrun]], and [[docs/Races/Solarans/Variants/Mokoweri]].  
+- Descendants and cultural variants include [[Arcanii]], [[Ferrun]], and [[Mokuun]].  
 - Related races such as [[Celestar]] and [[Velastri]] have diverged into distinct lineages.
 
 ---

@@ -15,17 +15,17 @@ spoken-language:
   - "[[Thraysian Common]]"
 ---
 
-# Mokoweri
+# Mokuun
 
 **Summary:**  
-The Mokoweri are Solarans who embraced nature and live in harmony with the jungles of their island home. They are spiritual, resilient, and guardians of the sacred tree [[Irasandra]].
+The [[Mokuun]] are [[Solaran|Solarans]] who embraced nature and live in harmony with the jungles of their island home. They are spiritual, resilient, and guardians of the sacred tree [[Irasandra]].
 
 ---
 
 ## Origins
 
-- Descendants of Solarans who rejected technology for symbiosis with nature.  
-- Inhabit the jungle island of [[docs/Races/Solarans/Variants/Mokoweri]].
+- Descendants of [[Solaran|Solarans]] who rejected technology for symbiosis with nature.  
+- Inhabit the jungle island of [[Mokuun]].
 
 ---
 

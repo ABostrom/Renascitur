@@ -17,7 +17,7 @@ The Velastri are a distinct and fearsome race descended from [[Solaran|Solarans]
 
 ## Origins
 
-- Evolved from Solarans trapped in [[Infernum]] during [[the First Age]].  
+- Evolved from [[Solaran|Solarans]] trapped in [[Infernum]] during [[the First Age]].  
 - Developed infernal traits due to harsh plane conditions.
 
 ---

@@ -1,18 +1,18 @@
-*Gateways of Light, Folded [[Weave]], and Solaran Ambition*
+*Gateways of Light, Folded [[Weave]], and [[Solaran]] Ambition*
 
 ---
 
 ## Overview  
 The **Ab Solara** were the primary transportation and communication infrastructure of the [[Solaran]]—a vast, arcano-mechanical network of gates that allowed near-instantaneous travel across continents, planes, and even distant worlds. Each gate harnessed solar and planar energy to fold the [[Weave]] itself, forming temporary corridors through reality.
 
-To the Solarans, the Ab Solara were more than mere logistics—they were a testament to their mastery of both arcane theory and cosmic mechanics.
+To the [[Solaran|Solarans]], the Ab Solara were more than mere logistics—they were a testament to their mastery of both arcane theory and cosmic mechanics.
 
 ---
 
 ## Structure and Design  
 An Ab Solara is typically composed of:
 
-- A **circular or octagonal portal ring**, etched with Solaran runes and embedded with calibrated **[[Sun Topaz]]** capacitors.
+- A **circular or octagonal portal ring**, etched with [[Solaran]] runes and embedded with calibrated **[[Sun Topaz]]** capacitors.
 - An **arcanometric control pedestal**, which housed planar maps, resonance settings, and security glyphs.
 - A **focusing core**, often constructed from [[Solaran Obsidian]], used to stabilize the spatial fold and contain its energetic backlash.
 - A **fold anchor**, rooted in both magical ley convergence and a physical support lattice, ensuring the gate’s orientation across realms.
@@ -39,7 +39,7 @@ The power required to fold [[Weave|the Weave]] created a number of **arcane haza
 
 - **[[Weave]] Destabilization**: Prolonged gate use thins the local [[Weave]], creating zones where magic functions erratically.
 - **Temporal Anomalies**: Rarely, travelers who take the “long path” through an unstable corridor may emerge **seconds, hours, or years** after they entered.
-- **[[Soul]] Flickering**: Improper transitions can cause the traveler’s [[soul]]-thread to desynchronize from their body. The Solarans developed countermeasures, but some experimental routes were deemed too dangerous to use regularly.
+- **[[Soul]] Flickering**: Improper transitions can cause the traveler’s [[soul]]-thread to desynchronize from their body. The [[Solaran|Solarans]] developed countermeasures, but some experimental routes were deemed too dangerous to use regularly.
 
 Because of these dangers, **each Ab Solara was sacred**, regulated, and attuned to a precise set of destination harmonics. Unauthorized use was considered reckless and, in some cases, heretical.
 
@@ -47,7 +47,7 @@ Because of these dangers, **each Ab Solara was sacred**, regulated, and attuned 
 
 ## Cultural and Strategic Significance  
 
-To the Solarans, the Ab Solara represented:
+To the [[Solaran|Solarans]], the Ab Solara represented:
 
 - **A unifying force** across the empire, connecting cities, minds, and cultures
 - **A divine mirror** of the [[soul]] cycle: entering, folding, and emerging anew
@@ -78,7 +78,7 @@ The Ab Solara network included connections to:
 Today, the remaining Ab Solara structures are either:
 
 - **Ruins** buried beneath jungle, sand, or ash
-- **Sealed sanctums**, maintained by splinter Solaran cultures or secret custodians like the [[Ferrun]]
+- **Sealed sanctums**, maintained by splinter [[Solaran]] cultures or secret custodians like the [[Ferrun]]
 
 Their power is coveted. Their cost is often forgotten.
 

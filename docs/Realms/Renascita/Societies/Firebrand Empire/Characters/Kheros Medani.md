@@ -13,4 +13,4 @@ aliases: [Medani, Lion’s Rest Overseer]
 - [[Leonin]]
 
 ## Description
-Sir Kheros Medani is the appointed Overseer of [[Lion’s Rest]], a prominent leonin noble and younger brother of [[Trelib Medani]]. They govern the city in service to the regional Imperator and maintain the delicate balance between imperial mandate and local power.
+Sir Kheros Medani is the appointed Overseer of [[Lion’s Rest]], a prominent [[docs/Races/Kyojin/Leonin/Leonin|leonin]] noble and younger brother of [[Trelib Medani]]. They govern the city in service to the regional Imperator and maintain the delicate balance between imperial mandate and local power.

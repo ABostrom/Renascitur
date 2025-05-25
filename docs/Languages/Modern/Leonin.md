@@ -8,9 +8,9 @@ spoken-by:
 - "[[Leonin]]"
 ---
 
-# Leonin
+# [[docs/Races/Kyojin/Leonin/Leonin|Leonin]]
 
-**Leonin** is the tactical and precise dialect of [[Natsugen]], used by the [[Leonin]] for leadership, strategy, and martial communication. It is known for its clarity and directness, emphasizing effective communication on and off the battlefield.
+**[[docs/Races/Kyojin/Leonin/Leonin|Leonin]]** is the tactical and precise dialect of [[Natsugen]], used by the [[Leonin]] for leadership, strategy, and martial communication. It is known for its clarity and directness, emphasizing effective communication on and off the battlefield.
 
 ---
 

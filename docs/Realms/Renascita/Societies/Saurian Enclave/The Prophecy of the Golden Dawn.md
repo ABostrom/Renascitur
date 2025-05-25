@@ -17,7 +17,7 @@ The golden child is believed to be destined for great things, including:
   
 - **Cleansing**: With an innate ability to purify corruption, the child will play a crucial role in healing the lands afflicted by the cosmic corruption that the [[Saurian|Saurians]] were originally created to combat.
     
-- **Innovation**: Bridging the gap between the ancient wisdom of the [[Saurian|Saurians]] and the possibilities of the future, the golden child will lead their people in discovering new ways to live in harmony with the world, possibly even rediscovering and reinterpreting technologies left behind by the Solarans for the betterment of all.
+- **Innovation**: Bridging the gap between the ancient wisdom of the [[Saurian|Saurians]] and the possibilities of the future, the golden child will lead their people in discovering new ways to live in harmony with the world, possibly even rediscovering and reinterpreting technologies left behind by the [[Solaran|Solarans]] for the betterment of all.
     
 
 # Challenges and Trials

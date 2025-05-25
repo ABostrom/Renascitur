@@ -93,7 +93,7 @@ Her form flickers, a sign of the effort it takes to maintain this communication.
 
 A sense of resolve strengthens her voice.
 
-"To aid you in this quest, I offer two Solaran devices, relics of a time when our technology and magic worked in harmony with the cosmos. These devices, once affixed to the sister trees, will amplify their capabilities, strengthening their connection to [[Weave|the weave]] and to each other, creating a triad of power that can stabilize the passage of souls and shield them from the Aberrant's grasp."
+"To aid you in this quest, I offer two [[Solaran]] devices, relics of a time when our technology and magic worked in harmony with the cosmos. These devices, once affixed to the sister trees, will amplify their capabilities, strengthening their connection to [[Weave|the weave]] and to each other, creating a triad of power that can stabilize the passage of souls and shield them from the Aberrant's grasp."
 
 With a gentle wave of light, two objects materialize before the adventurers. They are intricate, glowing with an inner light, their design both ancient and otherworldly, clearly crafted with a purpose far beyond ordinary comprehension.
 

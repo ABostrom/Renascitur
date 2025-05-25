@@ -15,13 +15,13 @@ spoken-language:
 # Slaads
 
 **Summary:**  
-Slaads are aberrant mutations of the [[Saurian|Saurians]], corrupted and twisted by exposure to aberrant energies. They embody chaos and destruction, threatening the fragile balance of the jungles of [[docs/Races/Solarans/Variants/Mokoweri]].
+Slaads are aberrant mutations of the [[Saurian|Saurians]], corrupted and twisted by exposure to aberrant energies. They embody chaos and destruction, threatening the fragile balance of the jungles of [[Mokuun]].
 
 ---
 
 ## Origins
 
-- Result of reckless Solaran experiments trying to harness aberrant energy.  
+- Result of reckless [[Solaran]] experiments trying to harness aberrant energy.  
 - Once noble [[Saurian|Saurians]], now corrupted into aggressive, monstrous forms.
 
 ---

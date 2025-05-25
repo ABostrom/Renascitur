@@ -52,9 +52,9 @@ From stone, he carved them, their backs broad and their hands strong, their hear
 
 **[[Valtor]] cast the first of the humans** upon the shifting tides, giving them the gift of motion, change, and boundless potential.
 
-**[[Aelion]] breathed light into the first Solarans**, making them brilliant and wise, attuned to the great forges of the heavens.
+**[[Aelion]] breathed light into the first [[Solaran|Solarans]]**, making them brilliant and wise, attuned to the great forges of the heavens.
 
-**[[Sylara]] wove the Kyojin from the threads of the world itself**, binding them to the [[soul]] of all living things, making them the keepers of the wild places.
+**[[Sylara]] wove the [[Kyojin]] from the threads of the world itself**, binding them to the [[soul]] of all living things, making them the keepers of the wild places.
 
 Thus, the world was set in its order, and the Makers stepped back to watch their work unfold.
 

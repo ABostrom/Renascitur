@@ -9,22 +9,22 @@ spoken-language:
 - "[[docs/Languages/Modern/Leonin|Leonin]]"
 ---
 
-# Imperial Leonin
+# Imperial [[docs/Races/Kyojin/Leonin/Leonin|Leonin]]
 
 **Summary:**  
-Imperial Leonin are the cultured, tactical elite within the [[Firebrand Empire]]. They blend primal nobility with imperial sophistication.
+Imperial [[docs/Races/Kyojin/Leonin/Leonin|Leonin]] are the cultured, tactical elite within the [[Firebrand Empire]]. They blend primal nobility with imperial sophistication.
 
 ---
 
 ## Origins
 
-- Refined Leonin integrated into the empire’s military and political structures.
+- Refined [[docs/Races/Kyojin/Leonin/Leonin|Leonin]] integrated into the empire’s military and political structures.
 
 ---
 
 ## Appearance
 
-- Larger, more muscular than common Leonin with polished armor.  
+- Larger, more muscular than common [[docs/Races/Kyojin/Leonin/Leonin|Leonin]] with polished armor.  
 - Exhibit regality and martial discipline.
 
 ---

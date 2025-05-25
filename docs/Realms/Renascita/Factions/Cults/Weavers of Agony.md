@@ -57,7 +57,7 @@ While many hobgoblin clans denounce the Weavers as heretics, their influence is 
 
 ## Adventure Hooks
 
-- **Ferrun Engineers Abducted**: The cult is stealing workers for a massive living altar under [[Salacia]], their ritual chamber linked directly to [[The World Beneath]].
+- **[[Ferrun]] Engineers Abducted**: The cult is stealing workers for a massive living altar under [[Salacia]], their ritual chamber linked directly to [[The World Beneath]].
     
 - **Silkborne Plague**: An afflicted village suffers psychic pain and scarification, symptoms believed to be a curse from [[Arachnie, the Matriarch of Pain]].
     

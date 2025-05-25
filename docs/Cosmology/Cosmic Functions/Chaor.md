@@ -16,7 +16,7 @@ Without it, form calcifies, and spirit dies.
 
 ## Cultural Notes
 - The [[Orc|Orcs]] trace their [[soul]]-rites and freedom-paths to Chaor’s breath.
-- Among the Kyojin, Chaor was held in sacred tension with [[Ordar]].
+- Among the [[Kyojin]], Chaor was held in sacred tension with [[Ordar]].
 
 ## In Opposition
 Chaor without balance becomes **anarchy**, **self-destruction**, and **loss of identity**.

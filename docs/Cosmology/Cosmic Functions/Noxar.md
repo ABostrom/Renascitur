@@ -15,7 +15,7 @@ It is the veil, the hidden path, the memory left unsaid. Without Noxar, no truth
 - A closed eye within a circle.
 
 ## Cultural Notes
-- Solarans saw Noxar not as a threat to [[Luxar]], but as its **mirror**.
+- [[Solaran|Solarans]] saw Noxar not as a threat to [[Luxar]], but as its **mirror**.
 - Dream-mages, shadow-priests, and spiritwalkers trace their magic to Noxar’s influence.
 
 ## In Opposition

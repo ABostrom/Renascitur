@@ -9,16 +9,16 @@ spoken-language:
 - "[[Orcish]]"
 ---
 
-# Imperial Orcs
+# Imperial [[Orc|Orcs]]
 
 **Summary:**  
-Imperial Orcs are a martial and disciplined branch of [[Orc|Orcs]] who serve the [[Firebrand Empire]]. They combine traditional orcish strength with imperial military discipline.
+Imperial [[Orc|Orcs]] are a martial and disciplined branch of [[Orc|Orcs]] who serve the [[Firebrand Empire]]. They combine traditional orcish strength with imperial military discipline.
 
 ---
 
 ## Origins
 
-- Orc clans integrated into the imperial structure of the [[Firebrand Empire]].
+- [[Orc]] clans integrated into the imperial structure of the [[Firebrand Empire]].
 
 ---
 

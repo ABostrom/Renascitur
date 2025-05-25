@@ -4,7 +4,7 @@ tags: [province, region]
 ---
 
 ## Overview
-A war-torn and reclaimed expanse once ruled by orcs and aberrant creatures. Now it stands as the Empire’s final shield wall, fiercely protected by border clans and militant orders.
+A war-torn and reclaimed expanse once ruled by [[Orc|orcs]] and aberrant creatures. Now it stands as the Empire’s final shield wall, fiercely protected by border clans and militant orders.
 
 ## Major Cities
 - [[Ashgatar]]

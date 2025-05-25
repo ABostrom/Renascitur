@@ -43,7 +43,7 @@ The Celestar, are a distinct race evolved from [[Solaran|Solarans]]. Known for t
 
 ## Notes
 
-- Maintain close ties with Solaran knowledge but chart independent destiny.
+- Maintain close ties with [[Solaran]] knowledge but chart independent destiny.
 
 ---
 

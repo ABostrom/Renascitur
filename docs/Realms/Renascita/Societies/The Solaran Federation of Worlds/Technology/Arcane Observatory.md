@@ -1,4 +1,4 @@
-The Arcane Observatory, located in geostationary orbit above the material plane, is a colossal structure that was once the pinnacle of Solaran magical and technological research and exploration. It was built by the most brilliant minds of the ancient world, who sought to understand the mysteries of magic, technology and the universe.
+The Arcane Observatory, located in geostationary orbit above the material plane, is a colossal structure that was once the pinnacle of [[Solaran]] magical and technological research and exploration. It was built by the most brilliant minds of the ancient world, who sought to understand the mysteries of magic, technology and the universe.
 
 Now, however, the Observatory is dormant and deserted. Its chambers and laboratories stand empty, and its libraries and archives have been left to gather dust. The once-great Solari who worked here have long since passed away or moved on to other pursuits.
 

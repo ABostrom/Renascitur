@@ -1,6 +1,6 @@
 # The Twelve Great Houses of the Firebrand Empire
 
-The Firebrand Empire is ruled by a Leonin Emperor, but its strength and longevity depend on the governance of the Twelve Great Houses. These noble dynasties form the backbone of imperial society, each entrusted with a specific domain of influence and responsibility.
+The Firebrand Empire is ruled by a [[docs/Races/Kyojin/Leonin/Leonin|Leonin]] Emperor, but its strength and longevity depend on the governance of the Twelve Great Houses. These noble dynasties form the backbone of imperial society, each entrusted with a specific domain of influence and responsibility.
 
 Together, the Houses make up the Imperial Council — a body that advises the Emperor and wields immense soft and hard power throughout the Empire. While their domains are clearly defined, the boundaries of influence often blur, leading to shifting alliances, rivalries, and cold wars within the council chambers.
 

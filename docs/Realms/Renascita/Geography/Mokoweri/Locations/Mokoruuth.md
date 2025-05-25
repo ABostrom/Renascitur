@@ -1,41 +1,41 @@
 - **Cultural Influence**: Named by the [[Solaran]]'s, whose pursuit of knowledge and enlightenment shaped their civilization.
 - **Meaning**:
     - _Moko_: Derived from Mokoweri, symbolizing the land it resides in.
-    - _Ruuth_: A Solaran term for "illumination" or "insight."
+    - _Ruuth_: A [[Solaran]] term for "illumination" or "insight."
 - **Alternate Names**:
     - **[[Irasandra]]**: A name used in modern times after Iris Andras merged with the tree.
     - **The Luminous Grove**: A poetic name used by scholars.
 
-[[Irasandra]], the colossal tree that graces the island of Mokoweri, stands as a monumental testament to the forgotten era of Solaran science and their struggle to control aberrant [[soul]] experiments. This majestic tree was crafted with care and purpose by the Solaran scientist, [[Iris Andras]].
+[[Irasandra]], the colossal tree that graces the island of Mokoweri, stands as a monumental testament to the forgotten era of [[Solaran]] science and their struggle to control aberrant [[soul]] experiments. This majestic tree was crafted with care and purpose by the [[Solaran]] scientist, [[Iris Andras]].
 
 
 ### Grove Warden
 [[Iris Andras]] fused with the great tree as part of the final experiment to 
 
 
-**A Monument of Solaran Science:**
+**A Monument of [[Solaran]] Science:**
 
 [[Irasandra]] was not a product of nature but a marvel of [[Solaran]] artifice, representing the zenith of their scientific and magical prowess. Constructed with both botanical and arcanometric precision, this towering sentinel was formed to fulfill a dual role: to maintain a sanctuary on Mokoweri and to protect the rest of the world from the dangerous experiments conducted there.
 
 **The Quest for Understanding:**
 
-[[Irasandra]]'s origins are cloaked in the pursuit of knowledge. The Solarans of old, renowned for their wisdom and advanced arcanometric capabilities, embarked on an ambitious endeavor. They sought to comprehend the nature of souls, especially the rare occurrence of aberrant souls that manifested inexplicable deviations from the norm.
+[[Irasandra]]'s origins are cloaked in the pursuit of knowledge. The [[Solaran|Solarans]] of old, renowned for their wisdom and advanced arcanometric capabilities, embarked on an ambitious endeavor. They sought to comprehend the nature of souls, especially the rare occurrence of aberrant souls that manifested inexplicable deviations from the norm.
 
 **The Enigmatic Anomaly:**
 
-While they had not created these aberrant souls, the Solarans were baffled by their existence. They recognized that there was a fundamental flaw in the cosmic design of the universe, something that had gone awry and resulted in the emergence of these [[aberrations]]. They were driven by an insatiable curiosity to uncover the root cause of this enigma.
+While they had not created these aberrant souls, the [[Solaran|Solarans]] were baffled by their existence. They recognized that there was a fundamental flaw in the cosmic design of the universe, something that had gone awry and resulted in the emergence of these [[aberrations]]. They were driven by an insatiable curiosity to uncover the root cause of this enigma.
 
 **Sealing the Island:**
 
-Under the careful guidance of Iris Andras, the Great Sentinel Tree was infused with [[Solaran Obsidian]], making it an entity of remarkable arcanometric power. Its primary function was to create a mystical barrier that sealed the island of Mokoweri from the rest of the world. With [[Irasandra]]'s intervention, the island became a haven within which the Solarans could explore and rectify their transgressions without the risk of spreading the contamination further.
+Under the careful guidance of Iris Andras, the Great Sentinel Tree was infused with [[Solaran Obsidian]], making it an entity of remarkable arcanometric power. Its primary function was to create a mystical barrier that sealed the island of Mokoweri from the rest of the world. With [[Irasandra]]'s intervention, the island became a haven within which the [[Solaran|Solarans]] could explore and rectify their transgressions without the risk of spreading the contamination further.
 
 **Guardian of Mokoweri:**
 
-Not only was [[Irasandra]] a barrier, but it was also a guardian of the island. The tree possessed sentient, arboreal consciousness, allowing it to sense potential threats and intruders. Its vast roots, intertwining with those of the indigenous flora, acted as an early warning system, signaling danger to the Solarans dwelling on Mokoweri.
+Not only was [[Irasandra]] a barrier, but it was also a guardian of the island. The tree possessed sentient, arboreal consciousness, allowing it to sense potential threats and intruders. Its vast roots, intertwining with those of the indigenous flora, acted as an early warning system, signaling danger to the [[Solaran|Solarans]] dwelling on Mokoweri.
 
 **Enigmatic Legacy:**
 
-As time passed and the Solaran civilization began to decline, the true purpose of [[Irasandra]] was lost to the world. The knowledge of its construction and mission gradually faded into obscurity. Nowadays, the inhabitants of Mokoweri have grown to revere [[Irasandra]] as a symbol of protection and an entity to be cherished, despite not fully comprehending its original purpose.
+As time passed and the [[Solaran]] civilization began to decline, the true purpose of [[Irasandra]] was lost to the world. The knowledge of its construction and mission gradually faded into obscurity. Nowadays, the inhabitants of Mokoweri have grown to revere [[Irasandra]] as a symbol of protection and an entity to be cherished, despite not fully comprehending its original purpose.
 
 **A Soothing Presence:**
 
@@ -43,7 +43,7 @@ As time passed and the Solaran civilization began to decline, the true purpose o
 
 **Anomalies in [[Weave|the Weave]]:**
 
-The world is ensnared in a complex web of cosmic energies and spiritual currents known as [[Weave|the weave]]. This ethereal lattice governs the transmigration of souls, the magic that binds the universe, and the equilibrium of forces. While typically a harmonious and balanced structure, [[Weave|the weave]] can be influenced and manipulated by powerful arcanometric entities, such as the Solarans.
+The world is ensnared in a complex web of cosmic energies and spiritual currents known as [[Weave|the weave]]. This ethereal lattice governs the transmigration of souls, the magic that binds the universe, and the equilibrium of forces. While typically a harmonious and balanced structure, [[Weave|the weave]] can be influenced and manipulated by powerful arcanometric entities, such as the [[Solaran|Solarans]].
 
 **The Guardian's Aura:**
 
@@ -59,7 +59,7 @@ The island of Mokoweri has unintentionally become a sanctuary for those afflicte
 
 **The Unintended Effect:**
 
-While the Solarans originally sought to understand and rectify the [[aberrations]] in [[Weave|the weave]], [[Irasandra]]'s influence led to a different outcome. Instead of solving the cosmic mystery, it allowed Mokoweri to exist as a haven for the anomalous, an island where they can experience a modicum of peace amid their cosmic turmoil.
+While the [[Solaran|Solarans]] originally sought to understand and rectify the [[aberrations]] in [[Weave|the weave]], [[Irasandra]]'s influence led to a different outcome. Instead of solving the cosmic mystery, it allowed Mokoweri to exist as a haven for the anomalous, an island where they can experience a modicum of peace amid their cosmic turmoil.
 
 **A Silent Guardian:**
 

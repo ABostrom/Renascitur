@@ -8,7 +8,7 @@ Nestled deep beneath the Dead Desert, Thelassia is an industrious haven of innov
 - **The Forge District**: The workshops and foundries of the Forge District are where Metal Elves craft their machinery and inventions. Steam hisses, and the clang of hammers on metal creates an ever-present symphony of industry.
 - **The Crag-Tiers**: Housing is arranged in tiered layers spiraling outward from the Core. Each tier is connected by lifts and ladders, with the higher levels reserved for esteemed inventors and engineers.
 - **The Chimney Spires**: Massive chimneys extend upward to the surface, venting smoke and heat from the Coalforge Engine. These spires also double as observation posts for any intrusions from above.
-- **The Deep Mines**: Below the city, miners extract coal and rare minerals necessary to keep the Coalforge Engine running. The mines are treacherous and sometimes lead to strange and ancient ruins, remnants of Solaran civilization.
+- **The Deep Mines**: Below the city, miners extract coal and rare minerals necessary to keep the Coalforge Engine running. The mines are treacherous and sometimes lead to strange and ancient ruins, remnants of [[Solaran]] civilization.
 
 
 ## Life in Thelassia
@@ -97,7 +97,7 @@ Towering structures that rise above the Forge District, the **Smelting Spires** 
 ### The Rustspire Observatory
 
 **Description**:  
-Perched on one of the higher tiers of Thelassia, the **Rustspire Observatory** is an unusual blend of science and superstition. Its spire is adorned with intricate clockwork mechanisms and polished lenses that pierce the perpetual haze of the cavern. Scholars and tinkerers gather here to study the stars—though visible only faintly through ancient Solaran technology—and to observe the flow of energy within the Coalforge Engine.
+Perched on one of the higher tiers of Thelassia, the **Rustspire Observatory** is an unusual blend of science and superstition. Its spire is adorned with intricate clockwork mechanisms and polished lenses that pierce the perpetual haze of the cavern. Scholars and tinkerers gather here to study the stars—though visible only faintly through ancient [[Solaran]] technology—and to observe the flow of energy within the Coalforge Engine.
 
 ---
 
@@ -118,4 +118,4 @@ The bustling **Gearhall Market** is a sprawling bazaar located near the center o
 ### The Rusted Reliquary
 
 **Description**:  
-The **Rusted Reliquary** is a solemn shrine dedicated to the memory of the Solarans and their scientific legacy. Located on the lowest tier of Thelassia, the reliquary is filled with ancient artifacts and remnants of Solaran technology, preserved and studied by the city’s historians. A massive obsidian tablet stands at its center, inscribed with glowing runes that recount the fall of the Solarans and the rise of the Metal Elves.
+The **Rusted Reliquary** is a solemn shrine dedicated to the memory of the [[Solaran|Solarans]] and their scientific legacy. Located on the lowest tier of Thelassia, the reliquary is filled with ancient artifacts and remnants of [[Solaran]] technology, preserved and studied by the city’s historians. A massive obsidian tablet stands at its center, inscribed with glowing runes that recount the fall of the [[Solaran|Solarans]] and the rise of the Metal Elves.

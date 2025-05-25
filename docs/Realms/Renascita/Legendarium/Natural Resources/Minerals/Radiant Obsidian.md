@@ -12,5 +12,5 @@ Found only at the heart of [[the Eternal Flame]], [[Radiant Obsidian]] forms whe
 ## Uses  
 - Used in [[Flameforging]] to create relics, lenses, and weapon cores for the [[Flamebound]].  
 - Integral to high ceremonial tools and flame-channeling constructs.  
-- When refined through Solaran techniques, it produces [[Solaran Obsidian]] — a material vital to containment technology and ancient starforges.
+- When refined through [[Solaran]] techniques, it produces [[Solaran Obsidian]] — a material vital to containment technology and ancient starforges.
 

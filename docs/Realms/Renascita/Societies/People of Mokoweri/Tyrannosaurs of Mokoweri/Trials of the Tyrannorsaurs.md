@@ -1,11 +1,11 @@
 
-"The Solarans were guardians of wisdom and keepers of balance. They valued harmony between the natural world and the power they harnessed. Can you truly embody these ideals?"
+"The [[Solaran|Solarans]] were guardians of wisdom and keepers of balance. They valued harmony between the natural world and the power they harnessed. Can you truly embody these ideals?"
 
-Titus regards them silently for a moment before nodding, his expression softened. "You have shown potential," he admits. "But the path to earning our trust is long and arduous. The trials you face will not be easy, but they will test your commitment to the Solaran ways."
+Titus regards them silently for a moment before nodding, his expression softened. "You have shown potential," he admits. "But the path to earning our trust is long and arduous. The trials you face will not be easy, but they will test your commitment to the [[Solaran]] ways."
 
 He steps back, giving them a nod of approval. "Prove yourselves in the trials, and perhaps you will earn the right to be considered allies of the Tyrannosaurs and guardians of the ancient ruins."
 
-With that, he turns and leads them deeper into the jungle, where the trials await. The players walk with determination, knowing that they carry the weight of their words and actions in the sacred lands of Mokoweri. They understand that the road ahead will challenge not only their magical prowess but also their hearts and souls, as they seek to prove themselves worthy of the Solaran legacy.
+With that, he turns and leads them deeper into the jungle, where the trials await. The players walk with determination, knowing that they carry the weight of their words and actions in the sacred lands of Mokoweri. They understand that the road ahead will challenge not only their magical prowess but also their hearts and souls, as they seek to prove themselves worthy of the [[Solaran]] legacy.
 
 
 ## Trial of Courage

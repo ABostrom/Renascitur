@@ -15,13 +15,13 @@ spoken-language: "[[Denisovan]]"
 # Saurians
 
 **Summary:**  
-The Saurians are a deeply spiritual, reptilian humanoid race engineered by the ancient [[Solarans]] to resist aberrant energy. They inhabit the jungles of [[docs/Races/Solarans/Variants/Mokoweri]], living in harmony with nature and their deity [[Irasandra]].
+The Saurians are a deeply spiritual, reptilian humanoid race engineered by the ancient [[Solarans]] to resist aberrant energy. They inhabit the jungles of [[Mokuun]], living in harmony with nature and their deity [[Irasandra]].
 
 ---
 
 ## Origins
 
-- Created by the Solarans as bio-engineered guardians against aberrant corruption.  
+- Created by the [[Solaran|Solarans]] as bio-engineered guardians against aberrant corruption.  
 - Distanced themselves from their creators to embrace nature and spirituality.
 
 ---
@@ -55,7 +55,7 @@ The Saurians are a deeply spiritual, reptilian humanoid race engineered by the a
 
 ## Notes
 
-- Their existence is vital to maintaining the balance on [[docs/Races/Solarans/Variants/Mokoweri]].  
+- Their existence is vital to maintaining the balance on [[Mokuun]].  
 - Their resilience and spiritual nature make them formidable guardians.
 
 ---

@@ -11,7 +11,7 @@ aat-language-family:
   - "[[Denisovan]]"
 aat-language-tier: derived
 spoken-by:
-  - "[[docs/Races/Solarans/Variants/Mokoweri]]"
+  - "[[Mokuun]]"
 ---
 
 # Mokoweran

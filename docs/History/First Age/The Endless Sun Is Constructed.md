@@ -5,4 +5,4 @@ timelines:
   - first-age
   - solaran
 ---
-In an attempt to stabilize the failing cosmic order, the Solarans construct the Endless Sun — an artificial star engineered to channel and regulate divine energy. It is their greatest creation, and their greatest mistake.
+In an attempt to stabilize the failing cosmic order, the [[Solaran|Solarans]] construct the Endless Sun — an artificial star engineered to channel and regulate divine energy. It is their greatest creation, and their greatest mistake.

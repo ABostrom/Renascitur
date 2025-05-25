@@ -26,7 +26,7 @@ spoken-by:
 
 - A tonal language with emphasis on breath control and pitch.
 - Used in ritual, oral traditions, and spiritual communication.
-- Variants include dialects spoken by orcs, leonin, and jungle tribes.
+- Variants include dialects spoken by [[Orc|orcs]], [[docs/Races/Kyojin/Leonin/Leonin|leonin]], and jungle tribes.
 
 ---
 

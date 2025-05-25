@@ -18,7 +18,7 @@ spoken-by:
 
 - Zytherin emphasizes **harsh consonants and guttural tones** interwoven with melodic vowel shifts.
 - It features an extensive system of **honorifics and ritualized phrasing** used in contracts, oaths, and magical incantations.
-- Spoken Zytherin is considered binding — words carry literal weight in Velastri culture.
+- Spoken Zytherin is considered binding — words carry literal weight in [[Velastri]] culture.
 - Written Zytherin employs the **Noxan script**, characterized by angular, flame-like glyphs etched into obsidian or soulglass.
 
 ---
@@ -26,7 +26,7 @@ spoken-by:
 ## Cultural Role
 
 - Used primarily in ceremonial, legal, and arcane contexts.
-- Velastri common folk may speak [[Thraysian Common|Thraysian]] for trade but revert to Zytherin in formal situations.
+- [[Velastri]] common folk may speak [[Thraysian Common|Thraysian]] for trade but revert to Zytherin in formal situations.
 - Magic and binding contracts are almost always performed in Zytherin.
 
 ---

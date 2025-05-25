@@ -20,7 +20,7 @@ Elyssan is the ancient and sacred root language of the [[Solaran]], the first ra
 
 - Elyssan is a **musical and structured language**, combining harmonic vowel sequences with precise consonantal articulation.
 - Its grammar is complex, featuring layers of meaning embedded in vocal intonation and subtle shifts in inflection.
-- While it is rarely spoken conversationally in the present age, Elyssan is still taught to scholars, magi, and the elite across Solaran-descended cultures.
+- While it is rarely spoken conversationally in the present age, Elyssan is still taught to scholars, magi, and the elite across [[Solaran]]-descended cultures.
 - Written Elyssan employs **elegant glyphs**, often inscribed with arcane runes to preserve meaning beyond simple phonetics.
 
 ---
@@ -35,7 +35,7 @@ Elyssan is the ancient and sacred root language of the [[Solaran]], the first ra
 ## Related Languages
 
 - Dialects derived from Elyssan include:
-  - [[Zytherin]] (Velastri dialect)
+  - [[Zytherin]] ([[Velastri]] dialect)
   - [[Serethi]] (Aerlai dialect)
 
 ---

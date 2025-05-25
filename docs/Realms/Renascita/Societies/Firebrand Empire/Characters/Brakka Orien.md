@@ -13,4 +13,4 @@ aliases: [Orien, Port Ardere Overseer]
 - [[Orc]]
 
 ## Description
-Commissar Brakka Orien is the appointed Overseer of [[Port Ardere]], a prominent orc noble and older sister of [[Kwanti Orien]]. They govern the city in service to the regional Imperator and maintain the delicate balance between imperial mandate and local power.
+Commissar Brakka Orien is the appointed Overseer of [[Port Ardere]], a prominent [[orc]] noble and older sister of [[Kwanti Orien]]. They govern the city in service to the regional Imperator and maintain the delicate balance between imperial mandate and local power.

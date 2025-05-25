@@ -6,4 +6,4 @@ timelines:
   - solaran
 ---
 
-The Solarans complete the [[Ab Solara]], allowing them to travel between worlds and map the leylines of the cosmos. Their golden age of celestial expansion begins.
+The [[Solaran|Solarans]] complete the [[Ab Solara]], allowing them to travel between worlds and map the leylines of the cosmos. Their golden age of celestial expansion begins.

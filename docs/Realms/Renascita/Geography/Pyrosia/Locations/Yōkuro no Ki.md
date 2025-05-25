@@ -2,7 +2,7 @@
 ---
 
  [[Yōkuro no Ki]] / [[Yunara]]  
-## The Kyojin World Tree – The Tree of Spirit  
+## The [[Kyojin]] World Tree – The Tree of Spirit  
 
 ### [[First Age]] Name: [[Yōkuro no Ki]] (*The Veilroot Tree*)  
 ### [[Third Age]] Name: [[Yunara]] (*The Verdant [[Soul]]*)  
