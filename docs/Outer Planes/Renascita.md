@@ -1,4 +1,0 @@
-The material plane - found at the centre of the [[Planes]] - a perfect balance of [[Luxar]] and [[Noxar]] forming [[Specular]] energy across the world. Night becomes day, day becomes night. Light and Dark can both exist and cease to exist in endless cycles. 
-[[Ordar]] and [[Chaor]] coexist to form [[Concorda]] which gives rise to systems that can be created and be reborn. Over and over again. 
-
-The Cycle of the universe continues on and on, and the material world of Renascitur lives and breaths through the cyclic nature of these four opposing laws of nature intersecting and driving each other through change and interwoven energy. 
