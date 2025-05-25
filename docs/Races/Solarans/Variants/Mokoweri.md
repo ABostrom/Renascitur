@@ -10,7 +10,7 @@ lineage:
   - "[[Solaran]]"
 origin-plane:
   - "[[Renascita]]"
-aat-race-tier: cultural variant
+aat-race-tier: variant
 spoken-language:
   - "[[Mokoweran]]"
   - "[[Imperial Common]]"

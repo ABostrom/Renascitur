@@ -1,11 +1,20 @@
 ---
-aliases: [Ferrun]
-tags: [race, cultural-variant, solarans, industrial]
-lineage: "[[Solaran]]"
-origin-plane: "[[Renascita]]"
-aat-race-tier: cultural variant
-spoken-language: 
-- "[[Thraysian Common]]"
+aliases:
+  - Ferrun
+tags:
+  - race
+  - cultural-variant
+  - solarans
+  - industrial
+lineage:
+  - "[[Solaran]]"
+origin-plane:
+  - "[[Renascita]]"
+aat-race-tier: variant
+spoken-language:
+  - "[[Thraysian Common]]"
+  - "[[Elyssan]]"
+  - "[[Dwarven]]"
 ---
 
 # Ferrun
