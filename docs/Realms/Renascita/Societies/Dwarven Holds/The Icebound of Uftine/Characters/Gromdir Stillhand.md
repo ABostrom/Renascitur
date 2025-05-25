@@ -4,7 +4,7 @@ aliases:
 ---
 ## Title: [[Icebound]] Thane of Uftine
 
-Gromdir Stillhand is the ruling figure of [[Uftine Humans]], known by his formal title as the **[[Icebound]] Thane** He is a dwarven elder of immense gravitas, bearing the mantle of silence, memory, and resilience passed down through generations of [[Icebound]] leadership. His skin is veined with frost, and his hands—unshaking, deliberate—move as though carved from the glacier itself.
+Gromdir Stillhand is the ruling figure of [[Uftine Human]], known by his formal title as the **[[Icebound]] Thane** He is a dwarven elder of immense gravitas, bearing the mantle of silence, memory, and resilience passed down through generations of [[Icebound]] leadership. His skin is veined with frost, and his hands—unshaking, deliberate—move as though carved from the glacier itself.
 
 ## Character
 Gromdir speaks rarely, but his words carry the weight of centuries. His leadership style reflects Uftine’s foundational principles: restraint, contemplation, and the eternal preservation of balance. He is not known for speeches, but for presence—his very stillness holds the city together.

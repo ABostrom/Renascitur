@@ -1,6 +1,9 @@
 ---
-aliases: [Ashen Plains]
-tags: [province, region]
+aliases:
+  - Ashen Plains
+tags:
+  - province
+  - region
 ---
 
 ## Overview

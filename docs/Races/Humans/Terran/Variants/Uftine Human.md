@@ -17,7 +17,7 @@ spoken-language:
 # Uftine Humans
 
 **Summary:**  
-The [[docs/Realms/Renascita/Locations and Cities/Arcturia/Cities/Uftine/Uftine|Uftine]] are hardy [[Terran|Terrans]] adapted to the frozen, harsh northern regions. They have developed thick builds and a resilience born of endless winters.
+The [[Uftine]] are hardy [[Terran|Terrans]] adapted to the frozen, harsh northern regions. They have developed thick builds and a resilience born of endless winters.
 
 ---
 

@@ -2,7 +2,7 @@
 Each dwarven city is descended from the ancient [[Grundthain]] and shaped by an elemental tradition tied unknowingly to a Great Elemental:
 
 - **[[Tidebound]]** of [[Draumhavn]] – Linked to [[Leviathan]]
-- **[[Icebound]]** of [[Uftine Humans]] – Linked to [[Zaratan]]
+- **[[Icebound]]** of [[Uftine Human]] – Linked to [[Zaratan]]
 - **[[Stormbound]]** of [[Thundrakar]]] – Linked to [[Tempus]]
 - **[[Flamebound]]** of [[Magnus’ Rest]] – Linked to [[Phenos]]
 

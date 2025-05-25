@@ -1,10 +1,10 @@
 ## Overview  
-[[Iceforging]] is the signature smithing tradition of the [[Icebound|Icebound Dwarves]] of [[Uftine Humans]], a slow and deliberate craft that uses **cold, pressure, and resonance** rather than flame. Where other [[Dwarf|dwarves]] strike with fire and fury, the [[Icebound]] whisper to the metal — teaching it to hold, endure, and remember.
+[[Iceforging]] is the signature smithing tradition of the [[Icebound|Icebound Dwarves]] of [[Uftine Human]], a slow and deliberate craft that uses **cold, pressure, and resonance** rather than flame. Where other [[Dwarf|dwarves]] strike with fire and fury, the [[Icebound]] whisper to the metal — teaching it to hold, endure, and remember.
 
 It is not about bending metal — it is about teaching it to be **still**.
 
 ## Origins  
-The art of Iceforging was born from necessity. With fire difficult to sustain in the glacial halls of [[Uftine Humans]], early smiths began to experiment with **pressure-hardening**, **cold-tempering**, and rune-etched freezing chambers. Over centuries, this developed into a unique and sacred form of metalwork.
+The art of Iceforging was born from necessity. With fire difficult to sustain in the glacial halls of [[Uftine Human]], early smiths began to experiment with **pressure-hardening**, **cold-tempering**, and rune-etched freezing chambers. Over centuries, this developed into a unique and sacred form of metalwork.
 
 The presence of [[The Pulsecore]] — the sealed fragment of [[Zaratan]] — imbues the region with elemental stability and resonance, further influencing the shaping process.
 

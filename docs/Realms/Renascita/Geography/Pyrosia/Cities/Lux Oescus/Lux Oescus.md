@@ -4,7 +4,7 @@ tags: [city, location]
 ---
 
 ## Province
-- [[The Ashen Plains]]
+- [[Ashen Plains]]
 
 ## Overseer
 - [[Rymelle Sivis]]

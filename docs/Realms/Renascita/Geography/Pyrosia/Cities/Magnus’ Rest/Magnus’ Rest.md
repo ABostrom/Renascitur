@@ -12,7 +12,7 @@
 
 [[Magnus’ Rest]] was the city founded by the god-forged hero [[Magnus]] shortly after the [[Psychic Schism]]. In the chaos that followed, he gathered a band of [[Dwarf|dwarves]], humans, and other refugees and led them into the volcanic mountains of southern [[Pyrosia]].
 
-There, beside a smouldering caldera of [[Mt. Earthspur]], [[Magnus]] and his [[Forge Clerics]] defended the entrance to the nascent city for **a thousand nights**, waging endless battle against the horrors of the night. When at last the final stones were laid and the forges lit, the gates were sealed—not in retreat, but in preparation.
+There, beside a smouldering caldera of [[Mount Earthspur]], [[Magnus]] and his [[Forge Clerics]] defended the entrance to the nascent city for **a thousand nights**, waging endless battle against the horrors of the night. When at last the final stones were laid and the forges lit, the gates were sealed—not in retreat, but in preparation.
 
 Magnus’ Rest became a **beacon of radiant fire**, an **enclave for all who fled the darkness**, in the days before the rise of the [[Firebrand Empire]] or the coming of the [[Unimus|Lightbringer]].
 

@@ -13,7 +13,7 @@ spoken-by:
   - "[[Kyojin]]"
   - "[[Orc]]"
   - "[[Leonin]]"
-  - "[[Mokoweri Humans|Mokoweri Humans]]"
+  - "[[Mokoweri Human|Mokoweri Humans]]"
 ---
 
 # Natsugen
