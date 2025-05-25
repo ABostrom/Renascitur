@@ -1,6 +1,6 @@
 # God of Death, The Anima Mea
 
-Vecna is a mysterious and enigmatic deity, worshipped by those who seek to understand the secrets of life and death. He is said to hold the power of the soul, able to manipulate and control the very essence of life itself.
+Vecna is a mysterious and enigmatic deity, worshipped by those who seek to understand the secrets of life and death. He is said to hold the power of the [[soul]], able to manipulate and control the very essence of life itself.
 
 Vecna was born as a human, centuries ago as a member of the untouchable caste in the Flan city of Fleeth on Oerth. He was initially trained by his mother, Mazzel, in the art of magic.
 He was naturally gifted in the ways of the arcane and in the ways of technology and alchemy.
@@ -16,7 +16,7 @@ He resides in the realm of [[Nihilum]]
 
 
 ## Binding [[Ishna]]
-During Vecna’s prime he became aware of the eldritch entity and the power he represented. The magician waged war on the god unborn and his eldritch aberrations. Realising the powers that he wielded, he turned to necromancy and engineering to construct an army of warforged and the undead. Afterall, these constructs were the only entities he couldn’t corrupt. 
+During Vecna’s prime he became aware of the eldritch entity and the power he represented. The magician waged war on [[Ishna|the god unborn]] and his eldritch [[aberrations]]. Realising the powers that he wielded, he turned to necromancy and engineering to construct an army of warforged and the undead. Afterall, these constructs were the only entities he couldn’t corrupt. 
 
-Still the army of flesh and steel wasn’t enough. Kas and Vecna fought over the proposed solutions and there fall to darkness. Eventually the Hexweave pylons were constructed and they bound the god unborn to the negative energy plane. 
+Still the army of flesh and steel wasn’t enough. Kas and Vecna fought over the proposed solutions and there fall to darkness. Eventually the Hexweave pylons were constructed and they bound [[Ishna|the god unborn]] to the negative energy plane. 
 

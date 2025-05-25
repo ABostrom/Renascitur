@@ -11,7 +11,7 @@ written-language: [[Dwarven Script]]
 # Stormbound Dwarves
 
 ## Overview  
-The [[Stormbound|Stormbound Dwarves]] are a proud and austere branch of dwarvenkind who dwell in [[Thundrakar]], the lightning-wreathed city carved into the heights and depths of the [[Stormspire]]. They are shaped — body and soul — by the unceasing storm that roars above and the sacred burden they carry: the **custodianship of the sealed fragment of [[Tempus]]**, the elemental god of storm and sky.
+The [[Stormbound|Stormbound Dwarves]] are a proud and austere branch of dwarvenkind who dwell in [[Thundrakar]], the lightning-wreathed city carved into the heights and depths of the [[Stormspire]]. They are shaped — body and [[soul]] — by the unceasing storm that roars above and the sacred burden they carry: the **custodianship of the sealed fragment of [[Tempus]]**, the elemental god of storm and sky.
 
 They are not merely miners or smiths.  
 They are **translators of thunder**, **scribes of lightning**, and **guardians of resonance**.
@@ -19,7 +19,7 @@ They are **translators of thunder**, **scribes of lightning**, and **guardians o
 ## Ancestry and Legacy  
 Descended from the ancient [[Grundthain]], the Stormbound are one of the four major dwarven clans — alongside the [[Tidebound]], [[Icebound]], and [[Flamebound]] — each of whom guards a piece of the broken world.
 
-Their elemental burden, sealed by [[Muradin]] in the First Age, has shaped their traditions, their craft, and their spirits. They alone dwell in the storm’s shadow — and **thrive within it**.
+Their elemental burden, sealed by [[Muradin]] in [[the First Age]], has shaped their traditions, their craft, and their spirits. They alone dwell in the storm’s shadow — and **thrive within it**.
 
 ## Society and Culture  
 Stormbound culture reveres harmony, resonance, and memory. Their great rituals are not shouted — they are **sung in tuning tones** that ripple through stone and sky. Their forges ring not just with hammer and anvil, but with the voice of the storm itself.

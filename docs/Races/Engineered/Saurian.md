@@ -64,7 +64,7 @@ Our pursuit of understanding the Saurians' remarkable resilience to aberrant ene
 
 In controlled exposure tests, we introduced Saurian specimens to concentrated aberrant energy sources. What we observed was nothing short of astounding. Unlike other living beings, the Saurians displayed an impressive ability to repel and neutralize the harmful effects of abberant energy.
 
-This resistance seems to be linked to their innate connection with the weave, as if the Saurians have a natural barrier that shields them from the aberrant forces seeking to corrupt their souls. This discovery holds immense promise, as it could potentially lead to the development of protective measures against abberant incursions in the future.
+This resistance seems to be linked to their innate connection with [[Weave|the weave]], as if the Saurians have a natural barrier that shields them from the aberrant forces seeking to corrupt their souls. This discovery holds immense promise, as it could potentially lead to the development of protective measures against abberant incursions in the future.
 
 However, it is crucial to proceed with caution. We must refrain from exploiting the Saurians' resilience for any destructive purposes. Their existence is deeply intertwined with the delicate balance of life on Mokoweri, and we must prioritize their preservation and well-being above all else.
 
@@ -80,7 +80,7 @@ While we have gained some insights into the Saurians' unique physiology and the 
 
 The weight of our actions in the name of scientific inquiry is becoming increasingly unbearable. We have reached a critical juncture in our research, where we must make difficult choices that will define our legacy.
 
-In our pursuit of knowledge and the development of protective measures against aberrant energy, we inadvertently subjected the Saurians to unspeakable suffering. Their innate resilience, a gift from nature and the weave, should not have come at the cost of their well-being and happiness.
+In our pursuit of knowledge and the development of protective measures against aberrant energy, we inadvertently subjected the Saurians to unspeakable suffering. Their innate resilience, a gift from nature and [[Weave|the weave]], should not have come at the cost of their well-being and happiness.
 
 It is with a heavy heart that I acknowledge our failure in this regard. Our experiments have demonstrated the potential dangers of scientific ambition devoid of compassion. From this moment forward, our priority must shift to the welfare and conservation of the Saurians, our living guardians of Mokoweri.
 

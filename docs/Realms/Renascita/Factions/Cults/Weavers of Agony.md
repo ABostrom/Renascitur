@@ -26,7 +26,7 @@ The cult was founded by [[Varkhaal Bloodlash]], a hobgoblin general who vanished
 
 ## Structure
 
-- **The First Fang**: Varkhaal the Broken-Jawed – prophet-general of the cult.
+- **The [[Varkhaal Bloodlash|First Fang]]**: Varkhaal the Broken-Jawed – prophet-general of the cult.
 - **Silkbound Seers**: Pain-prophets who channel [[Arachnie, the Matriarch of Pain]]’s will.
 - **Weaver-Knights**: Elite warriors with severed pain centers and ritual scars.
 - **Venomtouched**: Horrifically mutated cult champions.

@@ -1,4 +1,4 @@
-> *"The flame does not shape metal. It shapes the soul. The steel is just what survives the truth."*  
+> *"The flame does not shape metal. It shapes the [[soul]]. The steel is just what survives the truth."*  
 > — [[Maerra Vulkess]], High Devout of the [[Watch of the Dying Flame]]
 
 ---
@@ -41,10 +41,10 @@ Each creation is meant to endure—not just physically, but spiritually.
 Forged by [[Volgrin Flameward]] during the defense of the city. Said to burn brighter with each foe struck in defense of the innocent.
 
 ### [[Ashmantle]]
-A cloak of radiant mail that can turn psychic fire and reflect soul-sapping energies. Only worn by the High Devout.
+A cloak of radiant mail that can turn psychic fire and reflect [[soul]]-sapping energies. Only worn by the High Devout.
 
 ### [[The Sunforged Anvil]]
-A relic from the First Age. The only known anvil to **ring in harmony** with the Eternal Flame. No Radiant Forger may begin their work without touching it in prayer.
+A relic from [[the First Age]]. The only known anvil to **ring in harmony** with the Eternal Flame. No Radiant Forger may begin their work without touching it in prayer.
 
 ---
 

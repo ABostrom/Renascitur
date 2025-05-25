@@ -2,17 +2,17 @@
 **Nature**: The primal language of the cosmos  
 **Used By**: [[Aeternum]]  
 **Resulted In**: The Four Forces + Time  
-**Consequences**: The unintentional creation of [[Entropy]]  
+**Consequences**: The unintentional [[Creation Story]] of [[Entropy]]  
 **Tied To**: The foundation of [[Weave]]
 
 ---
 
 ## Overview
 
-The **Aetherglyphs** are the **first language**, predating stars, gods, and even the soul.  
+The **Aetherglyphs** are the **first language**, predating stars, gods, and even the [[soul]].  
 They are not symbols, but **functional constants**—conceptual runes that, when spoken or shaped, **define the behaviour of reality itself**.
 
-The **Aeternum**, beings beyond mortal comprehension, **transcribed** these glyphs at the dawn of existence.  
+The **[[Aeternum]]**, beings beyond mortal comprehension, **transcribed** these glyphs at the dawn of existence.  
 From that transcription came the **cosmic framework** that allows anything to exist, move, grow, or decay.
 
 ---
@@ -23,10 +23,10 @@ The Aetherglyphs gave rise to **five foundational functions** of the universe:
 
 | Function | Manifestation |
 |----------|----------------|
-| **Luxar** | Revelation, light, and clarity |
-| **Noxar** | Mystery, shadow, and depth |
-| **Ordar** | Structure, memory, and law |
-| **Chaor** | Motion, instinct, and change |
+| **[[Luxar]]** | Revelation, light, and clarity |
+| **[[Noxar]]** | Mystery, shadow, and depth |
+| **[[Ordar]]** | Structure, memory, and law |
+| **[[Chaor]]** | Motion, instinct, and change |
 | **Time**  | The constant that binds progression and sequence |
 
 > These five together form the **interwoven architecture** known as [[Weave]].
@@ -35,7 +35,7 @@ The Aetherglyphs gave rise to **five foundational functions** of the universe:
 
 ## The Birth of Entropy
 
-The **Aeternum did not foresee** what would happen when these five functions interacted across infinite contexts.
+The **[[Aeternum]] did not foresee** what would happen when these five functions interacted across infinite contexts.
 
 From the tension, recursion, and contradiction inherent in the system, something **unintended emerged**:
 - A **paradox** that does not obey form, flow, or opposition.
@@ -59,6 +59,6 @@ This is **[[Entropy]]**—the anti-pattern, the null response, the unraveling.
 ## In Magic
 
 - **Runes**, **sigils**, **divine tongues**, and even **mathematical spells** are all **fragments of Aetherglyph understanding**.
-- True Aetherglyphs cannot be wielded by mortals—**to comprehend one is to risk rewriting your soul**.
+- True Aetherglyphs cannot be wielded by mortals—**to comprehend one is to risk rewriting your [[soul]]**.
 - Some **artifact-level spells or relics** may contain partial transcriptions or **flawed reflections** of these glyphs, allowing glimpses into raw cosmic power.
 

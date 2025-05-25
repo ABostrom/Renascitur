@@ -14,13 +14,13 @@ aliases:
 
 That stranger was [[Magnus]].
 
-In the centuries since, Volgrin has become a **grizzled, enduring legend**—a master [[Radiant Forger]], living bulwark, and the only dwarf alive who remembers the founding of the city firsthand. He is **the soul of the Flamebound**, shaped not by birthright, but by fire, loss, and an unbreakable promise.
+In the centuries since, Volgrin has become a **grizzled, enduring legend**—a master [[Radiant Forger]], living bulwark, and the only dwarf alive who remembers the founding of the city firsthand. He is **the [[soul]] of the Flamebound**, shaped not by birthright, but by fire, loss, and an unbreakable promise.
 
 ---
 
 ## Origins
 
-Volgrin was born in the outer foothills of [[Pyrosia]], in a minor dwarven settlement erased entirely during the first wave of the Schism. When the aberrations struck, his home was consumed, his kin devoured or mind-broken.
+Volgrin was born in the outer foothills of [[Pyrosia]], in a minor dwarven settlement erased entirely during the first wave of the [[Psychic Schism|Schism]]. When the [[aberrations]] struck, his home was consumed, his kin devoured or mind-broken.
 
 He was found days later, trapped beneath scorched stone, his eyes burned raw from psychic light.
 

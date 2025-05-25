@@ -19,7 +19,7 @@ When struck, it rings like a choir of bells trapped in stone. When drawn, it she
 - Used to reinforce the bindings around the divine heart — not to seal, but to crown.
 
 ## Lore  
-[[Everburn Steel]] is more than a metal. It is **devotion made solid**, **radiance bound**, **purpose tempered**. It represents the perfect communion between dwarven craft and [[Solaran]] light—the echo of a covenant struck during the First Age.
+[[Everburn Steel]] is more than a metal. It is **devotion made solid**, **radiance bound**, **purpose tempered**. It represents the perfect communion between dwarven craft and [[Solaran]] light—the echo of a covenant struck during [[the First Age]].
 
 Where the other clans bind the remnants of broken elementals, the [[Flamebound]] do not seal — they **serve**. And [[Everburn Steel]] is the blade and burden of that service.
 

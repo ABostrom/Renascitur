@@ -25,7 +25,7 @@ Draumhavn is ruled like a fleet, not a kingdom.
 
 ### High Tide Admiral: [[Dagrin Thorne]]
 
-- Commands the city from the harbored warship _Leviathan’s Mercy_
+- Commands the city from the harbored warship _[[Leviathan]]’s Mercy_
 - Enforces the **Code of Salt**, etched in a coral slab in the harbor square
 
 Beneath him:

@@ -8,7 +8,7 @@
 
 ## Corruption
 - **Corruption Manifestation**:  
-    As Lord Syuul's corruption spreads, Vellara’s curiosity warps into obsession. Her intellectual pursuits begin to twist, and she seeks not just knowledge but total domination over it. This leads to increasingly invasive and unethical methods of gathering information, especially regarding the ancient secrets of the Solarans. At the same time, her charm and wit turn into dangerous tools of seduction and manipulation. She grows fascinated with Arthur, seeing him not as an ally but as an object of desire and control.
+    As [[Syuul, The Devourer|Lord Syuul]]'s corruption spreads, Vellara’s curiosity warps into obsession. Her intellectual pursuits begin to twist, and she seeks not just knowledge but total domination over it. This leads to increasingly invasive and unethical methods of gathering information, especially regarding the ancient secrets of the Solarans. At the same time, her charm and wit turn into dangerous tools of seduction and manipulation. She grows fascinated with Arthur, seeing him not as an ally but as an object of desire and control.
     
 - **Erratic Behavior**:  
     Vellara’s inquiries grow darker, and her once respectful pursuit of knowledge devolves into invasive questioning, manipulation, and dangerous experiments on the people of the island. Her charm turns predatory—she uses her allure to bend others to her will, with little regard for their autonomy. She becomes more reckless in her experimentation with ancient technology and magic, risking catastrophic consequences to satisfy her hunger for knowledge and power.

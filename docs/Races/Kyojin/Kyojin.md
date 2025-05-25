@@ -38,7 +38,7 @@ The Kyojin are a primal and spiritual race deeply connected to the cycles of lif
 
 ## Abilities
 
-- Natural attunement to spiritual magic and soul communication.  
+- Natural attunement to spiritual magic and [[soul]] communication.  
 - Skilled hunters, warriors, and spirit mediums.
 
 ---

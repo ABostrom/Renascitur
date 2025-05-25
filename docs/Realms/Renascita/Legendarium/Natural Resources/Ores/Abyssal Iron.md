@@ -12,6 +12,6 @@ Harvested from the deep veins beneath [[The Wakened Trench]], where the pressure
 
 ## Uses  
 - Reinforced plating in deep-sea diving suits and hulls.
-- Forged into ceremonial anchor-blades and soul-weights used in burial rites.
+- Forged into ceremonial anchor-blades and [[soul]]-weights used in burial rites.
 - Rarely made into weapons—those that are often whisper in dreams to their wielders.
 **

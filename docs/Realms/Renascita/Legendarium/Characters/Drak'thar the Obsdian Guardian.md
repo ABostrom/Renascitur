@@ -77,25 +77,25 @@ These lair actions reflect the dragon's control over its volcanic lair and its a
 
 
 ## Quote
-1. "Beware, mortals, for you have awakened the progenitor of madness, [[Lord Kyuul]]. With every step, his ancient tendrils reach into the depths of your minds, unraveling the very fabric of your sanity."
+1. "Beware, mortals, for you have awakened the progenitor of madness, [[Syuul, The Devourer]]. With every step, his ancient tendrils reach into the depths of your minds, unraveling the very fabric of your sanity."
     
-2. "In releasing Lord Kyuul, you have shattered the chains of time. His malevolent intellect spans millennia, a shadowy sentinel of secrets both forbidden and unforgiving."
+2. "In releasing [[Syuul, The Devourer]], you have shattered the chains of time. His malevolent intellect spans millennia, a shadowy sentinel of secrets both forbidden and unforgiving."
     
 3. "The first mind flayer, born of Solaran ambition and aberrant curiosity, has returned from the abyss of history. With his release, the echoes of madness reverberate through the ages."
     
-4. "Lord Kyuul, the living embodiment of Solaran folly, has been unshackled. His psychic dominion extends beyond your understanding, a dark legacy born of ancient experiments and hubris."
+4. "[[Syuul, The Devourer]], the living embodiment of Solaran folly, has been unshackled. His psychic dominion extends beyond your understanding, a dark legacy born of ancient experiments and hubris."
     
-5. "In unlocking the prison of Lord Kyuul, you have unleashed the quintessence of aberration upon this world. His insatiable hunger for knowledge and power knows no bounds."
+5. "In unlocking the prison of [[Syuul, The Devourer]], you have unleashed the quintessence of aberration upon this world. His insatiable hunger for knowledge and power knows no bounds."
     
-6. "From the depths of Solaran experimentation, Lord Kyuul emerges, a harbinger of eldritch terror. His return heralds an age of shadow and mind-bending horrors."
+6. "From the depths of Solaran experimentation, [[Syuul, The Devourer]] emerges, a harbinger of eldritch terror. His return heralds an age of shadow and mind-bending horrors."
     
-7. "As the seal shattered, Lord Kyuul's malevolence took form once more. He hungers not for flesh, but for the secrets hidden within your thoughts. Beware the mind flayer's ancient hunger."
+7. "As the seal shattered, [[Syuul, The Devourer]]'s malevolence took form once more. He hungers not for flesh, but for the secrets hidden within your thoughts. Beware the mind flayer's ancient hunger."
     
-8. "In releasing Lord Kyuul, you have rewritten the annals of fear. His psychic tendrils reach across the eons, probing for the essence of your very existence."
+8. "In releasing [[Syuul, The Devourer]], you have rewritten the annals of fear. His psychic tendrils reach across the eons, probing for the essence of your very existence."
     
-9. "The first mind flayer, the genesis of aberrant knowledge, now walks among you. Lord Kyuul's whispers echo through the corridors of time, promising revelations both forbidden and devastating."
+9. "The first mind flayer, the genesis of aberrant knowledge, now walks among you. [[Syuul, The Devourer]]'s whispers echo through the corridors of time, promising revelations both forbidden and devastating."
     
-10. "With Lord Kyuul's liberation, the line between reason and madness blurs. The Solarans' darkest experiment now hungers for the knowledge locked within your minds, and no thought is safe."
+10. "With [[Syuul, The Devourer]]'s liberation, the line between reason and madness blurs. The Solarans' darkest experiment now hungers for the knowledge locked within your minds, and no thought is safe."
 
 ## Battle Quotes
 1. "You tread upon grounds ancient and sacred, with minds as narrow as the paths you walk. Ignorance, it seems, is a choice you've made with great enthusiasm."

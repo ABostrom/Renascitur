@@ -20,5 +20,5 @@
 
 **Backstory**:
 
-- **Creation**: The Blood Kriss was created by a master blacksmith who sought to create the ultimate weapon. Obsessed with the purity of iron in blood, he sacrificed his own life in the forging process, imbuing the blade with a piece of his soul. The kriss was said to have been used in countless dark rituals and assassinations throughout history.
+- **Creation**: The Blood Kriss was created by a master blacksmith who sought to create the ultimate weapon. Obsessed with the purity of iron in blood, he sacrificed his own life in the forging process, imbuing the blade with a piece of his [[soul]]. The kriss was said to have been used in countless dark rituals and assassinations throughout history.
 - **Legacy**: The blade has passed through many hands, often leaving a trail of destruction in its wake. Few can wield it without succumbing to its bloodthirsty curse. Those who do often become feared assassins or warriors of unparalleled skill, but at the cost of their humanity.

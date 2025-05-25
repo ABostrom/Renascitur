@@ -24,7 +24,7 @@ Terran Humans are the widespread and adaptable peoples inhabiting the material w
 ## Appearance
 
 - Highly varied in height, skin tone, hair, and eye color.  
-- Physically resilient but less specialized than elder races.
+- Physically resilient but less specialized than [[elder races]].
 
 ---
 
@@ -51,7 +51,7 @@ Terran Humans are the widespread and adaptable peoples inhabiting the material w
 ## Notes
 
 - Known for shaping the geopolitical landscape of Renascitur.  
-- Often caught between elder races and aberrant threats.
+- Often caught between [[elder races]] and aberrant threats.
 
 ---
 

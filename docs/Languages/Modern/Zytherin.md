@@ -9,7 +9,7 @@ parent-language: [[Elyssan]]
 
 # Zytherin
 
-**Zytherin** is the **flame-forged dialect** of Elyssan spoken by the [[Velastri]], descendants of [[Solaran]] trapped and transformed by the harsh energies of [[Infernum]]. It reflects their fiery culture — sharp, rhythmic, and infused with the ritualistic complexity of their honor-bound society.
+**Zytherin** is the **flame-forged dialect** of [[Elyssan]] spoken by the [[Velastri]], descendants of [[Solaran]] trapped and transformed by the harsh energies of [[Infernum]]. It reflects their fiery culture — sharp, rhythmic, and infused with the ritualistic complexity of their honor-bound society.
 
 ---
 

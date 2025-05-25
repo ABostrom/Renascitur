@@ -1,4 +1,4 @@
-*Gateways of Light, Folded Weave, and Solaran Ambition*
+*Gateways of Light, Folded [[Weave]], and Solaran Ambition*
 
 ---
 
@@ -23,7 +23,7 @@ Most Ab Solara stations were housed within enclosed sanctums, watchtowers, or re
 
 ## Functionality  
 
-Activating an Ab Solara required vast amounts of magical energy and precise alignment of the Weave. Only trained [[Solartificers]] and gate-adepts could operate them safely.
+Activating an Ab Solara required vast amounts of magical energy and precise alignment of [[Weave|the Weave]]. Only trained [[Solartificers]] and gate-adepts could operate them safely.
 
 ### Primary Functions:
 
@@ -35,11 +35,11 @@ Activating an Ab Solara required vast amounts of magical energy and precise alig
 
 ## Risks and Side Effects  
 
-The power required to fold the Weave created a number of **arcane hazards**, particularly when poorly calibrated or corrupted:
+The power required to fold [[Weave|the Weave]] created a number of **arcane hazards**, particularly when poorly calibrated or corrupted:
 
-- **Weave Destabilization**: Prolonged gate use thins the local Weave, creating zones where magic functions erratically.
+- **[[Weave]] Destabilization**: Prolonged gate use thins the local [[Weave]], creating zones where magic functions erratically.
 - **Temporal Anomalies**: Rarely, travelers who take the “long path” through an unstable corridor may emerge **seconds, hours, or years** after they entered.
-- **Soul Flickering**: Improper transitions can cause the traveler’s soul-thread to desynchronize from their body. The Solarans developed countermeasures, but some experimental routes were deemed too dangerous to use regularly.
+- **[[Soul]] Flickering**: Improper transitions can cause the traveler’s [[soul]]-thread to desynchronize from their body. The Solarans developed countermeasures, but some experimental routes were deemed too dangerous to use regularly.
 
 Because of these dangers, **each Ab Solara was sacred**, regulated, and attuned to a precise set of destination harmonics. Unauthorized use was considered reckless and, in some cases, heretical.
 
@@ -50,7 +50,7 @@ Because of these dangers, **each Ab Solara was sacred**, regulated, and attuned 
 To the Solarans, the Ab Solara represented:
 
 - **A unifying force** across the empire, connecting cities, minds, and cultures
-- **A divine mirror** of the soul cycle: entering, folding, and emerging anew
+- **A divine mirror** of the [[soul]] cycle: entering, folding, and emerging anew
 - **A sacred trust**, powered by the essence of the sun itself
 
 After the fall of the [[Endless Sun]], many gates became dormant or unstable. Some still flicker with residual power—beckoning adventurers to forgotten places.
@@ -82,5 +82,5 @@ Today, the remaining Ab Solara structures are either:
 
 Their power is coveted. Their cost is often forgotten.
 
-> _“To travel the fold is to ask the Weave a question. One must be prepared for the answer.”_  
+> _“To travel the fold is to ask [[Weave|the Weave]] a question. One must be prepared for the answer.”_  
 > —Unknown Solartificer

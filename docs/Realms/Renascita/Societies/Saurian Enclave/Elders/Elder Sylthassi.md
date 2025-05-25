@@ -2,7 +2,7 @@
 
 **Appearance:** Elder Sylthassi is more diminutive than her counterparts, her scales a soft blue with a silvery luster. Her eyes are gentle but sharp, observing the world with a healer’s precision. She wears a simple tunic that flows like water, edged with silver threads that catch the light with every subtle movement, reflecting her connection to the healing waters of Aeloria.
 
-**Greeting:** She offers the players a warm, reassuring smile. "It is the heart's courage and the soul's compassion that truly tests us," she says softly. "May your tales today reflect not only valor but the wisdom of empathy and understanding."
+**Greeting:** She offers the players a warm, reassuring smile. "It is the heart's courage and the [[soul]]'s compassion that truly tests us," she says softly. "May your tales today reflect not only valor but the wisdom of empathy and understanding."
 
 
 ## Corruption

@@ -8,7 +8,7 @@ aliases: [ECI, Eclipsed Civilizations]
 
 ### Overview
 
-The Eclipsed Civilizations Initiative (ECI) at the Athenaeum of Arcane Arts and Sciences stands as a monumental endeavor aimed at uncovering and understanding the magic, culture, and history of ancient civilizations that have vanished into the annals of time. This interdisciplinary project bridges the gap between archaeology, anthropology, magical arts, and historical linguistics, casting light on societies whose contributions to magical and mundane knowledge have been obscured or lost.
+The Eclipsed Civilizations Initiative (ECI) at the [[Athenaeum of Arcane Arts and Sciences]] stands as a monumental endeavor aimed at uncovering and understanding the magic, culture, and history of ancient civilizations that have vanished into the annals of time. This interdisciplinary project bridges the gap between archaeology, anthropology, magical arts, and historical linguistics, casting light on societies whose contributions to magical and mundane knowledge have been obscured or lost.
 
 ### Goals and Objectives
 
@@ -26,12 +26,12 @@ The Eclipsed Civilizations Initiative (ECI) at the Athenaeum of Arcane Arts and 
 
 ### Notable Discoveries
 
-Under the guidance of Professor Arthur Denison, the ECI has already made groundbreaking discoveries, including:
+Under the guidance of Professor [[Arthur Denison]], the ECI has already made groundbreaking discoveries, including:
 
-- **The Sunken Archives of Thelassia:** A library of underwater ruins that housed texts combining elemental magic with architectural marvels, offering new insights into water-based magic.
-- **The Obsidian Obelisks of Keth:** A series of obelisks inscribed with a previously unknown magical script, believed to be a key to understanding the arcane energy manipulation techniques of the Keth civilization.
+- The Sunken Archives of [[Thelassia]] A library of underwater ruins that housed texts combining elemental magic with architectural marvels, offering new insights into water-based magic.
+- The [[Obsidian Obelisks of Keth]]: A series of obelisks inscribed with a previously unknown magical script, believed to be a key to understanding the arcane energy manipulation techniques of the Keth civilization.
 - **The Forgotten Pathways Network:** A network of ley lines and arcane waypoints used by a civilization for instantaneous travel across vast distances, potentially revolutionizing current understandings of spatial magic.
 
 ### Impact and Future Directions
 
-The Eclipsed Civilizations Initiative not only broadens the horizons of magical scholarship but also fosters a deeper appreciation for the diversity and complexity of ancient societies. By uncovering the secrets of the past, the Athenaeum of Arcane Arts and Sciences paves the way for future innovations in magic and deepens the connection between historical scholarship and practical arcane studies. The initiative continues to seek out new mysteries to unravel, driven by the belief that understanding the past is key to mastering the future.
+The Eclipsed Civilizations Initiative not only broadens the horizons of magical scholarship but also fosters a deeper appreciation for the diversity and complexity of ancient societies. By uncovering the secrets of the past, the [[Athenaeum of Arcane Arts and Sciences]] paves the way for future innovations in magic and deepens the connection between historical scholarship and practical arcane studies. The initiative continues to seek out new mysteries to unravel, driven by the belief that understanding the past is key to mastering the future.

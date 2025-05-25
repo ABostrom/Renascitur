@@ -11,15 +11,15 @@ written-language: [[Dwarven Script]]
 # Tidebound Dwarves
 
 ## Overview  
-The [[Tidebound|Tidebound Dwarves]] are the seafaring clan of dwarvenkind who dwell in the fortified island-city of [[Draumhavn]], nestled between the continents of [[Pyrosia]] and [[Qethusiyya]]. Hardened by salt, storm, and deepwater dread, they are guardians of the **Wakened Trench** — the bound wound of [[Leviathan]] sealed by [[Muradin]] in the First Age.
+The [[Tidebound|Tidebound Dwarves]] are the seafaring clan of dwarvenkind who dwell in the fortified island-city of [[Draumhavn]], nestled between the continents of [[Pyrosia]] and [[Qethusiyya]]. Hardened by salt, storm, and deepwater dread, they are guardians of the **Wakened Trench** — the bound wound of [[Leviathan]] sealed by [[Muradin]] in [[the First Age]].
 
 To the Tidebound, the sea is not a mystery — it is a memory.  
 They do not fear its hunger. They endure it.
 
 ## Ancestry and Legacy  
-Born of the same ancient [[Grundthain]] stock as the other dwarven clans, the Tidebound were the first to turn from the mountain and toward the ocean. Following Muradin’s path, they settled on the edge of the world to watch over what should never rise again.
+Born of the same ancient [[Grundthain]] stock as the other dwarven clans, the Tidebound were the first to turn from the mountain and toward the ocean. Following [[Muradin]]’s path, they settled on the edge of the world to watch over what should never rise again.
 
-It is said the **sea beneath Draumhavn remembers the First Age**, and that when the tide sings, the drowned voices of ancient horrors sing with it.
+It is said the **sea beneath Draumhavn remembers [[the First Age]]**, and that when the tide sings, the drowned voices of ancient horrors sing with it.
 
 ## Society and Culture  
 The Tidebound are pragmatic, ritualistic, and unyielding. They do not follow gods — they follow the **Creed**, an inherited code forged from necessity, silence, and survival. Their culture is oral, bound in oaths and salt-etched bone charms, rather than parchment.

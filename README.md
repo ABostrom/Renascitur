@@ -13,7 +13,7 @@ Welcome to **Renascitur**, a high-fantasy worldbuilding project years in the mak
 - 🌞 Lost Solarans and the ruined Endless Sun
 - 🧬 Bioengineered races like the Saurians
 - ⚙️ Rune magic and divine forges
-- 🕯️ Spirits trapped in the broken Machinery of Death
+- 🕯️ Spirits trapped in the broken [[Machinery of Death]]
 - 🛐 Mortal-born gods and aberrant horrors
 
 ---
@@ -29,7 +29,7 @@ Descendants of the Grundthain, divided into three major holds:
 All three are linked by a subterranean railway and allied with the Ferrun.
 
 ### ⚙️ Ferrun
-Descendants of the Solarans, embracing science and rune-smithing. Centered in **Thelassia**, they revere **Muradin** in his original Grundthain form and preserve the **Sanctuary of Iron**.
+Descendants of the Solarans, embracing science and rune-smithing. Centered in **Thelassia**, they revere **[[Muradin]]** in his original Grundthain form and preserve the **Sanctuary of Iron**.
 
 ### 🔥 Firebrand Empire
 A human empire. Ruled by an Emperor and **The Twelve Great Houses**, citizenship is earned through service. Anti-magic, yet technologically advanced. Society is divided between citizens and the oppressed **Stained** class. Massive **lux lapis** walls protect the empire from aberrant horrors.
@@ -41,7 +41,7 @@ Bio-engineered guardians of the island of Mokoweri, created by the Solarans to r
 Matriarchal desert nomads who sail living **Gaia-ships**, guided by visions and rites. Their society is spiritually rooted and structured around roles such as Dreamweavers, Grove Shapers, and Battle Sisters.
 
 ### 🐉 Kyojin
-Spiritual proto-orcs connected to the **Tree of Spirit**. First to discover and seal the **Machinery of Death**, they embody the cycle of life, death, and rebirth.
+Spiritual proto-orcs connected to the **Tree of Spirit**. First to discover and seal the **[[Machinery of Death]]**, they embody the cycle of life, death, and rebirth.
 
 ### 🌠 Solarans
 Ancient star-born race whose civilization fell after the corruption of the **Endless Sun**. Splintered into:
@@ -57,7 +57,7 @@ Based in **Eltabarr**, this elite arcane society is governed by the **Majlis of 
 Eltabarr is a beacon of magical power and political complexity.
 
 ### 🧠 Ilithids
-Corrupted Solarans twisted by aberrant energy during forbidden experimentation. Now aligned with **Ishna**, the God Unborn.
+Corrupted Solarans twisted by aberrant energy during forbidden experimentation. Now aligned with **[[Ishna]]**, [[Ishna|the God Unborn]].
 
 ---
 

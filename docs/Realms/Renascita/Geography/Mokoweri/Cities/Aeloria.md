@@ -39,9 +39,9 @@ Each of these locations within Aeloria plays a vital role in the life of the Sau
 # The Elders of Aeloria
 ![[82b7136b-20d5-4612-8e41-b8c46f8b43fa.webp]]
 
-- **Elder Thrasuun**: The de facto leader of the Council, Thrasuun is a formidable presence, known for his deep connection to the weave of magic and his unwavering commitment to the Saurian way of life. His scales bear the marks of ancient wisdom, and his eyes reflect the depth of his knowledge.
+- **Elder Thrasuun**: The de facto leader of the Council, Thrasuun is a formidable presence, known for his deep connection to [[Weave|the weave]] of magic and his unwavering commitment to the Saurian way of life. His scales bear the marks of ancient wisdom, and his eyes reflect the depth of his knowledge.
     
-- **Elder Sylthassi**: A master of herbalism and healing, Sylthassi oversees the Grove of Whispers and is revered for her unparalleled knowledge of the jungle’s medicinal resources. She is a gentle soul, with a fierce protectiveness for all living things.
+- **Elder Sylthassi**: A master of herbalism and healing, Sylthassi oversees the Grove of Whispers and is revered for her unparalleled knowledge of the jungle’s medicinal resources. She is a gentle [[soul]], with a fierce protectiveness for all living things.
     
 - **Elder Kirex**: The youngest of the current elders, Kirex is a brilliant strategist and warrior, responsible for the defense of Aeloria and the training of its guardians. His innovative tactics and prowess in combat have earned him respect among the Saurians.
     

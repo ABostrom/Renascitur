@@ -6,11 +6,11 @@ The Network served as the lifeline of Solara, an empire where magic and science 
 
 ### The Solaran Legacy
 
-The Solarans were visionaries, blending the laws of nature with the essence of magic to create a civilization that spanned continents and influenced realms. Their mastery allowed them to sculpt the landscape, bend the weave of magic to their will, and connect distant lands through the Forgotten Pathways Network. These pathways, marked by structures that defy simple magical classification, stand as monuments to a civilization that saw no boundaries between the forces of the universe.
+The Solarans were visionaries, blending the laws of nature with the essence of magic to create a civilization that spanned continents and influenced realms. Their mastery allowed them to sculpt the landscape, bend [[Weave|the weave]] of magic to their will, and connect distant lands through the Forgotten Pathways Network. These pathways, marked by structures that defy simple magical classification, stand as monuments to a civilization that saw no boundaries between the forces of the universe.
 
-### The Eclipsed Civilizations Initiative's Quest
+### The [[Eclipsed Civilisations Initiative|Eclipsed Civilizations]] Initiative's Quest
 
-The Eclipsed Civilizations Initiative, under the banner of the Athenaeum, has dedicated itself to uncovering the secrets of the Forgotten Pathways Network. Each expedition into the remnants of Solara's domain reveals the depth of their integration of magic and science. Artifacts and structures unearthed along the ley lines hint at technological advancements guided by magical principles, suggesting a symbiotic relationship between the two that modern scholars can only begin to grasp.
+The [[Eclipsed Civilisations Initiative|Eclipsed Civilizations]] Initiative, under the banner of the Athenaeum, has dedicated itself to uncovering the secrets of the Forgotten Pathways Network. Each expedition into the remnants of Solara's domain reveals the depth of their integration of magic and science. Artifacts and structures unearthed along the ley lines hint at technological advancements guided by magical principles, suggesting a symbiotic relationship between the two that modern scholars can only begin to grasp.
 
 ### Challenges and Revelations
 

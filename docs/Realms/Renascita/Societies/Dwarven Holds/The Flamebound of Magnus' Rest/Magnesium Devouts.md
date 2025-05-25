@@ -9,7 +9,7 @@ The **Magnesium Devouts** are the spiritual order of the [[Flamebound]] dwarves 
 
 Their creed is not one of dogma, but of duty:  
  - *Preserve the Eternal Flame.*  
- - *Refine the soul through hardship.*  
+ - *Refine the [[soul]] through hardship.*  
  - *Temper creation with truth.*  
 
 They oversee sacred rites, train Radiant Forgers, tend to the [[Everburn Forges]], and stand as the moral and mystical backbone of Flamebound society.
@@ -40,7 +40,7 @@ To the Devouts, magnesium is not just a material—it is a metaphor. Like their 
 - Oversee the [[Rite of Emberbinding]]  
 - Bless Radiant Forged creations and maintain the [[Sunforged Anvil]]  
 - Maintain flame-warded defenses against [[aberrations]] and [[Ishna]]’s corruptions  
-- Lead soul-cleansing rites for trauma-scarred warriors  
+- Lead [[soul]]-cleansing rites for trauma-scarred warriors  
 - Compose and sing canticles from the [[Tome of Thousand Nights]]
 
 ---

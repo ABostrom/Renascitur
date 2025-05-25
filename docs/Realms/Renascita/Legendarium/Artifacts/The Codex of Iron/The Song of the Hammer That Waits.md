@@ -6,16 +6,16 @@ _Carved at the twilight of Runehart, when all was nearly lost_
 
 The forge dimmed. The flame whispered.
 
-Muradin stood alone in the deep,  
+[[Muradin]] stood alone in the deep,  
 his hand upon the Anvil of Eternity,  
 his mind adrift among futures yet to come.
 
 He saw the echo of his name in a child not yet born.  
-A soul shaped not by stone, but by sorrow.  
+A [[soul]] shaped not by stone, but by sorrow.  
 An heir who would forget the forge,  
 and only by breaking it, learn its truth.
 
-To this heir, Muradin left no command.  
+To this heir, [[Muradin]] left no command.  
 Only the Codex. Only the song.
 
 Three songs for three ages.

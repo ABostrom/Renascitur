@@ -1,4 +1,4 @@
-In the heart of the magical city of Eltabarr, amidst its blend of cultures and the humming of arcane energies, stands the Athenaeum of Arcane Arts and Sciences. This illustrious institution is a cornerstone of the city's identity, a beacon of knowledge and magical prowess where the future of arcane research and the preservation of ancient wisdom converge under one expansive roof.
+In the heart of the magical city of [[Eltabarr]], amidst its blend of cultures and the humming of arcane energies, stands the Athenaeum of Arcane Arts and Sciences. This illustrious institution is a cornerstone of the city's identity, a beacon of knowledge and magical prowess where the future of arcane research and the preservation of ancient wisdom converge under one expansive roof.
 
 ### The Athenaeum's Structure
 
@@ -8,31 +8,31 @@ The university is divided into several faculties, each dedicated to a different 
 
 ### The Professors and Scholars
 
-The Athenaeum's faculty is as diverse as the city itself, comprising Elves, Tieflings, Humans, and more, each a master in their field. These professors are not just teachers but active practitioners of magic, contributing to Eltabarr's wealth of knowledge and defense.
+The Athenaeum's faculty is as diverse as the city itself, comprising [[Arcanii]], [[Velastri]], [[Terran|Terrans]]. These professors are not just teachers but active practitioners of magic, contributing to [[Eltabarr]]'s wealth of knowledge and defense.
 
-Among them is Mage Arthur Denison, a figure of renown within the Athenaeum's hallowed halls. As a Scribe and Scholar of the Ancient World, Arthur's expertise lies in the deciphering of ancient texts and the uncovering of lost civilizations. His office is a treasure trove of scrolls, books, and artifacts gathered from his extensive travels and excavations.
+Among them is Mage [[Arthur Denison]], a figure of renown within the Athenaeum's hallowed halls. As a Scribe and Scholar of the Ancient World, Arthur's expertise lies in the deciphering of ancient texts and the uncovering of lost civilizations. His office is a treasure trove of scrolls, books, and artifacts gathered from his extensive travels and excavations.
 
 ### Mage Arthur Denison's Role
 
-[[Arthur Denison]] embodies the spirit of exploration and curiosity that drives the Athenaeum. His work has led to groundbreaking discoveries about the ancient world, shedding light on forgotten magic and civilizations that once flourished across Thraysia. His lectures are a blend of storytelling and scholarly insight, captivating both his students and his peers.
+[[Arthur Denison]] embodies the spirit of exploration and curiosity that drives the Athenaeum. His work has led to groundbreaking discoveries about the ancient world, shedding light on forgotten magic and civilizations that once flourished across [[Thraysia]]. His lectures are a blend of storytelling and scholarly insight, captivating both his students and his peers.
 
 Arthur also oversees the Athenaeum's Archive of the Ancients, a vast collection of historical documents and magical artifacts. Under his guidance, students embark on journeys of discovery, learning to unravel the mysteries of the past to better understand the present and shape the future.
 
 ### The Athenaeum's Influence
 
-The Athenaeum of Arcane Arts and Sciences is more than an educational institution; it is a place of unity and discovery. Here, the next generation of mages, scholars, and inventors is nurtured, their talents honed for the betterment of Eltabarr and the wider world. The university's open exchange of ideas and its commitment to the preservation of knowledge make it a pivotal institution in the magical and academic realms.
+The Athenaeum of Arcane Arts and Sciences is more than an educational institution; it is a place of unity and discovery. Here, the next generation of mages, scholars, and inventors is nurtured, their talents honed for the betterment of [[Eltabarr]] and the wider world. The university's open exchange of ideas and its commitment to the preservation of knowledge make it a pivotal institution in the magical and academic realms.
 
-Through the efforts of individuals like Mage Arthur Denison, the Athenaeum continues to push the boundaries of what is known, ensuring that the magical and historical heritage of Thraysia and beyond is not only preserved but also expanded. In the ever-evolving city of Eltabarr, the Athenaeum stands as a testament to the power of knowledge and the unending quest for understanding that defines the magical community.
+Through the efforts of individuals like Mage Arthur Denison, the Athenaeum continues to push the boundaries of what is known, ensuring that the magical and historical heritage of [[Thraysia]] and beyond is not only preserved but also expanded. In the ever-evolving city of [[Eltabarr]], the Athenaeum stands as a testament to the power of knowledge and the unending quest for understanding that defines the magical community.
 
 # The Athenaeum's Research Initiatives
 
 The Athenaeum is also home to several cutting-edge research initiatives, including:
 
-- **The Ley Line Project:** Led by a team of multidisciplinary scholars, this project aims to map the ley lines of Thraysia, seeking to understand their impact on magic and the environment.
+- **The Ley Line Project:** Led by a team of multidisciplinary scholars, this project aims to map the ley lines of [[Thraysia]], seeking to understand their impact on magic and the environment.
 - **The Arcane Ethnography Collective:** This initiative studies the diverse magical practices and beliefs across different cultures, promoting a deeper understanding of magic's role in society.
 - **The Magical Flora Conservatory:** A botanical garden and research facility dedicated to the study and preservation of magical plants, some of which are the last of their kind.
 
-Through the efforts of its distinguished professors and their innovative courses and research, the Athenaeum of Arcane Arts and Sciences continues to push the boundaries of magical knowledge, shaping the future of Eltabarr and the wider world of Thraysia.
+Through the efforts of its distinguished professors and their innovative courses and research, the Athenaeum of Arcane Arts and Sciences continues to push the boundaries of magical knowledge, shaping the future of [[Eltabarr]] and the wider world of [[Thraysia]].
 # Staff
 
 ### Professor Lireal Silverwind
@@ -55,7 +55,7 @@ Through the efforts of its distinguished professors and their innovative courses
 
 **Specialization:** Divination and Temporal Magics
 
-**Courses:** "The Weave of Fate: An Introduction to Divination," "Manipulating Time: Ethics and Techniques"
+**Courses:** "[[Weave|The Weave]] of Fate: An Introduction to Divination," "Manipulating Time: Ethics and Techniques"
 
 **Research:** Professor al-Rashid's research delves into the ethical implications and practical applications of temporal magic. He is known for his cautious approach to time manipulation, advocating for its use in historical research rather than alteration of events.
 
@@ -65,7 +65,7 @@ Through the efforts of its distinguished professors and their innovative courses
 
 **Courses:** "Alchemy: The Science of Transformation," "Mastering Potions: From Healing to Harm"
 
-**Research:** With a keen interest in the transformative powers of alchemy, Professor van Draak explores the creation of potions that can enhance magical abilities, cure diseases, and even extend life. Her most notable work involves the development of a universal antidote.
+**Research:** With a keen interest in the transformative powers of alchemy, Professor van Draak explores the [[Creation Story]] of potions that can enhance magical abilities, cure diseases, and even extend life. Her most notable work involves the development of a universal antidote.
 
 ### Professor Arthur Denison
 

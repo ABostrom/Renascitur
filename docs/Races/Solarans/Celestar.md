@@ -17,7 +17,7 @@ The Celestar, are a distinct race evolved from [[Solaran|Solarans]]. Known for t
 
 ## Origins
 
-- Diverged from [[Solaran|Solarans]] during the First Age to embrace pure celestial magic.  
+- Diverged from [[Solaran|Solarans]] during [[the First Age]] to embrace pure celestial magic.  
 - Known for their flame-forged dialect, [[Zytherin|Zytherin]].
 
 ---

@@ -2,7 +2,7 @@
 **Opposes**: [[Noxar]]  
 **Domain**: Radiance, clarity, celestial purpose  
 **Associated Races**: [[Solaran|Solarans]]  
-**Place in the Weave**: One of the four cosmic forces that sustain reality.
+**Place in [[Weave|the Weave]]**: One of the four cosmic forces that sustain reality.
 
 ---
 

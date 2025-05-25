@@ -1,9 +1,18 @@
 ---
-aliases: [Titanic, Ceremonial Karathic]
-tags: [language, titanic, derived]
-aat-language-family: [[Karathic]]
+aliases:
+  - Titanic
+  - Ceremonial
+  - Karathic
+tags:
+  - language
+  - titanic
+  - derived
+aat-language-family:
+  - "[[Karathic]]"
 aat-language-tier: derived
-spoken-by: [[Varkuun]], [[Goliaths]]
+spoken-by:
+  - "[[Varkuun]]"
+  - "[[Goliath]]"
 ---
 
 # Titanic

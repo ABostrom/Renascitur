@@ -43,7 +43,7 @@ The Solarans are an ancient and advanced civilization deeply connected to celest
 
 - Innate affinity for sunlight and celestial magic.  
 - Mastery over arcane arts and advanced bioengineering.  
-- Spiritual attunement to the weave and cosmic forces.
+- Spiritual attunement to [[Weave|the weave]] and cosmic forces.
 
 ---
 

@@ -6,7 +6,7 @@ To stormforge is not to bend the storm to your will — it is to strike in time 
 ## Origins  
 The art of [[Stormforging]] was born in the vaulted ruins that would become the [[Great Forge of Ormr]], once the lair of the ancient bronze dragon [[Ormr]]. The dragon’s breath once carved the stone — now lightning dances where he once slept.
 
-Muradin himself is said to have struck the first runes into lightning-tempered steel here during his pilgrimage through the elemental planes.
+[[Muradin]] himself is said to have struck the first runes into lightning-tempered steel here during his pilgrimage through the elemental planes.
 
 ## The Process  
 The stormforge is a carefully tuned chamber open to the sky, built around lightning pylons and **resonance amplifiers** crafted from [[Storm Quartz]]. As the storm gathers above the [[Stormspire]], energy is drawn through runes and focused into the forge itself.

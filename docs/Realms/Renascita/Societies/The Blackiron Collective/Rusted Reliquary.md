@@ -7,8 +7,8 @@ The obsidian tablet, standing nearly ten feet tall and polished to a mirror-like
 - **Text**: Written in elegant Solaran script, this section speaks of the Solarans’ mastery over the trifecta of **Arcane**, **Science**, and **Nature**. It extols their creation of wonders, including the Endless Sun, their spacefaring vessels, and their harmonious society.
 - **Carvings**: Depictions of celestial cities suspended in starlight, massive crystalline structures harnessing the energy of the sun, and Solarans clad in flowing robes working in unity.
 
-## The Fall of the Endless Sun
-- **Text**: This panel describes the corruption of the Endless Sun by **Ishna**, the God Unborn, and the devastating psychic schism that shattered their civilization. The words describe the Solarans’ desperate attempts to flee their dying world, their sacrifices, and their ultimate descent into the darkness below.
+## [[The Fall of the Endless Sun]]
+- **Text**: This panel describes the corruption of the Endless Sun by **[[Ishna]]**, [[Ishna|the God Unborn]], and the devastating [[psychic schism]] that shattered their civilization. The words describe the Solarans’ desperate attempts to flee their dying world, their sacrifices, and their ultimate descent into the darkness below.
 - **Carvings**: The Endless Sun, darkened and cracked, radiates chaotic energy. Beneath it, Solarans flee into the void, their figures transformed by grief and desperation. Tendrils of aberrant corruption snake through the image.
 
 ## The Rise of the Ferrun

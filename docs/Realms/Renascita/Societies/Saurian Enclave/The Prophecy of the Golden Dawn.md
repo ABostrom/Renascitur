@@ -34,7 +34,7 @@ In the shadowed canopy of Aeloria and the whispered prayers of its inhabitants, 
 
 When night's shadow, thick and bold,  
 Creeps and chills the heart of the world,  
-When the weave of magic frays,  
+When [[Weave|the weave]] of magic frays,  
 And hope dims like the end of days,
 
 In this hour of world's deep plight,  

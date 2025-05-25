@@ -4,15 +4,15 @@ aliases:
 ---
 ## Overview
 
-Beneath the glacial city of [[docs/Races/Humans/Terran/Variants/Uftine]] lies a place of ancient silence and terrible weight: **The Pulsecore**. Carved into the ice-veined bedrock of the mountain itself, it is both a vault and a warning—a chamber where the dwarves unknowingly keep vigil over the fractured soul of a god.
+Beneath the glacial city of [[docs/Races/Humans/Terran/Variants/Uftine]] lies a place of ancient silence and terrible weight: **The Pulsecore**. Carved into the ice-veined bedrock of the mountain itself, it is both a vault and a warning—a chamber where the dwarves unknowingly keep vigil over the fractured [[soul]] of a god.
 
   
 
 The Pulsecore is not open to the public. Its existence is known only to the [[Gromdir Stillhand|Icebound Thane]], the [[Fracturecast]], and the sworn [[Icebound Sentinels]]. Even among them, few have ever stood in its presence. Those who have report the sensation of a heartbeat in the stone.
 
-## The Bound Fragment of Zaratan
+## The Bound Fragment of [[Zaratan]]
 
-Entombed within the Pulsecore is a corrupted progeny of [[Zaratan]], the Great Elemental of Stone. During the twilight of the First Age, this shard was cut from Zaratan’s essence by [[Muradin]] after it was twisted by [[Ishna]]’s influence.
+Entombed within the Pulsecore is a corrupted progeny of [[Zaratan]], the Great Elemental of Stone. During the twilight of [[the First Age]], this shard was cut from [[Zaratan]]’s essence by [[Muradin]] after it was twisted by [[Ishna]]’s influence.
 
 
 - It is no longer a creature, but a mass of silent pressure and broken memory.

@@ -7,4 +7,4 @@ timelines:
   - solaran
 ---
 
-Born from the aberrant fusion of a divine soul and star-forged flesh, [[Syuul, The Devourer|Lord Syuul]] becomes the first of the true God Hand—a being of entropy and godhood.
+Born from the aberrant fusion of a [[divine soul]] and star-forged flesh, [[Syuul, The Devourer|Lord Syuul]] becomes the first of the true [[Quintumvirate|God Hand]]—a being of entropy and godhood.

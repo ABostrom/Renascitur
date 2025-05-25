@@ -1,16 +1,16 @@
 ## Overview  
-The [[Great Forge of Ormr]] is the sacred heart of [[Thundrakar]], the soul-ember of the [[Stormbound]] dwarves, and the only known place in the world where **true [[Stormforging]]** can occur.
+The [[Great Forge of Ormr]] is the sacred heart of [[Thundrakar]], the [[soul]]-ember of the [[Stormbound]] dwarves, and the only known place in the world where **true [[Stormforging]]** can occur.
 
 It is carved deep into the upper roots of the [[Stormspire]], and was once the lair of the ancient bronze dragon [[Ormr]] — a being of storm-breath and skyborn wisdom.
 
 ## The Dragon’s Legacy  
 [[Ormr]] was not slain. He vanished.
 
-Legends say he carved this hollow with his claws and wings, shaping a chamber that breathed the sky into stone. When Muradin walked the elemental planes, he met Ormr and was shown the power of resonance — the voice of the storm.
+Legends say he carved this hollow with his claws and wings, shaping a chamber that breathed the sky into stone. When [[Muradin]] walked the elemental planes, he met Ormr and was shown the power of resonance — the voice of the storm.
 
 When the dragon vanished, the dwarves of Thundrakar turned his lair into a forge. His bones were never found, but the anvil rests where his heart once beat.
 
-> “It is said the lightning that strikes the forge is not from the sky — but from Ormr’s soul.”
+> “It is said the lightning that strikes the forge is not from the sky — but from Ormr’s [[soul]].”
 
 ## Architecture  
 The Forge is open to the sky through a wide, rune-etched chasm. **Lightning strikes directly into the forge’s heart**, guided by engraved pylons and resonant tuning towers. The walls shimmer faintly with static energy, and the stone itself hums with stormsong.

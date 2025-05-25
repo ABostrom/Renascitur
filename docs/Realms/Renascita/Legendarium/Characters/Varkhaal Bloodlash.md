@@ -28,4 +28,4 @@ Varkhaal is equal parts warlord, prophet, and martyr. His body is ravaged by sel
 
 ## Legends & Prophecies
 
-- It is said Varkhaal will one day weave himself into a great chrysalis and emerge as Arachnie’s true son, birthing the next age of sacred suffering.
+- It is said Varkhaal will one day [[weave]] himself into a great chrysalis and emerge as Arachnie’s true son, birthing the next age of sacred suffering.

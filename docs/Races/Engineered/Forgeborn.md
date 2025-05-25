@@ -11,13 +11,13 @@ written-language: Arcanometric Script (written-only)
 # Forgeborn
 
 **Summary:**  
-The Forgeborn are souldbound constructs created by [[Vecna]] in the Second Age, forged by binding souls into mechanical bodies powered by dark magic and arcane technology. Their mission is to eradicate entropy and aberrations from the multiverse.
+The Forgeborn are souldbound constructs created by [[Vecna]] in [[the Second Age]], forged by binding souls into mechanical bodies powered by dark magic and arcane technology. Their mission is to eradicate entropy and [[aberrations]] from the multiverse.
 
 ---
 
 ## Origins
 
-- Created by [[Vecna]] from his son [[Hephaestus]]’s soul, becoming the Forgeborn Prime.  
+- Created by [[Vecna]] from his son [[Hephaestus]]’s [[soul]], becoming the Forgeborn Prime.  
 - Mass-produced during the [[Forge Wars]] as unstoppable legions.
 
 ---

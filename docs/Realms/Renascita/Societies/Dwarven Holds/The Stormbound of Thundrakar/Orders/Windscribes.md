@@ -22,6 +22,6 @@ Windscribes wear cloaks sewn from **storm-felt**, a specially treated fabric tha
 Many carry **storm journals**, encoded with runes only audible when held during a thunderclap.
 
 ## Beliefs  
-The Windscribes believe that the storm **does not forget**. Every lightning strike is a word. Every echo is a name. They consider their work a sacred responsibility to ensure that nothing Tempus remembers is ever lost.
+The Windscribes believe that the storm **does not forget**. Every lightning strike is a word. Every echo is a name. They consider their work a sacred responsibility to ensure that nothing [[Tempus]] remembers is ever lost.
 
 > “The sky speaks. We do not translate it — we transcribe its truth.”

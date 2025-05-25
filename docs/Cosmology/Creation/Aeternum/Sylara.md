@@ -1,7 +1,7 @@
-# [[Sylara]], The Verdant Soul
+# [[Sylara]], The Verdant [[Soul]]
 
 ## Overview
-[[Sylara]] is the cosmic force of life, growth, and the interwoven spirit of nature. Known as the Verdant Soul, [[Sylara]] shaped the great forests, the rivers, and the interconnected web of all living things.
+[[Sylara]] is the cosmic force of life, growth, and the interwoven spirit of nature. Known as the Verdant [[Soul]], [[Sylara]] shaped the great forests, the rivers, and the interconnected web of all living things.
 
 She is the great weaver, the spirit of balance and renewal. In her presence, all things grow, decay, and return to the earth to begin anew.
 
@@ -20,7 +20,7 @@ She is the great weaver, the spirit of balance and renewal. In her presence, all
 - [[Valtor]] ensured that life would never stagnate, introducing migration, storms, and adaptation.
 
 ## The Flaw of [[Ishna]]
-To [[Sylara]], [[Ishna]] is a wound in the cycle, a rot that prevents [[Soul]]s from moving forward. The corruption of [[souls]] into aberrations is an abomination that disrupts the natural flow of existence.
+To [[Sylara]], [[Ishna]] is a wound in the cycle, a rot that prevents [[Soul]]s from moving forward. The corruption of [[souls]] into [[aberrations]] is an abomination that disrupts the natural flow of existence.
 
 ## Worship and Legacy
 Among the [[Kyojin]], [[Sylara]] is revered as the Spirit Weaver and the Keeper of the Cycle. Her teachings are passed down through the [[Verdant Sutras]], written in [[Natsugen]], the whispering language of nature itself.

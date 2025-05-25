@@ -1,7 +1,7 @@
 ---
 aliases: [Mokoweran, Hybrid Solaran-Saurian]
 tags: [language, mokoweran, derived]
-aat-language-family: [[Elyssan]], [[Denisovan]]
+aat-language-family: Elyssan Denisovan
 aat-language-tier: derived
 spoken-by: [[Mokoweri]]
 ---

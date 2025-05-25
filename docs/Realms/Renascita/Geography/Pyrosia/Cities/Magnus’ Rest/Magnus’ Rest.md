@@ -26,7 +26,7 @@ Magnus’ Rest became a **beacon of radiant fire**, an **enclave for all who fle
 
 ## Cultural Themes – The [[Flamebound]] Dwarves
 
-The dwarves of Magnus’ Rest are known as the **[[Flamebound]]**, and they live by the creed of **rebirth through fire**. Fire is more than a tool—it is a crucible of the soul. Through radiant heat, they believe that all things are tested, all weakness burned away.
+The dwarves of Magnus’ Rest are known as the **[[Flamebound]]**, and they live by the creed of **rebirth through fire**. Fire is more than a tool—it is a crucible of the [[soul]]. Through radiant heat, they believe that all things are tested, all weakness burned away.
 
 They revere [[Magnus]] not only as a divine protector but as the living embodiment of radiant defiance. His doctrine, passed down through the [[Magnesium Devouts]], teaches that in the face of overwhelming night, the only righteous answer is to burn brighter.
 
@@ -69,13 +69,13 @@ Magnus’ Rest is ruled by the **[[Volgrin Flameward|High Pyrethane]]**, a title
 
 ## The [[Eternal Flame]]
 
-At the heart of Magnus’ Rest burns the [[Eternal Flame]]—a living fire unlike any other. Its light never dims. Its heat never fades. It is the bound essence of [[Phenos]], the Great Elemental of Flame and Renewal, sealed beneath the caldera in the waning days of the First Age.
+At the heart of Magnus’ Rest burns the [[Eternal Flame]]—a living fire unlike any other. Its light never dims. Its heat never fades. It is the bound essence of [[Phenos]], the Great Elemental of Flame and Renewal, sealed beneath the caldera in the waning days of [[the First Age]].
 
-It was [[Muradin]], god of craft and sacrifice, who bound [[Phenos]]—not out of fear or hatred, but out of **love and foresight**. Muradin saw what had become of the other Elemental Kin—[[Zaratan]], [[Tempus]], and [[Leviathan]]—each falling prey to the creeping entropy of [[Ishna]]. Their primal forms twisted into monstrous echoes of themselves.
+It was [[Muradin]], god of craft and sacrifice, who bound [[Phenos]]—not out of fear or hatred, but out of **love and foresight**. [[Muradin]] saw what had become of the other Elemental Kin—[[Zaratan]], [[Tempus]], and [[Leviathan]]—each falling prey to the creeping entropy of [[Ishna]]. Their primal forms twisted into monstrous echoes of themselves.
 
 [[Muradin]] could not allow the same fate to befall [[Phenos]].
 
-So, in an act of divine mercy, he **bound Phenos’ essence in radiant runes**, forging a sanctuary deep in the earth where the flame could burn eternally—untouched by corruption, watched over by those who still remembered what it meant to kindle hope.
+So, in an act of divine mercy, he **bound [[Phenos]]’ essence in radiant runes**, forging a sanctuary deep in the earth where the flame could burn eternally—untouched by corruption, watched over by those who still remembered what it meant to kindle hope.
 
 Millennia later, in the chaos following the [[Psychic Schism]], it was the dying will of [[Muradin]] that guided [[Magnus]] to that place. There, Magnus raised a city atop the seal, vowing to guard the flame until the world was ready for its light once more.
 
@@ -104,7 +104,7 @@ Radiant-forged weapons and armor:
 
 Some relics of the First Flame, like the [[Sunforged Anvil]] and the sacred **Everburn Blades**, are considered holy objects, believed to carry echoes of [[Muradin]] and [[Magnus]]’ divine intent.
 
-> "The flame does not shape metal. It shapes the soul. The steel is just what survives the truth."  
+> "The flame does not shape metal. It shapes the [[soul]]. The steel is just what survives the truth."  
 > — [[Maerra Vulkess]], High Devout of the [[Watch of the Dying Flame]]
 
 ---

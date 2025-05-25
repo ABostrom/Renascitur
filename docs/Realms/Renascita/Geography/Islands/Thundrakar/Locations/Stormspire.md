@@ -1,12 +1,12 @@
 ## Overview  
-The [[Stormspire]] is the tallest mountain in the known world — a jagged, sky-piercing peak crowned by an **eternal storm**. It is the spiritual and elemental axis of the [[Stormbound]] dwarves, and the place where [[Muradin]] sealed the fragment of the storm god [[Tempus]] during the First Age.
+The [[Stormspire]] is the tallest mountain in the known world — a jagged, sky-piercing peak crowned by an **eternal storm**. It is the spiritual and elemental axis of the [[Stormbound]] dwarves, and the place where [[Muradin]] sealed the fragment of the storm god [[Tempus]] during [[the First Age]].
 
 The storm above has not ceased since the sealing. It never sleeps, never stills. The spire is not just a mountain — it is a **living pylon**, a conduit for divine rage, memory, and skyfire.
 
 ## Elemental Seal  
-At the summit of the [[Stormspire]] lies the bound fragment of [[Tempus]], god of thunder and sky. It cannot be approached by mortal hands — the storm would tear them apart. Only Muradin reached the peak, carving runes of memory and silence into the heart of the sky itself.
+At the summit of the [[Stormspire]] lies the bound fragment of [[Tempus]], god of thunder and sky. It cannot be approached by mortal hands — the storm would tear them apart. Only [[Muradin]] reached the peak, carving runes of memory and silence into the heart of the sky itself.
 
-Rather than contain the storm, Muradin taught the dwarves to **resonate** with it. The [[Stormbound]] built no fortress atop the spire. Instead, they constructed **pylons**, **conductors**, and **harmonic towers**, tuning the storm's madness into memory.
+Rather than contain the storm, [[Muradin]] taught the dwarves to **resonate** with it. The [[Stormbound]] built no fortress atop the spire. Instead, they constructed **pylons**, **conductors**, and **harmonic towers**, tuning the storm's madness into memory.
 
 > “It is not a prison. It is a song. One that must be remembered.”
 

@@ -6,7 +6,7 @@ aliases:
 
 ## Location
 
-[[Solaran Obsidian]] is no longer found in nature. It is a **refined material**, a product of Solaran artifice and divine metallurgy. Crafted originally from raw [[Radiant Obsidian]], it was forged in the starforges and sanctum-laboratories of the [[Solaran]], especially in the time of their alliance with [[Muradin]] during the First Age.
+[[Solaran Obsidian]] is no longer found in nature. It is a **refined material**, a product of Solaran artifice and divine metallurgy. Crafted originally from raw [[Radiant Obsidian]], it was forged in the starforges and sanctum-laboratories of the [[Solaran]], especially in the time of their alliance with [[Muradin]] during [[the First Age]].
 
 Fragments and intact plates of it can still be found deep within ruined Solaran cities, forgotten vaults, or built into the latticework of containment fields and lightforges.
 
@@ -31,7 +31,7 @@ Smooth and unnaturally precise, [[Solaran Obsidian]] glows faintly from within, 
 > Where Radiant Obsidian burns with divine purpose, Solaran Obsidian harnesses that purpose.  
 > It is godflame made tool — sacred fury shaped into function.
 
-Crafting Solaran Obsidian required a unique fusion of Solaran solarforging and Muradin’s runes of containment. Its recipe has been lost to time, but its legacy lives on in the deepest bones of the world.
+Crafting Solaran Obsidian required a unique fusion of Solaran solarforging and [[Muradin]]’s runes of containment. Its recipe has been lost to time, but its legacy lives on in the deepest bones of the world.
 
 
 ## Relationship to [[Radiant Obsidian]]
@@ -41,7 +41,7 @@ Crafting Solaran Obsidian required a unique fusion of Solaran solarforging and M
 > Where Radiant Obsidian burns with divine purpose, Solaran Obsidian harnesses that purpose.  
 > It is godflame made tool — sacred fury shaped into function.
 
-Crafting Solaran Obsidian required a unique fusion of Solaran solarforging and Muradin’s runes of containment. Its recipe has been lost to time, but its legacy lives on in the deepest bones of the world.
+Crafting Solaran Obsidian required a unique fusion of Solaran solarforging and [[Muradin]]’s runes of containment. Its recipe has been lost to time, but its legacy lives on in the deepest bones of the world.
 
 
 ## Lore

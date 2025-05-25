@@ -11,7 +11,7 @@ written-language: [[Karathic Script]]
 # Grundthain
 
 **Summary:**  
-The Grundthain are towering beings of elemental power and harmony, intrinsically bound to Earth, Fire, Water, and Air. They served as stewards of creation in the First Age, devoted to balance and unity.
+The Grundthain are towering beings of elemental power and harmony, intrinsically bound to Earth, Fire, Water, and Air. They served as stewards of creation in [[the First Age]], devoted to balance and unity.
 
 ---
 
@@ -51,7 +51,7 @@ The Grundthain are towering beings of elemental power and harmony, intrinsically
 
 ## Notes
 
-- Muradin, a visionary Grundthain, split from elemental traditions to forge the dwarves.  
+- [[Muradin]], a visionary Grundthain, split from elemental traditions to forge the dwarves.  
 - Related groups include [[Varkuun]], [[Goliaths]], and the dwarven clans.
 
 ---

@@ -2,7 +2,7 @@
 **Opposes**: [[Chaor]]  
 **Domain**: Civilization, lineage, permanence  
 **Associated Races**: [[Kyojin]], [[Leonin]]  
-**Place in the Weave**: One of the four cosmic forces that sustain reality.
+**Place in [[Weave|the Weave]]**: One of the four cosmic forces that sustain reality.
 
 ---
 

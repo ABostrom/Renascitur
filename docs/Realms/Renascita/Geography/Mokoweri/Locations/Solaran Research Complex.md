@@ -136,15 +136,15 @@ _Findings: Preliminary results indicate that Solarans harnessed arcanometric ene
 
 ---
 
-**Research Log #2 - Iris Andras - Aberrant Soul Infusion**
+**Research Log #2 - Iris Andras - Aberrant [[Soul]] Infusion**
 
 _Date: [Date]_
 
-_Objective: To investigate aberrant soul infusion effects on indigenous flora._
+_Objective: To investigate aberrant [[soul]] infusion effects on indigenous flora._
 
-*Procedure: Samples of indigenous flora were exposed to aberrant soul-infused arcanometric energy. Growth and behavior were monitored over time.
+*Procedure: Samples of indigenous flora were exposed to aberrant [[soul]]-infused arcanometric energy. Growth and behavior were monitored over time.
 
-_Findings: Aberrant soul infusion results in accelerated growth and unpredictable mutations. Understanding the mechanisms behind these changes will require further study._
+_Findings: Aberrant [[soul]] infusion results in accelerated growth and unpredictable mutations. Understanding the mechanisms behind these changes will require further study._
 
 ---
 
@@ -152,7 +152,7 @@ _Findings: Aberrant soul infusion results in accelerated growth and unpredictabl
 
 _Date: [Date]_
 
-*Objective: To develop a method to reverse aberrant soul-infused alterations in Saurians.
+*Objective: To develop a method to reverse aberrant [[soul]]-infused alterations in Saurians.
 
 *Procedure: Augmented Saurians were subjected to controlled arcanometric energy extraction procedures. The effects of these extractions on the reversal of aberrant alterations were observed.
 
@@ -164,11 +164,11 @@ _Findings: Significant obstacles persist in reversing aberrant alterations. We m
 
 _Date: [Date]_
 
-_Objective: To assess the potential of Solaran obsidian in reversing aberrant soul infusion._
+_Objective: To assess the potential of Solaran obsidian in reversing aberrant [[soul]] infusion._
 
 *Procedure: [[Solaran Obsidian]] samples were subjected to high-intensity arcanometric energy applications. Observations were made regarding energy absorption and redirection.
 
-_Findings: Solaran obsidian possesses unique energy-conducting properties. It may be a key component in reversing aberrant soul infusions by channeling and purifying arcanometric energy._
+_Findings: Solaran obsidian possesses unique energy-conducting properties. It may be a key component in reversing aberrant [[soul]] infusions by channeling and purifying arcanometric energy._
 
 ---
 
@@ -176,7 +176,7 @@ _Findings: Solaran obsidian possesses unique energy-conducting properties. It ma
 
 _Date: [Date]_
 
-*Objective: To find a method to harmonize and stabilize aberrant soul-infused energy.
+*Objective: To find a method to harmonize and stabilize aberrant [[soul]]-infused energy.
 
 *Procedure: Experiments were conducted to explore the potential for using Solaran technology to harmonize aberrant energy. Arcanometric devices were adapted for this purpose.
 
@@ -191,7 +191,7 @@ _Findings: Preliminary findings show that Solaran technology may provide a pathw
 
 Today's experiment involved infusing the newly developed life-generating matrix with a synthesized blend of [[Solaran]] energy signatures. Despite the significant advances we've made in harnessing elemental energy, the matrix remains stubbornly inert. Each time, the result is the same—no discernible response. The matrix lacks a vital component.
 
-In my pursuit of this mysterious missing link, I have reviewed countless Solaran texts, delving deep into the annals of ancient wisdom. It becomes increasingly evident that the matrix requires more than just energy; it yearns for a soul—an essence to bind its potential to the essence of life. Such a revelation is both daunting and exhilarating. The fusion of our Solaran science with the essence of Mokoweri itself beckons as a profound undertaking. I will proceed cautiously.
+In my pursuit of this mysterious missing link, I have reviewed countless Solaran texts, delving deep into the annals of ancient wisdom. It becomes increasingly evident that the matrix requires more than just energy; it yearns for a [[soul]]—an essence to bind its potential to the essence of life. Such a revelation is both daunting and exhilarating. The fusion of our Solaran science with the essence of Mokoweri itself beckons as a profound undertaking. I will proceed cautiously.
 
 **Experiment Log 442: Ethereal Resonance**
 
@@ -203,7 +203,7 @@ The experiment is underway, and the room is aglow with an otherworldly radiance.
 
 Every experiment brings me closer to understanding, yet the essence remains beyond my grasp. Frustration gnaws at my resolve, but I must persist. The world tree that Mokoweri deserves—no, requires—cannot be left to languish as an unfinished dream.
 
-The key lies not only in the science of Solaran design but also in the wisdom of the natural world. Forging the final connection requires a profound sacrifice—a union of soul and essence, of mortal and immortal. I cannot evade the truth any longer; it has become a resolute certainty. I alone must bind with the world tree. My essence must become its essence, and our destinies will intertwine as one.
+The key lies not only in the science of Solaran design but also in the wisdom of the natural world. Forging the final connection requires a profound sacrifice—a union of [[soul]] and essence, of mortal and immortal. I cannot evade the truth any longer; it has become a resolute certainty. I alone must bind with the world tree. My essence must become its essence, and our destinies will intertwine as one.
 
 **Experiment Log 450: The Final Confluence**
 
@@ -220,9 +220,9 @@ Through this sacrifice, we achieve a connection unattainable through science alo
 
 Remarkable progress today! Deep within the embered caverns of Mokoweri, I've stumbled upon a subterranean chamber of untold beauty and significance. The bioluminescent flora here pulsates with a vibrant, otherworldly energy, their roots extending deep into the essence of the world itself.
 
-This is the heart of Mokoweri, a place where life and the weave coalesce in a harmonious symphony. The plants here are unlike any I've ever encountered—imbued with the very essence of the world. Their existence is a testament to the intricate balance that binds all living things.
+This is the heart of Mokoweri, a place where life and [[Weave|the weave]] coalesce in a harmonious symphony. The plants here are unlike any I've ever encountered—imbued with the very essence of the world. Their existence is a testament to the intricate balance that binds all living things.
 
-But what captivates me most is the ancient tree at the center of this chamber. It radiates a serene aura, its roots extending into the weave itself. This tree, a natural wonder, seems to hold the key to understanding the profound connection between life, the weave, and the machinery of death.
+But what captivates me most is the ancient tree at the center of this chamber. It radiates a serene aura, its roots extending into [[Weave|the weave]] itself. This tree, a natural wonder, seems to hold the key to understanding the profound connection between life, [[Weave|the weave]], and the [[machinery of death]].
 
 This discovery may well be the missing piece I've sought in my quest to protect Solaran souls. The potential for further study and experimentation is boundless.
 
@@ -230,17 +230,17 @@ This discovery may well be the missing piece I've sought in my quest to protect 
 
 My exploration of the underground chamber continues to yield extraordinary results. I've named this place the "Eversoul Grove" for its potential to safeguard Solaran souls for all eternity.
 
-The essence of this place resonates with the weave, creating an environment where life flourishes in harmony. I've collected numerous samples of the bioluminescent flora and have conducted experiments to understand their unique properties. The potential for soul protection is immense.
+The essence of this place resonates with [[Weave|the weave]], creating an environment where life flourishes in harmony. I've collected numerous samples of the bioluminescent flora and have conducted experiments to understand their unique properties. The potential for [[soul]] protection is immense.
 
-The tree at the heart of the grove is unlike any other. Its roots extend deep into the weave, and I suspect it holds the key to unlocking the secrets of soul preservation. I've gathered samples from this ancient tree, which I believe will serve as the blueprint for the creation of the world Gaian tree.
+The tree at the heart of the grove is unlike any other. Its roots extend deep into [[Weave|the weave]], and I suspect it holds the key to unlocking the secrets of [[soul]] preservation. I've gathered samples from this ancient tree, which I believe will serve as the blueprint for the creation of the world Gaian tree.
 
 My research here has been nothing short of transformative, and I am filled with a sense of purpose. The Eversoul Grove may well be the key to ensuring the eternal protection of Solaran souls.
 
 **Scientific Log Entry #3**
 
-Today marks a turning point in my research. After months of meticulous study and experimentation, I've come to a profound realization: the Eversoul Grove holds within it the blueprint for safeguarding Solaran souls, but it requires more than mere replication. It requires a bond—a connection with the weave itself.
+Today marks a turning point in my research. After months of meticulous study and experimentation, I've come to a profound realization: the Eversoul Grove holds within it the blueprint for safeguarding Solaran souls, but it requires more than mere replication. It requires a bond—a connection with [[Weave|the weave]] itself.
 
-As I stand in the presence of the ancient tree, I can sense its connection to the weave, the pulse of life that flows through it. This is more than a scientific endeavor; it is a calling, a destiny. To create the Eversoul Grove, I must become one with the weave.
+As I stand in the presence of the ancient tree, I can sense its connection to [[Weave|the weave]], the pulse of life that flows through it. This is more than a scientific endeavor; it is a calling, a destiny. To create the Eversoul Grove, I must become one with [[Weave|the weave]].
 
 This decision is not made lightly, for it is an irreversible transformation. Yet, the fate of the Solaran people hangs in the balance. I must embrace this path, binding myself to the heart of Mokoweri's life force. Only then can I hope to protect the souls of my people for all eternity.
 

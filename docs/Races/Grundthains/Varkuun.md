@@ -1,11 +1,14 @@
 ---
-aliases: [Varkuun]
-tags: [race, elemental, grundthain]
-lineage: [[Grundthain]]
-origin-plane: [[Onderweld]]
+aliases:
+  - Varkuun
+tags:
+  - race
+  - elemental
+  - grundthain
+lineage: "[[Grundthain]]"
+origin-plane: "[[Thargrun]]"
 aat-race-tier: elder
-spoken-language: [[Titanic]]
-written-language: [[Karathic Script]]
+spoken-language: "[[Titanic]]"
 ---
 
 # Varkuun
@@ -31,7 +34,7 @@ The Varkuun are a proud elemental race descended from the [[Grundthain]], embody
 
 ## Culture
 
-- Deeply spiritual, with rituals honoring the elemental gods.  
+- Deeply spiritual, with rituals honouring the elemental gods.  
 - Hold sacred sites throughout [[Thargrun]].
 
 ---

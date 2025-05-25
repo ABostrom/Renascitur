@@ -1,4 +1,4 @@
 - **Appearance**: Quintavius is portrayed as a vibrant and charismatic Leonin with a mane of golden-brown that shines with vitality. His eyes are a warm green, and he is depicted wearing elegant robes and a crown adorned with precious gems, symbolizing his love for culture and the arts.
 - **Quote**: "An empire's heart beats in the rhythm of its culture and the voices of its people."
 - **Life Achievement**: Quintavius ushered in a golden age of culture and prosperity for the empire. He was a patron of the arts, sponsoring countless festivals, building grand theaters, and encouraging the flourishing of music, literature, and the visual arts.
-- **Spouse**: **Duchess Elena** - A renowned Leonin poet and musician, Duchess Elena was the artistic soul of the imperial court. She and Quintavius were beloved for their contributions to the cultural renaissance that marked his reign.
+- **Spouse**: **Duchess Elena** - A renowned Leonin poet and musician, Duchess Elena was the artistic [[soul]] of the imperial court. She and Quintavius were beloved for their contributions to the cultural renaissance that marked his reign.

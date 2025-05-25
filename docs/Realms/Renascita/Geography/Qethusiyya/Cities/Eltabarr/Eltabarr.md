@@ -59,7 +59,7 @@ Aelar Amakiir is the elven member of the Majlis, known as "The Verdant Sage" due
 
 ### 2. Zariel Mephistar, The Infernal Diplomat
 
-Zariel Mephistar is the tiefling grand sorcerer, often referred to as "The Infernal Diplomat." Zariel's heritage links him to the infernal realms, but his allegiance and love for Eltabarr are unmatched. He specializes in binding and infernal magic, using his powers to protect the city from the aberrations of the desert and to forge pacts that benefit Eltabarr. Zariel is a charismatic leader, using his innate abilities to negotiate and maintain the peace within the city's diverse populace. His efforts have significantly contributed to the integration of Tieflings within Eltabarr, promoting a society where one's merit is judged by their contributions and character rather than their ancestry.
+Zariel Mephistar is the tiefling grand sorcerer, often referred to as "The Infernal Diplomat." Zariel's heritage links him to the infernal realms, but his allegiance and love for Eltabarr are unmatched. He specializes in binding and infernal magic, using his powers to protect the city from the [[aberrations]] of the desert and to forge pacts that benefit Eltabarr. Zariel is a charismatic leader, using his innate abilities to negotiate and maintain the peace within the city's diverse populace. His efforts have significantly contributed to the integration of Tieflings within Eltabarr, promoting a society where one's merit is judged by their contributions and character rather than their ancestry.
 
 ### 3. Farid al-Hakim, The Arcane Architect
 

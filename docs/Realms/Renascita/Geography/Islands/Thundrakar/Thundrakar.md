@@ -29,7 +29,7 @@ This is the sacred heart of [[Stormforging]], the art of binding steel and storm
 > — Forgemaster Kaelgrun
 
 ## Elemental Seal  
-Atop the [[Stormspire]], hidden within the endless maelstrom, lies the bound fragment of [[Tempus]] — the elemental god of storm and sky. It cannot be touched, only endured. Muradin sealed it there during the First Age, shaping the mountain itself into a divine pylon.
+Atop the [[Stormspire]], hidden within the endless maelstrom, lies the bound fragment of [[Tempus]] — the elemental god of storm and sky. It cannot be touched, only endured. [[Muradin]] sealed it there during [[the First Age]], shaping the mountain itself into a divine pylon.
 
 The storm is not silenced — it is **channeled**.  
 Its veins run downward through the mountain, forming conduits of [[Storm Quartz]] and [[Skyshatter Ore]]. These carry the storm’s memory into [[Thundrakar]] below.

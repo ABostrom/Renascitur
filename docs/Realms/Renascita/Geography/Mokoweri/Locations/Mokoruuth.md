@@ -6,7 +6,7 @@
     - **Irasandra**: A name used in modern times after Iris Andras merged with the tree.
     - **The Luminous Grove**: A poetic name used by scholars.
 
-Irisandra, the colossal tree that graces the island of Mokoweri, stands as a monumental testament to the forgotten era of Solaran science and their struggle to control aberrant soul experiments. This majestic tree was crafted with care and purpose by the Solaran scientist, [[Iris Andras]].
+Irisandra, the colossal tree that graces the island of Mokoweri, stands as a monumental testament to the forgotten era of Solaran science and their struggle to control aberrant [[soul]] experiments. This majestic tree was crafted with care and purpose by the Solaran scientist, [[Iris Andras]].
 
 
 ### Grove Warden
@@ -23,7 +23,7 @@ Irisandra's origins are cloaked in the pursuit of knowledge. The Solarans of old
 
 **The Enigmatic Anomaly:**
 
-While they had not created these aberrant souls, the Solarans were baffled by their existence. They recognized that there was a fundamental flaw in the cosmic design of the universe, something that had gone awry and resulted in the emergence of these aberrations. They were driven by an insatiable curiosity to uncover the root cause of this enigma.
+While they had not created these aberrant souls, the Solarans were baffled by their existence. They recognized that there was a fundamental flaw in the cosmic design of the universe, something that had gone awry and resulted in the emergence of these [[aberrations]]. They were driven by an insatiable curiosity to uncover the root cause of this enigma.
 
 **Sealing the Island:**
 
@@ -41,13 +41,13 @@ As time passed and the Solaran civilization began to decline, the true purpose o
 
 Irisandra now stands as a tranquil guardian, casting shade and nurturing the diverse ecosystem that has sprung up around it. The Great Sentinel Tree continues to be a powerful figure in the life of Mokoweri, its legacy intertwined with the island's identity, even if its original purpose remains veiled in the annals of time.
 
-**Anomalies in the Weave:**
+**Anomalies in [[Weave|the Weave]]:**
 
-The world is ensnared in a complex web of cosmic energies and spiritual currents known as the weave. This ethereal lattice governs the transmigration of souls, the magic that binds the universe, and the equilibrium of forces. While typically a harmonious and balanced structure, the weave can be influenced and manipulated by powerful arcanometric entities, such as the Solarans.
+The world is ensnared in a complex web of cosmic energies and spiritual currents known as [[Weave|the weave]]. This ethereal lattice governs the transmigration of souls, the magic that binds the universe, and the equilibrium of forces. While typically a harmonious and balanced structure, [[Weave|the weave]] can be influenced and manipulated by powerful arcanometric entities, such as the Solarans.
 
 **The Guardian's Aura:**
 
-Irisandra, the immense sentinel tree that graces Mokoweri, is more than just a tree. It serves as a living, breathing component of the weave. Its roots and branches delve deep into the weave, interlacing with the cosmic threads that sustain the world. As a result, it generates a distinct and unique aura, a quality that veils Mokoweri in a protective and curious web of energy.
+Irisandra, the immense sentinel tree that graces Mokoweri, is more than just a tree. It serves as a living, breathing component of [[Weave|the weave]]. Its roots and branches delve deep into [[Weave|the weave]], interlacing with the cosmic threads that sustain the world. As a result, it generates a distinct and unique aura, a quality that veils Mokoweri in a protective and curious web of energy.
 
 **Weakening the Aberrant:**
 
@@ -55,13 +55,13 @@ One of the most extraordinary manifestations of Irisandra's power is the weakeni
 
 **A Sanctuary for the Anomalous:**
 
-The island of Mokoweri has unintentionally become a sanctuary for those afflicted by aberrant souls. It offers respite to those who carry the cosmic burden of aberration, allowing them a temporary reprieve from the turmoil and chaos that often accompanies such anomalies. Here, they can experience a semblance of normality, as their aberrations are gently muted by Irisandra's enigmatic aura.
+The island of Mokoweri has unintentionally become a sanctuary for those afflicted by aberrant souls. It offers respite to those who carry the cosmic burden of aberration, allowing them a temporary reprieve from the turmoil and chaos that often accompanies such anomalies. Here, they can experience a semblance of normality, as their [[aberrations]] are gently muted by Irisandra's enigmatic aura.
 
 **The Unintended Effect:**
 
-While the Solarans originally sought to understand and rectify the aberrations in the weave, Irisandra's influence led to a different outcome. Instead of solving the cosmic mystery, it allowed Mokoweri to exist as a haven for the anomalous, an island where they can experience a modicum of peace amid their cosmic turmoil.
+While the Solarans originally sought to understand and rectify the [[aberrations]] in [[Weave|the weave]], Irisandra's influence led to a different outcome. Instead of solving the cosmic mystery, it allowed Mokoweri to exist as a haven for the anomalous, an island where they can experience a modicum of peace amid their cosmic turmoil.
 
 **A Silent Guardian:**
 
-Unbeknownst to the island's inhabitants, Irisandra continues to weave its unique anomalies, gently affecting the souls that venture onto Mokoweri's shores. It is an unwitting protector of the anomalous, a silent guardian of the enigmas of the universe.
+Unbeknownst to the island's inhabitants, Irisandra continues to [[weave]] its unique anomalies, gently affecting the souls that venture onto Mokoweri's shores. It is an unwitting protector of the anomalous, a silent guardian of the enigmas of the universe.
 

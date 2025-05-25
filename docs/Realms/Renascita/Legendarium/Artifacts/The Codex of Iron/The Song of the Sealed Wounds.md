@@ -1,7 +1,7 @@
  
 
 ---
-When Muradin returned from his pilgrimage across the Elemental Planes, the silence of the material world struck him as wrong.
+When [[Muradin]] returned from his pilgrimage across the Elemental Planes, the silence of the material world struck him as wrong.
 
 The flames no longer danced, but raged.
 
@@ -22,7 +22,7 @@ In the age before memory, the four great Elementals walked freely—beings vast 
 
 But when the Unmaker came, she whispered rot into the seams of the world. She offered the Elementals not dominion, but distortion. Hunger. Rage. Madness. Stillness. And so each was wounded—torn from harmony, left to fester.
 
-Muradin saw this. He saw it in the fires that burned without purpose, in the tides that swallowed light, in the mountains that no longer echoed the world’s heart. He saw it in the sky, where the storm had forgotten mercy.
+[[Muradin]] saw this. He saw it in the fires that burned without purpose, in the tides that swallowed light, in the mountains that no longer echoed the world’s heart. He saw it in the sky, where the storm had forgotten mercy.
 
 And he knew: they could not be slain.
 
@@ -33,17 +33,17 @@ So he chose another path.
 ---
 ### The Sealing of the Four Wounds
 
-With runes etched in grief and steel, Muradin sought out the scars in the world where the Elementals bled. He did not bind the beings themselves, for such arrogance would shatter the world. He bound their wounds.
+With runes etched in grief and steel, [[Muradin]] sought out the scars in the world where the Elementals bled. He did not bind the beings themselves, for such arrogance would shatter the world. He bound their wounds.
 
 ---
 
 **The Wakened Trench** — Hunger of the Deep  
 
-Muradin descended into the deepest fissures of the southern seas, where the water turned black and the pressure crushed even memory. There he beheld the wound of Leviathan’s Hunger—a vast abyss that devoured light, song, and hope.
+[[Muradin]] descended into the deepest fissures of the southern seas, where the water turned black and the pressure crushed even memory. There he beheld the wound of [[Leviathan]]’s Hunger—a vast abyss that devoured light, song, and hope.
 
 He carved the seal into the bones of the ocean itself, using runes chiseled with tools that bled salt and steel. The sea screamed for days. Tides rebelled. Whirlpools opened in the hearts of cities.
 
-But Muradin stood firm. He fed the trench a rune of Binding, etched into stone hauled from the stars.
+But [[Muradin]] stood firm. He fed the trench a rune of Binding, etched into stone hauled from the stars.
 
 When it closed, it did not sleep.
 
@@ -54,9 +54,9 @@ The dwarves who dwell above are known as the **Tidebound**. Born of salt and sto
 ---
 **The Pulsecore** — Stillness of the North
 
-In the frost-ridden north, where silence is the only sound, Muradin delved into the glaciers that held Zaratan’s wound. The ice pulsed like a dying heart—slow, mournful, hollow.
+In the frost-ridden north, where silence is the only sound, [[Muradin]] delved into the glaciers that held [[Zaratan]]’s wound. The ice pulsed like a dying heart—slow, mournful, hollow.
 
-He walked barefoot across endless sheets of sorrow, the cold eating at his soul. There, in the glacier’s hollow, he found the elemental stillness—the apathy of death before dying.
+He walked barefoot across endless sheets of sorrow, the cold eating at his [[soul]]. There, in the glacier’s hollow, he found the elemental stillness—the apathy of death before dying.
 
 With trembling hands, he forged a beating core from silver-veined ice and bound it with a rune of Awakening. The glacier shuddered, and the silence cracked—but the stillness did not vanish. It became dormant.
 
@@ -67,7 +67,7 @@ They are the **Icebound**—carvers of frost and silence. Their forges burn cold
 ---
 **The Stormspire** — Madness of the Sky
 
-Muradin climbed into the shattered peaks where the winds howled with voices and the air burned with lightning. Atop a mountain no map dares name, where Tempus' fury danced eternal, he confronted the sky’s fracture.
+[[Muradin]] climbed into the shattered peaks where the winds howled with voices and the air burned with lightning. Atop a mountain no map dares name, where [[Tempus]]' fury danced eternal, he confronted the sky’s fracture.
 
 The madness here was not chaos—but memory. Echoes of every thought ever carried by wind, unshaped, unsilenced, eternally storming.
 
@@ -75,7 +75,7 @@ He brought no forge, no metal, only silence. He carved a rune of Memory into the
 
 When the carving was done, the clouds spiraled inward. Lightning cracked the world, and a spire rose—grown, not built—formed of stormglass and skyfire. It pierced the heavens.
 
-Muradin called it the Stormspire.
+[[Muradin]] called it the Stormspire.
 
 The dwarves do not dwell there. They maintain its pylons, they respect its silence. And when the thunder calls, they listen for what it might remember.
 
@@ -85,9 +85,9 @@ They are the **Stormbound**—those shaped by skyfire and thunder, whose craft i
 
 **The Eternal Flame** — Rage of the Heart
 
-There was no hiding the wound of Phenos. It burned at the world’s core—a volcano of divine rage. It could not be buried.
+There was no hiding the wound of [[Phenos]]. It burned at the world’s core—a volcano of divine rage. It could not be buried.
 
-So Muradin crowned it.
+So [[Muradin]] crowned it.
 
 He forged a great brazier around the wound and filled it with Aetherium—whisper-forged metal that could drink the fire without being consumed. Into its basin, he poured runes of Containment, Temperance, and Burden.
   
@@ -97,14 +97,14 @@ The dwarves of the Flamebound do not quench it.
 
 They **tend** it.
 
-They say Muradin did not seal this wound. He gave it purpose.
+They say [[Muradin]] did not seal this wound. He gave it purpose.
 
 They are the **Flamebound**—keepers of heat that never dies. Their forges are altars. Their hammers fall like sermons. Every ember they stoke is a hymn to control. They speak softly, for their rage is hidden, tempered. Their creations gleam with purpose and warning, and the warmth they share is hard-earned. They are both stewards and prisoners of the fire, bound to contain the wrath of the world’s heart.
 
 ---
 ### The Pact Forged in Silence
 
-He spoke no vow, offered no prayer. Muradin did not ask the Elementals to forgive their wounds, nor begged them to sleep.
+He spoke no vow, offered no prayer. [[Muradin]] did not ask the Elementals to forgive their wounds, nor begged them to sleep.
 
 He **commanded**.
 
@@ -119,7 +119,7 @@ And so the wounds were sealed—not healed, but held.
 ---
 ### The Dwarves’ Inheritance
 
-Those who followed Muradin became keepers of the seals.
+Those who followed [[Muradin]] became keepers of the seals.
 
 They did not know the full truth.
 They still do not.

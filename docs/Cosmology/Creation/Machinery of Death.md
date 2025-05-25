@@ -10,7 +10,7 @@ The machinery of death. The cogs turn and whur, this is the cycle that ensures t
 
 In the world of Renascitur, the concept of the Machinery of Death represents the intricate system that governs the journey of souls in the afterlife. It is a cosmic mechanism that ensures the cycle of life and death, maintaining balance and allowing for the continuation of existence.
 
-When a living being passes away, their soul is separated from their physical form and enters the Machinery of Death. This metaphysical machinery serves as a conduit, guiding souls through the transition from the mortal realm to the realms beyond. It acts as a bridge between life and death, orchestrating the intricate process of reincarnation or transmigration.
+When a living being passes away, their [[soul]] is separated from their physical form and enters the Machinery of Death. This metaphysical machinery serves as a conduit, guiding souls through the transition from the mortal realm to the realms beyond. It acts as a bridge between life and death, orchestrating the intricate process of reincarnation or transmigration.
 
 The Machinery of Death is an enigmatic construct, its inner workings hidden from mortal eyes. It is believed to exist in a realm between worlds, an ethereal domain where the souls traverse and undergo a transformative journey. The exact mechanics and purpose of this machinery are shrouded in mystery, known only to those ancient beings who have studied the deepest secrets of the cosmos.
 
