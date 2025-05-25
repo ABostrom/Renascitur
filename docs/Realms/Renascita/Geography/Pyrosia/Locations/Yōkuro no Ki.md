@@ -8,7 +8,7 @@
 ### [[Third Age]] Name: [[Yunara]] (*The Verdant [[Soul]]*)  
 
 ### Overview  
-[[Yōkuro no Ki]], the **Veilroot Tree**, was a sacred site of the [[Kyojin]], believed to be a **gateway to the Umbra Terra**. It stood on the **northern border of Pyrosia**, where the land shifted between **light and shadow**. Its **ethereal blossoms** pulsed with the energy of the **[[soul]] cycle**, and shamans believed its **roots anchored spirits before rebirth**.
+[[Yōkuro no Ki]], the **Veilroot Tree**, was a sacred site of the [[Kyojin]], believed to be a **gateway to the Umbra Terra**. It stood on the **northern border of [[Pyrosia]]**, where the land shifted between **light and shadow**. Its **ethereal blossoms** pulsed with the energy of the **[[soul]] cycle**, and shamans believed its **roots anchored spirits before rebirth**.
 
 By the Third Age, the tree was lost to time, and the land surrounding it became a cursed wasteland. Now known only in myth as [[Yunara]], the **Verdant [[Soul]]**, it is said that the tree still exists somewhere in the twilight realm, its branches touching both **life and death**.
 

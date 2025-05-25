@@ -5,7 +5,7 @@ aliases:
 ![[f1e5b90b-25db-47d1-ab4a-f5ab53ee54af.png]]
 ## Overview
 
-Draumhavn is a dwarven island-state nestled in a perilous cluster of volcanic isles between the continents of Pyrosia and Qethusiyya. It stands as a fortress-port, a neutral bastion of trade between empires too proud or too bitter to speak directly. The sea around it is treacherous, haunted by abyssal horrors and cursed shoals, making Draumhavn both gateway and gatekeeper.
+Draumhavn is a dwarven island-state nestled in a perilous cluster of volcanic isles between the continents of [[Pyrosia]] and [[Qethusiyya]]. It stands as a fortress-port, a neutral bastion of trade between empires too proud or too bitter to speak directly. The sea around it is treacherous, haunted by abyssal horrors and cursed shoals, making Draumhavn both gateway and gatekeeper.
 
 Its lifeline lies beneath the earth: the **Deep Road**, a vast subterranean rail and tunnel network connecting it to the mainland dwarven cities—**Uftine**, **Mithral Hall**, **[[Magnus]]' Rest**—and, more recently, the [[Ferrun]] stronghold of **Thelassia**. But no Deep Road runs south. There lies only the **Wakened Trench**, a chasm of unspeakable depth and hungering darkness.
 
