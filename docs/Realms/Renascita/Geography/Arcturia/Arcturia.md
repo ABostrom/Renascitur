@@ -1,6 +1,5 @@
 ---
 type: continent
-name: Arcturia
 terrain:
   - mountains
   - glaciers

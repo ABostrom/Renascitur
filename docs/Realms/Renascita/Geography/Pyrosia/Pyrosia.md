@@ -1,6 +1,5 @@
 ---
 type: continent
-name: Pyrosia
 terrain:
   - mountains
   - volcanic plains
