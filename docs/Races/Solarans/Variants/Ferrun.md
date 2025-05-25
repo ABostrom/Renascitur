@@ -6,10 +6,8 @@ tags:
   - cultural-variant
   - solarans
   - industrial
-lineage:
-  - "[[Solaran]]"
-origin-plane:
-  - "[[Renascita]]"
+lineage: "[[Solaran]]"
+origin-plane: "[[Renascita]]"
 aat-race-tier: variant
 spoken-language:
   - "[[Thraysian Common]]"

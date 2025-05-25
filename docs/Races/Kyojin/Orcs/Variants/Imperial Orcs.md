@@ -1,7 +1,7 @@
 ---
 aliases: [Imperial Orcs]
 tags: [race, cultural-variant, orcs, imperial]
-lineage: [[Orc]]
+lineage: "[[Orc]]"
 origin-plane: "[[Renascita]]"
 aat-race-tier: variant
 spoken-language: 

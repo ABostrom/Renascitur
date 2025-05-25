@@ -6,11 +6,9 @@ tags:
   - cultural-variant
   - solarans
   - arcane
-lineage:
-  - "[[Solarans]]"
-origin-plane:
-  - "[[Renascita]]"
-aat-race-tier: cultural variant
+lineage: "[[Solarans]]"
+origin-plane: "[[Renascita]]"
+aat-race-tier: variant
 spoken-language:
   - "[[Thraysian Common]]"
   - "[[Elyssan]]"

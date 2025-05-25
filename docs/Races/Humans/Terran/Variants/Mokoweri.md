@@ -6,13 +6,15 @@ tags:
   - cultural-variant
   - humans
   - tribal
-lineage: "[[Terran]]"
-origin-plane: "[[Renascita]]"
-aat-race-tier: cultural variant
-spoken-language: 
-- "[[Imperial Common]]"
-- "[[Thraysian Common]]"
-- "[[Mokoweran]]"
+lineage:
+  - "[[Terran]]"
+origin-plane:
+  - "[[Renascita]]"
+aat-race-tier: variant
+spoken-language:
+  - "[[Imperial Common]]"
+  - "[[Thraysian Common]]"
+  - "[[Mokoweran]]"
 ---
 
 # Mokoweri Humans

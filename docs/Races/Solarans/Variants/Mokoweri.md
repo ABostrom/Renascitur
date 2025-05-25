@@ -6,10 +6,8 @@ tags:
   - cultural-variant
   - solarans
   - nature
-lineage:
-  - "[[Solaran]]"
-origin-plane:
-  - "[[Renascita]]"
+lineage: "[[Solaran]]"
+origin-plane: "[[Renascita]]"
 aat-race-tier: variant
 spoken-language:
   - "[[Mokoweran]]"

@@ -1,10 +1,15 @@
 ---
-aliases: [Slaads]
-tags: [race, aberrant, corrupted]
-lineage: Aberrant Mutation
+aliases:
+  - Slaads
+tags:
+  - race
+  - aberrant
+  - corrupted
+lineage: "[[Saurian]]"
 origin-plane: "[[Renascita]]"
 aat-race-tier: aberrant
-spoken-language: "[[Denisovan]]"
+spoken-language:
+  - "[[Denisovan]]"
 ---
 
 # Slaads
