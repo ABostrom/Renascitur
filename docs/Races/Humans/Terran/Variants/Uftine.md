@@ -11,7 +11,7 @@ written-language: [[Common Script]]
 # Uftine Humans
 
 **Summary:**  
-The [[docs/Material Plane/Locations and Cities/Arcturia/Cities/Uftine/Uftine|Uftine]] are hardy [[Terran|Terrans]] adapted to the frozen, harsh northern regions. They have developed thick builds and a resilience born of endless winters.
+The [[docs/Realms/Renascita/Locations and Cities/Arcturia/Cities/Uftine/Uftine|Uftine]] are hardy [[Terran|Terrans]] adapted to the frozen, harsh northern regions. They have developed thick builds and a resilience born of endless winters.
 
 ---
 

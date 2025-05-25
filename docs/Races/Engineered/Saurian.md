@@ -11,7 +11,7 @@ written-language: Denisovan Script, Mokoweran Script
 # Saurians
 
 **Summary:**  
-The Saurians are a deeply spiritual, reptilian humanoid race engineered by the ancient [[Solarans]] to resist aberrant energy. They inhabit the jungles of [[Mokoweri]], living in harmony with nature and their deity [[Irasandra]].
+The Saurians are a deeply spiritual, reptilian humanoid race engineered by the ancient [[Solarans]] to resist aberrant energy. They inhabit the jungles of [[docs/Races/Solarans/Variants/Mokoweri]], living in harmony with nature and their deity [[Irasandra]].
 
 ---
 
@@ -51,7 +51,7 @@ The Saurians are a deeply spiritual, reptilian humanoid race engineered by the a
 
 ## Notes
 
-- Their existence is vital to maintaining the balance on [[Mokoweri]].  
+- Their existence is vital to maintaining the balance on [[docs/Races/Solarans/Variants/Mokoweri]].  
 - Their resilience and spiritual nature make them formidable guardians.
 
 ---

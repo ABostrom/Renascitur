@@ -12,6 +12,6 @@
 - **Dwarven** — spoken by [[Dwarf|Dwarves]]
 - **Leonin** — tactical dialect of [[Leonin]]
 - **Orcish** — spiritual dialect of [[Orc]]
-- **Mokoweran** — unique dialect spoken by [[Mokoweri]]
+- **Mokoweran** — unique dialect spoken by [[docs/Races/Solarans/Variants/Mokoweri]]
 - **Titanic** — ceremonial dialect of [[Varkuun]] and [[Goliath]]
 - **Imperial / Thraysian** — common tongue of [[Terran|Terrans]] 

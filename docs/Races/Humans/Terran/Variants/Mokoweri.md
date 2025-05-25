@@ -20,7 +20,7 @@ written-language:
 # Mokoweri Humans
 
 **Summary:**  
-The Mokoweri are tribal [[Terran|Terrans]] living in harmony with the natural world on the island of [[docs/Material Plane/Locations and Cities/Mokoweri/Mokoweri|Mokoweri]]. They have embraced a lifestyle centred around community, nature, and coexistence.
+The Mokoweri are tribal [[Terran|Terrans]] living in harmony with the natural world on the island of [[docs/Realms/Renascita/Locations and Cities/Mokoweri/Mokoweri|Mokoweri]]. They have embraced a lifestyle centred around community, nature, and coexistence.
 
 ---
 
