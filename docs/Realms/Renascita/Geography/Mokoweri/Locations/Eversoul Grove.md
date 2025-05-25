@@ -49,7 +49,7 @@ Her attention shifts, and with it, the air seems to thrum with a deeper magic.
 
 A pause, a moment of silence that feels like the calm before a storm.
 
-"To the successor of Vecna's will, you carry a burden heavy with power and peril. Your journey is one of redemption and defiance, a chance to forge a legacy beyond the shadows that seek to claim you."
+"To the successor of [[Vecna]]'s will, you carry a burden heavy with power and peril. Your journey is one of redemption and defiance, a chance to forge a legacy beyond the shadows that seek to claim you."
 
 Her gaze softens as she addresses the next adventurer.
 

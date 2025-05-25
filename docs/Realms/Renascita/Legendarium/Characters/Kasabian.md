@@ -2,4 +2,4 @@
 aliases:
   - Kas
 ---
-# Kasabian - First General of Vecna
+# Kasabian - First General of [[Vecna]]

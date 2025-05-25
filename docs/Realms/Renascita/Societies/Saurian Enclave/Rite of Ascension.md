@@ -8,7 +8,7 @@ Before the Rite of Ascension can commence, the aspirant undergoes a period of se
 
 The ceremony itself takes place in the Temple of [[Mokoruuth]], under the open sky, allowing the natural elements to bear witness to the rite. Elders, family members, and respected members of the community gather, forming a circle around the Sacred Pool – a symbol of life, purity, and the continuous flow of wisdom.
 
-### Invocation of Irisandra
+### Invocation of [[Irisandra]]
 
 The ceremony begins with an invocation to [[Mokoruuth]], the island goddess, asking for her blessing and guidance for the aspirant. This invocation is performed through a chant, led by the High Elder, and joined by all present, creating a harmonious resonance that fills the temple.
 

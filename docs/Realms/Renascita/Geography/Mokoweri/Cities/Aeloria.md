@@ -6,7 +6,7 @@
 
 At the heart of Aeloria's bustling life is the Canopy Commons, a sprawling platform that serves as the city's main gathering place. Supported by a network of interlocking branches high above the ground, it is a testament to Saurian engineering and their ability to live in harmony with nature. The Commons is the venue for market days, where traders from all over Aeloria come to sell exotic fruits, handcrafted items, and rare materials gathered from the jungle below. At its center stands the Community Totem, a towering sculpture adorned with symbols representing each family unit within Aeloria, symbolizing unity and collective identity.
 
-## The Temple of Irisandra
+## The Temple of [[Irisandra]]
 
 A marvel of organic architecture, the Temple of [[Mokoruuth]] is built around and within one of the largest trees in Aeloria. Its walls are alive, composed of the tree's roots and branches, with spaces open to the sky where light filters through dense foliage. Inside, altars of natural stone and wood hold sacred relics and offerings to [[Mokoruuth]]. The air is heavy with incense and the sound of quiet prayers or chants during worship. It's not just a place for religious rituals but also a sanctuary for those seeking solace and guidance from the goddess.
 
