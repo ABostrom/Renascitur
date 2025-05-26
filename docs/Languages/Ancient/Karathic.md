@@ -1,12 +1,18 @@
 ---
-aliases: [Karathic, Grundthain Tongue]
-tags: [language, grundthain, ancient]
-aat-language-family: "[[Grundthain]]"
+aliases:
+  - Karathic
+  - Grundthain Tongue
+tags:
+  - language
+  - grundthain
+  - ancient
+aat-language-family:
+  - "[[Grundthain]]"
 aat-language-tier: root
-spoken-by: 
-- "[[Grundthain]]"
-- "[[Dwarves]]"
-- "[[Varkuun]]"
+spoken-by:
+  - "[[Grundthain]]"
+  - "[[Varkuun]]"
+  - "[[Dwarf|Dwarves]]"
 ---
 
 # Karathic
