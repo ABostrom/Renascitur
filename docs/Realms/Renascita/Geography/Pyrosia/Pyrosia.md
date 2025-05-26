@@ -66,7 +66,7 @@ This is the content that is majority controlled by the [[Firebrand Empire]] alth
 
 ![[The Forge of Souls]]
 
-# Ember Peaks
+# [[Ember Peaks]]
 
 ![[Mount Earthspur]]
 

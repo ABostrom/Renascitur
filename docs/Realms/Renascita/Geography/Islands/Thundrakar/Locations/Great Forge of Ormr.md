@@ -21,6 +21,6 @@ The anvil — *Ormr's Rest* — is made from fused [[Skyshatter Ore]] and polish
 Only master smiths and [[Windscribes]] are permitted to perform the [[Stormforging]] rites here. All tools must be tuned to storm resonance. Silence is mandatory during the rite, broken only by the thunder outside — and the hammer’s echo.
 
 ## Myth and Mystery  
-Some say [[High Conductor Aundril Voxhammer]] meditates here during moonless nights, speaking aloud into the void. Others believe the Forge is still alive — that Ormr’s spirit lingers, waiting for the day the storm calls him back.
+Some say [[Aundril Voxhammer]] meditates here during moonless nights, speaking aloud into the void. Others believe the Forge is still alive — that Ormr’s spirit lingers, waiting for the day the storm calls him back.
 
 > “The forge does not wait for you. It waits for the storm. Be worthy of its voice.”

@@ -8,7 +8,7 @@ The Windscribes are revered not as warriors, but as interpreters. Where the hamm
 
 They are trained from youth to detect subtle shifts in resonance — from the pitch of wind passing through cavern tunnels to the harmonic distortion of a storm brewing days away.
 
-Most rites and decisions of state in [[Thundrakar]] are undertaken only after the Windscribes have “read the sky.” Even the [[High Conductor Aundril Voxhammer]] was once a Windscribe, and is still considered part of their order.
+Most rites and decisions of state in [[Thundrakar]] are undertaken only after the Windscribes have “read the sky.” Even the [[Aundril Voxhammer]] was once a Windscribe, and is still considered part of their order.
 
 ## Duties and Rites  
 - **Storm Chanting**: Ritual hums and tones performed to harmonize with incoming storms.

@@ -23,7 +23,7 @@ Their elemental burden, sealed by [[Muradin]] in [[the First Age]], has shaped t
 ## Society and Culture  
 Stormbound culture reveres harmony, resonance, and memory. Their great rituals are not shouted — they are **sung in tuning tones** that ripple through stone and sky. Their forges ring not just with hammer and anvil, but with the voice of the storm itself.
 
-Their leader is the [[High Conductor Aundril Voxhammer]], chosen not by blood, but by **resonant attunement** to the sealed fragment of [[Tempus]].
+Their leader is the [[Aundril Voxhammer]], chosen not by blood, but by **resonant attunement** to the sealed fragment of [[Tempus]].
 
 The [[Windscribes]], mystics and archivists of thunder’s voice, serve as lorekeepers and advisors, tuning the city’s pylons and deciphering the sky’s warnings.
 

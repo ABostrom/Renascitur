@@ -1,6 +1,11 @@
 ---
 aliases:
-  - Stormbound
+type: city
+continent: ""
+province: ""
+society: "[[Stormbound of Thundrakar]]"
+leadership:
+  - "[[Aundril Voxhammer]]"
 ---
 ![[Pasted image 20250419175154.png]]
 ## Overview  
@@ -13,7 +18,7 @@ The [[Stormbound]] are not architects of dominion, but custodians of resonance. 
 
 They shape runes not to control lightning, but to **honor its message**. The most honored among them are the [[Windscribes]] — those who can hear prophecy in static and story in the roar of thunder.
 
-Their city is led by [[High Conductor Aundril Voxhammer]], a figure not crowned by blood, but **chosen by resonance** — the one who best interprets the voice of [[Tempus]] and guides the chorus of the storm.
+Their city is led by [[Aundril Voxhammer]], a figure not crowned by blood, but **chosen by resonance** — the one who best interprets the voice of [[Tempus]] and guides the chorus of the storm.
 
 ## Geography and Structure  
 Unlike most dwarven cities, [[Thundrakar]] is built both **downward and upward**, spiraling around the [[Stormspire]] in layers of mine and citadel. The veins of [[Storm Quartz]] and [[Skyshatter Ore]] flow from the peak like lightning frozen in stone, pulsing with energy drawn from the bound essence of [[Tempus]].
@@ -34,6 +39,6 @@ Atop the [[Stormspire]], hidden within the endless maelstrom, lies the bound fra
 The storm is not silenced — it is **channeled**.  
 Its veins run downward through the mountain, forming conduits of [[Storm Quartz]] and [[Skyshatter Ore]]. These carry the storm’s memory into [[Thundrakar]] below.
 
-[[High Conductor Aundril Voxhammer]] oversees the rituals that maintain this resonance. Through chants, tuning, and lightning rites, they ensure the madness of the storm remains a message, not a scream.
+[[Aundril Voxhammer]] oversees the rituals that maintain this resonance. Through chants, tuning, and lightning rites, they ensure the madness of the storm remains a message, not a scream.
 
 > “The sky remembers what the world forgets. And we remember the sky.”

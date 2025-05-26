@@ -16,7 +16,7 @@ Veins of [[Storm Quartz]] and [[Skyshatter Ore]] twist down from the peak like f
 When lightning strikes the peak — and it always does — it does not vanish. It echoes.
 
 ## Religious and Cultural Role  
-The [[Stormspire]] is revered, feared, and studied. The [[Windscribes]] travel its lower slopes to listen to its resonance. The [[High Conductor Aundril Voxhammer|High Conductor]] alone interprets its shifts in tone and fury.
+The [[Stormspire]] is revered, feared, and studied. The [[Windscribes]] travel its lower slopes to listen to its resonance. The [[Aundril Voxhammer|High Conductor]] alone interprets its shifts in tone and fury.
 
 It is said that should the pylons ever fall out of tune, the storm will remember what it once was — and awaken.
 
