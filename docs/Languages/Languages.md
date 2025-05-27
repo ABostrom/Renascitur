@@ -1,4 +1,4 @@
 
 ```dataview
- TABLE spoken-by FROM #language 
+ TABLE spoken-by, language-family, language-tier FROM #language 
 ```

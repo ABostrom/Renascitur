@@ -1,10 +1,17 @@
 ---
-aliases: [Serethi, Aerlai Tongue]
-tags: [language, solaran, dialect, celestial]
-language-family: "[Elyssan]]"
+aliases:
+  - Serethi
+  - Aerlai Tongue
+tags:
+  - language
+  - solaran
+  - dialect
+  - celestial
+language-family:
+  - "[[Elyssan]]"
 language-tier: dialect
-spoken-by: 
-- "[[Celestar]]"
+spoken-by:
+  - "[[Celestar]]"
 ---
 
 # Serethi
