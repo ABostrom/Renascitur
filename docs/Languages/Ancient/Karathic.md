@@ -6,9 +6,9 @@ tags:
   - language
   - grundthain
   - ancient
-aat-language-family:
+language-family:
   - "[[Grundthain]]"
-aat-language-tier: root
+language-tier: root
 spoken-by:
   - "[[Grundthain]]"
   - "[[Varkuun]]"

@@ -7,9 +7,9 @@ tags:
   - thraysian
   - dialect
   - magic
-aat-language-family:
+language-family:
   - "[[Valeshi]]"
-aat-language-tier: dialect
+language-tier: dialect
 spoken-by:
   - "[[Thraysian Common]]"
 ---

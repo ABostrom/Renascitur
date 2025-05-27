@@ -1,8 +1,8 @@
 ---
 aliases: [Valeshi, Proto-Human Tongue]
 tags: [language, human, ancient]
-aat-language-family: "[[Human]]"
-aat-language-tier: root
+language-family: "[[Human]]"
+language-tier: root
 spoken-by: 
 - "[[Human]]"
 - "[[Elasi]]"

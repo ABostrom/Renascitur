@@ -1,9 +1,9 @@
 ---
 aliases: [Leonin, Tactical Natsugen]
 tags: [language, leonin, derived]
-aat-language-family: 
+language-family: 
 - "[[Natsugen]]"
-aat-language-tier: derived
+language-tier: derived
 spoken-by: 
 - "[[Leonin]]"
 ---

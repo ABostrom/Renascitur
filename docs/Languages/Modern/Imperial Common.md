@@ -1,9 +1,19 @@
 ---
-aliases: [Imperial, Common Trade Tongue]
-tags: [language, trade, common]
-aat-language-family: 
-- "[[Valeshi]]"
-aat-language-tier: derived
+aliases:
+  - Imperial
+  - Common Trade Tongue
+tags:
+  - language
+  - trade
+  - common
+language-family:
+  - "[[Valeshi]]"
+language-tier: derived
+spoken-by:
+  - "[[Imperial Human]]"
+  - "[[Goliath]]"
+  - "[[Imperial Orcs]]"
+  - "[[Imperial Leonin]]"
 ---
 
 # Imperial

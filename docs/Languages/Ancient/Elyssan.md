@@ -1,8 +1,8 @@
 ---
 aliases: [Elyssan]
 tags: [language, solaran, root, ancient]
-aat-language-family: "[[Solaran]]"
-aat-language-tier: root
+language-family: "[[Solaran]]"
+language-tier: root
 spoken-by: 
 - "[[Solaran]]"
 - "[[Arcanii]]"

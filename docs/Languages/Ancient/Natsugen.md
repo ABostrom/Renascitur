@@ -6,9 +6,9 @@ tags:
   - language
   - kyojin
   - ancient
-aat-language-family:
+language-family:
   - "[[Kyojin]]"
-aat-language-tier: root
+language-tier: root
 spoken-by:
   - "[[Kyojin]]"
   - "[[Orc]]"
