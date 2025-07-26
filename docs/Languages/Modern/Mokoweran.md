@@ -6,9 +6,7 @@ tags:
   - language
   - mokoweran
   - derived
-language-family:
-  - "[[Elyssan]]"
-  - "[[Denisovan]]"
+language-family: "[[Elyssan]]"
 language-tier: derived
 spoken-by:
   - "[[Mokuun]]"

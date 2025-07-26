@@ -1,11 +1,15 @@
 ---
-aliases: [Leonin, Tactical Natsugen]
-tags: [language, leonin, derived]
-language-family: 
-- "[[Natsugen]]"
+aliases:
+  - Leonin
+  - Tactical Natsugen
+tags:
+  - language
+  - leonin
+  - derived
+language-family: "[[Natsugen]]"
 language-tier: derived
-spoken-by: 
-- "[[Leonin]]"
+spoken-by:
+  - "[[Leonin]]"
 ---
 
 # [[docs/Races/Kyojin/Leonin/Leonin|Leonin]]

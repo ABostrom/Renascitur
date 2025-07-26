@@ -6,8 +6,7 @@ tags:
   - language
   - trade
   - common
-language-family:
-  - "[[Valeshi]]"
+language-family: "[[Valeshi]]"
 language-tier: derived
 spoken-by:
   - "[[Imperial Human]]"

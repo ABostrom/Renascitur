@@ -6,8 +6,7 @@ tags:
   - language
   - grundthain
   - ancient
-language-family:
-  - "[[Grundthain]]"
+language-family: "[[Grundthain]]"
 language-tier: root
 spoken-by:
   - "[[Grundthain]]"

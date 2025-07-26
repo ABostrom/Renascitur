@@ -1,11 +1,16 @@
 ---
-aliases: [Zytherin, Velastri Tongue]
-tags: [language, solaran, dialect, infernal]
-language-family: 
-- "[[Elyssan]]"
+aliases:
+  - Zytherin
+  - Velastri Tongue
+tags:
+  - language
+  - solaran
+  - dialect
+  - infernal
+language-family: "[[Elyssan]]"
 language-tier: dialect
-spoken-by: 
-- "[[Velastri]]"
+spoken-by:
+  - "[[Velastri]]"
 ---
 
 # Zytherin

@@ -1,11 +1,15 @@
 ---
-aliases: [Orcish, Spiritual Natsugen]
-tags: [language, orcish, derived]
-language-family: 
-- "[[Natsugen]]"
+aliases:
+  - Orcish
+  - Spiritual Natsugen
+tags:
+  - language
+  - orcish
+  - derived
+language-family: "[[Natsugen]]"
 language-tier: derived
-spoken-by: 
-- "[[Orc]]"
+spoken-by:
+  - "[[Orc]]"
 ---
 
 # Orcish

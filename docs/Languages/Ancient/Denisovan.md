@@ -6,8 +6,7 @@ tags:
   - language
   - saurian
   - ancient
-language-family:
-  - "[[Saurian]]"
+language-family: "[[Saurian]]"
 language-tier: root
 spoken-by:
   - "[[Saurian]]"

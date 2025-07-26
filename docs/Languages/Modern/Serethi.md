@@ -7,8 +7,7 @@ tags:
   - solaran
   - dialect
   - celestial
-language-family:
-  - "[[Elyssan]]"
+language-family: "[[Elyssan]]"
 language-tier: dialect
 spoken-by:
   - "[[Celestar]]"

@@ -6,8 +6,7 @@ tags:
   - language
   - dwarven
   - derived
-language-family:
-  - "[[Karathic]]"
+language-family: "[[Karathic]]"
 language-tier: derived
 spoken-by:
   - "[[Dwarf|Dwarves]]"

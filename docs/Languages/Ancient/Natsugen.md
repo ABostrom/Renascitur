@@ -6,8 +6,7 @@ tags:
   - language
   - kyojin
   - ancient
-language-family:
-  - "[[Kyojin]]"
+language-family: "[[Kyojin]]"
 language-tier: root
 spoken-by:
   - "[[Kyojin]]"
