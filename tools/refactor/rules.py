@@ -61,6 +61,19 @@ RULES: List[Tuple[re.Pattern, str, Extras]] = [
     # ---------- Meta files: skip ----------
     (re.compile(r"^_meta/.*\.md$"), None, lambda _: {}),
 
+    # ---------- Realm-level summary files ----------
+    # The realm itself: Realms/Renascita/Renascita.md
+    (re.compile(r"^Realms/Renascita/Renascita\.md$"), "continent", lambda _: {}),
+    (re.compile(r"^Realms/Renascita/Constellations\.md$"), "essay", lambda _: {}),
+
+    # ---------- Geography: Islands (extra nesting level) ----------
+    # Island self-named: Geography/Islands/<Island>/<Island>.md
+    (re.compile(r"^Realms/Renascita/Geography/Islands/([^/]+)/\1\.md$"),
+     "continent", lambda _: {"kind": "island"}),
+    # Locations under an island
+    (re.compile(r"^Realms/Renascita/Geography/Islands/([^/]+)/Locations/[^/]+\.md$"),
+     "landmark", lambda relpath: {"continent": "[[{}]]".format(relpath.split("/")[4])}),
+
     # ---------- Geography (most specific first) ----------
     # Continent self-named file: Geography/Arcturia/Arcturia.md
     (re.compile(r"^Realms/Renascita/Geography/([^/]+)/\1\.md$"), "continent", lambda _: {}),
@@ -97,6 +110,11 @@ RULES: List[Tuple[re.Pattern, str, Extras]] = [
     (re.compile(r"^Realms/Renascita/Geography/[^/]+/Locations/.*\.md$"),
      "landmark", realm_from_renascita_path),
 
+    # Anything else directly in a city folder (e.g. Magnus' Rest/Cascadia.md
+    # where Cascadia is a sub-district without an explicit Locations/ subfolder)
+    (re.compile(r"^Realms/Renascita/Geography/[^/]+/Cities/[^/]+/[^/]+\.md$"),
+     "landmark", realm_from_renascita_path),
+
     # ---------- Societies ----------
     # Society self-named: Societies/<Society>/<Society>.md  → faction (Aaron may relabel to culture)
     (re.compile(r"^Realms/Renascita/Societies/([^/]+)/\1\.md$"), "faction", lambda _: {"realm": "[[Renascita]]"}),
@@ -114,9 +132,16 @@ RULES: List[Tuple[re.Pattern, str, Extras]] = [
     (re.compile(r"^Realms/Renascita/Legendarium/Characters/.*\.md$"), "character", lambda _: {}),
     (re.compile(r"^Realms/Renascita/Legendarium/Technology/.*\.md$"), "technology", lambda _: {}),
     (re.compile(r"^Realms/Renascita/Legendarium/Natural Resources/.*\.md$"), "resource", lambda _: {}),
+    (re.compile(r"^Realms/Renascita/Legendarium/Magic/.*\.md$"), "technology", lambda _: {}),
+    (re.compile(r"^Realms/Renascita/Legendarium/Monsters/.*\.md$"), "character", lambda _: {}),
+    (re.compile(r"^Realms/Renascita/Legendarium/Prophecies/.*\.md$"), "prophecy", lambda _: {}),
+    # Anything else loose under Legendarium: treat as artifact (named, singular)
+    (re.compile(r"^Realms/Renascita/Legendarium/[^/]+\.md$"), "artifact", lambda _: {}),
 
     # ---------- Factions ----------
     (re.compile(r"^Realms/Renascita/Factions/Organisations/.*\.md$"), "organisation", lambda _: {}),
+    (re.compile(r"^Realms/Renascita/Factions/Orders/.*\.md$"), "organisation", lambda _: {}),
+    (re.compile(r"^Realms/Renascita/Factions/Religions/.*\.md$"), "faction", lambda _: {}),
     (re.compile(r"^Realms/Renascita/Factions/Cults/.*\.md$"), "faction", lambda _: {}),
 
     # ---------- Other realms / planes (single-file stubs being promoted) ----------
@@ -148,6 +173,7 @@ RULES: List[Tuple[re.Pattern, str, Extras]] = [
 
     # ---------- Races ----------
     (re.compile(r"^Races/[^/]+/[^/]+/Variants/[^/]+\.md$"), "race", lambda _: {}),
+    (re.compile(r"^Races/[^/]+/[^/]+/[^/]+\.md$"), "race", lambda _: {}),
     (re.compile(r"^Races/[^/]+/[^/]+\.md$"), "race", lambda _: {}),
     (re.compile(r"^Races/[^/]+\.md$"), "race", lambda _: {}),
 
