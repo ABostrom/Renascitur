@@ -1,2 +1,4 @@
 .obsidian/
 /.obsidian
+__pycache__/
+*.pyc
