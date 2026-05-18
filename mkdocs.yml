@@ -1,7 +1,7 @@
 site_name: Renascitur
+
 theme:
   name: material
-
   palette:
     # Light mode
     - media: "(prefers-color-scheme: light)"
@@ -11,8 +11,7 @@ theme:
       toggle:
         icon: material/toggle-switch-off-outline
         name: Switch to dark mode
-
-      # Dark mode
+    # Dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
       primary: pink
@@ -32,13 +31,22 @@ markdown_extensions:
       permalink: true
 
 plugins:
-- search
-- roamlinks 
-- callouts
-#- ezlinks:
-#   wikilinks: true
-#   reference_links: true
+  - search
+  - roamlinks
+  - callouts
 
 extra_javascript:
-- https://polyfill.io/v3/polyfill.min.js?features=es6
-- https://unpkg.com/mermaid/dist/mermaid.min.js 
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://unpkg.com/mermaid/dist/mermaid.min.js
+
+# Explicit top-level nav so the site doesn't depend on filesystem order.
+# Sub-pages are auto-included by mkdocs from each folder.
+nav:
+  - Welcome: index.md
+  - Cosmology: Cosmology/
+  - History: History/
+  - Realms: Realms/
+  - Races: Races/
+  - Languages: Languages/
+  - Story: Story/
+  - Reference (_meta): _meta/

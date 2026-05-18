@@ -23,6 +23,5 @@ jobs:
             mkdocs-material-
       - run: pip install mkdocs-material
       - run: pip install mkdocs-callouts
-      - run: pip install mkdocs-ezlinks-plugin
       - run: pip install mkdocs-roamlinks-plugin
       - run: mkdocs gh-deploy --force
