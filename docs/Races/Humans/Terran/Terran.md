@@ -11,6 +11,7 @@ spoken-language:
 - '[[Imperial Common|Imperial]]'
 type: race
 status: draft
+lineage: Human
 ---
 # Terran Humans
 
