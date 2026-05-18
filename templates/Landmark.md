@@ -1,9 +1,11 @@
 ---
-type: item
+type: landmark
 status: draft
 tags: []
-rarity: common
-origin: ""
+continent: ""
+region: ""
+inside: ""     # e.g. "[[Eltabarr]]" for a district
+era: ""
 created: <% tp.date.now("YYYY-MM-DD") %>
 updated: <% tp.date.now("YYYY-MM-DD") %>
 ---
@@ -12,4 +14,4 @@ updated: <% tp.date.now("YYYY-MM-DD") %>
 
 ## Description
 
-## Use
+## Significance

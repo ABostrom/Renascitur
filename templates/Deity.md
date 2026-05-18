@@ -1,9 +1,11 @@
 ---
-type: item
+type: deity
 status: draft
 tags: []
-rarity: common
-origin: ""
+pantheon: ""
+domain: []
+era-of-emergence: ""
+aliases: []
 created: <% tp.date.now("YYYY-MM-DD") %>
 updated: <% tp.date.now("YYYY-MM-DD") %>
 ---
@@ -12,4 +14,8 @@ updated: <% tp.date.now("YYYY-MM-DD") %>
 
 ## Description
 
-## Use
+## Domain
+
+## Worship
+
+## History

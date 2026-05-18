@@ -1,20 +1,23 @@
 ---
-type: organisation
+type: character
 status: draft
 tags: []
-parent-faction: ""
-realm: ""
-era-founded: ""
+race: ""
+culture: ""
+affiliation: ""
+location: ""
+era: ""
+aliases: []
 created: <% tp.date.now("YYYY-MM-DD") %>
 updated: <% tp.date.now("YYYY-MM-DD") %>
 ---
 
 # {{title}}
 
-## Purpose
+## Appearance
 
-## Structure
-
-## Membership
+## Personality
 
 ## History
+
+## Connections

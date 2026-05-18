@@ -1,9 +1,11 @@
 ---
-type: item
+type: resource
 status: draft
 tags: []
-rarity: common
-origin: ""
+category: ""     # metal | gem | wood | reagent | textile | …
+realm: ""
+sources: []
+uses: []
 created: <% tp.date.now("YYYY-MM-DD") %>
 updated: <% tp.date.now("YYYY-MM-DD") %>
 ---
@@ -12,4 +14,6 @@ updated: <% tp.date.now("YYYY-MM-DD") %>
 
 ## Description
 
-## Use
+## Sources
+
+## Uses

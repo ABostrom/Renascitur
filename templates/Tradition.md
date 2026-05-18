@@ -1,9 +1,10 @@
 ---
-type: item
+type: tradition
 status: draft
 tags: []
-rarity: common
-origin: ""
+culture: ""
+realm: ""
+era: ""
 created: <% tp.date.now("YYYY-MM-DD") %>
 updated: <% tp.date.now("YYYY-MM-DD") %>
 ---
@@ -12,4 +13,4 @@ updated: <% tp.date.now("YYYY-MM-DD") %>
 
 ## Description
 
-## Use
+## Significance

@@ -1,15 +1,17 @@
 ---
-type: item
+type: cosmic-force
 status: draft
 tags: []
-rarity: common
-origin: ""
+opposed-by: ""
+related-forces: []
 created: <% tp.date.now("YYYY-MM-DD") %>
 updated: <% tp.date.now("YYYY-MM-DD") %>
 ---
 
 # {{title}}
 
-## Description
+## Nature
 
-## Use
+## Manifestations
+
+## Mortal contact

@@ -1,15 +1,18 @@
 ---
-type: item
+type: technology
 status: draft
 tags: []
-rarity: common
-origin: ""
+era-of-invention: ""
+invented-by: ""
+discipline: ""
 created: <% tp.date.now("YYYY-MM-DD") %>
 updated: <% tp.date.now("YYYY-MM-DD") %>
 ---
 
 # {{title}}
 
-## Description
+## Principle
 
-## Use
+## History
+
+## Applications

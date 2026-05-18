@@ -1,15 +1,17 @@
 ---
-type: item
+type: range
 status: draft
 tags: []
-rarity: common
-origin: ""
+continent: ""
+kind: range   # range | peak | massif
 created: <% tp.date.now("YYYY-MM-DD") %>
 updated: <% tp.date.now("YYYY-MM-DD") %>
 ---
 
 # {{title}}
 
-## Description
+## Geography
 
-## Use
+## Inhabitants
+
+## History

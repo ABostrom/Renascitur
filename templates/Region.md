@@ -1,15 +1,19 @@
 ---
-type: item
+type: region
 status: draft
 tags: []
-rarity: common
-origin: ""
+continent: ""
+era: ""
+features: []
+settlements: []
 created: <% tp.date.now("YYYY-MM-DD") %>
 updated: <% tp.date.now("YYYY-MM-DD") %>
 ---
 
 # {{title}}
 
-## Description
+## Overview
 
-## Use
+## Geography
+
+## History
