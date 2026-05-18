@@ -1,3 +1,8 @@
+---
+type: essay
+status: draft
+tags: []
+---
 ## The Sword of Ardanus
 
 This constellation resembles a sword held by a warrior. According to legend, the sword belonged to the hero [[Ardanus]], who used it to defeat a powerful dragon.

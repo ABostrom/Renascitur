@@ -1,8 +1,13 @@
 ---
-tags: [city-overseer, House Vadalis]
-aliases: [Vadalis, Old Westgate Overseer]
+tags:
+- city-overseer
+- House Vadalis
+aliases:
+- Vadalis
+- Old Westgate Overseer
+type: character
+status: draft
 ---
-
 ## Title
 - Overseer of [[Old Westgate]]
 

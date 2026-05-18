@@ -1,3 +1,9 @@
+---
+type: faction
+status: draft
+realm: '[[Renascita]]'
+tags: []
+---
 **Type**:: Sovereign Protectorate  
 **Capital**:: [[Calvereth]]  
 **Ruler**:: [[Vaelira Lyrandar|Vaelira]], *The Lady of Velkhar*  

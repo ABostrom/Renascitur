@@ -1,12 +1,15 @@
 ---
 aliases:
-  - Hollowed Warrens
-  - Arachnie's Cathedral
-  - Silk Catacombs
+- Hollowed Warrens
+- Arachnie's Cathedral
+- Silk Catacombs
 tags:
-  - location
-  - cult
-  - worldbeneath
+- location
+- cult
+- worldbeneath
+type: landmark
+status: draft
+continent: '[[The World Beneath]]'
 ---
 # [[The Hollowed Warrens]]
 

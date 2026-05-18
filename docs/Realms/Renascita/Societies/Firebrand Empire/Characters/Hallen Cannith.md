@@ -1,8 +1,13 @@
 ---
-tags: [city-overseer, House Cannith]
-aliases: [Cannith, Magnus' Rest Overseer]
+tags:
+- city-overseer
+- House Cannith
+aliases:
+- Cannith
+- Magnus' Rest Overseer
+type: character
+status: draft
 ---
-
 ## Title
 - Overseer of [[Magnus' Rest]]
 

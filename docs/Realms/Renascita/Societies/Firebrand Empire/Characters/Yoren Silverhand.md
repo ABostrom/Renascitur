@@ -1,8 +1,12 @@
 ---
-tags: [leader, House Silverhand]
-aliases: [Yoren]
+tags:
+- leader
+- House Silverhand
+aliases:
+- Yoren
+type: character
+status: draft
 ---
-
 ## Affiliation
 - **House**: [[House Silverhand]]
 

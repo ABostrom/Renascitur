@@ -1,19 +1,20 @@
 ---
 aliases:
-  - Uftine Humans
+- Uftine Humans
 tags:
-  - race
-  - cultural-variant
-  - humans
-  - hardy
-lineage: "[[Terran]]"
-origin-plane: "[[Renascita]]"
+- race
+- cultural-variant
+- humans
+- hardy
+lineage: '[[Terran]]'
+origin-plane: '[[Renascita]]'
 aat-race-tier: variant
 spoken-language:
-  - "[[Imperial Common]]"
-  - "[[Dwarven]]"
+- '[[Imperial Common]]'
+- '[[Dwarven]]'
+type: race
+status: draft
 ---
-
 # Uftine Humans
 
 **Summary:**  

@@ -1,15 +1,21 @@
 ---
-aliases: [Goliaths]
-tags: [race, elemental, grundthain, nomadic]
-lineage: "[[Dwarf|Dwarves]]"
-origin-plane: "[[Renascita]]"
+aliases:
+- Goliaths
+tags:
+- race
+- elemental
+- grundthain
+- nomadic
+lineage: '[[Dwarf|Dwarves]]'
+origin-plane: '[[Renascita]]'
 aat-race-tier: distinct
-spoken-language: 
-- "[[Karathic]]"
-- "[[Titanic]]"
-- "[[Imperial Common]]"
+spoken-language:
+- '[[Karathic]]'
+- '[[Titanic]]'
+- '[[Imperial Common]]'
+type: race
+status: draft
 ---
-
 # Goliaths
 
 **Summary:**  

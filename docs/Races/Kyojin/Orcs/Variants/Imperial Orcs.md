@@ -1,14 +1,20 @@
 ---
-aliases: [Imperial Orcs]
-tags: [race, cultural-variant, orcs, imperial]
-lineage: "[[Orc]]"
-origin-plane: "[[Renascita]]"
+aliases:
+- Imperial Orcs
+tags:
+- race
+- cultural-variant
+- orcs
+- imperial
+lineage: '[[Orc]]'
+origin-plane: '[[Renascita]]'
 aat-race-tier: variant
-spoken-language: 
-- "[[Imperial Common]]"
-- "[[Orcish]]"
+spoken-language:
+- '[[Imperial Common]]'
+- '[[Orcish]]'
+type: race
+status: draft
 ---
-
 # Imperial [[Orc|Orcs]]
 
 **Summary:**  

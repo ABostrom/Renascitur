@@ -1,7 +1,10 @@
 ---
-aliases: [Tharashk]
+aliases:
+- Tharashk
+type: essay
+status: draft
+tags: []
 ---
-
 ## Domain
 *Finding*
 _Responsible for hunting threats, scouting, and frontier operations within the Firebrand Empire._

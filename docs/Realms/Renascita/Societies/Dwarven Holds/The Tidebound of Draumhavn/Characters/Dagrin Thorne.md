@@ -1,3 +1,8 @@
+---
+type: character
+status: stub
+tags: []
+---
 # Dagrin Thorne
 
 ## Title

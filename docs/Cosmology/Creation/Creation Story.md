@@ -1,3 +1,8 @@
+---
+type: essay
+status: draft
+tags: []
+---
 ## The [[Aeternum]] and the [[Machinery of Death]]
 
 _(A Creation Myth as Told by the [[Elder Races]] of Renascitur)_

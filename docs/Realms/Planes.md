@@ -1,4 +1,8 @@
-
+---
+type: essay
+status: draft
+tags: []
+---
 
 ## Planes of [[Luxar]]
 ![[Imperium]]

@@ -1,3 +1,8 @@
+---
+type: deity
+status: draft
+tags: []
+---
 ### **The Life of Muradin: The Visionary, the Smith, the God**
 
 #### **The Era of the [[Grundthain]]**

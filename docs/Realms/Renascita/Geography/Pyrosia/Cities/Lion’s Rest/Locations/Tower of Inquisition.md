@@ -1,8 +1,14 @@
 ---
-tags: [location, headquarters, House Medani]
-aliases: [Tower of Inquisition]
+tags:
+- location
+- headquarters
+- House Medani
+aliases:
+- Tower of Inquisition
+type: landmark
+status: draft
+continent: '[[Pyrosia]]'
 ---
-
 ## Associated House
 - [[House Medani]]
 

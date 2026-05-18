@@ -1,3 +1,8 @@
+---
+type: essay
+status: draft
+tags: []
+---
 ### Elder Vellara
 
 **Appearance:** Elder Vellara's scales are an ancient ivory, etched with lines of age and experience. Her eyes, a piercing shade of amber, seem to hold centuries of knowledge. Her robe is a tapestry of history, embroidered with scenes from [[Solaran]] lore, signifying her role as the keeper of knowledge.

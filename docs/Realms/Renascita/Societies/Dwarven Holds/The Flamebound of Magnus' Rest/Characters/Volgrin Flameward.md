@@ -1,9 +1,11 @@
 ---
 aliases:
-  - High Pyrethane
-  - High Pyrethane Volgrin Flameward
+- High Pyrethane
+- High Pyrethane Volgrin Flameward
+type: character
+status: draft
+tags: []
 ---
-
 > *"I was a child when the night came. [[Magnus]] gave me fire. I have never let it go."*
 
 ---

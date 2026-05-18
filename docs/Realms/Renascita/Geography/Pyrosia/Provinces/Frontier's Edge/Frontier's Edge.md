@@ -1,8 +1,13 @@
 ---
-aliases: [Frontier's Edge]
-tags: [province, region]
+aliases:
+- Frontier's Edge
+tags:
+- province
+- region
+type: region
+status: draft
+continent: '[[Pyrosia]]'
 ---
-
 ## Overview
 A war-torn and reclaimed expanse once ruled by [[Orc|orcs]] and aberrant creatures. Now it stands as the Empire’s final shield wall, fiercely protected by border clans and militant orders.
 

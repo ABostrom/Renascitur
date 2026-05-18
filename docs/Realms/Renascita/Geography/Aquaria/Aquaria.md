@@ -1,4 +1,8 @@
-
+---
+type: continent
+status: stub
+tags: []
+---
 
 ![[Coral Reef Bay]]
 

@@ -1,3 +1,9 @@
+---
+type: region
+status: draft
+continent: '[[Qethusiyya]]'
+tags: []
+---
 _Appearance:_ Nestled amid the arid expanse of Renascitur, the Eversoul Grove presents a striking contrast to the surrounding desolation. It is an oasis of vibrant life and tranquility, offering a haven of resplendent greenery amidst the harsh wilderness. Tall, ancient trees with verdant foliage form a protective canopy over the grove, their leaves shimmering with an ethereal radiance that bathes the entire area in a soft, gentle glow. This luminescence, akin to dappled sunlight, emanates from the heart of the grove.
 
 _Entrance to Solara:_ The Eversoul Grove is one of the last known places in Renascitur that holds the elusive key to accessing the storied city of Solara, a place of great significance to the [[Solaran]] civilization. It serves as a physical gateway to the ancient city, allowing those of [[Solaran]] ancestry to pass through to the hallowed grounds of Solara.

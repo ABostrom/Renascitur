@@ -1,20 +1,21 @@
 ---
 aliases:
-  - Thraysian Humans
+- Thraysian Humans
 tags:
-  - race
-  - cultural-variant
-  - humans
-  - magocratic
+- race
+- cultural-variant
+- humans
+- magocratic
 lineage:
-  - "[[Terran]]"
+- '[[Terran]]'
 origin-plane:
-  - "[[Renascita]]"
+- '[[Renascita]]'
 aat-race-tier: variant
 spoken-language:
-  - "[[Thraysian Common]]"
+- '[[Thraysian Common]]'
+type: race
+status: draft
 ---
-
 # Thraysian Humans
 
 **Summary:**  

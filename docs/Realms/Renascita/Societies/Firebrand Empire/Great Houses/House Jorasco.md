@@ -1,7 +1,10 @@
 ---
-aliases: [Jorasco]
+aliases:
+- Jorasco
+type: essay
+status: draft
+tags: []
 ---
-
 ## Domain
 *Healing*
 _Responsible for medicine, healing, and battlefield care within the Firebrand Empire._

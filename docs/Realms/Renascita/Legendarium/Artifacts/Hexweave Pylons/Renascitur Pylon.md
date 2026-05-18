@@ -1,3 +1,8 @@
+---
+type: artifact
+status: draft
+tags: []
+---
 Location: [[The Ruins of Baldur's Gate]]
 Status: Online 
 

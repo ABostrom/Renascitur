@@ -1,3 +1,8 @@
+---
+type: essay
+status: draft
+tags: []
+---
 Luminis embodies the cosmic balance of actions and consequences, the intricate interplay of energies that shape the destiny of souls. It encompasses the notion of cause and effect, reflecting the belief that every action, intention, and thought reverberates throughout the universe, leaving an indelible mark on the fabric of existence.
 
 Just as light illuminates the darkness, Luminis reveals the hidden connections between deeds and their repercussions. It symbolizes the radiance of enlightened choices, the gleaming path toward spiritual growth and harmony.

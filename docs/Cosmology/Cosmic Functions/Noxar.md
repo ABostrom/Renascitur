@@ -1,3 +1,8 @@
+---
+type: cosmic-force
+status: draft
+tags: []
+---
 **Aspect**: Shadow, Mystery, Depth, Potential  
 **Opposes**: [[Luxar]]  
 **Domain**: Dreams, the unknown, reflection, secrecy  

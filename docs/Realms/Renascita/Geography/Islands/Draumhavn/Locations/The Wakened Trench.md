@@ -1,3 +1,9 @@
+---
+type: landmark
+status: draft
+continent: '[[Draumhavn]]'
+tags: []
+---
 ## Overview
 
 To the south of [[Draumhavn]], beyond the edge of the last charted reefs, lies a yawning abyss known only as **The Wakened Trench**. A fault in the world’s crust, it plunges into unknowable darkness—a place where even light forgets to return. It is said that when the trench first opened during the [[end of the First Age]], the tides themselves recoiled, and the water grew still with dread.

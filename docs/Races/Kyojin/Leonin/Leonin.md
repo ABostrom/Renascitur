@@ -1,18 +1,19 @@
 ---
 aliases:
-  - Leonin
+- Leonin
 tags:
-  - race
-  - cultural-variant
-  - kyojin
-  - primal
-lineage: "[[docs/Races/Kyojin/Leonin/Leonin|Leonin]]"
-origin-plane: "[[Renascita]]"
+- race
+- cultural-variant
+- kyojin
+- primal
+lineage: '[[docs/Races/Kyojin/Leonin/Leonin|Leonin]]'
+origin-plane: '[[Renascita]]'
 aat-race-tier: distinct
-spoken-language: 
-- "[[docs/Languages/Modern/Leonin|Leonin]]"
+spoken-language:
+- '[[docs/Languages/Modern/Leonin|Leonin]]'
+type: race
+status: draft
 ---
-
 # Leonin
 
 **Summary:**  

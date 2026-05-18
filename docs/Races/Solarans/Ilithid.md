@@ -1,9 +1,8 @@
 ---
 aliases:
-  - Ilithids
+- Ilithids
+type: race
+status: stub
+tags: []
 ---
- 
-
-
-
 ![[Syuul, The Devourer]]

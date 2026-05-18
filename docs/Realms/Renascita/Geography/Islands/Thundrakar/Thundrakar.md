@@ -1,11 +1,14 @@
 ---
-aliases:
+aliases: null
 type: city
-continent: ""
-province: ""
-society: "[[Stormbound of Thundrakar]]"
+continent: ''
+province: ''
+society: '[[Stormbound of Thundrakar]]'
 leadership:
-  - "[[Aundril Voxhammer]]"
+- '[[Aundril Voxhammer]]'
+status: draft
+kind: island
+tags: []
 ---
 ![[Pasted image 20250419175154.png]]
 ## Overview  

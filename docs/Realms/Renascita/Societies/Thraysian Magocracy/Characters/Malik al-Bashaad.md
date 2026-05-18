@@ -1,8 +1,14 @@
 ---
-tags: [zahirah, khadi, saramun]
-aliases: [Khadi of Saramun, Malik]
+tags:
+- zahirah
+- khadi
+- saramun
+aliases:
+- Khadi of Saramun
+- Malik
+type: character
+status: draft
 ---
-
 # Malik al-Bashaad
 
 ## ## Role

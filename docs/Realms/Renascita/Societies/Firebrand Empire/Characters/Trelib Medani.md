@@ -1,8 +1,12 @@
 ---
-tags: [leader, House Medani]
-aliases: [Trelib]
+tags:
+- leader
+- House Medani
+aliases:
+- Trelib
+type: character
+status: draft
 ---
-
 ## Affiliation
 - **House**: [[House Medani]]
 

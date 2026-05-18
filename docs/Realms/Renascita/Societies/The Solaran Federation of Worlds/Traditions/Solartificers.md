@@ -1,6 +1,9 @@
 ---
 aliases:
-  - Seshem-tem
+- Seshem-tem
+type: tradition
+status: draft
+tags: []
 ---
 Solartificers are skilled craftsmen and artisans who specialise in creating magical items and artefacts powered by the energy of the sun. They possess a deep understanding of the workings of magic and the energy of the sun, and are able to combine these two elements in order to create powerful and unique objects.
 

@@ -1,4 +1,7 @@
 ---
 aliases:
-  - Vaelira
+- Vaelira
+type: character
+status: stub
+tags: []
 ---

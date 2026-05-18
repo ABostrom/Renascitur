@@ -1,3 +1,8 @@
+---
+type: resource
+status: draft
+tags: []
+---
 ## Location  
 Found only in exposed cliff veins near the [[Stormspire]], [[Skyshatter Ore]] is formed where raw lightning has struck the same high-altitude rock repeatedly over centuries. These veins run deep beneath storm-tempered peaks and require dangerous mining expeditions during lulls in the weather.
 

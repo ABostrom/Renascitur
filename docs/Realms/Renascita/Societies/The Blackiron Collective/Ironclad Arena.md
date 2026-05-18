@@ -1,3 +1,8 @@
+---
+type: essay
+status: draft
+tags: []
+---
 #### **Purpose and Function**
 
 1. **Entertainment**: The pit hosts regular matches to entertain the populace, showcasing the skill and resourcefulness of its combatants.

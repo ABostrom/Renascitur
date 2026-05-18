@@ -1,7 +1,10 @@
 ---
-aliases: [Phiarlan]
+aliases:
+- Phiarlan
+type: essay
+status: draft
+tags: []
 ---
-
 ## Domain
 *Shadow*
 _Responsible for espionage, assassination, and manipulation within the Firebrand Empire._

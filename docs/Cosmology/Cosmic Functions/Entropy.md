@@ -1,8 +1,11 @@
 ---
 aliases:
-  - Aberrant
-  - Aberrant Energy
-  - Aberrant Corruption
+- Aberrant
+- Aberrant Energy
+- Aberrant Corruption
+type: cosmic-force
+status: draft
+tags: []
 ---
 **Aspect**: Unmaking, Dissolution, Void  
 **Opposes**: [[Weave]] itself  

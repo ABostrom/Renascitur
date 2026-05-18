@@ -1,8 +1,13 @@
 ---
-aliases: [Lux Oescus]
-tags: [city, location]
+aliases:
+- Lux Oescus
+tags:
+- city
+- location
+type: settlement
+status: draft
+continent: '[[Pyrosia]]'
 ---
-
 ## Province
 - [[Ashen Plains]]
 

@@ -1,10 +1,11 @@
 ---
 aliases:
-  - Alat Altanauskh
-  - The Divine Sun
+- Alat Altanauskh
+- The Divine Sun
+type: essay
+status: draft
+tags: []
 ---
-
-
 # Machinery of Death
 The machinery of death. The cogs turn and whur, this is the cycle that ensures the souls in the universe are reincarnated. All souls were created at the dawn of the universe, and when no more souls exist, the animus machina will cease to function, and time and the universe will end. 
 

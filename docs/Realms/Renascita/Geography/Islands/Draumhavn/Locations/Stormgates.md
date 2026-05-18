@@ -1,3 +1,9 @@
+---
+type: landmark
+status: stub
+continent: '[[Draumhavn]]'
+tags: []
+---
 # Stormgates
 
 ## Overview

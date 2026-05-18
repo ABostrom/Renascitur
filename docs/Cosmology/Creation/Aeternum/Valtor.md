@@ -1,6 +1,9 @@
 ---
 aliases:
-  - Valtor, The Unfettered Wind
+- Valtor, The Unfettered Wind
+type: essay
+status: draft
+tags: []
 ---
 # [[Valtor|Valtor, The Unfettered Wind]]
 

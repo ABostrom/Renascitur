@@ -1,8 +1,12 @@
 ---
-tags: [leader, House Sivis]
-aliases: [Lysse]
+tags:
+- leader
+- House Sivis
+aliases:
+- Lysse
+type: character
+status: draft
 ---
-
 ## Affiliation
 - **House**: [[House Sivis]]
 

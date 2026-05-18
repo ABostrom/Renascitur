@@ -1,17 +1,18 @@
 ---
 aliases:
-  - Orcish
-  - Spiritual Natsugen
+- Orcish
+- Spiritual Natsugen
 tags:
-  - language
-  - orcish
-  - derived
-language-family: "[[Natsugen]]"
+- language
+- orcish
+- derived
+language-family: '[[Natsugen]]'
 language-tier: derived
 spoken-by:
-  - "[[Orc]]"
+- '[[Orc]]'
+type: language
+status: draft
 ---
-
 # Orcish
 
 **Orcish** is the spiritual and ritualistic dialect of [[Natsugen]], spoken by the [[Orcs]]. It is rich in symbolism, chants, and oral tradition, reflecting the deep shamanic roots of the orcish people.

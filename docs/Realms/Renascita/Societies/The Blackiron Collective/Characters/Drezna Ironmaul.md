@@ -1,3 +1,8 @@
+---
+type: character
+status: draft
+tags: []
+---
 ![[0744ebd3-db41-44bd-b9f9-592ee36a808b.webp]]
 
 _Medium Humanoid (Metal Elf), Lawful Neutral_  

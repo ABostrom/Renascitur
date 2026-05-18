@@ -1,8 +1,15 @@
 ---
-tags: [zahirah, khadiyat, grain, agriculture, food]
-aliases: [Khadiyat-e Talvareh]
+tags:
+- zahirah
+- khadiyat
+- grain
+- agriculture
+- food
+aliases:
+- Khadiyat-e Talvareh
+type: organisation
+status: draft
 ---
-
 # Khadiyat-e Talvareh
 
 ## Overview

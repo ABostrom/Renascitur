@@ -1,4 +1,8 @@
-
+---
+type: essay
+status: draft
+tags: []
+---
 - **Appearance**: [[Unimus]] is depicted as a towering [[docs/Races/Kyojin/Leonin/Leonin|Leonin]], his mane a brilliant gold that seems to shimmer with an inner light. His piercing amber eyes reflect both wisdom and the fierce determination that led him to ascend to godhood. He wears ornate armor adorned with celestial symbols, a cloak of lion's fur draped over his broad shoulders.
 - **Quote**: "In the darkness of the [[Night War]], I found the light within myself and led my people to a new dawn."
 - **Life Achievement**: [[Unimus]] founded the [[Firebrand Empire]] of [[Pyrosia]], built the city of Lion's Rest, and ascended to godhood after leading his people to victory in the [[Night War]], a conflict that threatened the very existence of their continent.

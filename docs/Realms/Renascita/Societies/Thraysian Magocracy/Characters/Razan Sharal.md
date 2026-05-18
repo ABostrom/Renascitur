@@ -1,8 +1,14 @@
 ---
-tags: [zahirah, khadi, zinnarat]
-aliases: [Khadi of Zinnarat, Razan]
+tags:
+- zahirah
+- khadi
+- zinnarat
+aliases:
+- Khadi of Zinnarat
+- Razan
+type: character
+status: draft
 ---
-
 # Razan Sharal
 
 ## ## Role

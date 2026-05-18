@@ -1,22 +1,23 @@
 ---
 aliases:
-  - Mokoweri Humans
+- Mokoweri Humans
 tags:
-  - race
-  - cultural-variant
-  - humans
-  - tribal
+- race
+- cultural-variant
+- humans
+- tribal
 lineage:
-  - "[[Terran]]"
+- '[[Terran]]'
 origin-plane:
-  - "[[Renascita]]"
+- '[[Renascita]]'
 aat-race-tier: variant
 spoken-language:
-  - "[[Imperial Common]]"
-  - "[[Thraysian Common]]"
-  - "[[Mokoweran]]"
+- '[[Imperial Common]]'
+- '[[Thraysian Common]]'
+- '[[Mokoweran]]'
+type: race
+status: draft
 ---
-
 # [[Mokoweri]] Humans
 
 **Summary:**  

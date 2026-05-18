@@ -1,4 +1,7 @@
 ---
 aliases:
-  - Blade of Typhon
+- Blade of Typhon
+type: artifact
+status: stub
+tags: []
 ---

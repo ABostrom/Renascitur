@@ -1,8 +1,14 @@
 ---
-tags: [location, headquarters, House Orien]
-aliases: [Journey’s Home]
+tags:
+- location
+- headquarters
+- House Orien
+aliases:
+- Journey’s Home
+type: landmark
+status: draft
+continent: '[[Pyrosia]]'
 ---
-
 ## Associated House
 - [[House Orien]]
 

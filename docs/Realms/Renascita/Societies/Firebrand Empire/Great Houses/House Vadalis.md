@@ -1,7 +1,10 @@
 ---
-aliases: [Vadalis]
+aliases:
+- Vadalis
+type: essay
+status: draft
+tags: []
 ---
-
 ## Domain
 *Handling*
 _Responsible for animal husbandry and mounted logistics within the Firebrand Empire._

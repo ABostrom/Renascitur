@@ -1,3 +1,8 @@
+---
+type: organisation
+status: stub
+tags: []
+---
 # Clan Brinevein
 
 ## Motto

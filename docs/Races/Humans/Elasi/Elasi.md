@@ -1,13 +1,21 @@
 ---
-aliases: [Elasi]
-tags: [race, elemental, mortal-descendant]
+aliases:
+- Elasi
+tags:
+- race
+- elemental
+- mortal-descendant
 lineage: Mortal Race
-origin-plane: [[Elemental Plane]]
+origin-plane:
+- - Elemental Plane
 aat-race-tier: mortal-descendant
-spoken-language: [[Elemental Tongue]]
-written-language: [[Elemental Script]]
+spoken-language:
+- - Elemental Tongue
+written-language:
+- - Elemental Script
+type: race
+status: draft
 ---
-
 # Elasi
 
 **Summary:**  

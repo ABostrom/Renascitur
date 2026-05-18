@@ -1,4 +1,8 @@
-
+---
+type: essay
+status: draft
+tags: []
+---
 **Nature**: The primal language of the cosmos  
 **Used By**: [[Aeternum]]  
 **Resulted In**: The Four Forces + Time  

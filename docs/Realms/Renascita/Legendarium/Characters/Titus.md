@@ -1,3 +1,8 @@
+---
+type: character
+status: draft
+tags: []
+---
 Titus, the imposing and majestic leader of the Tyrannosaurs in the jungle region of Canopy Heights, is a sight to behold. Towering over all other creatures in the area, he is a formidable Tyrannosaurus Rex with gleaming golden eyes that exude both intelligence and ferocity. His scales are a rich mix of deep green and earthy tones, camouflaging him effectively amidst the lush foliage of the jungle.
 
 Titus carries himself with an air of regal authority, and his every movement is calculated and deliberate. He wears the scars of numerous battles, a testament to his prowess as a warrior and protector of the ancient ruins. A single prominent scar runs across one eye, a reminder of a close encounter with a formidable adversary.

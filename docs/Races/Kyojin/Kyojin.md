@@ -1,13 +1,18 @@
 ---
-aliases: [Kyojin]
-tags: [race, elder, primal]
-lineage: "[[Elder Races]]"
-origin-plane: "[[Veltharyn]]"
+aliases:
+- Kyojin
+tags:
+- race
+- elder
+- primal
+lineage: '[[Elder Races]]'
+origin-plane: '[[Veltharyn]]'
 aat-race-tier: elder
-spoken-language: 
-- "[[Natsugen]]"
+spoken-language:
+- '[[Natsugen]]'
+type: race
+status: draft
 ---
-
 # Kyojin
 
 **Summary:**  

@@ -1,18 +1,19 @@
 ---
 aliases:
-  - Imperial Humans
+- Imperial Humans
 tags:
-  - race
-  - cultural-variant
-  - humans
-  - imperial
-lineage: "[[Terran]]"
-origin-plane: "[[Renascita]]"
+- race
+- cultural-variant
+- humans
+- imperial
+lineage: '[[Terran]]'
+origin-plane: '[[Renascita]]'
 aat-race-tier: variant
 spoken-language:
-  - "[[Imperial Common]]"
+- '[[Imperial Common]]'
+type: race
+status: draft
 ---
-
 # Imperial Humans
 
 **Summary:**  

@@ -1,7 +1,10 @@
 ---
-aliases: [Kundarak]
+aliases:
+- Kundarak
+type: essay
+status: draft
+tags: []
 ---
-
 ## Domain
 *Warding*
 _Responsible for dwarven arcane security and magical protections within the Firebrand Empire._

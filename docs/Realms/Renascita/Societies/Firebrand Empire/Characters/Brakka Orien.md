@@ -1,8 +1,13 @@
 ---
-tags: [city-overseer, House Orien]
-aliases: [Orien, Port Ardere Overseer]
+tags:
+- city-overseer
+- House Orien
+aliases:
+- Orien
+- Port Ardere Overseer
+type: character
+status: draft
 ---
-
 ## Title
 - Overseer of [[Port Ardere]]
 

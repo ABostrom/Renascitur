@@ -1,3 +1,8 @@
+---
+type: essay
+status: draft
+tags: []
+---
 ## Cultural Themes – The [[Flamebound]] [[Dwarf|Dwarves]]
 
 The [[Dwarf|dwarves]] of Magnus’ Rest are known as the **[[Flamebound]]**, and they live by the creed of **rebirth through fire**. Fire is more than a tool—it is a crucible of the [[soul]]. Through radiant heat, they believe that all things are tested, all weakness burned away.

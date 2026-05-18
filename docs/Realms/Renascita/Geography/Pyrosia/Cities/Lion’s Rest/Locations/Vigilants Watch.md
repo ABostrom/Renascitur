@@ -1,8 +1,14 @@
 ---
-tags: [location, headquarters, House Deneith]
-aliases: [Vigilants Watch]
+tags:
+- location
+- headquarters
+- House Deneith
+aliases:
+- Vigilants Watch
+type: landmark
+status: draft
+continent: '[[Pyrosia]]'
 ---
-
 ## Associated House
 - [[House Deneith]]
 

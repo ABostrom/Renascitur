@@ -1,6 +1,12 @@
 ---
-aliases: [The Raining Bay]
-tags: [city, location]
+aliases:
+- The Raining Bay
+tags:
+- city
+- location
+type: settlement
+status: draft
+continent: '[[Pyrosia]]'
 ---
 ![[Pasted image 20250420165543.png]]
 ## Province

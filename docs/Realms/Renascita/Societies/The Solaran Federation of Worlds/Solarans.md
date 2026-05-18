@@ -1,3 +1,8 @@
+---
+type: essay
+status: draft
+tags: []
+---
 *Ancient Architects of Light, Harmony, and [[Weave|the Weave]]*
 
 ---

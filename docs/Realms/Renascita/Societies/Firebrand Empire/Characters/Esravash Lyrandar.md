@@ -1,8 +1,12 @@
 ---
-tags: [leader, House Lyrandar]
-aliases: [Esravash]
+tags:
+- leader
+- House Lyrandar
+aliases:
+- Esravash
+type: character
+status: draft
 ---
-
 ## Affiliation
 - **House**: [[House Lyrandar]]
 

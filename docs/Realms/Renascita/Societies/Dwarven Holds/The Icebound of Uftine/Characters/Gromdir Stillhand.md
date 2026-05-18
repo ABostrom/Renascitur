@@ -1,6 +1,9 @@
 ---
 aliases:
-  - Icebound Thane
+- Icebound Thane
+type: character
+status: draft
+tags: []
 ---
 ## Title: [[Icebound]] Thane of Uftine
 

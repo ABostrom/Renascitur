@@ -1,8 +1,13 @@
 ---
-aliases: [Ashgatar]
-tags: [city, location]
+aliases:
+- Ashgatar
+tags:
+- city
+- location
+type: region
+status: draft
+continent: '[[Pyrosia]]'
 ---
-
 ## Province
 - [[Frontier's Edge]]
 

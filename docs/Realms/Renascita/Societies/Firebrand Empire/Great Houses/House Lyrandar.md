@@ -1,7 +1,10 @@
 ---
-aliases: [Lyrandar]
+aliases:
+- Lyrandar
+type: essay
+status: draft
+tags: []
 ---
-
 ## Domain
 *Storm*
 _Responsible for weather control, navigation, and prophecy within the Firebrand Empire._

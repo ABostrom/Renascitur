@@ -1,3 +1,8 @@
+---
+type: essay
+status: draft
+tags: []
+---
 The **Tomb of Emperors** is an ancient, sacred site where the last seven [[Emperors]]s of the [[Firebrand Empire]] are interred. Hidden deep beneath the surface, the tomb is accessible only through the empire's stargate, which is itself concealed within the tomb. Each emperor’s crypt is a reflection of their reign, personality, and contributions to the empire, and the entire complex is protected by advanced security systems and powerful guardians.
 
 

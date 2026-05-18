@@ -1,3 +1,8 @@
+---
+type: essay
+status: stub
+tags: []
+---
 # Blackwake Ships
 
 ## Overview

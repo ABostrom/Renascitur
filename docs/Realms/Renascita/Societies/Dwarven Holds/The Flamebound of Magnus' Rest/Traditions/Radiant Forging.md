@@ -1,3 +1,8 @@
+---
+type: tradition
+status: draft
+tags: []
+---
 > *"The flame does not shape metal. It shapes the [[soul]]. The steel is just what survives the truth."*  
 > — [[Maerra Vulkess]], High Devout of the [[Watch of the Dying Flame]]
 

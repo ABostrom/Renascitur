@@ -1,3 +1,8 @@
+---
+type: essay
+status: draft
+tags: []
+---
 # The Twelve Great Houses of the Firebrand Empire
 
 The Firebrand Empire is ruled by a [[docs/Races/Kyojin/Leonin/Leonin|Leonin]] Emperor, but its strength and longevity depend on the governance of the Twelve Great Houses. These noble dynasties form the backbone of imperial society, each entrusted with a specific domain of influence and responsibility.

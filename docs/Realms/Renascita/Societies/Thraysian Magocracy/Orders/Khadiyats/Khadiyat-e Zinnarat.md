@@ -1,8 +1,15 @@
 ---
-tags: [zahirah, khadiyat, port, coral, trade]
-aliases: [Khadiyat-e Zinnarat]
+tags:
+- zahirah
+- khadiyat
+- port
+- coral
+- trade
+aliases:
+- Khadiyat-e Zinnarat
+type: organisation
+status: draft
 ---
-
 # Khadiyat-e Zinnarat
 
 ## Overview

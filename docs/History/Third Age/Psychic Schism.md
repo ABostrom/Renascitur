@@ -1,6 +1,10 @@
 ---
 aliases:
-  - Schism
+- Schism
+type: event
+status: draft
+era: '[[Age of Stagnation]]'
+tags: []
 ---
 After the psychic schism, great swathes of the population were killed. The world reacted in utter terror at the devastation and destruction of civilization as they knew it. 
 

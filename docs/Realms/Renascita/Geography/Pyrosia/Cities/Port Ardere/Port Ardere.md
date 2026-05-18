@@ -1,8 +1,13 @@
 ---
-aliases: [Port Ardere]
-tags: [city, location]
+aliases:
+- Port Ardere
+tags:
+- city
+- location
+type: settlement
+status: draft
+continent: '[[Pyrosia]]'
 ---
-
 ## Province
 - [[Ashen Plains]]
 

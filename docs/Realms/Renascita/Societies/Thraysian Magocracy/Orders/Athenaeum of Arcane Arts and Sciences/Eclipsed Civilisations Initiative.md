@@ -1,9 +1,14 @@
 ---
-tags: [athenaeum, research, history]
-aliases: [ECI, Eclipsed Civilizations]
+tags:
+- athenaeum
+- research
+- history
+aliases:
+- ECI
+- Eclipsed Civilizations
+type: organisation
+status: draft
 ---
-
-
 **Research Lead:** Professor Arthur Denison, with contributions from various faculties
 
 ### Overview

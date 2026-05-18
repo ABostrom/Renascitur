@@ -1,12 +1,17 @@
 ---
-aliases: [Solarans]
-tags: [race, elder, celestial]
-lineage: "[[Elder Races]]"
-origin-plane: "[[Solirion]]"
+aliases:
+- Solarans
+tags:
+- race
+- elder
+- celestial
+lineage: '[[Elder Races]]'
+origin-plane: '[[Solirion]]'
 aat-race-tier: elder
-spoken-language: "[[Elyssan]]"
+spoken-language: '[[Elyssan]]'
+type: race
+status: draft
 ---
-
 # Solaran
 
 **Summary:**  

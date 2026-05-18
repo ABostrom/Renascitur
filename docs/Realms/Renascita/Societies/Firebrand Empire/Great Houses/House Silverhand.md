@@ -1,7 +1,10 @@
 ---
-aliases: [Silverhand]
+aliases:
+- Silverhand
+type: essay
+status: draft
+tags: []
 ---
-
 ## Domain
 *Hospitality*
 _Responsible for trade, inns, taverns, and diplomacy within the Firebrand Empire._

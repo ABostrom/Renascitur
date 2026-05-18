@@ -1,3 +1,8 @@
+---
+type: landmark
+status: draft
+tags: []
+---
 > *"It is not a fire. It is a promise made by gods, kept by [[Dwarf|dwarves]]."*  
 > — [[Maerra Vulkess]], High Devout of the [[Watch of the Dying Flame]]
 

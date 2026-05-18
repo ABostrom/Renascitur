@@ -1,3 +1,9 @@
+---
+type: landmark
+status: draft
+continent: '[[Mokoweri]]'
+tags: []
+---
 The Eversoul Grove, a realm of unparalleled mystique and beauty, unfolds in a secluded valley, encircled by the stark, volcanic caverns and sheer, obsidian rock faces that define the landscape. This verdant sanctuary stands as a vivid contrast to its harsh surroundings, a testament to the ancient and profound magic that shields and sustains it. The air within the grove is thick with the essence of magic, carrying the scent of a myriad of exotic plants and the fresh purity of the oasis at its heart.
 
 Central to the grove's majesty is the Eversoul Tree, a wondrous and towering beacon whose branches reach directly into [[Weave|the Weave]] itself, the very fabric of magical energy that permeates the world. It stands majestic, its trunk and limbs glowing softly with an inner light that illuminates the grove. The tree does not just grow within the grove; it is the grove, its roots sprawling deep and wide, intertwining with the streams of magic that flow beneath the earth's surface. Its bark is etched with ancient runes that pulse with a life of their own, telling the story of the cosmos in a language older than time.

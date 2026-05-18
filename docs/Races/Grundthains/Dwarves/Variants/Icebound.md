@@ -1,12 +1,18 @@
 ---
-aliases: [Icebound Dwarves]
-tags: [race, variant, dwarves, elemental]
-lineage: "[[Dwarf|Dwarves]]"
-origin-plane: "[[Thargrun]]"
+aliases:
+- Icebound Dwarves
+tags:
+- race
+- variant
+- dwarves
+- elemental
+lineage: '[[Dwarf|Dwarves]]'
+origin-plane: '[[Thargrun]]'
 aat-race-tier: variant
-spoken-language: "[[Dwarven]]"
+spoken-language: '[[Dwarven]]'
+type: race
+status: draft
 ---
-
 # Icebound [[Dwarf|Dwarves]]
 
 ## Overview  

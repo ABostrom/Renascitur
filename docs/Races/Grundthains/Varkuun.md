@@ -1,17 +1,18 @@
 ---
 aliases:
-  - Varkuun
+- Varkuun
 tags:
-  - race
-  - elemental
-  - grundthain
-lineage: "[[Dwarf|Dwarves]]"
-origin-plane: "[[Thargrun]]"
+- race
+- elemental
+- grundthain
+lineage: '[[Dwarf|Dwarves]]'
+origin-plane: '[[Thargrun]]'
 aat-race-tier: distinct
-spoken-language: 
-- "[[Titanic]]"
+spoken-language:
+- '[[Titanic]]'
+type: race
+status: draft
 ---
-
 # Varkuun
 
 **Summary:**  

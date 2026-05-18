@@ -1,8 +1,14 @@
 ---
-tags: [location, headquarters, House Phiarlan]
-aliases: [The Serpentine Citadel]
+tags:
+- location
+- headquarters
+- House Phiarlan
+aliases:
+- The Serpentine Citadel
+type: landmark
+status: draft
+continent: '[[Pyrosia]]'
 ---
-
 ## Associated House
 - [[House Phiarlan]]
 

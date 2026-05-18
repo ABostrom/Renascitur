@@ -2,9 +2,13 @@
 aat-event-start-date: 10001
 aat-event-end-date: 12000
 aat-render-enabled: true
-timelines: [second-age]
+timelines:
+- second-age
+type: event
+status: draft
+era: '[[Age of Forging]]'
+tags: []
 ---
-
 ## Age of Twilight’s Convergence
 
 The Second Age marks the desperate struggle of mortals to resist the creeping entropy left in the wake of Solara’s fall. It is a time of fractured unity, relentless war, and sacrifice on a scale the world had never seen.

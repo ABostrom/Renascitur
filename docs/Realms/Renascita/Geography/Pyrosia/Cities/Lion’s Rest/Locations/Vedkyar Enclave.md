@@ -1,8 +1,14 @@
 ---
-tags: [location, headquarters, House Jorasco]
-aliases: [Vedkyar Enclave]
+tags:
+- location
+- headquarters
+- House Jorasco
+aliases:
+- Vedkyar Enclave
+type: landmark
+status: draft
+continent: '[[Pyrosia]]'
 ---
-
 ## Associated House
 - [[House Jorasco]]
 

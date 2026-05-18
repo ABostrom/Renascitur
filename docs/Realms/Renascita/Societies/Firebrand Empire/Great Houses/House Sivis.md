@@ -1,7 +1,10 @@
 ---
-aliases: [Sivis]
+aliases:
+- Sivis
+type: essay
+status: draft
+tags: []
 ---
-
 ## Domain
 *Scribing*
 _Responsible for communication, bureaucracy, and encoded records within the Firebrand Empire._

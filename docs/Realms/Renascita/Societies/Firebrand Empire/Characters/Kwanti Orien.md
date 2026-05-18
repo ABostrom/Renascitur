@@ -1,8 +1,12 @@
 ---
-tags: [leader, House Orien]
-aliases: [Kwanti]
+tags:
+- leader
+- House Orien
+aliases:
+- Kwanti
+type: character
+status: draft
 ---
-
 ## Affiliation
 - **House**: [[House Orien]]
 

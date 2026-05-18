@@ -1,3 +1,9 @@
+---
+type: landmark
+status: draft
+continent: '[[Mokoweri]]'
+tags: []
+---
 ### The Research Complex
 The laboratories in the obsidian causeway are a haunting testament to the ambitious experiments that once took place within their shadowy confines. These chambers are constructed of sleek, polished obsidian stone, a stark contrast to the vibrant, thriving jungle that surrounds them. Each laboratory is a self-contained unit with its own set of controls and equipment.
 

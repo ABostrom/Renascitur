@@ -1,6 +1,8 @@
 ---
 tags:
-  - magic
-  - soul
-  - divine
+- magic
+- soul
+- divine
+type: technology
+status: stub
 ---

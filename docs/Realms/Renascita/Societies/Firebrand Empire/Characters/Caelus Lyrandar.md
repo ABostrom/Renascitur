@@ -1,8 +1,13 @@
 ---
-tags: [city-overseer, House Lyrandar]
-aliases: [Lyrandar, The Raining Bay Overseer]
+tags:
+- city-overseer
+- House Lyrandar
+aliases:
+- Lyrandar
+- The Raining Bay Overseer
+type: character
+status: draft
 ---
-
 ## Title
 - Overseer of [[The Raining Bay]]
 

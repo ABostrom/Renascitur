@@ -1,3 +1,8 @@
+---
+type: organisation
+status: draft
+tags: []
+---
 > *"We do not worship the flame. We serve it. There is a difference."*  
 > — [[Maerra Vulkess]], High Devout of the [[Watch of the Dying Flame]]
 

@@ -1,3 +1,8 @@
+---
+type: essay
+status: draft
+tags: []
+---
 The [[Dwarf|dwarves]] of [[Uftine]] are known collectively as the [[Icebound]]—those who are bound to the glacier not just in body, but in purpose. This identity defines their culture, their duty, and their [[soul]]. Among them, the term Icebreakers refers more specifically to those who carve the frozen stone, forge in the cold, and mine the glacier’s deep veins. They are artisans, engineers, and delvers who shape the silence beneath Uftine.
   
 >They are stoic, highly disciplined, and bound by deep tradition.

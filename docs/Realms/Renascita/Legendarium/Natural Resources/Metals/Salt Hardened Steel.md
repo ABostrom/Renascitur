@@ -1,3 +1,8 @@
+---
+type: resource
+status: draft
+tags: []
+---
 # [[Salt Hardened Steel]]
 
 ## Location  

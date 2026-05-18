@@ -1,19 +1,20 @@
 ---
 aliases:
-  - Karathic
-  - Grundthain Tongue
+- Karathic
+- Grundthain Tongue
 tags:
-  - language
-  - grundthain
-  - ancient
-language-family: "[[Grundthain]]"
+- language
+- grundthain
+- ancient
+language-family: '[[Grundthain]]'
 language-tier: root
 spoken-by:
-  - "[[Grundthain]]"
-  - "[[Varkuun]]"
-  - "[[Dwarf|Dwarves]]"
+- '[[Grundthain]]'
+- '[[Varkuun]]'
+- '[[Dwarf|Dwarves]]'
+type: language
+status: draft
 ---
-
 # Karathic
 
 **Karathic** is the ancient language of the [[Grundthain]], the primordial elemental race. It is a deep, resonant tongue that reflects their elemental nature and connection to the earth.

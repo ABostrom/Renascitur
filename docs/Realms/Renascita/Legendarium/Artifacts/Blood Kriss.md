@@ -1,3 +1,8 @@
+---
+type: artifact
+status: draft
+tags: []
+---
 **Description**: The Blood Kriss is a dark and ominous weapon, a knife forged through an ancient and forbidden technique. It is said that the iron in a skilled smith's blood was extracted, refined, and then painstakingly crafted into this deadly blade. The kriss, with its distinctive wavy blade, emanates a sinister aura, its surface etched with faint, pulsing red lines reminiscent of veins.
 
 ![[f84287e4-8a75-4647-9970-57749cecdc4e.webp]]

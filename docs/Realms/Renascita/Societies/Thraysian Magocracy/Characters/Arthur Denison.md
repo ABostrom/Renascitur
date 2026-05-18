@@ -1,1 +1,6 @@
+---
+type: character
+status: stub
+tags: []
+---
 ![[02bd0acc-0121-4696-bd15-49b9692e1f01.webp]]

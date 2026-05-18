@@ -1,17 +1,18 @@
 ---
 aliases:
-  - Dwarven
-  - Modern Karathic
+- Dwarven
+- Modern Karathic
 tags:
-  - language
-  - dwarven
-  - derived
-language-family: "[[Karathic]]"
+- language
+- dwarven
+- derived
+language-family: '[[Karathic]]'
 language-tier: derived
 spoken-by:
-  - "[[Dwarf|Dwarves]]"
+- '[[Dwarf|Dwarves]]'
+type: language
+status: draft
 ---
-
 # Dwarven
 
 **Dwarven** is the modern industrial evolution of [[Karathic]], used by [[Dwarf]] in daily life and trade.

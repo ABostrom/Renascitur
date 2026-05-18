@@ -1,3 +1,8 @@
+---
+type: character
+status: draft
+tags: []
+---
 - **Role**: Overseer of the Coalforge Engine and head of maintenance operations.
 - **Personality**: Obsessive and stern, Torvik is entirely devoted to the Coalforge Engine’s upkeep.
 - **Appearance**: A stocky [[Ferrun]] with a patchwork of burns and scars, wearing a heavy leather apron.

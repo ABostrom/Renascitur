@@ -1,18 +1,19 @@
 ---
 aliases:
-  - Thraysian
-  - Magocratic Dialect
+- Thraysian
+- Magocratic Dialect
 tags:
-  - language
-  - thraysian
-  - dialect
-  - magic
-language-family: "[[Valeshi]]"
+- language
+- thraysian
+- dialect
+- magic
+language-family: '[[Valeshi]]'
 language-tier: dialect
 spoken-by:
-  - "[[Thraysian Common]]"
+- '[[Thraysian Common]]'
+type: language
+status: draft
 ---
-
 # Thraysian
 
 **Thraysian** is a magically inflected dialect of [[Imperial Common]], heavily influenced by [[Valeshi]] and arcane terminology. It is the language of the Thraysian Magocracy, used for magical study, governance, and arcane rituals.

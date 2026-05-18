@@ -1,3 +1,8 @@
+---
+type: tradition
+status: stub
+tags: []
+---
 # Tideforging
 
 ## Overview

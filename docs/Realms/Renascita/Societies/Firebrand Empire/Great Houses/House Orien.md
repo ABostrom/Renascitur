@@ -1,7 +1,10 @@
 ---
-aliases: [Orien]
+aliases:
+- Orien
+type: essay
+status: draft
+tags: []
 ---
-
 ## Domain
 *Passage*
 _Responsible for transport, travel, and logistics within the Firebrand Empire._

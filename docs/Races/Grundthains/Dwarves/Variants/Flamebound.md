@@ -1,12 +1,18 @@
 ---
-aliases: [Flamebound Dwarves]
-tags: [race, variant, dwarves, elemental]
-lineage: "[[Dwarf|Dwarves]]"
-origin-plane: "[[Thargrun]]"
+aliases:
+- Flamebound Dwarves
+tags:
+- race
+- variant
+- dwarves
+- elemental
+lineage: '[[Dwarf|Dwarves]]'
+origin-plane: '[[Thargrun]]'
 aat-race-tier: variant
-spoken-language: "[[Dwarven]]"
+spoken-language: '[[Dwarven]]'
+type: race
+status: draft
 ---
-
 # Flamebound [[Dwarf|Dwarves]]
 
 ## Overview  

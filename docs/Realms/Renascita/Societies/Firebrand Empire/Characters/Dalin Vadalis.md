@@ -1,8 +1,12 @@
 ---
-tags: [leader, House Vadalis]
-aliases: [Dalin]
+tags:
+- leader
+- House Vadalis
+aliases:
+- Dalin
+type: character
+status: draft
 ---
-
 ## Affiliation
 - **House**: [[House Vadalis]]
 

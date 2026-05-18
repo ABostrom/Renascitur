@@ -1,8 +1,14 @@
 ---
-tags: [location, headquarters, House Tharashk]
-aliases: [The Den]
+tags:
+- location
+- headquarters
+- House Tharashk
+aliases:
+- The Den
+type: landmark
+status: draft
+continent: '[[Pyrosia]]'
 ---
-
 ## Associated House
 - [[House Tharashk]]
 

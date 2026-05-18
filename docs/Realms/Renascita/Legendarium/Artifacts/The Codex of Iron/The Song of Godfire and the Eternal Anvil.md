@@ -1,4 +1,8 @@
-
+---
+type: artifact
+status: draft
+tags: []
+---
 ---
 
 In the days before Runehart, when the [[Grundthain]] still knelt at the feet of the elemental gods, [[Muradin]] stood apart. He had seen the pacts unravel. He had watched as [[Phenos]] burned without boundary, as [[Zaratan]] grew still with sorrow, as [[Tempus]] roared with madness, and [[Leviathan]] hungered without end.

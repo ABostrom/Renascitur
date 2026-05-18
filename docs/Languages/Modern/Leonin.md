@@ -1,17 +1,18 @@
 ---
 aliases:
-  - Leonin
-  - Tactical Natsugen
+- Leonin
+- Tactical Natsugen
 tags:
-  - language
-  - leonin
-  - derived
-language-family: "[[Natsugen]]"
+- language
+- leonin
+- derived
+language-family: '[[Natsugen]]'
 language-tier: derived
 spoken-by:
-  - "[[Leonin]]"
+- '[[Leonin]]'
+type: language
+status: draft
 ---
-
 # [[docs/Races/Kyojin/Leonin/Leonin|Leonin]]
 
 **[[docs/Races/Kyojin/Leonin/Leonin|Leonin]]** is the tactical and precise dialect of [[Natsugen]], used by the [[Leonin]] for leadership, strategy, and martial communication. It is known for its clarity and directness, emphasizing effective communication on and off the battlefield.

@@ -1,3 +1,8 @@
+---
+type: cosmic-force
+status: draft
+tags: []
+---
 **Aspect**: Light, Revelation, Illumination, Truth  
 **Opposes**: [[Noxar]]  
 **Domain**: Radiance, clarity, celestial purpose  

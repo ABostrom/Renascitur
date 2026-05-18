@@ -1,10 +1,14 @@
 ---
-aliases: 
-continent: ""
-province: ""
-society: "[[Tidebound of Draumhavn]]"
+aliases: null
+continent: ''
+province: ''
+society: '[[Tidebound of Draumhavn]]'
 leadership:
-  - "[[Dagrin Thorne]]"
+- '[[Dagrin Thorne]]'
+type: continent
+status: draft
+kind: island
+tags: []
 ---
 ![[f1e5b90b-25db-47d1-ab4a-f5ab53ee54af.png]]
 ## Overview

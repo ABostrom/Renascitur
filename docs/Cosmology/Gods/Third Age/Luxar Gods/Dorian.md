@@ -1,3 +1,8 @@
+---
+type: deity
+status: draft
+tags: []
+---
 # God of Knowledge, The Weaver
 
 Dorian is revered as the god of knowledge, wisdom, and magic. He is the patron deity of scholars, wizards, and seekers of arcane lore. Dorian is often depicted as a mysterious, contemplative figure with a book or a wand in his hand. 

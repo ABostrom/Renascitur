@@ -1,8 +1,12 @@
 ---
-tags: [leader, House Phiarlan]
-aliases: [Elar]
+tags:
+- leader
+- House Phiarlan
+aliases:
+- Elar
+type: character
+status: draft
 ---
-
 ## Affiliation
 - **House**: [[House Phiarlan]]
 

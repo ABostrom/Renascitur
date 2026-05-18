@@ -1,8 +1,13 @@
 ---
-aliases: [Old Westgate]
-tags: [city, location]
+aliases:
+- Old Westgate
+tags:
+- city
+- location
+type: settlement
+status: draft
+continent: '[[Pyrosia]]'
 ---
-
 ## Province
 - [[Ember Peaks]]
 

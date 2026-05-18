@@ -1,13 +1,19 @@
 ---
-aliases: [Forgeborn]
-tags: [race, engineered, undead, constructs]
+aliases:
+- Forgeborn
+tags:
+- race
+- engineered
+- undead
+- constructs
 lineage: Engineered Race
-origin-plane: "[[Renascita]]"
+origin-plane: '[[Renascita]]'
 aat-race-tier: engineered
-spoken-language: 
-- "[[Valeshi]]"
+spoken-language:
+- '[[Valeshi]]'
+type: race
+status: draft
 ---
-
 # Forgeborn
 
 **Summary:**  

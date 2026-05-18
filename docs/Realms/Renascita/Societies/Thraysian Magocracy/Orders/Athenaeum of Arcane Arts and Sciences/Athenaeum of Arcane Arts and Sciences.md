@@ -1,3 +1,8 @@
+---
+type: organisation
+status: draft
+tags: []
+---
 In the heart of the magical city of [[Eltabarr]], amidst its blend of cultures and the humming of arcane energies, stands the Athenaeum of Arcane Arts and Sciences. This illustrious institution is a cornerstone of the city's identity, a beacon of knowledge and magical prowess where the future of arcane research and the preservation of ancient wisdom converge under one expansive roof.
 
 ### The Athenaeum's Structure

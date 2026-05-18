@@ -1,8 +1,14 @@
 ---
-tags: [location, headquarters, House Vadalis]
-aliases: [Foalswood]
+tags:
+- location
+- headquarters
+- House Vadalis
+aliases:
+- Foalswood
+type: landmark
+status: draft
+continent: '[[Pyrosia]]'
 ---
-
 ## Associated House
 - [[House Vadalis]]
 

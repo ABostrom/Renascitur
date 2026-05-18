@@ -1,8 +1,13 @@
 ---
-tags: [city-overseer, House Sivis]
-aliases: [Sivis, Lux Oescus Overseer]
+tags:
+- city-overseer
+- House Sivis
+aliases:
+- Sivis
+- Lux Oescus Overseer
+type: character
+status: draft
 ---
-
 ## Title
 - Overseer of [[Lux Oescus]]
 

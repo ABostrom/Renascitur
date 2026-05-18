@@ -1,7 +1,10 @@
 ---
-aliases: [Deneith]
+aliases:
+- Deneith
+type: essay
+status: draft
+tags: []
 ---
-
 ## Domain
 *Sentinel*
 _Responsible for internal defense, lawkeeping, and martial order within the Firebrand Empire._

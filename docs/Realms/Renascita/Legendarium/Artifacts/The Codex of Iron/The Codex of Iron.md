@@ -1,7 +1,10 @@
 ---
 aliases:
-  - The Iron Codex
-  - Iron Codex
+- The Iron Codex
+- Iron Codex
+type: artifact
+status: draft
+tags: []
 ---
 ### **The Codex of Iron**
 

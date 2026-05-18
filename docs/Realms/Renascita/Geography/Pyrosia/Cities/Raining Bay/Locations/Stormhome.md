@@ -1,8 +1,14 @@
 ---
-tags: [location, headquarters, House Lyrandar]
-aliases: [Stormhome]
+tags:
+- location
+- headquarters
+- House Lyrandar
+aliases:
+- Stormhome
+type: landmark
+status: draft
+continent: '[[Pyrosia]]'
 ---
-
 ## Associated House
 - [[House Lyrandar]]
 

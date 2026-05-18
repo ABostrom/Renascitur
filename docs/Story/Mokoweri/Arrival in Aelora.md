@@ -1,4 +1,8 @@
-
+---
+type: essay
+status: draft
+tags: []
+---
 As the dense jungle gradually gives way, the first glimpses of Aeloria begin to materialize through the mists—a vast network of treetop dwellings, connected by winding bridges and spiraling platforms that ascend into the heavens. Sunlight filters through the lush canopy, casting dappled patterns on the forest floor and illuminating the city in an ethereal glow. The air is rich with the scents of flowering vines and fresh sap, mingling with the distant sounds of the [[Saurian]] city life: the rhythmic beating of drums, the soft murmur of voices, and the occasional call of a native bird echoing through the trees.
 
 The path narrows as it approaches the city, bordered by towering ferns and ancient trees whose trunks are broader than houses. Suddenly, the ground trembles subtly underfoot—a sensation that grows more pronounced with each step. The players pause, sensing the approach of something vast.

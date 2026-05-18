@@ -1,4 +1,8 @@
-
+---
+type: deity
+status: stub
+tags: []
+---
 ![[Noxarian]]
 
 ![[Tiamat]]

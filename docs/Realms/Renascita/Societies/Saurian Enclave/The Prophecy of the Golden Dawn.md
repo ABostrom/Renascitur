@@ -1,4 +1,8 @@
-
+---
+type: essay
+status: draft
+tags: []
+---
 The prophecy of the "golden" child is a profound element within the tapestry of [[Saurian]] lore, deeply woven into the spiritual and cultural fabric of their society. According to ancient foretellings preserved by the Elders of Aeloria, the emergence of this prophesied child is a beacon of hope, symbolizing a pivotal shift towards an era of renewal and enlightenment for the [[Saurian]] people and perhaps the world beyond.
 
 # The Prophecy Unveiled

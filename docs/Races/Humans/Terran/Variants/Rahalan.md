@@ -1,18 +1,19 @@
 ---
 aliases:
-  - Rahalan Humans
+- Rahalan Humans
 tags:
-  - race
-  - cultural-variant
-  - humans
-  - tribal
-lineage: "[[Terran]]"
-origin-plane: "[[Renascita]]"
+- race
+- cultural-variant
+- humans
+- tribal
+lineage: '[[Terran]]'
+origin-plane: '[[Renascita]]'
 aat-race-tier: variant
 spoken-language:
-  - "[[Thraysian Common]]"
+- '[[Thraysian Common]]'
+type: race
+status: draft
 ---
-
 # Rahalan Humans
 
 **Summary:**  

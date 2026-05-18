@@ -1,20 +1,21 @@
 ---
 aliases:
-  - Mokoweri
+- Mokoweri
 tags:
-  - race
-  - cultural-variant
-  - solarans
-  - nature
-lineage: "[[Solaran]]"
-origin-plane: "[[Renascita]]"
+- race
+- cultural-variant
+- solarans
+- nature
+lineage: '[[Solaran]]'
+origin-plane: '[[Renascita]]'
 aat-race-tier: variant
 spoken-language:
-  - "[[Mokoweran]]"
-  - "[[Imperial Common]]"
-  - "[[Thraysian Common]]"
+- '[[Mokoweran]]'
+- '[[Imperial Common]]'
+- '[[Thraysian Common]]'
+type: race
+status: draft
 ---
-
 # Mokuun
 
 **Summary:**  

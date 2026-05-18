@@ -1,3 +1,8 @@
+---
+type: essay
+status: draft
+tags: []
+---
 ### Elder Sylthassi
 
 **Appearance:** Elder Sylthassi is more diminutive than her counterparts, her scales a soft blue with a silvery luster. Her eyes are gentle but sharp, observing the world with a healer’s precision. She wears a simple tunic that flows like water, edged with silver threads that catch the light with every subtle movement, reflecting her connection to the healing waters of Aeloria.

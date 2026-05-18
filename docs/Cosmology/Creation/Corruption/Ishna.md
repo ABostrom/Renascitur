@@ -1,10 +1,11 @@
 ---
 aliases:
-  - The God Unborn
-  - Ishna's
+- The God Unborn
+- Ishna's
+type: cosmic-force
+status: stub
+tags: []
 ---
-
-
 ![[The Forge Wars]]
 
 ![[Hexweave Binding]]

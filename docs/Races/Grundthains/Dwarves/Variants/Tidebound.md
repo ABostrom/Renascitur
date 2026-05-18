@@ -1,12 +1,18 @@
 ---
-aliases: [Tidebound Dwarves]
-tags: [race, variant, dwarves, elemental]
-lineage: "[[Dwarf|Dwarves]]"
-origin-plane: "[[Thargrun]]"
+aliases:
+- Tidebound Dwarves
+tags:
+- race
+- variant
+- dwarves
+- elemental
+lineage: '[[Dwarf|Dwarves]]'
+origin-plane: '[[Thargrun]]'
 aat-race-tier: variant
-spoken-language: "[[Dwarven]]"
+spoken-language: '[[Dwarven]]'
+type: race
+status: draft
 ---
-
 # Tidebound [[Dwarf|Dwarves]]
 
 ## Overview  

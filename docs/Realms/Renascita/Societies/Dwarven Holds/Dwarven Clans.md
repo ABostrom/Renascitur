@@ -1,3 +1,8 @@
+---
+type: essay
+status: draft
+tags: []
+---
 ## Overview
 Each dwarven city is descended from the ancient [[Grundthain]] and shaped by an elemental tradition tied unknowingly to a Great Elemental:
 

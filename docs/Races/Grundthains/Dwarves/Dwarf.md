@@ -1,12 +1,18 @@
 ---
-aliases: [Dwarves]
-tags: [race, elemental, grundthain, crafts]
-lineage: "[[Dwarf|Dwarves]]"
-origin-plane: "[[Thargrun]]"
+aliases:
+- Dwarves
+tags:
+- race
+- elemental
+- grundthain
+- crafts
+lineage: '[[Dwarf|Dwarves]]'
+origin-plane: '[[Thargrun]]'
 aat-race-tier: distinct
-spoken-language: "[[Dwarven]]"
+spoken-language: '[[Dwarven]]'
+type: race
+status: draft
 ---
-
 # Dwarves
 
 **Summary:**  

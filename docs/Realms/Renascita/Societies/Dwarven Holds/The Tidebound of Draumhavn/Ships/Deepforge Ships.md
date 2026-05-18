@@ -1,3 +1,8 @@
+---
+type: essay
+status: stub
+tags: []
+---
 # Deepforge Ships
 
 ## Overview

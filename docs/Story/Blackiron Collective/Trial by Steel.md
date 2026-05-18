@@ -1,4 +1,8 @@
-
+---
+type: essay
+status: draft
+tags: []
+---
 
 1. **Capture and Enslavement**:
     

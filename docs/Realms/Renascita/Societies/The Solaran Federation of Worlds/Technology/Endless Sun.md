@@ -1,3 +1,8 @@
+---
+type: essay
+status: draft
+tags: []
+---
 The Endless Sun was a machine designed to ensure balance in the universe. They believed that the finite number of souls in existence was essential to the stability of existence, and that the natural cycle of birth, life, and death was a fundamental component of that balance.
 
 However, when the [[Machinery of Death]] began to malfunction and souls were no longer being reborn, the [[Solaran|Solarans]] recognized the catastrophic consequences that this could bring. Without souls re-entering the universe, the existing cycle would become increasingly unbalanced, leading to stagnation and nothingness.

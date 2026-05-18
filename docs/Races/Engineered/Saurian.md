@@ -1,17 +1,18 @@
 ---
 aliases:
-  - Saurians
+- Saurians
 tags:
-  - race
-  - engineered
-  - reptilian
-  - spiritual
+- race
+- engineered
+- reptilian
+- spiritual
 lineage: Engineered Race
-origin-plane: "[[Renascita]]"
+origin-plane: '[[Renascita]]'
 aat-race-tier: engineered
-spoken-language: "[[Denisovan]]"
+spoken-language: '[[Denisovan]]'
+type: race
+status: draft
 ---
-
 # Saurians
 
 **Summary:**  

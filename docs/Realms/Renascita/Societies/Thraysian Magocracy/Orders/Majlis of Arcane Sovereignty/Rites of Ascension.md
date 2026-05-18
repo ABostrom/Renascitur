@@ -1,8 +1,13 @@
 ---
-tags: [majlis, rites, arcane]
-aliases: [Ascension Rites]
+tags:
+- majlis
+- rites
+- arcane
+aliases:
+- Ascension Rites
+type: organisation
+status: stub
 ---
-
 # Rites of Ascension
 
 ## ## Ritual Description

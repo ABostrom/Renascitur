@@ -1,8 +1,15 @@
 ---
-tags: [zahirah, khadiyat, stone, infrastructure, vaults]
-aliases: [Khadiyat-e Saramun]
+tags:
+- zahirah
+- khadiyat
+- stone
+- infrastructure
+- vaults
+aliases:
+- Khadiyat-e Saramun
+type: organisation
+status: draft
 ---
-
 # Khadiyat-e Saramun
 
 ## Overview

@@ -1,8 +1,13 @@
 ---
-aliases: [Burnt Reach]
-tags: [province, region]
+aliases:
+- Burnt Reach
+tags:
+- province
+- region
+type: region
+status: draft
+continent: '[[Pyrosia]]'
 ---
-
 ## Overview
 A sun-blasted southern wasteland connected only by a narrow land bridge. It holds no known value, but whispers speak of ruins beneath the ash, and strange lights beyond the mountains.
 

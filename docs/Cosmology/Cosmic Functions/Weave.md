@@ -1,8 +1,10 @@
 ---
 aliases:
-  - The Weave
+- The Weave
+type: cosmic-force
+status: draft
+tags: []
 ---
-
 **Nature**: The foundational structure of reality—like the fabric of spacetime  
 **Created By**: The [[Aeternum]], using the [[Aetherglyphs]]  
 **Composed Of**: The four cosmic forces ([[Luxar]], [[Noxar]], [[Ordar]], [[Chaor]]) + [[Time]]  

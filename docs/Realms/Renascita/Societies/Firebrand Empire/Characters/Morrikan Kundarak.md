@@ -1,8 +1,12 @@
 ---
-tags: [leader, House Kundarak]
-aliases: [Morrikan]
+tags:
+- leader
+- House Kundarak
+aliases:
+- Morrikan
+type: character
+status: draft
 ---
-
 ## Affiliation
 - **House**: [[House Kundarak]]
 

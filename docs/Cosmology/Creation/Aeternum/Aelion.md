@@ -1,3 +1,8 @@
+---
+type: essay
+status: draft
+tags: []
+---
 # [[Aelion]], The First Dawn
 
 ## Overview

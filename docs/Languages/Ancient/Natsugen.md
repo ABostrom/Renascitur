@@ -1,20 +1,21 @@
 ---
 aliases:
-  - Natsugen
-  - Kyojin Tongue
+- Natsugen
+- Kyojin Tongue
 tags:
-  - language
-  - kyojin
-  - ancient
-language-family: "[[Kyojin]]"
+- language
+- kyojin
+- ancient
+language-family: '[[Kyojin]]'
 language-tier: root
 spoken-by:
-  - "[[Kyojin]]"
-  - "[[Orc]]"
-  - "[[Leonin]]"
-  - "[[Mokoweri Human|Mokoweri Humans]]"
+- '[[Kyojin]]'
+- '[[Orc]]'
+- '[[Leonin]]'
+- '[[Mokoweri Human|Mokoweri Humans]]'
+type: language
+status: draft
 ---
-
 # Natsugen
 
 **Natsugen** is the primal tongue of the [[Kyojin]], marked by breathy intonations and spiritual resonance. It is the linguistic root of [[Orcish]], [[Leonin]], and [[Mokoweran]].

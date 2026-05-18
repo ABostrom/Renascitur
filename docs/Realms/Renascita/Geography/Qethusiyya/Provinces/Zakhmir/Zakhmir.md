@@ -1,3 +1,9 @@
+---
+type: region
+status: draft
+continent: '[[Qethusiyya]]'
+tags: []
+---
 # Zakhmir
 **Original Root:** Zakhm-e Jān
 

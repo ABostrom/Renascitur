@@ -1,8 +1,10 @@
 ---
 aliases:
-  - Tharamos, The Worldforger
+- Tharamos, The Worldforger
+type: essay
+status: draft
+tags: []
 ---
-
 # [[Tharamos]], The Worldforger
 
 ## Overview

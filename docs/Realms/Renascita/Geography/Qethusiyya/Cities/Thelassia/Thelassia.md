@@ -1,3 +1,9 @@
+---
+type: settlement
+status: draft
+continent: '[[Qethusiyya]]'
+tags: []
+---
 # Thelassia: The City of the Endless Flame
 
 Nestled deep beneath the Dead Desert, Thelassia is an industrious haven of innovation and survival. Carved into the subterranean rock, this small industrial city is built around its lifeblood: a massive coal-burning generator that provides the energy necessary to sustain the Metal Elves and their coal-punk civilization.

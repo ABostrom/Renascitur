@@ -1,3 +1,8 @@
+---
+type: character
+status: draft
+tags: []
+---
 # Ormr - Thunder of the deep 
 Ancient Bronze Dragon
 

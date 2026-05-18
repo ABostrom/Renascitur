@@ -1,3 +1,8 @@
+---
+type: essay
+status: draft
+tags: []
+---
 ### Elder Marn
 
 **Appearance:** Marn's appearance is distinctly marked by his deep blue scales, interwoven with streaks of silver. His eyes are soft, reflecting a life spent in contemplation and spiritual search. He wears a simple robe, but around his neck hangs a pendant of an ancient tree, symbolizing his deep connection to the spiritual paths of Aeloria.

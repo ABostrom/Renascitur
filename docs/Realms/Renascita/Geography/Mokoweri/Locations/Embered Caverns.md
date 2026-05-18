@@ -1,4 +1,9 @@
-
+---
+type: landmark
+status: draft
+continent: '[[Mokoweri]]'
+tags: []
+---
 
 # Entrance Chamber - Luminescent Foyer
 

@@ -1,6 +1,9 @@
 ---
 aliases:
-  - High Conductor
+- High Conductor
+type: character
+status: draft
+tags: []
 ---
 ## Title  
 **High Conductor of Thundrakar**  

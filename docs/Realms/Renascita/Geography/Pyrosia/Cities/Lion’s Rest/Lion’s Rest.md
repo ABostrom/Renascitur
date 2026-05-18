@@ -1,8 +1,13 @@
 ---
-aliases: [Lion’s Rest]
-tags: [city, location]
+aliases:
+- Lion’s Rest
+tags:
+- city
+- location
+type: settlement
+status: draft
+continent: '[[Pyrosia]]'
 ---
-
 ## Province
 - [[Ashen Plains]]
 

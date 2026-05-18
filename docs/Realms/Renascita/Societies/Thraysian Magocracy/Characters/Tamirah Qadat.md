@@ -1,8 +1,14 @@
 ---
-tags: [zahirah, khadi, nehrun]
-aliases: [Khadi of Nehrun, Tamirah]
+tags:
+- zahirah
+- khadi
+- nehrun
+aliases:
+- Khadi of Nehrun
+- Tamirah
+type: character
+status: stub
 ---
-
 # Tamirah Qadat
 
 ## ## Role

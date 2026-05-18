@@ -1,13 +1,19 @@
 ---
-aliases: [Valeshi, Proto-Human Tongue]
-tags: [language, human, ancient]
-language-family: "[[Human]]"
+aliases:
+- Valeshi
+- Proto-Human Tongue
+tags:
+- language
+- human
+- ancient
+language-family: '[[Human]]'
 language-tier: root
-spoken-by: 
-- "[[Human]]"
-- "[[Elasi]]"
+spoken-by:
+- '[[Human]]'
+- '[[Elasi]]'
+type: language
+status: draft
 ---
-
 # Valeshi
 
 **Valeshi** is the proto-language of the [[Humans]], largely lost but preserved in ancient scrolls and the roots of modern tongues.

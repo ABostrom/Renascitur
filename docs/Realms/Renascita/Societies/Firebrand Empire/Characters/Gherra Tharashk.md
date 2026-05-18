@@ -1,8 +1,13 @@
 ---
-tags: [city-overseer, House Tharashk]
-aliases: [Tharashk, Ashgatar Overseer]
+tags:
+- city-overseer
+- House Tharashk
+aliases:
+- Tharashk
+- Ashgatar Overseer
+type: character
+status: draft
 ---
-
 ## Title
 - Overseer of [[Ashgatar]]
 

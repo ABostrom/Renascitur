@@ -1,3 +1,8 @@
+---
+type: character
+status: draft
+tags: []
+---
 _Species_: Ancient Obsidian Dragon
 
 _Age_: Millennia-old

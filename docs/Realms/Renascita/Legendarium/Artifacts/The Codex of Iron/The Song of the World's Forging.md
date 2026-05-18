@@ -1,4 +1,8 @@
-
+---
+type: artifact
+status: draft
+tags: []
+---
 ---
 
 **Before the first chisel struck the stone, before the first fire burned in the forge, there was nothing.**  

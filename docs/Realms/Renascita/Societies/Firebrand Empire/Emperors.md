@@ -1,3 +1,8 @@
+---
+type: essay
+status: draft
+tags: []
+---
 ![[Unimus - First Emperor]]
 ![[Duo - Second Emperor]]
 ![[Tertia - Third Empress]]

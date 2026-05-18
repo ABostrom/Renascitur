@@ -1,3 +1,8 @@
+---
+type: character
+status: stub
+tags: []
+---
 # Eddreict - Lord of Ice
 
 Ancient Silver Dragon

@@ -1,8 +1,12 @@
 ---
-tags: [leader, House Deneith]
-aliases: [Breven]
+tags:
+- leader
+- House Deneith
+aliases:
+- Breven
+type: character
+status: draft
 ---
-
 ## Affiliation
 - **House**: [[House Deneith]]
 

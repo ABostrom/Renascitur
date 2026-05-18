@@ -1,8 +1,12 @@
 ---
-tags: [leader, House Cannith]
-aliases: [Zorlan]
+tags:
+- leader
+- House Cannith
+aliases:
+- Zorlan
+type: character
+status: draft
 ---
-
 ## Affiliation
 - **House**: [[House Cannith]]
 

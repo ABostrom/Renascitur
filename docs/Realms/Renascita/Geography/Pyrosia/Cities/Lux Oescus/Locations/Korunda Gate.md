@@ -1,8 +1,14 @@
 ---
-tags: [location, headquarters, House Kundarak]
-aliases: [Korunda Gate]
+tags:
+- location
+- headquarters
+- House Kundarak
+aliases:
+- Korunda Gate
+type: landmark
+status: draft
+continent: '[[Pyrosia]]'
 ---
-
 ## Associated House
 - [[House Kundarak]]
 

@@ -72,7 +72,9 @@ def write_frontmatter(path: Path, metadata: Dict, body: str) -> None:
         text = "---\n{}---{}".format(front, body)
     else:
         text = body
-    path.write_text(text, encoding="utf-8", newline="\n")
+    # Path.write_text gained newline= in 3.10; for 3.7+ compatibility use open().
+    with path.open("w", encoding="utf-8", newline="\n") as fh:
+        fh.write(text)
 
 
 def iter_md_files(root: Path = DOCS_DIR) -> Iterator[Path]:

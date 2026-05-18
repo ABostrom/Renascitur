@@ -1,3 +1,8 @@
+---
+type: cosmic-force
+status: draft
+tags: []
+---
 **Aspect**: Law, Structure, Memory, Discipline  
 **Opposes**: [[Chaor]]  
 **Domain**: Civilization, lineage, permanence  

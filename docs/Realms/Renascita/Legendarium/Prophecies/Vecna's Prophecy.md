@@ -1,4 +1,8 @@
-
+---
+type: prophecy
+status: draft
+tags: []
+---
 [[Vecna]] wrote a single prophecy in the [[Book of Vile Darkness]] before he was destroyed. 
 
 The prophecy was split into two parts sometime during [[The Age of Twilight's Lament]]. 

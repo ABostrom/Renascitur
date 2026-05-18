@@ -1,16 +1,17 @@
 ---
 aliases:
-  - Humans
-  - Terrans
+- Humans
+- Terrans
 tags:
-  - race
-  - mortal
-  - adaptable
-origin-plane: "[[Renascita]]"
-spoken-language: 
-- "[[Imperial Common|Imperial]]"
+- race
+- mortal
+- adaptable
+origin-plane: '[[Renascita]]'
+spoken-language:
+- '[[Imperial Common|Imperial]]'
+type: race
+status: draft
 ---
-
 # Terran Humans
 
 **Summary:**  

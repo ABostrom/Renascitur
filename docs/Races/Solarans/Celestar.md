@@ -1,13 +1,19 @@
 ---
-aliases: [Celestars]
-tags: [race, distinct, solarans, celestial]
-lineage: "[[Solaran]]"
-origin-plane: "[[Imperium]]"
+aliases:
+- Celestars
+tags:
+- race
+- distinct
+- solarans
+- celestial
+lineage: '[[Solaran]]'
+origin-plane: '[[Imperium]]'
 aat-race-tier: distinct
-spoken-language: 
-- "[[Serethi]]"
+spoken-language:
+- '[[Serethi]]'
+type: race
+status: draft
 ---
-
 # Celestar
 
 **Summary:**  

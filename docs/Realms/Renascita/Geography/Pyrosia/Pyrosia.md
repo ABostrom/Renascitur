@@ -1,47 +1,46 @@
 ---
 type: continent
 terrain:
-  - mountains
-  - volcanic plains
-  - coastal cliffs
-  - temperate forests
-  - grasslands
-  - tropical bays
-  - river deltas
+- mountains
+- volcanic plains
+- coastal cliffs
+- temperate forests
+- grasslands
+- tropical bays
+- river deltas
 inhabited_by:
-  - "[[Leonin]]"
-  - "[[Orc]]"
-  - "[[Flamebound|Flamebound Dwarves]]"
-  - "[[Goliath]]"
-  - "[[Gnome]]"
-  - "[[Imperial Human]]"
+- '[[Leonin]]'
+- '[[Orc]]'
+- '[[Flamebound|Flamebound Dwarves]]'
+- '[[Goliath]]'
+- '[[Gnome]]'
+- '[[Imperial Human]]'
 provinces:
-  - "[[Ashen Plains]]"
-  - "[[Ashgatar]]"
-  - "[[Ember Peaks]]"
-  - "[[Flame Coast]]"
-  - "[[Frontier's Edge]]"
-  - "[[Burnt Reach]]"
+- '[[Ashen Plains]]'
+- '[[Ashgatar]]'
+- '[[Ember Peaks]]'
+- '[[Flame Coast]]'
+- '[[Frontier''s Edge]]'
+- '[[Burnt Reach]]'
 cities:
-  - "[[Lux Oescus]]"
-  - "[[Old Westgate]]"
-  - "[[Port Ardere]]"
-  - "[[Raining Bay]]"
-  - "[[Lion’s Rest]]"
-  - "[[Magnus’ Rest]]"
+- '[[Lux Oescus]]'
+- '[[Old Westgate]]'
+- '[[Port Ardere]]'
+- '[[Raining Bay]]'
+- '[[Lion’s Rest]]'
+- '[[Magnus’ Rest]]'
 mountains:
-  - "[[Mount Earthspur]]"
-  - "[[Ashen Range]]"
-  - "[[Dawnspire Mountains]]"
-  - "[[Veilsmoke Ridge]]"
+- '[[Mount Earthspur]]'
+- '[[Ashen Range]]'
+- '[[Dawnspire Mountains]]'
+- '[[Veilsmoke Ridge]]'
 rivers:
-  - "[[Redwash River]]"
-  - "[[Glowtongue Stream]]"
-  - "[[Moltren Delta]]"
+- '[[Redwash River]]'
+- '[[Glowtongue Stream]]'
+- '[[Moltren Delta]]'
+status: draft
+tags: []
 ---
-
-
-
 **Pyrosia** is a vast and diverse land of elemental tension, tectonic fire, and sprawling nations. Bordered by volcanic coastlines and inland mountain arcs, the continent hosts an enormous range of biomes — from the charred [[Ashgatar]] highlands to the verdant woodlands near [[Raining Bay]].
 
 The region is shared by an array of peoples, from the imperial courts of the [[Imperial Human]] to the fire-worshipping [[Flamebound Dwarves]] of [[Magnus' Rest]], and the coastal strongholds of the [[Leonin]] at [[Lion's Rest]].

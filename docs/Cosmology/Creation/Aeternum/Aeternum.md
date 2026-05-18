@@ -1,6 +1,9 @@
 ---
 aliases:
-  - The Aeternum
+- The Aeternum
+type: essay
+status: draft
+tags: []
 ---
 # [[Aeternum]], The Cosmic Architects
 

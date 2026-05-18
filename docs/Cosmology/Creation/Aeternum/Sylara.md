@@ -1,3 +1,8 @@
+---
+type: essay
+status: draft
+tags: []
+---
 # [[Sylara]], The Verdant [[Soul]]
 
 ## Overview

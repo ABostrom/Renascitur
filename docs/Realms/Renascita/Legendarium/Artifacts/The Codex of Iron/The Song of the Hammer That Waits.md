@@ -1,3 +1,8 @@
+---
+type: artifact
+status: draft
+tags: []
+---
 # The Song of the Hammer That Waits
 
 _Carved at the twilight of Runehart, when all was nearly lost_

@@ -1,7 +1,10 @@
 ---
-aliases: [Medani]
+aliases:
+- Medani
+type: essay
+status: draft
+tags: []
 ---
-
 ## Domain
 *Detection*
 _Responsible for internal security, inquisition, and rooting out cultists within the Firebrand Empire._

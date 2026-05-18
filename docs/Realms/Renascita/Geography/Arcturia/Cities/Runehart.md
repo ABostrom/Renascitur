@@ -1,3 +1,9 @@
+---
+type: settlement
+status: draft
+continent: '[[Arcturia]]'
+tags: []
+---
 ### **Runehart: The Lost Hold of [[Muradin]]**
 
 #### **The [[Founding of Runehart]]**

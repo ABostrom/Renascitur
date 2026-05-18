@@ -1,8 +1,13 @@
 ---
-tags: [city-overseer, House Medani]
-aliases: [Medani, Lion’s Rest Overseer]
+tags:
+- city-overseer
+- House Medani
+aliases:
+- Medani
+- Lion’s Rest Overseer
+type: character
+status: draft
 ---
-
 ## Title
 - Overseer of [[Lion’s Rest]]
 

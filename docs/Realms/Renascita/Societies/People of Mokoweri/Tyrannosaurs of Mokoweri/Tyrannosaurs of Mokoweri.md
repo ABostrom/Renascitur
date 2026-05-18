@@ -1,3 +1,8 @@
+---
+type: essay
+status: draft
+tags: []
+---
 In the heart of the jungle on the island of [[docs/Realms/Renascita/Locations and Cities/Mokoweri/Mokoweri]], where the dense foliage reaches toward the sky in the region known as the Canopy Heights, a formidable clan of colossal carnivorous dinosaurs roams freely. This territory, near the border of the ancient ruins, is ruled by none other than [[Titus]], the mighty and imposing Tyrannosaurus Rex, alongside his bold and audacious teenage son, [[Rexaris]].
 
 Titus, a creature of immense power and age, stands as a symbol of authority and wisdom among the clan. With his towering frame, sharp teeth, and thunderous roar, he commands respect and loyalty from his subjects. His crimson eyes, wise and ancient, bear the weight of countless years of experience, and the scars etched into his thick, armored hide tell tales of battles fought and won.

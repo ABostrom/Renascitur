@@ -1,3 +1,8 @@
+---
+type: essay
+status: draft
+tags: []
+---
 ### Elder Thrasuun
 
 **Appearance:** Elder Thrasuun is a towering figure, his scales a deep emerald that shimmers with specks of gold when he moves. His eyes, wise and penetrating, glint with a hint of mirth that belies his otherwise stoic appearance. His robes are richly textured, dyed in shades of forest green and adorned with intricate beadwork depicting the Tree of Life, a symbol of continuity and growth.

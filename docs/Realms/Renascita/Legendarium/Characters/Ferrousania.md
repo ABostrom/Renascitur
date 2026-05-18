@@ -1,3 +1,8 @@
+---
+type: character
+status: stub
+tags: []
+---
 # Ferrousania - The Sorrowful
 Ancient Iron Dragon
 

@@ -1,4 +1,9 @@
-
+---
+type: event
+status: draft
+era: '[[Age of Night]]'
+tags: []
+---
 
 
 ### _The Unveiling of the Deep Line_

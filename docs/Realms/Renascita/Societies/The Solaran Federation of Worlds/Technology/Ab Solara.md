@@ -1,3 +1,8 @@
+---
+type: essay
+status: draft
+tags: []
+---
 *Gateways of Light, Folded [[Weave]], and [[Solaran]] Ambition*
 
 ---

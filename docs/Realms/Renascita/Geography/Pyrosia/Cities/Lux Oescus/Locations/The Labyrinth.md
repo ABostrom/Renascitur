@@ -1,8 +1,14 @@
 ---
-tags: [location, headquarters, House Sivis]
-aliases: [The Labyrinth]
+tags:
+- location
+- headquarters
+- House Sivis
+aliases:
+- The Labyrinth
+type: landmark
+status: draft
+continent: '[[Pyrosia]]'
 ---
-
 ## Associated House
 - [[House Sivis]]
 

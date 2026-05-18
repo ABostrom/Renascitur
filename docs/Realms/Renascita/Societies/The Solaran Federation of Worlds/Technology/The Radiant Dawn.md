@@ -1,3 +1,8 @@
+---
+type: essay
+status: draft
+tags: []
+---
 ### [[Solaran]] Airship: The Radiant Dawn
 
 

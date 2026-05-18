@@ -1,6 +1,10 @@
 ---
 aliases:
-  - Pulsecore
+- Pulsecore
+type: landmark
+status: draft
+continent: '[[Arcturia]]'
+tags: []
 ---
 ## Overview
 

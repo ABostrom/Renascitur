@@ -1,3 +1,8 @@
+---
+type: organisation
+status: draft
+tags: []
+---
 Insignia: ∀
 
 A secret society founded originally to restore the good name of [[Vecna]] they did not revere him as a deity, but as a scientist and mage of great renown. Striving for the search and uncovering of the truth and knowledge. 

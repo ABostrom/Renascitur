@@ -1,3 +1,8 @@
+---
+type: character
+status: stub
+tags: []
+---
 # Larendrammagar - The Wise 
 
 

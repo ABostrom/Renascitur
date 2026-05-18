@@ -1,19 +1,20 @@
 ---
 aliases:
-  - Titanic
-  - Ceremonial
-  - Karathic
+- Titanic
+- Ceremonial
+- Karathic
 tags:
-  - language
-  - titanic
-  - derived
-language-family: "[[Karathic]]"
+- language
+- titanic
+- derived
+language-family: '[[Karathic]]'
 language-tier: derived
 spoken-by:
-  - "[[Varkuun]]"
-  - "[[Goliath]]"
+- '[[Varkuun]]'
+- '[[Goliath]]'
+type: language
+status: draft
 ---
-
 # Titanic
 
 **Titanic** is the grand ceremonial dialect of [[Karathic]], spoken by the [[Varkuun]] and [[Goliaths]]. It is characterized by heavy, resonant sounds and rhythmic cadence suited for ritual and oral history.

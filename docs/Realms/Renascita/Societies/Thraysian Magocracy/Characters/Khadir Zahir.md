@@ -1,8 +1,15 @@
 ---
-tags: [zahirah, khadi, azdaham, rahala]
-aliases: [Khadi of Azdaham, Khadir]
+tags:
+- zahirah
+- khadi
+- azdaham
+- rahala
+aliases:
+- Khadi of Azdaham
+- Khadir
+type: character
+status: draft
 ---
-
 # Khadir Zahir
 
 ## ## Role

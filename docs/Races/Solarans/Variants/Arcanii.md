@@ -1,20 +1,21 @@
 ---
 aliases:
-  - Arcanii
+- Arcanii
 tags:
-  - race
-  - cultural-variant
-  - solarans
-  - arcane
-lineage: "[[Solarans]]"
-origin-plane: "[[Renascita]]"
+- race
+- cultural-variant
+- solarans
+- arcane
+lineage: '[[Solarans]]'
+origin-plane: '[[Renascita]]'
 aat-race-tier: variant
 spoken-language:
-  - "[[Thraysian Common]]"
-  - "[[Elyssan]]"
-  - "[[Zytherin]]"
+- '[[Thraysian Common]]'
+- '[[Elyssan]]'
+- '[[Zytherin]]'
+type: race
+status: draft
 ---
-
 # Arcanii
 
 **Summary:**  

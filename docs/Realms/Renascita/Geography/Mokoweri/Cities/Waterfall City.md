@@ -1,3 +1,9 @@
+---
+type: settlement
+status: draft
+continent: '[[Mokoweri]]'
+tags: []
+---
 Waterfall City, nestled within the lush and vibrant [[docs/Realms/Renascita/Locations and Cities/Mokoweri/Mokoweri#The Riverland's|riverland's]] of [[Mokoweri]], stands as a testament to the resilience and ingenuity of the [[People of Mokoweri|Mokoweran]] people. It is a place where the natural beauty of the surrounding landscape intertwines with human craftsmanship, creating a harmonious blend of architecture and nature.
 
 The city gets its name from the magnificent waterfall that cascades down the nearby cliffs, its thundering waters providing a constant symphony that resonates throughout the settlement. The sound of rushing water and the gentle mist that rises from the falls lend a serene and tranquil atmosphere to the city.

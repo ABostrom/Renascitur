@@ -1,3 +1,8 @@
+---
+type: deity
+status: draft
+tags: []
+---
 # God of Death, The Anima Mea
 
 Vecna is a mysterious and enigmatic deity, worshipped by those who seek to understand the secrets of life and death. He is said to hold the power of the [[soul]], able to manipulate and control the very essence of life itself.

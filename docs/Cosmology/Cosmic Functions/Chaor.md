@@ -1,3 +1,8 @@
+---
+type: cosmic-force
+status: draft
+tags: []
+---
 **Aspect**: Freedom, Instinct, Motion, Change  
 **Opposes**: [[Ordar]]  
 **Domain**: Rebellion, creativity, adaptation  

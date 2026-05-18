@@ -1,14 +1,20 @@
 ---
-aliases: [Imperial Leonin]
-tags: [race, cultural-variant, leonin, imperial]
-lineage: "[[docs/Races/Kyojin/Leonin/Leonin|Leonin]]"
-origin-plane: "[[Renascita]]"
+aliases:
+- Imperial Leonin
+tags:
+- race
+- cultural-variant
+- leonin
+- imperial
+lineage: '[[docs/Races/Kyojin/Leonin/Leonin|Leonin]]'
+origin-plane: '[[Renascita]]'
 aat-race-tier: variant
-spoken-language: 
-- "[[Imperial Common]]"
-- "[[docs/Languages/Modern/Leonin|Leonin]]"
+spoken-language:
+- '[[Imperial Common]]'
+- '[[docs/Languages/Modern/Leonin|Leonin]]'
+type: race
+status: draft
 ---
-
 # Imperial [[docs/Races/Kyojin/Leonin/Leonin|Leonin]]
 
 **Summary:**  

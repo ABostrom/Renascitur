@@ -1,12 +1,14 @@
 ---
 aliases:
-  - Varkhaal, the Broken-Jawed
-  - First Fang
-  - Prophet of Arachnie
+- Varkhaal, the Broken-Jawed
+- First Fang
+- Prophet of Arachnie
 tags:
-  - npc
-  - cult
-  - hobgoblin
+- npc
+- cult
+- hobgoblin
+type: character
+status: draft
 ---
 ## [[Varkhaal Bloodlash|Varkhaal, the Broken-Jawed]]
 

@@ -1,3 +1,8 @@
+---
+type: essay
+status: draft
+tags: []
+---
 The [[Ferrun]], descendants of the **[[Solaran|Solarans]]** who turned to science and craftsmanship, have spent centuries studying the collapse of the **[[Machinery of Death]]**. They realized early on that the souls of their people were **not moving on**, lingering in the world before fading into oblivion. Rather than allow their loved ones to **vanish from existence**, they devised a way to **bind and store their souls** using an advanced version of [[Solaran]] [[soul]] magic.
 
 - The **Great Vault** of the [[Ferrun]] is an immense underground chamber lined with crystalline conduits and obsidian constructs, each one housing the essence of a [[Ferrun]] [[soul]]. These souls are not simply stored—they retain a level of **consciousness**, able to **speak** through special interfaces, offering guidance to their descendants and engineers.

@@ -1,8 +1,14 @@
 ---
-tags: [eltabarr, majlis, institution]
-aliases: [Majlis, Arcane Sovereignty]
+tags:
+- eltabarr
+- majlis
+- institution
+aliases:
+- Majlis
+- Arcane Sovereignty
+type: organisation
+status: draft
 ---
-
 # Majlis of Arcane Sovereignty
 
 ## ## Overview

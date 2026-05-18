@@ -1,8 +1,12 @@
 ---
-tags: [leader, House Tharashk]
-aliases: [Broxiz]
+tags:
+- leader
+- House Tharashk
+aliases:
+- Broxiz
+type: character
+status: draft
 ---
-
 ## Affiliation
 - **House**: [[House Tharashk]]
 

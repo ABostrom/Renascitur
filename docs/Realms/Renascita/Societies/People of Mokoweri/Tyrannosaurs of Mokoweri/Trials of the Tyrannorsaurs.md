@@ -1,4 +1,8 @@
-
+---
+type: essay
+status: draft
+tags: []
+---
 "The [[Solaran|Solarans]] were guardians of wisdom and keepers of balance. They valued harmony between the natural world and the power they harnessed. Can you truly embody these ideals?"
 
 Titus regards them silently for a moment before nodding, his expression softened. "You have shown potential," he admits. "But the path to earning our trust is long and arduous. The trials you face will not be easy, but they will test your commitment to the [[Solaran]] ways."

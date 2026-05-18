@@ -1,8 +1,14 @@
 ---
-tags: [location, headquarters, House Cannith]
-aliases: [Cannith Tower]
+tags:
+- location
+- headquarters
+- House Cannith
+aliases:
+- Cannith Tower
+type: landmark
+status: draft
+continent: '[[Pyrosia]]'
 ---
-
 ## Associated House
 - [[House Cannith]]
 

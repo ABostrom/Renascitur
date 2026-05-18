@@ -1,20 +1,21 @@
 ---
 aliases:
-  - Ferrun
+- Ferrun
 tags:
-  - race
-  - cultural-variant
-  - solarans
-  - industrial
-lineage: "[[Solaran]]"
-origin-plane: "[[Renascita]]"
+- race
+- cultural-variant
+- solarans
+- industrial
+lineage: '[[Solaran]]'
+origin-plane: '[[Renascita]]'
 aat-race-tier: variant
 spoken-language:
-  - "[[Thraysian Common]]"
-  - "[[Elyssan]]"
-  - "[[Dwarven]]"
+- '[[Thraysian Common]]'
+- '[[Elyssan]]'
+- '[[Dwarven]]'
+type: race
+status: draft
 ---
-
 # Ferrun
 
 **Summary:**  

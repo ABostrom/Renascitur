@@ -1,12 +1,18 @@
 ---
-aliases: [Stormbound Dwarves]
-tags: [race, variant, dwarves, elemental]
-lineage: "[[Dwarf|Dwarves]]"
-origin-plane: "[[Thargrun]]"
+aliases:
+- Stormbound Dwarves
+tags:
+- race
+- variant
+- dwarves
+- elemental
+lineage: '[[Dwarf|Dwarves]]'
+origin-plane: '[[Thargrun]]'
 aat-race-tier: variant
-spoken-language: "[[Dwarven]]"
+spoken-language: '[[Dwarven]]'
+type: race
+status: draft
 ---
-
 # Stormbound [[Dwarf|Dwarves]]
 
 ## Overview  

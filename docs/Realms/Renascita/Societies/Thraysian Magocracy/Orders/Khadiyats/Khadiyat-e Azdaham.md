@@ -1,8 +1,15 @@
 ---
-tags: [zahirah, khadiyat, monsters, relics, rahalan]
-aliases: [Khadiyat-e Azdaham]
+tags:
+- zahirah
+- khadiyat
+- monsters
+- relics
+- rahalan
+aliases:
+- Khadiyat-e Azdaham
+type: organisation
+status: draft
 ---
-
 # Khadiyat-e Azdaham
 
 ## Overview

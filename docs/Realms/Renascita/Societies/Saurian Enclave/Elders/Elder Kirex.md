@@ -1,3 +1,8 @@
+---
+type: essay
+status: draft
+tags: []
+---
 ### Elder Kirex
 
 **Appearance:** As the youngest Elder, Kirex has an athletic build, his scales a vibrant bronze that speaks of his frequent patrols under the sun. His attire is less ornate, functional yet dignified, with a cloak clasped with a brooch shaped like a guardian’s shield. His gaze is direct, challenging yet fair.

@@ -1,3 +1,8 @@
+---
+type: essay
+status: draft
+tags: []
+---
 **The Elder Races and Their Connection to [[Aeternum|the Aeternum]] and the Three World Trees**
 
 The Elder Races were the first mortal civilizations shaped by the divine forces of the **Four [[Aeternum]]**: [[Aelion]], [[Tharamos]], [[Sylara]], and [[Valtor]] Each race was chosen and blessed by one of these primordial forces, forming the foundation of the world's ancient history. Their destinies became intertwined with the Three World Trees, each representing a different pillar of existence.

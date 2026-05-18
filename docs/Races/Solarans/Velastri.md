@@ -1,13 +1,19 @@
 ---
-aliases: [Velastri]
-tags: [race, distinct, solarans, infernal]
-lineage: "[[Solaran]]"
-origin-plane: "[[Infernum]]"
+aliases:
+- Velastri
+tags:
+- race
+- distinct
+- solarans
+- infernal
+lineage: '[[Solaran]]'
+origin-plane: '[[Infernum]]'
 aat-race-tier: distinct
-spoken-language: 
-- "[[Zytherin]]"
+spoken-language:
+- '[[Zytherin]]'
+type: race
+status: draft
 ---
-
 # Velastri
 
 **Summary:**  

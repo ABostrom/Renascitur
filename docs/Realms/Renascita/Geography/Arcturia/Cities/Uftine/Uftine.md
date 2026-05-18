@@ -1,13 +1,14 @@
 ---
 aliases: []
 type: city
-continent: "[[Arcturia]]"
-province: "[[Calderian Mountains]]"
-society: "[[Icebound of Uftine]]"
+continent: '[[Arcturia]]'
+province: '[[Calderian Mountains]]'
+society: '[[Icebound of Uftine]]'
 leadership:
-  - "[[Gromdir Stillhand]]"
+- '[[Gromdir Stillhand]]'
+status: draft
+tags: []
 ---
-
 ![[2a6dc07c-2481-498a-96e7-b1cbae589bb1.png]]
 ## Overview
 

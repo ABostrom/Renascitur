@@ -1,7 +1,10 @@
 ---
-aliases: [Cannith]
+aliases:
+- Cannith
+type: essay
+status: draft
+tags: []
 ---
-
 ## Domain
 *Making*
 _Responsible for construction, weapons development, and engineering within the Firebrand Empire._

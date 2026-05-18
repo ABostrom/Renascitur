@@ -1,8 +1,15 @@
 ---
-tags: [zahirah, khadiyat, ink, glyphs, writing]
-aliases: [Khadiyat-e Nehrun]
+tags:
+- zahirah
+- khadiyat
+- ink
+- glyphs
+- writing
+aliases:
+- Khadiyat-e Nehrun
+type: organisation
+status: draft
 ---
-
 # Khadiyat-e Nehrun
 
 ## Overview

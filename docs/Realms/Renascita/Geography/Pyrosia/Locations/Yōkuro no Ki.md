@@ -1,4 +1,10 @@
 ---
+type: landmark
+status: draft
+continent: '[[Pyrosia]]'
+tags: []
+---
+---
 ---
 
  [[Yōkuro no Ki]] / [[Yunara]]  

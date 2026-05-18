@@ -1,8 +1,12 @@
 ---
-tags: [leader, House Jorasco]
-aliases: [Ulara]
+tags:
+- leader
+- House Jorasco
+aliases:
+- Ulara
+type: character
+status: draft
 ---
-
 ## Affiliation
 - **House**: [[House Jorasco]]
 

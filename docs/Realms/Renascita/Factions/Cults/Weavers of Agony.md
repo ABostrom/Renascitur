@@ -1,13 +1,15 @@
 ---
 aliases:
-  - Weaver of Agony
-  - Weavers of Agony
-  - Cult of Arachnie
-  - Hobgoblin Cult of Arachnie
+- Weaver of Agony
+- Weavers of Agony
+- Cult of Arachnie
+- Hobgoblin Cult of Arachnie
 tags:
-  - faction
-  - cult
-  - hobgoblin
+- faction
+- cult
+- hobgoblin
+type: faction
+status: draft
 ---
 # [[Weavers of Agony]]
 

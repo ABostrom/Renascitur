@@ -1,3 +1,9 @@
+---
+type: settlement
+status: draft
+continent: '[[Pyrosia]]'
+tags: []
+---
 > *"We held the gates for a thousand nights, and in that furnace, the future was forged."*  
 > — [[Volgrin Flameward]], First [[Pyrethane]] of [[Magnus’ Rest]]
 

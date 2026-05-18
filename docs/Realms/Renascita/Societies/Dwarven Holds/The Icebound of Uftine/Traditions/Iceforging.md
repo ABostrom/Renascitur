@@ -1,3 +1,8 @@
+---
+type: tradition
+status: draft
+tags: []
+---
 ## Overview  
 [[Iceforging]] is the signature smithing tradition of the [[Icebound|Icebound Dwarves]] of [[Uftine Human]], a slow and deliberate craft that uses **cold, pressure, and resonance** rather than flame. Where other [[Dwarf|dwarves]] strike with fire and fury, the [[Icebound]] whisper to the metal — teaching it to hold, endure, and remember.
 

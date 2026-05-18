@@ -1,3 +1,8 @@
+---
+type: character
+status: draft
+tags: []
+---
 Here is the 5e stat block for an Efreeti, lightly reskinned to represent a celestial being, the Avatar of [[Unimus]]:
 
 Large Celestial, Lawful Good

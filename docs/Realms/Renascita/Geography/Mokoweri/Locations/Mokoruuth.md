@@ -1,3 +1,9 @@
+---
+type: landmark
+status: draft
+continent: '[[Mokoweri]]'
+tags: []
+---
 - **Cultural Influence**: Named by the [[Solaran]]'s, whose pursuit of knowledge and enlightenment shaped their civilization.
 - **Meaning**:
     - _Moko_: Derived from [[Mokoweri]], symbolizing the land it resides in.

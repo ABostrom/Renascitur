@@ -1,1 +1,6 @@
+---
+type: landmark
+status: stub
+tags: []
+---
 The capital city of the plane of fire - this shining city of gold is built into the rock face of a large rocky pillar. The lower city spirals upwards to meet a towering city that sits atop.

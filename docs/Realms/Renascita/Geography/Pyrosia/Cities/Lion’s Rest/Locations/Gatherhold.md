@@ -1,8 +1,14 @@
 ---
-tags: [location, headquarters, House Silverhand]
-aliases: [Gatherhold]
+tags:
+- location
+- headquarters
+- House Silverhand
+aliases:
+- Gatherhold
+type: landmark
+status: draft
+continent: '[[Pyrosia]]'
 ---
-
 ## Associated House
 - [[House Silverhand]]
 

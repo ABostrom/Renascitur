@@ -1,3 +1,8 @@
+---
+type: deity
+status: draft
+tags: []
+---
 [[Ishna|The god unborn]] could twist and contort the souls of mortals into unnatural [[aberrations]].
 
 These creations took on a twisted, cruel imitation of life. Devoid of emotion, and the Lux that gives mortals their essence.

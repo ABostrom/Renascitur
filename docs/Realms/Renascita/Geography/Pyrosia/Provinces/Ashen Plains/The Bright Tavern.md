@@ -1,3 +1,9 @@
+---
+type: region
+status: draft
+continent: '[[Pyrosia]]'
+tags: []
+---
 Owner: [Breona](https://docs.google.com/document/d/17UBeTKd3Fl4TwHLNa-uxBUu0vXz8Ud6m6s0cmIC5HpY/edit#heading=h.w5rdmvg40p64)
 
 This tavern is a roadside tavern along the [[Vialux]] between [[Lion’s Rest]] and [[Lux Oescus]].

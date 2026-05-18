@@ -1,18 +1,19 @@
 ---
 aliases:
-  - Serethi
-  - Aerlai Tongue
+- Serethi
+- Aerlai Tongue
 tags:
-  - language
-  - solaran
-  - dialect
-  - celestial
-language-family: "[[Elyssan]]"
+- language
+- solaran
+- dialect
+- celestial
+language-family: '[[Elyssan]]'
 language-tier: dialect
 spoken-by:
-  - "[[Celestar]]"
+- '[[Celestar]]'
+type: language
+status: draft
 ---
-
 # Serethi
 
 **Serethi** is the **radiant dialect** of [[Elyssan]] spoken by the [[Celestar]], the celestial descendants of the [[Solaran]] who remained within [[Imperium]]. It preserves the elegance and harmonic purity of [[Elyssan]], suffused with the grace and discipline of the celestial plane.

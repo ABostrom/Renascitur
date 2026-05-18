@@ -1,3 +1,9 @@
+---
+type: faction
+status: draft
+realm: '[[Renascita]]'
+tags: []
+---
 The [[docs/Races/Solaran/Mokoweri|Mokoweri]] people are an ancient civilization with a rich and complex history. According to legend, their ancestors were among the first to inhabit the islands that now make up their homeland. They lived in harmony with the native [[Saurian]], developing a symbiotic relationship that would endure for centuries.
 
 As time went on, the [[docs/Races/Solaran/Mokoweri|Mokoweri]] people grew and flourished, creating their own unique culture and society. They developed a deep connection with the natural world, learning to harness the power of the jungle to meet their needs. They also became skilled navigators, building seaworthy vessels that allowed them to explore the surrounding seas and trade with other civilizations.

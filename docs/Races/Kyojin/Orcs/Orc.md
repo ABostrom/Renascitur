@@ -1,13 +1,19 @@
 ---
-aliases: [Orcs]
-tags: [race, cultural-variant, kyojin, primal]
-lineage: "[[docs/Races/Kyojin/Leonin/Leonin|Leonin]]"
-origin-plane: "[[Renascita]]"
+aliases:
+- Orcs
+tags:
+- race
+- cultural-variant
+- kyojin
+- primal
+lineage: '[[docs/Races/Kyojin/Leonin/Leonin|Leonin]]'
+origin-plane: '[[Renascita]]'
 aat-race-tier: distinct
-spoken-language: 
-- "[[Orcish]]"
+spoken-language:
+- '[[Orcish]]'
+type: race
+status: draft
 ---
-
 # Orcs
 
 **Summary:**  
