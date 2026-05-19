@@ -10,6 +10,7 @@ terrain:
 - volcanic
 dominant_culture: ''
 population_density: ''
+settlements: []
 ---
 The Obsidian Fortress, the formidable stronghold of General Tau and the central bastion of [[Ishna]]'s forces, is located in a desolate and inhospitable region of [[Pyrosia]] known as the Scorched Wastes. This harsh, barren expanse of land stretches for miles in every direction, with little sign of life or vegetation.
 
@@ -37,7 +38,7 @@ TABLE WITHOUT ID
   size AS "Size",
   controlled_by AS "Held by"
 FROM ""
-WHERE type = "settlement" AND region = this.file.link
+WHERE type = "settlement" AND string(region) = string(this.file.link)
 SORT file.name ASC
 ```
 
@@ -45,7 +46,7 @@ SORT file.name ASC
 
 ```dataview
 LIST FROM ""
-WHERE type = "landmark" AND region = this.file.link
+WHERE type = "landmark" AND string(region) = string(this.file.link)
 SORT file.name ASC
 ```
 
@@ -57,7 +58,7 @@ TABLE WITHOUT ID
   race AS "Race",
   affiliation AS "Affiliation"
 FROM ""
-WHERE type = "character" AND location = this.file.link
+WHERE type = "character" AND string(location) = string(this.file.link)
 SORT file.name ASC
 ```
 
@@ -69,7 +70,7 @@ TABLE WITHOUT ID
   era AS "Era",
   year_display AS "When"
 FROM ""
-WHERE type = "event" AND location = this.file.link
+WHERE type = "event" AND string(location) = string(this.file.link)
 SORT year ASC
 ```
 

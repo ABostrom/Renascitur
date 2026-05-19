@@ -16,6 +16,7 @@ allies: []
 rivals: []
 magic:
 - '[[Rune Magic]]'
+leadership: []
 ---
 The [[Dwarf|dwarves]] of [[Uftine]] are known collectively as the [[Icebound]]—those who are bound to the glacier not just in body, but in purpose. This identity defines their culture, their duty, and their [[soul]]. Among them, the term Icebreakers refers more specifically to those who carve the frozen stone, forge in the cold, and mine the glacier’s deep veins. They are artisans, engineers, and delvers who shape the silence beneath Uftine.
   
@@ -69,7 +70,7 @@ An extension of the [[Deep Road]], the [[Uftine Express]] is a marvel of subterr
 
 ```dataview
 LIST FROM ""
-WHERE type = "faction" AND parent_faction = this.file.link
+WHERE type = "faction" AND string(parent_faction) = string(this.file.link)
 SORT file.name ASC
 ```
 
@@ -81,7 +82,7 @@ TABLE WITHOUT ID
   race AS "Race",
   location AS "Location"
 FROM ""
-WHERE type = "character" AND affiliation = this.file.link
+WHERE type = "character" AND string(affiliation) = string(this.file.link)
 SORT file.name ASC
 ```
 
@@ -89,7 +90,7 @@ SORT file.name ASC
 
 ```dataview
 LIST FROM ""
-WHERE type = "organisation" AND parent_faction = this.file.link
+WHERE type = "organisation" AND string(parent_faction) = string(this.file.link)
 SORT file.name ASC
 ```
 

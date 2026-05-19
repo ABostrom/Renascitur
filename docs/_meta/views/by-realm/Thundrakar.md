@@ -11,7 +11,7 @@ view: Thundrakar — Overview
 
 ## Regions
 ```dataview
-LIST FROM "" WHERE type = "region" AND continent = [[Thundrakar]]
+LIST FROM "" WHERE type = "region" AND string(continent) = "[[Thundrakar]]"
 SORT file.name ASC
 ```
 
@@ -22,25 +22,25 @@ TABLE WITHOUT ID
   size AS "Size",
   controlled_by AS "Held by"
 FROM ""
-WHERE type = "settlement" AND continent = [[Thundrakar]]
+WHERE type = "settlement" AND string(continent) = "[[Thundrakar]]"
 SORT file.name ASC
 ```
 
 ## Landmarks
 ```dataview
-LIST FROM "" WHERE type = "landmark" AND continent = [[Thundrakar]]
+LIST FROM "" WHERE type = "landmark" AND string(continent) = "[[Thundrakar]]"
 SORT file.name ASC
 ```
 
 ## Ranges
 ```dataview
-LIST FROM "" WHERE type = "range" AND continent = [[Thundrakar]]
+LIST FROM "" WHERE type = "range" AND string(continent) = "[[Thundrakar]]"
 SORT file.name ASC
 ```
 
 ## Waterways
 ```dataview
-LIST FROM "" WHERE type = "waterway" AND continent = [[Thundrakar]]
+LIST FROM "" WHERE type = "waterway" AND string(continent) = "[[Thundrakar]]"
 SORT file.name ASC
 ```
 
@@ -51,13 +51,13 @@ TABLE WITHOUT ID
   race AS "Race",
   affiliation AS "Faction"
 FROM ""
-WHERE type = "character" AND location = [[Thundrakar]]
+WHERE type = "character" AND string(location) = "[[Thundrakar]]"
 SORT file.name ASC
 ```
 
 ## Events here
 ```dataview
 TABLE WITHOUT ID file.link AS "Event", era AS "Era", year_display AS "When"
-FROM "" WHERE type = "event" AND location = [[Thundrakar]]
+FROM "" WHERE type = "event" AND string(location) = "[[Thundrakar]]"
 SORT year ASC
 ```

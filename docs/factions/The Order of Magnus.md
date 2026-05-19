@@ -15,6 +15,7 @@ size: ''
 allies: []
 rivals: []
 magic: []
+leadership: []
 ---
 The order of [[Magnus]] was formerly recognised following the death of [[Magnus]] Hammerfell in 100 AS. During his life [[Magnus]] has founded his order of Clerics to spread the teachings of the Old God [[Muradin]]. Knowing that [[Muradin]] had saved his life, he felt it his holy duty to spread his teachings to all [[Dwarf|Dwarves]] of the new world.
 
@@ -28,7 +29,7 @@ The order of [[Magnus]] was formerly recognised following the death of [[Magnus]
 
 ```dataview
 LIST FROM ""
-WHERE type = "faction" AND parent_faction = this.file.link
+WHERE type = "faction" AND string(parent_faction) = string(this.file.link)
 SORT file.name ASC
 ```
 
@@ -40,7 +41,7 @@ TABLE WITHOUT ID
   race AS "Race",
   location AS "Location"
 FROM ""
-WHERE type = "character" AND affiliation = this.file.link
+WHERE type = "character" AND string(affiliation) = string(this.file.link)
 SORT file.name ASC
 ```
 
@@ -48,7 +49,7 @@ SORT file.name ASC
 
 ```dataview
 LIST FROM ""
-WHERE type = "organisation" AND parent_faction = this.file.link
+WHERE type = "organisation" AND string(parent_faction) = string(this.file.link)
 SORT file.name ASC
 ```
 

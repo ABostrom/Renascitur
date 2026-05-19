@@ -368,9 +368,12 @@ REALMS = [
 
 
 def realm_view_body(continent_wikilink: str) -> str:
+    # Use string() coercion so the comparison works whether the stored
+    # frontmatter value was parsed as a wikilink object or a quoted string.
+    s = '"' + continent_wikilink + '"'
     return '''## Regions
 ```dataview
-LIST FROM "" WHERE type = "region" AND continent = ''' + continent_wikilink + '''
+LIST FROM "" WHERE type = "region" AND string(continent) = ''' + s + '''
 SORT file.name ASC
 ```
 
@@ -381,25 +384,25 @@ TABLE WITHOUT ID
   size AS "Size",
   controlled_by AS "Held by"
 FROM ""
-WHERE type = "settlement" AND continent = ''' + continent_wikilink + '''
+WHERE type = "settlement" AND string(continent) = ''' + s + '''
 SORT file.name ASC
 ```
 
 ## Landmarks
 ```dataview
-LIST FROM "" WHERE type = "landmark" AND continent = ''' + continent_wikilink + '''
+LIST FROM "" WHERE type = "landmark" AND string(continent) = ''' + s + '''
 SORT file.name ASC
 ```
 
 ## Ranges
 ```dataview
-LIST FROM "" WHERE type = "range" AND continent = ''' + continent_wikilink + '''
+LIST FROM "" WHERE type = "range" AND string(continent) = ''' + s + '''
 SORT file.name ASC
 ```
 
 ## Waterways
 ```dataview
-LIST FROM "" WHERE type = "waterway" AND continent = ''' + continent_wikilink + '''
+LIST FROM "" WHERE type = "waterway" AND string(continent) = ''' + s + '''
 SORT file.name ASC
 ```
 
@@ -410,14 +413,14 @@ TABLE WITHOUT ID
   race AS "Race",
   affiliation AS "Faction"
 FROM ""
-WHERE type = "character" AND location = ''' + continent_wikilink + '''
+WHERE type = "character" AND string(location) = ''' + s + '''
 SORT file.name ASC
 ```
 
 ## Events here
 ```dataview
 TABLE WITHOUT ID file.link AS "Event", era AS "Era", year_display AS "When"
-FROM "" WHERE type = "event" AND location = ''' + continent_wikilink + '''
+FROM "" WHERE type = "event" AND string(location) = ''' + s + '''
 SORT year ASC
 ```'''
 
@@ -440,6 +443,7 @@ MAJOR_FACTIONS = [
 
 
 def faction_view_body(wlink: str) -> str:
+    s = '"' + wlink + '"'
     return '''## Members
 ```dataview
 TABLE WITHOUT ID
@@ -448,32 +452,33 @@ TABLE WITHOUT ID
   role AS "Role",
   living_status AS "Status"
 FROM ""
-WHERE type = "character" AND affiliation = ''' + wlink + '''
+WHERE type = "character" AND string(affiliation) = ''' + s + '''
 SORT file.name ASC
 ```
 
 ## Sub-factions
 ```dataview
-LIST FROM "" WHERE type = "faction" AND parent_faction = ''' + wlink + '''
+LIST FROM "" WHERE type = "faction" AND string(parent_faction) = ''' + s + '''
 SORT file.name ASC
 ```
 
 ## Organisations within
 ```dataview
-LIST FROM "" WHERE type = "organisation" AND parent_faction = ''' + wlink + '''
+LIST FROM "" WHERE type = "organisation" AND string(parent_faction) = ''' + s + '''
 SORT file.name ASC
 ```
 
 ## Events involving
 ```dataview
 TABLE WITHOUT ID file.link AS "Event", era AS "Era", year_display AS "When"
-FROM "" WHERE type = "event" AND contains(participants, ''' + wlink + ''')
+FROM "" WHERE type = "event" AND contains(string(participants), "''' + wlink + '''")
 SORT year ASC
 ```
 
 ## Everything else referencing
 ```dataview
-LIST WHERE contains(file.inlinks, ''' + wlink + ''')
+LIST WHERE contains(file.outlinks, ''' + wlink + ''')
+  AND !contains(string(file.path), "_meta/views/")
 SORT file.name ASC
 LIMIT 30
 ```'''
@@ -492,6 +497,7 @@ ERAS = [
 
 
 def era_view_body(wlink: str) -> str:
+    s = '"' + wlink + '"'
     return '''## Events in this era
 ```dataview
 TABLE WITHOUT ID
@@ -501,31 +507,31 @@ TABLE WITHOUT ID
   importance AS "Importance",
   status AS "Status"
 FROM ""
-WHERE type = "event" AND era = ''' + wlink + '''
+WHERE type = "event" AND string(era) = ''' + s + '''
 SORT year ASC
 ```
 
 ## Chronicles
 ```dataview
-LIST FROM "" WHERE type = "chronicle" AND era_of_composition = ''' + wlink + '''
+LIST FROM "" WHERE type = "chronicle" AND string(era_of_composition) = ''' + s + '''
 SORT file.name ASC
 ```
 
 ## Myths from this era
 ```dataview
-LIST FROM "" WHERE type = "myth" AND era = ''' + wlink + '''
+LIST FROM "" WHERE type = "myth" AND string(era) = ''' + s + '''
 SORT file.name ASC
 ```
 
 ## Deities emerging
 ```dataview
-LIST FROM "" WHERE type = "deity" AND era_of_emergence = ''' + wlink + '''
+LIST FROM "" WHERE type = "deity" AND string(era_of_emergence) = ''' + s + '''
 SORT file.name ASC
 ```
 
 ## Characters living in this era
 ```dataview
-LIST FROM "" WHERE type = "character" AND era = ''' + wlink + '''
+LIST FROM "" WHERE type = "character" AND string(era) = ''' + s + '''
 SORT file.name ASC
 ```'''
 

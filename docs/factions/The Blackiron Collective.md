@@ -14,6 +14,7 @@ size: regional
 allies: []
 rivals: []
 magic: []
+leadership: []
 ---
 ---
 
@@ -29,7 +30,7 @@ magic: []
 
 ```dataview
 LIST FROM ""
-WHERE type = "faction" AND parent_faction = this.file.link
+WHERE type = "faction" AND string(parent_faction) = string(this.file.link)
 SORT file.name ASC
 ```
 
@@ -41,7 +42,7 @@ TABLE WITHOUT ID
   race AS "Race",
   location AS "Location"
 FROM ""
-WHERE type = "character" AND affiliation = this.file.link
+WHERE type = "character" AND string(affiliation) = string(this.file.link)
 SORT file.name ASC
 ```
 
@@ -49,7 +50,7 @@ SORT file.name ASC
 
 ```dataview
 LIST FROM ""
-WHERE type = "organisation" AND parent_faction = this.file.link
+WHERE type = "organisation" AND string(parent_faction) = string(this.file.link)
 SORT file.name ASC
 ```
 

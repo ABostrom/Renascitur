@@ -13,6 +13,7 @@ terrain:
 - mountains
 dominant_culture: ''
 population_density: ''
+settlements: []
 ---
 ## Overview
 Mountainous and smog-choked, the Ember Peaks house vast forges, industrial hubs, and deep-mining operations. It is the beating iron heart of the Empire’s military-industrial power.
@@ -38,7 +39,7 @@ TABLE WITHOUT ID
   size AS "Size",
   controlled_by AS "Held by"
 FROM ""
-WHERE type = "settlement" AND region = this.file.link
+WHERE type = "settlement" AND string(region) = string(this.file.link)
 SORT file.name ASC
 ```
 
@@ -46,7 +47,7 @@ SORT file.name ASC
 
 ```dataview
 LIST FROM ""
-WHERE type = "landmark" AND region = this.file.link
+WHERE type = "landmark" AND string(region) = string(this.file.link)
 SORT file.name ASC
 ```
 
@@ -58,7 +59,7 @@ TABLE WITHOUT ID
   race AS "Race",
   affiliation AS "Affiliation"
 FROM ""
-WHERE type = "character" AND location = this.file.link
+WHERE type = "character" AND string(location) = string(this.file.link)
 SORT file.name ASC
 ```
 
@@ -70,7 +71,7 @@ TABLE WITHOUT ID
   era AS "Era",
   year_display AS "When"
 FROM ""
-WHERE type = "event" AND location = this.file.link
+WHERE type = "event" AND string(location) = string(this.file.link)
 SORT year ASC
 ```
 

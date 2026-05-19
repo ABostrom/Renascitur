@@ -14,6 +14,7 @@ size: continental
 allies: []
 rivals: []
 magic: []
+leadership: []
 ---
 The Firebrand Empire is a powerful and highly organised civilization that resembles the ancient Roman Empire. The Empire is ruled by an [[Emperors]] and [[The 12 Great Houses]], each of which holds significant influence over the Empire's affairs. Citizenship is not guaranteed by birthright in the Firebrand Empire; rather, it must be earned through service to the Empire and deeds worthy of recognition. This system of earned [[Citizenship]] emphasises individual achievement and meritocracy, but the great houses use it as a form of control over the common people.
 
@@ -33,7 +34,7 @@ Despite its aversion to magic, the Firebrand Empire is technologically advanced,
 
 ```dataview
 LIST FROM ""
-WHERE type = "faction" AND parent_faction = this.file.link
+WHERE type = "faction" AND string(parent_faction) = string(this.file.link)
 SORT file.name ASC
 ```
 
@@ -45,7 +46,7 @@ TABLE WITHOUT ID
   race AS "Race",
   location AS "Location"
 FROM ""
-WHERE type = "character" AND affiliation = this.file.link
+WHERE type = "character" AND string(affiliation) = string(this.file.link)
 SORT file.name ASC
 ```
 
@@ -53,7 +54,7 @@ SORT file.name ASC
 
 ```dataview
 LIST FROM ""
-WHERE type = "organisation" AND parent_faction = this.file.link
+WHERE type = "organisation" AND string(parent_faction) = string(this.file.link)
 SORT file.name ASC
 ```
 

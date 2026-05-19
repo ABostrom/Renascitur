@@ -10,6 +10,10 @@ climate: arid
 terrain: underground
 defenses: ''
 predominant_economy: mining
+size: ''
+controlled_by: ''
+populated_by: []
+era_founded: ''
 ---
 # Thelassia: The City of the Endless Flame
 
@@ -143,7 +147,7 @@ The **Rusted Reliquary** is a solemn shrine dedicated to the memory of the [[Sol
 
 ```dataview
 LIST FROM ""
-WHERE type = "landmark" AND inside = this.file.link
+WHERE type = "landmark" AND string(inside) = string(this.file.link)
 SORT file.name ASC
 ```
 
@@ -155,7 +159,7 @@ TABLE WITHOUT ID
   race AS "Race",
   affiliation AS "Affiliation"
 FROM ""
-WHERE type = "character" AND location = this.file.link
+WHERE type = "character" AND string(location) = string(this.file.link)
 SORT file.name ASC
 ```
 
@@ -167,7 +171,7 @@ TABLE WITHOUT ID
   era AS "Era",
   year_display AS "When"
 FROM ""
-WHERE type = "event" AND location = this.file.link
+WHERE type = "event" AND string(location) = string(this.file.link)
 SORT year ASC
 ```
 

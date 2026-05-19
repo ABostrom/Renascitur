@@ -10,6 +10,10 @@ climate: volcanic
 terrain: plains
 defenses: walled
 predominant_economy: mining
+size: ''
+controlled_by: ''
+populated_by: []
+era_founded: ''
 ---
 > *"We held the gates for a thousand nights, and in that furnace, the future was forged."*  
 > — [[Volgrin Flameward]], First [[Pyrethane]] of [[Magnus’ Rest]]
@@ -121,7 +125,7 @@ Few seek the hidden gate. Fewer return. The old [[Solaran]] ghosts do not sleep 
 
 ```dataview
 LIST FROM ""
-WHERE type = "landmark" AND inside = this.file.link
+WHERE type = "landmark" AND string(inside) = string(this.file.link)
 SORT file.name ASC
 ```
 
@@ -133,7 +137,7 @@ TABLE WITHOUT ID
   race AS "Race",
   affiliation AS "Affiliation"
 FROM ""
-WHERE type = "character" AND location = this.file.link
+WHERE type = "character" AND string(location) = string(this.file.link)
 SORT file.name ASC
 ```
 
@@ -145,7 +149,7 @@ TABLE WITHOUT ID
   era AS "Era",
   year_display AS "When"
 FROM ""
-WHERE type = "event" AND location = this.file.link
+WHERE type = "event" AND string(location) = string(this.file.link)
 SORT year ASC
 ```
 

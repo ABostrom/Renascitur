@@ -10,6 +10,7 @@ terrain:
 - forest
 dominant_culture: ''
 population_density: ''
+settlements: []
 ---
 _Appearance:_ Nestled amid the arid expanse of Renascitur, the Eversoul Grove presents a striking contrast to the surrounding desolation. It is an oasis of vibrant life and tranquility, offering a haven of resplendent greenery amidst the harsh wilderness. Tall, ancient trees with verdant foliage form a protective canopy over the grove, their leaves shimmering with an ethereal radiance that bathes the entire area in a soft, gentle glow. This luminescence, akin to dappled sunlight, emanates from the heart of the grove.
 
@@ -37,7 +38,7 @@ TABLE WITHOUT ID
   size AS "Size",
   controlled_by AS "Held by"
 FROM ""
-WHERE type = "settlement" AND region = this.file.link
+WHERE type = "settlement" AND string(region) = string(this.file.link)
 SORT file.name ASC
 ```
 
@@ -45,7 +46,7 @@ SORT file.name ASC
 
 ```dataview
 LIST FROM ""
-WHERE type = "landmark" AND region = this.file.link
+WHERE type = "landmark" AND string(region) = string(this.file.link)
 SORT file.name ASC
 ```
 
@@ -57,7 +58,7 @@ TABLE WITHOUT ID
   race AS "Race",
   affiliation AS "Affiliation"
 FROM ""
-WHERE type = "character" AND location = this.file.link
+WHERE type = "character" AND string(location) = string(this.file.link)
 SORT file.name ASC
 ```
 
@@ -69,7 +70,7 @@ TABLE WITHOUT ID
   era AS "Era",
   year_display AS "When"
 FROM ""
-WHERE type = "event" AND location = this.file.link
+WHERE type = "event" AND string(location) = string(this.file.link)
 SORT year ASC
 ```
 

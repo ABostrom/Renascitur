@@ -16,6 +16,7 @@ rivals: []
 magic:
 - '[[Primal]]'
 - '[[Divine]]'
+leadership: []
 ---
 In the heart of the vast deserts surrounding the mystical city of Eltabarr lies the nomadic and enigmatic culture of the Rahalans. Governed by the principles of matriarchy and reverence for their elders, the Rahalans have cultivated a society deeply rooted in spiritual connections and a harmonious relationship with nature.
 
@@ -91,7 +92,7 @@ For the Rahalans, the Gaia vessels are more than architectural marvels; they are
 
 ```dataview
 LIST FROM ""
-WHERE type = "faction" AND parent_faction = this.file.link
+WHERE type = "faction" AND string(parent_faction) = string(this.file.link)
 SORT file.name ASC
 ```
 
@@ -103,7 +104,7 @@ TABLE WITHOUT ID
   race AS "Race",
   location AS "Location"
 FROM ""
-WHERE type = "character" AND affiliation = this.file.link
+WHERE type = "character" AND string(affiliation) = string(this.file.link)
 SORT file.name ASC
 ```
 
@@ -111,7 +112,7 @@ SORT file.name ASC
 
 ```dataview
 LIST FROM ""
-WHERE type = "organisation" AND parent_faction = this.file.link
+WHERE type = "organisation" AND string(parent_faction) = string(this.file.link)
 SORT file.name ASC
 ```
 

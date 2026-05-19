@@ -46,7 +46,7 @@ House Deneith serves a critical role within the Firebrand Empire, overseeing int
 
 ```dataview
 LIST FROM ""
-WHERE type = "character" AND affiliation = this.file.link
+WHERE type = "character" AND string(affiliation) = string(this.file.link)
 SORT file.name ASC
 ```
 

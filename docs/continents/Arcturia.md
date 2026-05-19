@@ -51,7 +51,7 @@ The [[Icebound|Icebound Dwarves]] guard their ancient vaults beneath the [[Calde
 
 ```dataview
 LIST FROM ""
-WHERE type = "region" AND continent = this.file.link
+WHERE type = "region" AND string(continent) = string(this.file.link)
 SORT file.name ASC
 ```
 
@@ -64,7 +64,7 @@ TABLE WITHOUT ID
   controlled_by AS "Held by",
   status AS "Status"
 FROM ""
-WHERE type = "settlement" AND continent = this.file.link
+WHERE type = "settlement" AND string(continent) = string(this.file.link)
 SORT file.name ASC
 ```
 
@@ -72,7 +72,7 @@ SORT file.name ASC
 
 ```dataview
 LIST FROM ""
-WHERE type = "range" AND continent = this.file.link
+WHERE type = "range" AND string(continent) = string(this.file.link)
 SORT file.name ASC
 ```
 
@@ -80,7 +80,7 @@ SORT file.name ASC
 
 ```dataview
 LIST FROM ""
-WHERE type = "waterway" AND continent = this.file.link
+WHERE type = "waterway" AND string(continent) = string(this.file.link)
 SORT file.name ASC
 ```
 
@@ -88,7 +88,7 @@ SORT file.name ASC
 
 ```dataview
 LIST FROM ""
-WHERE type = "landmark" AND continent = this.file.link
+WHERE type = "landmark" AND string(continent) = string(this.file.link)
 SORT file.name ASC
 ```
 
@@ -100,7 +100,7 @@ TABLE WITHOUT ID
   race AS "Race",
   affiliation AS "Affiliation"
 FROM ""
-WHERE type = "character" AND location = this.file.link
+WHERE type = "character" AND string(location) = string(this.file.link)
 SORT file.name ASC
 ```
 
@@ -112,7 +112,7 @@ TABLE WITHOUT ID
   era AS "Era",
   year_display AS "When"
 FROM ""
-WHERE type = "event" AND location = this.file.link
+WHERE type = "event" AND string(location) = string(this.file.link)
 SORT year ASC
 ```
 

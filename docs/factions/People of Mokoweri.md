@@ -15,6 +15,7 @@ allies: []
 rivals: []
 magic:
 - '[[Primal]]'
+leadership: []
 ---
 The [[docs/Races/Solaran/Mokoweri|Mokoweri]] people are an ancient civilization with a rich and complex history. According to legend, their ancestors were among the first to inhabit the islands that now make up their homeland. They lived in harmony with the native [[Saurian]], developing a symbiotic relationship that would endure for centuries.
 
@@ -40,7 +41,7 @@ In terms of religion, the [[Mokoweri]] worship a pantheon of nature deities, inc
 
 ```dataview
 LIST FROM ""
-WHERE type = "faction" AND parent_faction = this.file.link
+WHERE type = "faction" AND string(parent_faction) = string(this.file.link)
 SORT file.name ASC
 ```
 
@@ -52,7 +53,7 @@ TABLE WITHOUT ID
   race AS "Race",
   location AS "Location"
 FROM ""
-WHERE type = "character" AND affiliation = this.file.link
+WHERE type = "character" AND string(affiliation) = string(this.file.link)
 SORT file.name ASC
 ```
 
@@ -60,7 +61,7 @@ SORT file.name ASC
 
 ```dataview
 LIST FROM ""
-WHERE type = "organisation" AND parent_faction = this.file.link
+WHERE type = "organisation" AND string(parent_faction) = string(this.file.link)
 SORT file.name ASC
 ```
 

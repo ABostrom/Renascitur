@@ -38,7 +38,7 @@ TABLE WITHOUT ID
   race AS "Race",
   affiliation AS "Affiliation"
 FROM ""
-WHERE type = "character" AND culture = this.file.link
+WHERE type = "character" AND string(culture) = string(this.file.link)
 SORT file.name ASC
 ```
 
@@ -46,7 +46,7 @@ SORT file.name ASC
 
 ```dataview
 LIST FROM ""
-WHERE type = "tradition" AND culture = this.file.link
+WHERE type = "tradition" AND string(culture) = string(this.file.link)
 SORT file.name ASC
 ```
 

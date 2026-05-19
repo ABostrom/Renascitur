@@ -12,6 +12,7 @@ climate: volcanic
 terrain: []
 dominant_culture: ''
 population_density: ''
+settlements: []
 ---
 ## Overview
 A war-torn and reclaimed expanse once ruled by [[Orc|orcs]] and aberrant creatures. Now it stands as the Empire’s final shield wall, fiercely protected by border clans and militant orders.
@@ -36,7 +37,7 @@ TABLE WITHOUT ID
   size AS "Size",
   controlled_by AS "Held by"
 FROM ""
-WHERE type = "settlement" AND region = this.file.link
+WHERE type = "settlement" AND string(region) = string(this.file.link)
 SORT file.name ASC
 ```
 
@@ -44,7 +45,7 @@ SORT file.name ASC
 
 ```dataview
 LIST FROM ""
-WHERE type = "landmark" AND region = this.file.link
+WHERE type = "landmark" AND string(region) = string(this.file.link)
 SORT file.name ASC
 ```
 
@@ -56,7 +57,7 @@ TABLE WITHOUT ID
   race AS "Race",
   affiliation AS "Affiliation"
 FROM ""
-WHERE type = "character" AND location = this.file.link
+WHERE type = "character" AND string(location) = string(this.file.link)
 SORT file.name ASC
 ```
 
@@ -68,7 +69,7 @@ TABLE WITHOUT ID
   era AS "Era",
   year_display AS "When"
 FROM ""
-WHERE type = "event" AND location = this.file.link
+WHERE type = "event" AND string(location) = string(this.file.link)
 SORT year ASC
 ```
 

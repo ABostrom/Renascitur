@@ -9,6 +9,7 @@ climate: volcanic
 terrain: []
 dominant_culture: ''
 population_density: ''
+settlements: []
 ---
 Candle Keep was a famous library of great renown the world over. Before the [[Psychic Schism]] it contained tomes that could change the very nature of the world. Since the [[Psychic Schism|schism]] the keep has fallen into disrepair, and a small number of scholars have managed to keep the library safeguarded. Though knowledge of its location, and the tomes contained within, are forbidden within the [[Firebrand Empire]] there are some that would seek the lore for their own purposes.
 
@@ -26,7 +27,7 @@ TABLE WITHOUT ID
   size AS "Size",
   controlled_by AS "Held by"
 FROM ""
-WHERE type = "settlement" AND region = this.file.link
+WHERE type = "settlement" AND string(region) = string(this.file.link)
 SORT file.name ASC
 ```
 
@@ -34,7 +35,7 @@ SORT file.name ASC
 
 ```dataview
 LIST FROM ""
-WHERE type = "landmark" AND region = this.file.link
+WHERE type = "landmark" AND string(region) = string(this.file.link)
 SORT file.name ASC
 ```
 
@@ -46,7 +47,7 @@ TABLE WITHOUT ID
   race AS "Race",
   affiliation AS "Affiliation"
 FROM ""
-WHERE type = "character" AND location = this.file.link
+WHERE type = "character" AND string(location) = string(this.file.link)
 SORT file.name ASC
 ```
 
@@ -58,7 +59,7 @@ TABLE WITHOUT ID
   era AS "Era",
   year_display AS "When"
 FROM ""
-WHERE type = "event" AND location = this.file.link
+WHERE type = "event" AND string(location) = string(this.file.link)
 SORT year ASC
 ```
 

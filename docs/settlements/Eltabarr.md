@@ -10,6 +10,10 @@ climate: arid
 terrain: desert
 defenses: strongly-warded
 predominant_economy: mercantile
+size: ''
+controlled_by: ''
+populated_by: []
+era_founded: ''
 ---
 In the heart of Thraysia lies Eltabarr, a city where the sands of time and the gears of progress turn in unison, weaving a tapestry of culture and innovation unrivaled in the known world. Governed by the esteemed Majlis of Arcane Sovereignty, this magocracy stands as a testament to the power of unity and the pursuit of knowledge.
 
@@ -94,7 +98,7 @@ Together, Aelar, Zariel, and Farid embody the spirit of Eltabarr, guiding it thr
 
 ```dataview
 LIST FROM ""
-WHERE type = "landmark" AND inside = this.file.link
+WHERE type = "landmark" AND string(inside) = string(this.file.link)
 SORT file.name ASC
 ```
 
@@ -106,7 +110,7 @@ TABLE WITHOUT ID
   race AS "Race",
   affiliation AS "Affiliation"
 FROM ""
-WHERE type = "character" AND location = this.file.link
+WHERE type = "character" AND string(location) = string(this.file.link)
 SORT file.name ASC
 ```
 
@@ -118,7 +122,7 @@ TABLE WITHOUT ID
   era AS "Era",
   year_display AS "When"
 FROM ""
-WHERE type = "event" AND location = this.file.link
+WHERE type = "event" AND string(location) = string(this.file.link)
 SORT year ASC
 ```
 

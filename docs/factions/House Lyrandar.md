@@ -46,7 +46,7 @@ House Lyrandar serves a critical role within the Firebrand Empire, overseeing we
 
 ```dataview
 LIST FROM ""
-WHERE type = "character" AND affiliation = this.file.link
+WHERE type = "character" AND string(affiliation) = string(this.file.link)
 SORT file.name ASC
 ```
 

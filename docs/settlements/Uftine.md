@@ -2,13 +2,16 @@
 aliases: []
 type: settlement
 continent: '[[Arcturia]]'
-province: '[[Calderian Mountains]]'
-society: '[[Icebound of Uftine]]'
 leadership:
 - '[[Gromdir Stillhand]]'
 status: draft
 tags: []
 realm: '[[Renascita]]'
+controlled_by: '[[Icebound of Uftine]]'
+region: '[[Calderian Mountains]]'
+size: ''
+populated_by: []
+era_founded: ''
 ---
 ![[2a6dc07c-2481-498a-96e7-b1cbae589bb1.png]]
 ## Overview
@@ -46,7 +49,7 @@ Each dwarven city was founded over such a prison, and each holds vigil over a co
 
 ```dataview
 LIST FROM ""
-WHERE type = "landmark" AND inside = this.file.link
+WHERE type = "landmark" AND string(inside) = string(this.file.link)
 SORT file.name ASC
 ```
 
@@ -58,7 +61,7 @@ TABLE WITHOUT ID
   race AS "Race",
   affiliation AS "Affiliation"
 FROM ""
-WHERE type = "character" AND location = this.file.link
+WHERE type = "character" AND string(location) = string(this.file.link)
 SORT file.name ASC
 ```
 
@@ -70,7 +73,7 @@ TABLE WITHOUT ID
   era AS "Era",
   year_display AS "When"
 FROM ""
-WHERE type = "event" AND location = this.file.link
+WHERE type = "event" AND string(location) = string(this.file.link)
 SORT year ASC
 ```
 

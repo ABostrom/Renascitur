@@ -10,6 +10,10 @@ climate: arid
 terrain: underground
 defenses: ''
 predominant_economy: mercantile
+size: ''
+controlled_by: ''
+populated_by: []
+era_founded: ''
 ---
 Zahirah is the thriving heart of commerce in the [[Vasir]], nestled among fertile deltas and intersecting glyphroads. Known for its sprawling bazaar, floating canal markets, and colorful canvas awnings enchanted with protective runes, it is a melting pot of culture, trade, and low-tier enchantment.
 
@@ -25,7 +29,7 @@ The city is governed loosely by a council of merchant guilds, with magical regul
 
 ```dataview
 LIST FROM ""
-WHERE type = "landmark" AND inside = this.file.link
+WHERE type = "landmark" AND string(inside) = string(this.file.link)
 SORT file.name ASC
 ```
 
@@ -37,7 +41,7 @@ TABLE WITHOUT ID
   race AS "Race",
   affiliation AS "Affiliation"
 FROM ""
-WHERE type = "character" AND location = this.file.link
+WHERE type = "character" AND string(location) = string(this.file.link)
 SORT file.name ASC
 ```
 
@@ -49,7 +53,7 @@ TABLE WITHOUT ID
   era AS "Era",
   year_display AS "When"
 FROM ""
-WHERE type = "event" AND location = this.file.link
+WHERE type = "event" AND string(location) = string(this.file.link)
 SORT year ASC
 ```
 

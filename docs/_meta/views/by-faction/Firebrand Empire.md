@@ -17,32 +17,33 @@ TABLE WITHOUT ID
   role AS "Role",
   living_status AS "Status"
 FROM ""
-WHERE type = "character" AND affiliation = [[Firebrand Empire]]
+WHERE type = "character" AND string(affiliation) = "[[Firebrand Empire]]"
 SORT file.name ASC
 ```
 
 ## Sub-factions
 ```dataview
-LIST FROM "" WHERE type = "faction" AND parent_faction = [[Firebrand Empire]]
+LIST FROM "" WHERE type = "faction" AND string(parent_faction) = "[[Firebrand Empire]]"
 SORT file.name ASC
 ```
 
 ## Organisations within
 ```dataview
-LIST FROM "" WHERE type = "organisation" AND parent_faction = [[Firebrand Empire]]
+LIST FROM "" WHERE type = "organisation" AND string(parent_faction) = "[[Firebrand Empire]]"
 SORT file.name ASC
 ```
 
 ## Events involving
 ```dataview
 TABLE WITHOUT ID file.link AS "Event", era AS "Era", year_display AS "When"
-FROM "" WHERE type = "event" AND contains(participants, [[Firebrand Empire]])
+FROM "" WHERE type = "event" AND contains(string(participants), "[[Firebrand Empire]]")
 SORT year ASC
 ```
 
 ## Everything else referencing
 ```dataview
-LIST WHERE contains(file.inlinks, [[Firebrand Empire]])
+LIST WHERE contains(file.outlinks, [[Firebrand Empire]])
+  AND !contains(string(file.path), "_meta/views/")
 SORT file.name ASC
 LIMIT 30
 ```

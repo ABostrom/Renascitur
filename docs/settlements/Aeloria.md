@@ -10,6 +10,10 @@ climate: tropical
 terrain: forest
 defenses: hidden
 predominant_economy: ''
+size: ''
+controlled_by: ''
+populated_by: []
+era_founded: ''
 ---
 ![[9b7d3d1b-9f8f-4f19-9593-54b7a1666a19-1.webp]]Nestled within the heart of the [[Mokoweri]] jungle, the [[Saurian]] treetop city of Aeloria is a testament to the harmony between nature and civilization. Built among the colossal trees that have stood for millennia, Aeloria is an architectural wonder, blending organic design with the innate [[Saurian]] reverence for the natural world. Its structures are crafted from the jungle's bounty—vines, leaves, and woods—engineered to leave no scar on the environment. The city is illuminated by bioluminescent plants and crystals, casting a serene glow on walkways and dwellings during the night.
 
@@ -101,7 +105,7 @@ The Hatchery is not just a place of birth; it is where the very essence of being
 
 ```dataview
 LIST FROM ""
-WHERE type = "landmark" AND inside = this.file.link
+WHERE type = "landmark" AND string(inside) = string(this.file.link)
 SORT file.name ASC
 ```
 
@@ -113,7 +117,7 @@ TABLE WITHOUT ID
   race AS "Race",
   affiliation AS "Affiliation"
 FROM ""
-WHERE type = "character" AND location = this.file.link
+WHERE type = "character" AND string(location) = string(this.file.link)
 SORT file.name ASC
 ```
 
@@ -125,7 +129,7 @@ TABLE WITHOUT ID
   era AS "Era",
   year_display AS "When"
 FROM ""
-WHERE type = "event" AND location = this.file.link
+WHERE type = "event" AND string(location) = string(this.file.link)
 SORT year ASC
 ```
 

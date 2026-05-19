@@ -11,7 +11,7 @@ view: Mokoweri — Overview
 
 ## Regions
 ```dataview
-LIST FROM "" WHERE type = "region" AND continent = [[Mokoweri]]
+LIST FROM "" WHERE type = "region" AND string(continent) = "[[Mokoweri]]"
 SORT file.name ASC
 ```
 
@@ -22,25 +22,25 @@ TABLE WITHOUT ID
   size AS "Size",
   controlled_by AS "Held by"
 FROM ""
-WHERE type = "settlement" AND continent = [[Mokoweri]]
+WHERE type = "settlement" AND string(continent) = "[[Mokoweri]]"
 SORT file.name ASC
 ```
 
 ## Landmarks
 ```dataview
-LIST FROM "" WHERE type = "landmark" AND continent = [[Mokoweri]]
+LIST FROM "" WHERE type = "landmark" AND string(continent) = "[[Mokoweri]]"
 SORT file.name ASC
 ```
 
 ## Ranges
 ```dataview
-LIST FROM "" WHERE type = "range" AND continent = [[Mokoweri]]
+LIST FROM "" WHERE type = "range" AND string(continent) = "[[Mokoweri]]"
 SORT file.name ASC
 ```
 
 ## Waterways
 ```dataview
-LIST FROM "" WHERE type = "waterway" AND continent = [[Mokoweri]]
+LIST FROM "" WHERE type = "waterway" AND string(continent) = "[[Mokoweri]]"
 SORT file.name ASC
 ```
 
@@ -51,13 +51,13 @@ TABLE WITHOUT ID
   race AS "Race",
   affiliation AS "Faction"
 FROM ""
-WHERE type = "character" AND location = [[Mokoweri]]
+WHERE type = "character" AND string(location) = "[[Mokoweri]]"
 SORT file.name ASC
 ```
 
 ## Events here
 ```dataview
 TABLE WITHOUT ID file.link AS "Event", era AS "Era", year_display AS "When"
-FROM "" WHERE type = "event" AND location = [[Mokoweri]]
+FROM "" WHERE type = "event" AND string(location) = "[[Mokoweri]]"
 SORT year ASC
 ```
