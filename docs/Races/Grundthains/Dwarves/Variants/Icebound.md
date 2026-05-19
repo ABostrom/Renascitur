@@ -6,7 +6,7 @@ tags:
 - variant
 - dwarves
 - elemental
-lineage: '[[Dwarf|Dwarves]]'
+lineage: Grundthains
 origin_plane: '[[Thargrun]]'
 aat-race-tier: variant
 spoken_language: '[[Dwarven]]'

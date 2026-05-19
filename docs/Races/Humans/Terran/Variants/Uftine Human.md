@@ -6,7 +6,7 @@ tags:
 - cultural-variant
 - humans
 - hardy
-lineage: '[[Terran]]'
+lineage: Terran
 origin_plane: '[[Renascita]]'
 aat-race-tier: variant
 spoken_language:

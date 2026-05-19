@@ -6,7 +6,7 @@ tags:
 - elemental
 - grundthain
 - crafts
-lineage: '[[Dwarf|Dwarves]]'
+lineage: Grundthains
 origin_plane: '[[Thargrun]]'
 aat-race-tier: distinct
 spoken_language: '[[Dwarven]]'

@@ -5,7 +5,7 @@ tags:
 - race
 - aberrant
 - corrupted
-lineage: '[[Saurian]]'
+lineage: Saurian
 origin_plane: '[[Renascita]]'
 aat-race-tier: aberrant
 spoken_language:

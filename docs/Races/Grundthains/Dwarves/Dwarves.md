@@ -2,7 +2,7 @@
 type: race
 status: stub
 tags: []
-lineage: Grundthain
+lineage: Grundthains
 nature: mortal
 importance: major
 lifespan: ''

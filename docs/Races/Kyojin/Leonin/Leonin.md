@@ -6,7 +6,7 @@ tags:
 - cultural-variant
 - kyojin
 - primal
-lineage: '[[docs/Races/Kyojin/Leonin/Leonin|Leonin]]'
+lineage: Kyojin
 origin_plane: '[[Renascita]]'
 aat-race-tier: distinct
 spoken_language:

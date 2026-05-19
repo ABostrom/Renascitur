@@ -1,6 +1,6 @@
 ---
 aliases: null
-type: city
+type: settlement
 continent: ''
 province: ''
 society: '[[Stormbound of Thundrakar]]'

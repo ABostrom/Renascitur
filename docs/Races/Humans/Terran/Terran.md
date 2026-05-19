@@ -11,7 +11,7 @@ spoken_language:
 - '[[Imperial Common|Imperial]]'
 type: race
 status: draft
-lineage: Human
+lineage: Humans
 nature: mortal
 importance: major
 lifespan: ''

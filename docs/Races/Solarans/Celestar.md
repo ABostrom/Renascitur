@@ -6,7 +6,7 @@ tags:
 - distinct
 - solarans
 - celestial
-lineage: '[[Solaran]]'
+lineage: Solarans
 origin_plane: '[[Imperium]]'
 aat-race-tier: distinct
 spoken_language:

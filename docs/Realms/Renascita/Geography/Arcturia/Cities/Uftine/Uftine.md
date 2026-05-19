@@ -1,6 +1,6 @@
 ---
 aliases: []
-type: city
+type: settlement
 continent: '[[Arcturia]]'
 province: '[[Calderian Mountains]]'
 society: '[[Icebound of Uftine]]'

@@ -5,7 +5,7 @@ tags:
 - race
 - elemental
 - mortal-descendant
-lineage: Mortal Race
+lineage: Humans
 origin_plane:
 - - Elemental Plane
 aat-race-tier: mortal-descendant

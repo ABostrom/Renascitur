@@ -6,7 +6,7 @@ tags:
 - cultural-variant
 - orcs
 - imperial
-lineage: '[[Orc]]'
+lineage: Kyojin
 origin_plane: '[[Renascita]]'
 aat-race-tier: variant
 spoken_language:

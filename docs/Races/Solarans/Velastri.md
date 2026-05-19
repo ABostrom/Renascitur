@@ -6,7 +6,7 @@ tags:
 - distinct
 - solarans
 - infernal
-lineage: '[[Solaran]]'
+lineage: Solarans
 origin_plane: '[[Infernum]]'
 aat-race-tier: distinct
 spoken_language:
