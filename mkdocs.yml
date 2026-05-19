@@ -39,14 +39,8 @@ extra_javascript:
   - https://polyfill.io/v3/polyfill.min.js?features=es6
   - https://unpkg.com/mermaid/dist/mermaid.min.js
 
-# Explicit top-level nav so the site doesn't depend on filesystem order.
-# Sub-pages are auto-included by mkdocs from each folder.
-nav:
-  - Welcome: index.md
-  - Cosmology: Cosmology/
-  - History: History/
-  - Realms: Realms/
-  - Races: Races/
-  - Languages: Languages/
-  - Story: Story/
-  - Reference (_meta): _meta/
+# Nav is intentionally NOT specified — folder structure is now flat by
+# type at the top level, so mkdocs's auto-generated nav matches the
+# desired site layout. If you want a curated nav later, list explicit
+# pages here (not directory paths — that syntax requires the
+# awesome-pages plugin).
