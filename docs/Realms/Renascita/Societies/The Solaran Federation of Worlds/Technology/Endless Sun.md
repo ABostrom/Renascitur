@@ -4,7 +4,7 @@ status: draft
 tags: []
 realm: '[[Renascita]]'
 nature: ''
-importance: ''
+importance: notable
 magic: []
 ---
 The Endless Sun was a machine designed to ensure balance in the universe. They believed that the finite number of souls in existence was essential to the stability of existence, and that the natural cycle of birth, life, and death was a fundamental component of that balance.

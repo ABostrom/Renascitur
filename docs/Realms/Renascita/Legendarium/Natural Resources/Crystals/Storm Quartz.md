@@ -8,7 +8,7 @@ tags: []
 realm: '[[Renascita]]'
 category: Crystals
 nature: ''
-importance: ''
+importance: minor
 ---
 ## Location  
 Formed in the upper peaks around the [[Stormspire]], [[Storm Quartz]] is grown within storm-scarred geodes where thunder has split stone and rain has etched runes over centuries. It is often found in caverns where sound never dies and lightning echoes through the air like breath.

@@ -7,7 +7,7 @@ type: cosmic-force
 status: draft
 tags: []
 nature: eldritch
-importance: ''
+importance: major
 alignment: ''
 ---
 **Aspect**: Unmaking, Dissolution, Void  

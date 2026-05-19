@@ -4,7 +4,7 @@ status: draft
 continent: '[[Mokoweri]]'
 tags: []
 realm: '[[Renascita]]'
-climate: ''
+climate: tropical
 terrain: []
 dominant_culture: ''
 population_density: ''

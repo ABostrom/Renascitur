@@ -15,8 +15,8 @@ spoken_language:
 type: race
 status: draft
 parent_race: '[[Orcs]]'
-nature: ''
-importance: ''
+nature: mortal
+importance: notable
 lifespan: ''
 magic_affinity: []
 ---

@@ -3,17 +3,20 @@ type: faction
 status: draft
 realm: '[[Renascita]]'
 tags: []
-nature: ''
-importance: ''
-alignment: ''
-society_form: ''
-government: ''
-economy: ''
-seat: ''
-size: ''
+nature: mortal
+importance: notable
+alignment: neutral
+society_form: magocratic
+government: magocratic-council
+economy: magical
+seat: '[[Eltabarr]]'
+size: regional
 allies: []
 rivals: []
-magic: []
+magic:
+- '[[Arcane]]'
+- '[[Arcanometry]]'
+- '[[Glyph Magic]]'
 ---
 ### The Majlis of Arcane Sovereignty
 

@@ -4,9 +4,9 @@ status: draft
 continent: '[[Qethusiyya]]'
 tags: []
 realm: '[[Renascita]]'
-importance: ''
+importance: legendary
 population: ''
-climate: ''
+climate: arid
 terrain: ''
 defenses: ''
 predominant_economy: ''

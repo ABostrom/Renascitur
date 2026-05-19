@@ -4,9 +4,9 @@ status: draft
 continent: '[[Arcturia]]'
 tags: []
 realm: '[[Renascita]]'
-importance: ''
+importance: legendary
 population: ''
-climate: ''
+climate: arctic
 terrain: ''
 defenses: ''
 predominant_economy: ''

@@ -4,7 +4,7 @@ status: stub
 tags: []
 realm: '[[Renascita]]'
 culture: '[[Thraysian Magocracy]]'
-nature: ''
-importance: ''
+nature: mortal
+importance: minor
 magic: []
 ---

@@ -4,7 +4,7 @@ status: stub
 tags: []
 lineage: Kyojin
 nature: mortal
-importance: ''
+importance: major
 lifespan: ''
 magic_affinity: []
 ---

@@ -4,7 +4,7 @@ status: stub
 continent: '[[Aquaria]]'
 tags: []
 realm: '[[Renascita]]'
-climate: ''
+climate: aquatic
 terrain: []
 dominant_culture: ''
 population_density: ''

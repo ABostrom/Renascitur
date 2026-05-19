@@ -4,7 +4,7 @@ status: stub
 tags: []
 realm: '[[Renascita]]'
 parent_faction: '[[Thraysian Magocracy]]'
-nature: ''
-importance: ''
+nature: mortal
+importance: minor
 alignment: ''
 ---

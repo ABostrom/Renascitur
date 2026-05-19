@@ -13,7 +13,7 @@ aliases:
 - The Fall of the Endless Sun
 year_display: ES 8500
 year: 8500
-importance: ''
+importance: legendary
 victors: []
 casualties: []
 outcome: ''

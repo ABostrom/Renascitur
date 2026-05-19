@@ -4,7 +4,7 @@ status: stub
 tags: []
 pantheon: Elementals
 nature: elemental
-importance: ''
+importance: major
 alignment: ''
 worshippers: []
 temples: []

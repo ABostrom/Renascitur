@@ -4,17 +4,19 @@ status: draft
 tags: []
 realm: '[[Renascita]]'
 parent_faction: '[[Dwarven Holds]]'
-nature: ''
-importance: ''
-alignment: ''
-society_form: ''
-government: ''
-economy: ''
-seat: ''
-size: ''
+nature: mortal
+importance: notable
+alignment: lawful-neutral
+society_form: martial
+government: monarchy
+economy: mining
+seat: '[[Magnus'' Rest]]'
+size: regional
 allies: []
 rivals: []
-magic: []
+magic:
+- '[[Rune Magic]]'
+- '[[Forge Magic]]'
 ---
 ## Cultural Themes – The [[Flamebound]] [[Dwarf|Dwarves]]
 

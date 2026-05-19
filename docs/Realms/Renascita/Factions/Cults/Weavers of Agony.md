@@ -12,8 +12,8 @@ type: faction
 status: draft
 realm: '[[Renascita]]'
 kind: cult
-nature: ''
-importance: ''
+nature: mortal
+importance: notable
 alignment: ''
 society_form: ''
 government: ''

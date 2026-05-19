@@ -3,7 +3,7 @@ type: cosmic-force
 status: stub
 tags: []
 nature: corrupted
-importance: ''
+importance: major
 alignment: chaotic-evil
 ---
 ## Cronus, The Endless

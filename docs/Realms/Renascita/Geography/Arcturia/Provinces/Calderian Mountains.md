@@ -4,7 +4,7 @@ status: stub
 continent: '[[Arcturia]]'
 tags: []
 realm: '[[Renascita]]'
-climate: ''
+climate: arctic
 terrain: []
 dominant_culture: ''
 population_density: ''

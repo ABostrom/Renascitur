@@ -4,6 +4,6 @@ status: stub
 tags: []
 realm: '[[Renascita]]'
 nature: ''
-importance: ''
+importance: notable
 magic: []
 ---

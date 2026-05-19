@@ -14,7 +14,7 @@ type: language
 status: draft
 kind: ancient
 nature: ''
-importance: ''
+importance: notable
 ---
 # Denisovan
 

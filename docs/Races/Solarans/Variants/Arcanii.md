@@ -16,7 +16,7 @@ spoken_language:
 type: race
 status: draft
 nature: ''
-importance: ''
+importance: notable
 lifespan: ''
 magic_affinity: []
 ---

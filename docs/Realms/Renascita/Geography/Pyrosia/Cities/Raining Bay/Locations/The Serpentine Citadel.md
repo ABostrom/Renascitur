@@ -11,7 +11,7 @@ continent: '[[Pyrosia]]'
 realm: '[[Renascita]]'
 inside: '[[Raining Bay]]'
 nature: ''
-importance: ''
+importance: minor
 ---
 ## Associated House
 - [[House Phiarlan]]

@@ -6,5 +6,5 @@ tags: []
 realm: '[[Renascita]]'
 inside: '[[Magnus’ Rest]]'
 nature: ''
-importance: ''
+importance: minor
 ---

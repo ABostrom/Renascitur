@@ -3,8 +3,8 @@ type: race
 status: stub
 tags: []
 lineage: Grundthain
-nature: ''
-importance: ''
+nature: mortal
+importance: major
 lifespan: ''
 magic_affinity: []
 ---

@@ -5,5 +5,5 @@ continent: '[[Mokoweri]]'
 tags: []
 realm: '[[Renascita]]'
 nature: ''
-importance: ''
+importance: notable
 ---

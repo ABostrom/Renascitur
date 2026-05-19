@@ -6,7 +6,7 @@ type: cosmic-force
 status: stub
 tags: []
 nature: aberrant
-importance: ''
+importance: major
 alignment: ''
 ---
 ![[The Forge Wars]]

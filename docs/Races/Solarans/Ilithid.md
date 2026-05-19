@@ -6,7 +6,7 @@ status: stub
 tags: []
 lineage: Solarans
 nature: celestial
-importance: ''
+importance: major
 lifespan: ''
 magic_affinity: []
 ---

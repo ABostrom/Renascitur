@@ -4,9 +4,9 @@ status: draft
 continent: '[[Pyrosia]]'
 tags: []
 realm: '[[Renascita]]'
-importance: ''
+importance: notable
 population: ''
-climate: ''
+climate: volcanic
 terrain: ''
 defenses: ''
 predominant_economy: ''

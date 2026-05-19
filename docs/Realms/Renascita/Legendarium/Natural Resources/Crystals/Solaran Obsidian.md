@@ -7,7 +7,7 @@ tags: []
 realm: '[[Renascita]]'
 category: Crystals
 nature: ''
-importance: ''
+importance: minor
 ---
 ## Location
 

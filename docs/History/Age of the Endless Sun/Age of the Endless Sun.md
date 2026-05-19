@@ -5,7 +5,7 @@ tags: []
 code: ES
 aliases:
 - First Age
-importance: ''
+importance: legendary
 ---
 # Age of the Endless Sun
 

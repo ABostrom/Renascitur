@@ -6,10 +6,10 @@ status: draft
 tags: []
 realm: '[[Renascita]]'
 parent_faction: '[[Firebrand Empire]]'
-nature: ''
-importance: ''
+nature: mortal
+importance: notable
 alignment: ''
-government: ''
+government: oligarchy
 size: ''
 allies: []
 rivals: []

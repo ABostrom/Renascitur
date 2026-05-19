@@ -14,7 +14,7 @@ aliases:
 - Betrayal of Vecna
 year_display: AF 11991
 year: 11991
-importance: ''
+importance: legendary
 victors: []
 casualties: []
 outcome: ''

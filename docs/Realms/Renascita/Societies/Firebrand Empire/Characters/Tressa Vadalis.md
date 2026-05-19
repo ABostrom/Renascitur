@@ -9,7 +9,7 @@ type: character
 status: draft
 realm: '[[Renascita]]'
 affiliation: '[[Firebrand Empire]]'
-nature: ''
+nature: mortal
 importance: ''
 alignment: ''
 gender: ''
@@ -18,6 +18,8 @@ magic: []
 living_status: ''
 era_of_birth: ''
 era_of_death: ''
+race: '[[Imperial Human]]'
+culture: '[[Firebrand]]'
 ---
 ## Title
 - Overseer of [[Old Westgate]]

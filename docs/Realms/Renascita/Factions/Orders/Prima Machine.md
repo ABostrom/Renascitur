@@ -3,8 +3,8 @@ type: organisation
 status: draft
 tags: []
 realm: '[[Renascita]]'
-nature: ''
-importance: ''
+nature: mortal
+importance: minor
 alignment: ''
 ---
 The order of the first machines. Forged for War by extracting the [[Soul]] of the dead who served [[Vecna]] in his original campaign ([[The Last War]]) against [[Ishna]]

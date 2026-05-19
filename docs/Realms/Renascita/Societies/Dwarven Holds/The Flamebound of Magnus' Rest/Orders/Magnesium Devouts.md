@@ -4,8 +4,8 @@ status: draft
 tags: []
 realm: '[[Renascita]]'
 parent_faction: '[[The Flamebound of Magnus'' Rest]]'
-nature: ''
-importance: ''
+nature: mortal
+importance: minor
 alignment: ''
 ---
 > *"We do not worship the flame. We serve it. There is a difference."*  

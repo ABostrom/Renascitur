@@ -5,5 +5,5 @@ continent: '[[Arcturia]]'
 tags: []
 realm: '[[Renascita]]'
 nature: ''
-importance: ''
+importance: minor
 ---

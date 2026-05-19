@@ -4,8 +4,8 @@ status: draft
 tags: []
 realm: '[[Renascita]]'
 parent_faction: '[[Devouts of Muradin]]'
-nature: ''
-importance: ''
+nature: mortal
+importance: notable
 alignment: ''
 society_form: ''
 government: ''

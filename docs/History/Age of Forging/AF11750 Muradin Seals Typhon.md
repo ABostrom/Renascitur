@@ -13,7 +13,7 @@ aliases:
 - Muradin Seals Typhon
 year_display: AF 11750
 year: 11750
-importance: ''
+importance: legendary
 victors: []
 casualties: []
 outcome: ''

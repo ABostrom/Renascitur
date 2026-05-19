@@ -4,8 +4,8 @@ status: draft
 tags: []
 realm: '[[Renascita]]'
 culture: '[[The Stormbound of Thundrakar]]'
-nature: ''
-importance: ''
+nature: mortal
+importance: minor
 magic: []
 ---
 ## Overview  

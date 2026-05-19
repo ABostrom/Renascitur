@@ -9,8 +9,8 @@ type: organisation
 status: stub
 realm: '[[Renascita]]'
 parent_faction: '[[Thraysian Magocracy]]'
-nature: ''
-importance: ''
+nature: mortal
+importance: minor
 alignment: ''
 ---
 # Rites of Ascension

@@ -13,8 +13,8 @@ spoken_language:
 - '[[Zytherin]]'
 type: race
 status: draft
-nature: ''
-importance: ''
+nature: mortal
+importance: major
 lifespan: ''
 magic_affinity: []
 ---

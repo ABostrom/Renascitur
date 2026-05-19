@@ -3,6 +3,6 @@ type: landmark
 status: stub
 tags: []
 nature: ''
-importance: ''
+importance: minor
 ---
 The plane of [[Chaor]] and [[Specular]]

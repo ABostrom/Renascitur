@@ -11,8 +11,8 @@ aat-race-tier: elder
 spoken_language: '[[Elyssan]]'
 type: race
 status: draft
-nature: ''
-importance: ''
+nature: mortal
+importance: major
 lifespan: ''
 magic_affinity: []
 ---

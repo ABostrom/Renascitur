@@ -3,8 +3,8 @@ type: organisation
 status: draft
 tags: []
 realm: '[[Renascita]]'
-nature: ''
-importance: ''
+nature: mortal
+importance: minor
 alignment: ''
 ---
 Devout worshippers of [[Bahamut]], this order seeks to spread the good will of there platinum god. The order is made of mostly metallic dragon’s and their dragonborn kin. 

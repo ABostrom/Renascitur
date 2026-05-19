@@ -5,7 +5,7 @@ type: cosmic-force
 status: draft
 tags: []
 nature: eldritch
-importance: ''
+importance: major
 alignment: ''
 ---
 **Nature**: The foundational structure of reality—like the fabric of spacetime  

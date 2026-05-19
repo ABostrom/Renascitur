@@ -13,8 +13,8 @@ spoken_language:
 - '[[Valeshi]]'
 type: race
 status: draft
-nature: ''
-importance: ''
+nature: forgeborn
+importance: major
 lifespan: ''
 magic_affinity: []
 ---

@@ -3,7 +3,7 @@ type: prophecy
 status: draft
 tags: []
 realm: '[[Renascita]]'
-importance: ''
+importance: notable
 alignment: ''
 ---
 [[Vecna]] wrote a single prophecy in the [[Book of Vile Darkness]] before he was destroyed. 

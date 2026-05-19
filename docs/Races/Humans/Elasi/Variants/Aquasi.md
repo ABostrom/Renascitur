@@ -5,7 +5,7 @@ tags: []
 lineage: Humans
 parent_race: '[[Elasi]]'
 nature: mortal
-importance: ''
+importance: notable
 lifespan: ''
 magic_affinity: []
 ---

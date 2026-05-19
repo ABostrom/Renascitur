@@ -8,7 +8,7 @@ type: region
 status: draft
 continent: '[[Pyrosia]]'
 realm: '[[Renascita]]'
-climate: ''
+climate: volcanic
 terrain: []
 dominant_culture: ''
 population_density: ''

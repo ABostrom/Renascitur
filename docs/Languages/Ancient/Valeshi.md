@@ -15,7 +15,7 @@ type: language
 status: draft
 kind: ancient
 nature: ''
-importance: ''
+importance: notable
 ---
 # Valeshi
 

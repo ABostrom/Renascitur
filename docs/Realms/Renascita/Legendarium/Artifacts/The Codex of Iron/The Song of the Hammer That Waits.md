@@ -4,7 +4,7 @@ status: draft
 tags: []
 realm: '[[Renascita]]'
 nature: ''
-importance: ''
+importance: notable
 current_bearer: ''
 cursed: false
 divine: false

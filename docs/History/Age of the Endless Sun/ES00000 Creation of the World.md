@@ -12,7 +12,7 @@ aliases:
 - Creation of the World
 year_display: ES (undated)
 year: 0
-importance: ''
+importance: legendary
 victors: []
 casualties: []
 outcome: ''

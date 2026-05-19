@@ -5,6 +5,6 @@ tags: []
 realm: '[[Renascita]]'
 discipline: Arcane
 nature: ''
-importance: ''
+importance: notable
 magic: []
 ---

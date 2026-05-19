@@ -4,7 +4,7 @@ status: stub
 tags: []
 realm: '[[Renascita]]'
 affiliation: '[[The Tidebound of Draumhavn]]'
-nature: ''
+nature: mortal
 importance: ''
 alignment: ''
 gender: ''
@@ -13,6 +13,9 @@ magic: []
 living_status: ''
 era_of_birth: ''
 era_of_death: ''
+race: '[[Dwarf]]'
+culture: '[[Tidebound]]'
+location: '[[Draumhavn]]'
 ---
 # Dagrin Thorne
 

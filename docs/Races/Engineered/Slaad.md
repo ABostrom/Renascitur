@@ -12,8 +12,8 @@ spoken_language:
 - '[[Denisovan]]'
 type: race
 status: draft
-nature: ''
-importance: ''
+nature: aberrant
+importance: major
 lifespan: ''
 magic_affinity: []
 ---

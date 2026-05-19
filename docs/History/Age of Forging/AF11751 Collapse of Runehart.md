@@ -13,7 +13,7 @@ aliases:
 - Collapse of Runehart
 year_display: AF 11751
 year: 11751
-importance: ''
+importance: legendary
 victors: []
 casualties: []
 outcome: ''

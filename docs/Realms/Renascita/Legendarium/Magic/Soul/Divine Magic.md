@@ -8,6 +8,8 @@ status: stub
 realm: '[[Renascita]]'
 discipline: Soul
 nature: ''
-importance: ''
-magic: []
+importance: notable
+magic:
+- '[[Soul Magic]]'
+- '[[Divine]]'
 ---

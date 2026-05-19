@@ -5,5 +5,5 @@ tags: []
 realm: '[[Renascita]]'
 controlled_by: '[[The Flamebound of Magnus'' Rest]]'
 nature: ''
-importance: ''
+importance: minor
 ---

@@ -5,8 +5,8 @@ status: stub
 tags: []
 realm: '[[Renascita]]'
 culture: '[[The Tidebound of Draumhavn]]'
-nature: ''
-importance: ''
+nature: mortal
+importance: minor
 magic: []
 ---
 ## Overview

@@ -5,7 +5,7 @@ tags: []
 realm: '[[Renascita]]'
 category: Metals
 nature: ''
-importance: ''
+importance: minor
 ---
 # [[Salt Hardened Steel]]
 

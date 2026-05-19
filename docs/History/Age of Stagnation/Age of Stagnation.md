@@ -5,7 +5,7 @@ tags: []
 code: AS
 aliases:
 - Third Age
-importance: ''
+importance: legendary
 ---
 # Age of Stagnation
 

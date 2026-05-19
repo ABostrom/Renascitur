@@ -5,7 +5,7 @@ tags: []
 code: AF
 aliases:
 - Second Age
-importance: ''
+importance: legendary
 ---
 # Age of Forging
 

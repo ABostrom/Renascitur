@@ -4,7 +4,7 @@ status: draft
 tags: []
 realm: '[[Renascita]]'
 affiliation: '[[The Blackiron Collective]]'
-nature: ''
+nature: forgeborn
 importance: ''
 alignment: ''
 gender: ''
@@ -13,6 +13,7 @@ magic: []
 living_status: ''
 era_of_birth: ''
 era_of_death: ''
+race: '[[Forgeborn]]'
 ---
 - **Role**: A controversial figure advocating for widespread mechanical augmentation.
 - **Personality**: Charismatic and ambitious, Lyria believes that embracing machine integration is the future of the Metal Elves.

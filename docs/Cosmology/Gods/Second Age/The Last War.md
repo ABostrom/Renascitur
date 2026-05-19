@@ -4,7 +4,7 @@ status: draft
 tags: []
 era_of_emergence: '[[Age of Forging]]'
 nature: divine
-importance: ''
+importance: major
 alignment: ''
 worshippers: []
 temples: []

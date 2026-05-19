@@ -4,8 +4,8 @@ status: stub
 tags: []
 realm: '[[Renascita]]'
 parent_faction: '[[The Tidebound of Draumhavn]]'
-nature: ''
-importance: ''
+nature: mortal
+importance: minor
 alignment: ''
 ---
 # Clan Deepforge

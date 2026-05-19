@@ -5,5 +5,5 @@ continent: '[[Qethusiyya]]'
 tags: []
 realm: '[[Renascita]]'
 nature: ''
-importance: ''
+importance: notable
 ---

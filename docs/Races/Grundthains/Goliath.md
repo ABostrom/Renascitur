@@ -15,8 +15,8 @@ spoken_language:
 - '[[Imperial Common]]'
 type: race
 status: draft
-nature: ''
-importance: ''
+nature: mortal
+importance: major
 lifespan: ''
 magic_affinity: []
 ---

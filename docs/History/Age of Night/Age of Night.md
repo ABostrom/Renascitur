@@ -5,7 +5,7 @@ tags: []
 code: AN
 aliases:
 - Fourth Age
-importance: ''
+importance: legendary
 ---
 # Age of Night
 

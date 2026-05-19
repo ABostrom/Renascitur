@@ -4,9 +4,9 @@ status: draft
 continent: '[[Mokoweri]]'
 tags: []
 realm: '[[Renascita]]'
-importance: ''
+importance: notable
 population: ''
-climate: ''
+climate: tropical
 terrain: ''
 defenses: ''
 predominant_economy: ''

@@ -12,7 +12,7 @@ status: draft
 continent: '[[The World Beneath]]'
 realm: '[[Renascita]]'
 nature: ''
-importance: ''
+importance: minor
 ---
 # [[The Hollowed Warrens]]
 

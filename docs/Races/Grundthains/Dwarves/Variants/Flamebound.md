@@ -13,8 +13,8 @@ spoken_language: '[[Dwarven]]'
 type: race
 status: draft
 parent_race: '[[Dwarves]]'
-nature: ''
-importance: ''
+nature: mortal
+importance: notable
 lifespan: ''
 magic_affinity: []
 ---

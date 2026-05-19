@@ -7,7 +7,7 @@ continent: '[[Arcturia]]'
 tags: []
 realm: '[[Renascita]]'
 nature: ''
-importance: ''
+importance: minor
 ---
 aliases:  [[Dürrenholt]] / [[Dürrenholt|Wyrmholt]]
 ## The [[Grundthain]] World Tree – The Tree of Power  

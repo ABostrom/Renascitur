@@ -5,7 +5,7 @@ continent: '[[Draumhavn]]'
 tags: []
 realm: '[[Renascita]]'
 nature: ''
-importance: ''
+importance: minor
 ---
 ## Overview
 

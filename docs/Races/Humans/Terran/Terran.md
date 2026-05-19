@@ -12,8 +12,8 @@ spoken_language:
 type: race
 status: draft
 lineage: Human
-nature: ''
-importance: ''
+nature: mortal
+importance: major
 lifespan: ''
 magic_affinity: []
 ---

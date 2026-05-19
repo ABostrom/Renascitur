@@ -5,7 +5,7 @@ tags: []
 realm: '[[Renascita]]'
 category: Wood
 nature: ''
-importance: ''
+importance: minor
 ---
 Nyxthorn is a rare, **petrified fungal wood** found deep within the **World Beneath**, where it grows in the remains of long-dead **Titan Mycelium**. Over centuries, the decayed fungal matter absorbs residual arcane energy from underground ley lines, crystallizing into a **black, ebony-like wood** with streaks of deep violet or faint silver veins.
 

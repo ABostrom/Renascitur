@@ -5,7 +5,7 @@ tags: []
 pantheon: '[[Luxar Gods]]'
 era_of_emergence: '[[Age of Stagnation]]'
 nature: divine
-importance: ''
+importance: major
 alignment: ''
 worshippers: []
 temples: []

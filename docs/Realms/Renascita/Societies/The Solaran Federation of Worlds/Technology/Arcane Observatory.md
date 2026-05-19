@@ -4,7 +4,7 @@ status: draft
 tags: []
 realm: '[[Renascita]]'
 nature: ''
-importance: ''
+importance: notable
 magic: []
 ---
 The Arcane Observatory, located in geostationary orbit above the material plane, is a colossal structure that was once the pinnacle of [[Solaran]] magical and technological research and exploration. It was built by the most brilliant minds of the ancient world, who sought to understand the mysteries of magic, technology and the universe.

@@ -3,7 +3,7 @@ type: cosmic-force
 status: draft
 tags: []
 nature: eldritch
-importance: ''
+importance: major
 alignment: ''
 ---
 **Aspect**: Light, Revelation, Illumination, Truth  

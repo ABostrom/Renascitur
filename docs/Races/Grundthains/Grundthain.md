@@ -12,7 +12,7 @@ type: race
 status: draft
 lineage: Grundthains
 nature: mortal
-importance: ''
+importance: major
 lifespan: ''
 magic_affinity: []
 ---

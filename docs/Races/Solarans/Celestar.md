@@ -13,8 +13,8 @@ spoken_language:
 - '[[Serethi]]'
 type: race
 status: draft
-nature: ''
-importance: ''
+nature: celestial
+importance: major
 lifespan: ''
 magic_affinity: []
 ---

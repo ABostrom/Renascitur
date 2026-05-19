@@ -10,8 +10,8 @@ type: organisation
 status: draft
 realm: '[[Renascita]]'
 parent_faction: '[[Thraysian Magocracy]]'
-nature: ''
-importance: ''
+nature: mortal
+importance: minor
 alignment: ''
 ---
 **Research Lead:** Professor Arthur Denison, with contributions from various faculties

@@ -5,7 +5,7 @@ type: cosmic-force
 status: draft
 tags: []
 nature: aberrant
-importance: ''
+importance: major
 alignment: ''
 ---
 The god hand is a quintumvirate of aberration sovereigns who act as executors of the [[Ishna|Ishna's]] will.

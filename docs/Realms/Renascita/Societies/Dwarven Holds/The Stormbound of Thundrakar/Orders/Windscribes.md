@@ -4,8 +4,8 @@ status: draft
 tags: []
 realm: '[[Renascita]]'
 parent_faction: '[[The Stormbound of Thundrakar]]'
-nature: ''
-importance: ''
+nature: mortal
+importance: minor
 alignment: ''
 ---
 ## Overview  

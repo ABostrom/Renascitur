@@ -4,7 +4,7 @@ status: draft
 tags: []
 realm: '[[Renascita]]'
 affiliation: '[[Saurian Enclave]]'
-nature: ''
+nature: bioengineered
 importance: ''
 alignment: ''
 gender: ''
@@ -13,6 +13,9 @@ magic: []
 living_status: ''
 era_of_birth: ''
 era_of_death: ''
+race: '[[Saurian]]'
+culture: '[[Saurian]]'
+location: '[[Aeloria]]'
 ---
 ### Elder Thrasuun
 

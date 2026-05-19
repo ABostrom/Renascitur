@@ -5,5 +5,5 @@ continent: '[[Pyrosia]]'
 tags: []
 realm: '[[Renascita]]'
 nature: ''
-importance: ''
+importance: minor
 ---

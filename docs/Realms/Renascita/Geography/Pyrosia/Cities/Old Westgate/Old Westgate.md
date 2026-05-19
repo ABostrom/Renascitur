@@ -8,9 +8,9 @@ type: settlement
 status: draft
 continent: '[[Pyrosia]]'
 realm: '[[Renascita]]'
-importance: ''
+importance: major
 population: ''
-climate: ''
+climate: volcanic
 terrain: ''
 defenses: ''
 predominant_economy: ''

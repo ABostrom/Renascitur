@@ -5,7 +5,7 @@ type: cosmic-force
 status: draft
 tags: []
 nature: corrupted
-importance: ''
+importance: major
 alignment: chaotic-evil
 ---
 ## Syuul, The Devourer

@@ -5,7 +5,7 @@ tags: []
 realm: '[[Renascita]]'
 category: Crystals
 nature: ''
-importance: ''
+importance: minor
 ---
 ## Location  
 [[Sun Topaz]] occurs **naturally in the land surrounding [[the Eternal Flame]]**, crystallized from molten stone infused with divine radiance. These raw stones are embedded in the obsidian veins and golden faults of the region, glowing faintly even underground.

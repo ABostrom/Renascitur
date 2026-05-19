@@ -6,7 +6,7 @@ status: draft
 tags: []
 realm: '[[Renascita]]'
 affiliation: '[[The Icebound of Uftine]]'
-nature: ''
+nature: mortal
 importance: ''
 alignment: ''
 gender: ''
@@ -15,6 +15,9 @@ magic: []
 living_status: ''
 era_of_birth: ''
 era_of_death: ''
+race: '[[Dwarf]]'
+culture: '[[Icebound]]'
+location: '[[Uftine]]'
 ---
 ## Title: [[Icebound]] Thane of Uftine
 

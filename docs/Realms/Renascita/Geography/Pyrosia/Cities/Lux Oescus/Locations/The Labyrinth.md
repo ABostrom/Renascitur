@@ -11,7 +11,7 @@ continent: '[[Pyrosia]]'
 realm: '[[Renascita]]'
 inside: '[[Lux Oescus]]'
 nature: ''
-importance: ''
+importance: minor
 ---
 ## Associated House
 - [[House Sivis]]

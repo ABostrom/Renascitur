@@ -7,7 +7,7 @@ aliases:
 - Night War
 year_display: AN (undated)
 year: 0
-importance: ''
+importance: legendary
 victors: []
 casualties: []
 outcome: ''

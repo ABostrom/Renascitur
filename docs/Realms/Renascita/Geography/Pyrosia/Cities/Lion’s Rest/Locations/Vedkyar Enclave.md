@@ -11,7 +11,7 @@ continent: '[[Pyrosia]]'
 realm: '[[Renascita]]'
 inside: '[[Lion’s Rest]]'
 nature: ''
-importance: ''
+importance: minor
 ---
 ## Associated House
 - [[House Jorasco]]

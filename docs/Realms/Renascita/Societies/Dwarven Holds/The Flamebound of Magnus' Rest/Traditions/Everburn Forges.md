@@ -4,7 +4,7 @@ status: stub
 tags: []
 realm: '[[Renascita]]'
 culture: '[[The Flamebound of Magnus'' Rest]]'
-nature: ''
-importance: ''
+nature: mortal
+importance: minor
 magic: []
 ---

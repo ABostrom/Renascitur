@@ -5,6 +5,6 @@ tags: []
 realm: '[[Renascita]]'
 discipline: Nature
 nature: ''
-importance: ''
+importance: notable
 magic: []
 ---

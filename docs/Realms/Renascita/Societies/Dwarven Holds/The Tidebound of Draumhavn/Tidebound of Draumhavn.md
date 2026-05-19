@@ -4,17 +4,18 @@ status: draft
 tags: []
 realm: '[[Renascita]]'
 parent_faction: '[[Dwarven Holds]]'
-nature: ''
-importance: ''
-alignment: ''
-society_form: ''
-government: ''
-economy: ''
-seat: ''
-size: ''
+nature: mortal
+importance: notable
+alignment: lawful-neutral
+society_form: martial
+government: monarchy
+economy: mercantile
+seat: '[[Draumhavn]]'
+size: regional
 allies: []
 rivals: []
-magic: []
+magic:
+- '[[Rune Magic]]'
 ---
 The [[Dwarf|dwarves]] of [[Draumhavn]] are known as the **[[Tidebound]]**. They are not mountain-folk but sea-dwellers, their lives shaped by storm and salt. Rather than religion, they follow a **Creed**—a philosophy of survival, discipline, and bond.
 

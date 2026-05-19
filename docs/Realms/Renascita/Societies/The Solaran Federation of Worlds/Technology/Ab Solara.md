@@ -4,7 +4,7 @@ status: draft
 tags: []
 realm: '[[Renascita]]'
 nature: ''
-importance: ''
+importance: notable
 magic: []
 ---
 *Gateways of Light, Folded [[Weave]], and [[Solaran]] Ambition*

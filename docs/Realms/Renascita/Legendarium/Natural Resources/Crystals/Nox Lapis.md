@@ -5,7 +5,7 @@ tags: []
 realm: '[[Renascita]]'
 category: Crystals
 nature: ''
-importance: ''
+importance: minor
 ---
 An obsidian black crystal, originally created by [[Vecna]] to house the souls of mortal beings. These were used to power the [[Forgeborn]] and give them life. 
 

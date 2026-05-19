@@ -13,7 +13,7 @@ aliases:
 - Sealing of Ishna
 year_display: AF 11990
 year: 11990
-importance: ''
+importance: legendary
 victors: []
 casualties: []
 outcome: ''

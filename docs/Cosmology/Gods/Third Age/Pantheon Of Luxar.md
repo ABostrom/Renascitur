@@ -4,7 +4,7 @@ status: stub
 tags: []
 era_of_emergence: '[[Age of Stagnation]]'
 nature: divine
-importance: ''
+importance: major
 alignment: ''
 worshippers: []
 temples: []

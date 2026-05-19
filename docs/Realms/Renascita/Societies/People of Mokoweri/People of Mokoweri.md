@@ -3,17 +3,18 @@ type: faction
 status: draft
 realm: '[[Renascita]]'
 tags: []
-nature: ''
-importance: ''
-alignment: ''
-society_form: ''
-government: ''
-economy: ''
+nature: mortal
+importance: notable
+alignment: neutral-good
+society_form: tribal
+government: tribal-council
+economy: agrarian
 seat: ''
-size: ''
+size: regional
 allies: []
 rivals: []
-magic: []
+magic:
+- '[[Primal]]'
 ---
 The [[docs/Races/Solaran/Mokoweri|Mokoweri]] people are an ancient civilization with a rich and complex history. According to legend, their ancestors were among the first to inhabit the islands that now make up their homeland. They lived in harmony with the native [[Saurian]], developing a symbiotic relationship that would endure for centuries.
 

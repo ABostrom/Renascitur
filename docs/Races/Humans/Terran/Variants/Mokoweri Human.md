@@ -18,8 +18,8 @@ spoken_language:
 type: race
 status: draft
 parent_race: '[[Terran]]'
-nature: ''
-importance: ''
+nature: mortal
+importance: notable
 lifespan: ''
 magic_affinity: []
 ---

@@ -10,7 +10,7 @@ type: character
 status: draft
 realm: '[[Renascita]]'
 affiliation: '[[Thraysian Magocracy]]'
-nature: ''
+nature: mortal
 importance: ''
 alignment: ''
 gender: ''
@@ -19,6 +19,9 @@ magic: []
 living_status: ''
 era_of_birth: ''
 era_of_death: ''
+race: '[[Thraysian Human]]'
+culture: '[[Thraysian]]'
+location: '[[Eltabarr]]'
 ---
 # Sariv al-Ruhana
 

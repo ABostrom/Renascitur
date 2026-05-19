@@ -4,17 +4,18 @@ status: stub
 tags: []
 realm: '[[Renascita]]'
 parent_faction: '[[Dwarven Holds]]'
-nature: ''
-importance: ''
-alignment: ''
-society_form: ''
-government: ''
-economy: ''
-seat: ''
-size: ''
+nature: mortal
+importance: notable
+alignment: lawful-neutral
+society_form: martial
+government: monarchy
+economy: mining
+seat: '[[Thundrakar]]'
+size: regional
 allies: []
 rivals: []
-magic: []
+magic:
+- '[[Rune Magic]]'
 ---
 ---
 

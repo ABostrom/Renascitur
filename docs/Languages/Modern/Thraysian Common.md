@@ -15,7 +15,7 @@ type: language
 status: draft
 kind: modern
 nature: ''
-importance: ''
+importance: notable
 ---
 # Thraysian
 

@@ -12,7 +12,7 @@ aliases:
 - Collapse of Solara
 year_display: ES 9000
 year: 9000
-importance: ''
+importance: legendary
 victors: []
 casualties: []
 outcome: ''

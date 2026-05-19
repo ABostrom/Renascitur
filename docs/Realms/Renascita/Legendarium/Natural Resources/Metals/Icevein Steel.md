@@ -5,7 +5,7 @@ tags: []
 realm: '[[Renascita]]'
 category: Metals
 nature: ''
-importance: ''
+importance: minor
 ---
 ## Location  
 Forged deep beneath the [[The Pulsecore|Pulsecore]] by the [[Icebound]], [[Icevein Steel]] is smelted from refined iron mixed with threads of [[Stillstone Ore]], drawn from veins laced with pale blue minerals that resonate with silence and dormancy.

@@ -6,7 +6,7 @@ tags: []
 realm: '[[Renascita]]'
 inside: '[[Uftine]]'
 nature: ''
-importance: ''
+importance: minor
 ---
 # Frostforge
 

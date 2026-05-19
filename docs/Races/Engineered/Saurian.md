@@ -12,8 +12,8 @@ aat-race-tier: engineered
 spoken_language: '[[Denisovan]]'
 type: race
 status: draft
-nature: ''
-importance: ''
+nature: bioengineered
+importance: major
 lifespan: ''
 magic_affinity: []
 ---

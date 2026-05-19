@@ -4,7 +4,7 @@ status: draft
 tags: []
 realm: '[[Renascita]]'
 affiliation: '[[The Blackiron Collective]]'
-nature: ''
+nature: forgeborn
 importance: ''
 alignment: ''
 gender: ''
@@ -13,6 +13,7 @@ magic: []
 living_status: ''
 era_of_birth: ''
 era_of_death: ''
+race: '[[Forgeborn]]'
 ---
 ![[0744ebd3-db41-44bd-b9f9-592ee36a808b.webp]]
 

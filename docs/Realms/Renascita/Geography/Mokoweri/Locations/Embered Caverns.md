@@ -5,7 +5,7 @@ continent: '[[Mokoweri]]'
 tags: []
 realm: '[[Renascita]]'
 nature: ''
-importance: ''
+importance: minor
 ---
 # Entrance Chamber - Luminescent Foyer
 

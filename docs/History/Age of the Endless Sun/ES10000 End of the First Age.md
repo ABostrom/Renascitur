@@ -13,7 +13,7 @@ aliases:
 - End of the First Age
 year_display: ES 10000
 year: 10000
-importance: ''
+importance: legendary
 victors: []
 casualties: []
 outcome: ''

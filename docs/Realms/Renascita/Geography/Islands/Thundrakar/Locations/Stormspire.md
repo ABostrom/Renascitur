@@ -5,7 +5,7 @@ continent: '[[Thundrakar]]'
 tags: []
 realm: '[[Renascita]]'
 nature: ''
-importance: ''
+importance: minor
 ---
 ## Overview  
 The [[Stormspire]] is the tallest mountain in the known world — a jagged, sky-piercing peak crowned by an **eternal storm**. It is the spiritual and elemental axis of the [[Stormbound]] [[Dwarf|dwarves]], and the place where [[Muradin]] sealed the fragment of the storm god [[Tempus]] during [[the First Age]].

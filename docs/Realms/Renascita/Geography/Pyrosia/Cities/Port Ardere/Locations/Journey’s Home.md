@@ -11,7 +11,7 @@ continent: '[[Pyrosia]]'
 realm: '[[Renascita]]'
 inside: '[[Port Ardere]]'
 nature: ''
-importance: ''
+importance: minor
 ---
 ## Associated House
 - [[House Orien]]

@@ -4,9 +4,9 @@ status: stub
 continent: '[[Qethusiyya]]'
 tags: []
 realm: '[[Renascita]]'
-importance: ''
+importance: notable
 population: ''
-climate: ''
+climate: arid
 terrain: ''
 defenses: ''
 predominant_economy: ''
