@@ -119,8 +119,8 @@ SORT year ASC
 ### Other notes referencing this place
 
 ```dataview
-LIST FROM [[]]
-WHERE !contains(string(file.path), "_meta/")
+LIST WHERE contains(file.inlinks, this.file.link)
+  AND !contains(string(file.path), "_meta/")
 SORT file.name ASC
 ```
 

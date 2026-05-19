@@ -8,6 +8,10 @@ realm: '[[Renascita]]'
 
 ## Contents
 
+---
+
+## Contents
+
 <!-- AUTO-INJECTED-DYNAMIC-CONTENTS — delete this comment and everything below to opt out; safe to edit otherwise -->
 
 ### Regions
@@ -82,8 +86,8 @@ SORT year ASC
 ### Other notes referencing this place
 
 ```dataview
-LIST FROM [[]]
-WHERE !contains(string(file.path), "_meta/")
+LIST WHERE contains(file.inlinks, this.file.link)
+  AND !contains(string(file.path), "_meta/")
 SORT file.name ASC
 ```
 

@@ -1,8 +1,9 @@
 ---
-type: essay
+type: faction
 status: draft
 tags: []
 realm: '[[Renascita]]'
+parent_faction: '[[Dwarven Holds]]'
 ---
 The [[Dwarf|dwarves]] of [[Uftine]] are known collectively as the [[Icebound]]—those who are bound to the glacier not just in body, but in purpose. This identity defines their culture, their duty, and their [[soul]]. Among them, the term Icebreakers refers more specifically to those who carve the frozen stone, forge in the cold, and mine the glacier’s deep veins. They are artisans, engineers, and delvers who shape the silence beneath Uftine.
   
@@ -45,3 +46,58 @@ An extension of the [[Deep Road]], the [[Uftine Express]] is a marvel of subterr
 - They believe ice remembers—every crack, fracture, and whisper etched into its ancient mass
 - [[Aberrations]] are seen as **entropy given form**—to be held, not destroyed
 - Their reverence for [[Muradin]] and [[Magnus]] is tied to their belief in preservation through craftsmanship and silence
+
+---
+
+## Contents
+
+<!-- AUTO-INJECTED-DYNAMIC-CONTENTS — delete this comment and everything below to opt out; safe to edit otherwise -->
+
+### Sub-factions
+
+```dataview
+LIST FROM ""
+WHERE type = "faction" AND parent_faction = this.file.link
+SORT file.name ASC
+```
+
+### Members
+
+```dataview
+TABLE WITHOUT ID
+  file.link AS "Name",
+  race AS "Race",
+  location AS "Location"
+FROM ""
+WHERE type = "character" AND affiliation = this.file.link
+SORT file.name ASC
+```
+
+### Organisations within
+
+```dataview
+LIST FROM ""
+WHERE type = "organisation" AND parent_faction = this.file.link
+SORT file.name ASC
+```
+
+### Events involving this faction
+
+```dataview
+TABLE WITHOUT ID
+  file.link AS "Event",
+  era AS "Era",
+  year_display AS "When"
+FROM ""
+WHERE type = "event" AND contains(participants, this.file.link)
+SORT year ASC
+```
+
+### Other notes referencing this faction
+
+```dataview
+LIST WHERE contains(file.inlinks, this.file.link)
+  AND !contains(string(file.path), "_meta/")
+SORT file.name ASC
+```
+

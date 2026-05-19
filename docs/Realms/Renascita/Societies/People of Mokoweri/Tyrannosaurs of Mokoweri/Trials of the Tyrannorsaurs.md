@@ -1,8 +1,9 @@
 ---
-type: essay
+type: character
 status: draft
 tags: []
 realm: '[[Renascita]]'
+affiliation: '[[People of Mokoweri]]'
 ---
 "The [[Solaran|Solarans]] were guardians of wisdom and keepers of balance. They valued harmony between the natural world and the power they harnessed. Can you truly embody these ideals?"
 

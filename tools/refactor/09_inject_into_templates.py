@@ -46,21 +46,26 @@ TEMPLATE_BY_TYPE = {
 
 
 def main() -> None:
+    refresh = "--refresh" in sys.argv
     for filename, type_key in TEMPLATE_BY_TYPE.items():
         path = TEMPLATES_DIR / filename
         if not path.exists():
             print("WARN: missing {}".format(path))
             continue
         text = path.read_text(encoding="utf-8")
-        if MARKER in text:
+        already = MARKER in text
+        if already and not refresh:
             print("Skip (marker present): {}".format(filename))
             continue
+        if already:
+            text = INJECT08._strip_existing_section(text)
         snippet = SNIPPETS[type_key]
-        addition = "\n\n---\n\n## Contents\n\n{}\n{}".format(MARKER, snippet)
+        addition = "{}\n{}".format(INJECT08.SECTION_PREAMBLE, snippet)
         new_text = text.rstrip() + addition + "\n"
         with path.open("w", encoding="utf-8", newline="\n") as fh:
             fh.write(new_text)
-        print("Injected: {}".format(filename))
+        label = "Refreshed" if already else "Injected"
+        print("{}: {}".format(label, filename))
 
 
 if __name__ == "__main__":

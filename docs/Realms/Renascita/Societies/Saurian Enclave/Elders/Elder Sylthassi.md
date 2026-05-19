@@ -1,8 +1,9 @@
 ---
-type: essay
+type: character
 status: draft
 tags: []
 realm: '[[Renascita]]'
+affiliation: '[[Saurian Enclave]]'
 ---
 ### Elder Sylthassi
 

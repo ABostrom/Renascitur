@@ -1,9 +1,10 @@
 ---
-type: essay
+type: character
 status: draft
 tags: []
 realm: '[[Renascita]]'
 parent_faction: '[[People of Mokoweri]]'
+affiliation: '[[People of Mokoweri]]'
 ---
 In the heart of the jungle on the island of [[docs/Realms/Renascita/Locations and Cities/Mokoweri/Mokoweri]], where the dense foliage reaches toward the sky in the region known as the Canopy Heights, a formidable clan of colossal carnivorous dinosaurs roams freely. This territory, near the border of the ancient ruins, is ruled by none other than [[Titus]], the mighty and imposing Tyrannosaurus Rex, alongside his bold and audacious teenage son, [[Rexaris]].
 

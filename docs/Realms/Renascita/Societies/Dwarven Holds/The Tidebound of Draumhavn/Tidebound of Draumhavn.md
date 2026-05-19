@@ -1,8 +1,9 @@
 ---
-type: essay
+type: faction
 status: draft
 tags: []
 realm: '[[Renascita]]'
+parent_faction: '[[Dwarven Holds]]'
 ---
 The [[Dwarf|dwarves]] of [[Draumhavn]] are known as the **[[Tidebound]]**. They are not mountain-folk but sea-dwellers, their lives shaped by storm and salt. Rather than religion, they follow a **Creed**—a philosophy of survival, discipline, and bond.
 
@@ -49,3 +50,58 @@ Some [[The Salt-Blessed|Tidebound]] return from the deep changed:
 - Deepwater vision, storm-sense, abyssal influence
 - Feared and honoured; many serve in the silent order known as the [[Abysswatch]]
 See: [[The Salt-Blessed]]
+
+---
+
+## Contents
+
+<!-- AUTO-INJECTED-DYNAMIC-CONTENTS — delete this comment and everything below to opt out; safe to edit otherwise -->
+
+### Sub-factions
+
+```dataview
+LIST FROM ""
+WHERE type = "faction" AND parent_faction = this.file.link
+SORT file.name ASC
+```
+
+### Members
+
+```dataview
+TABLE WITHOUT ID
+  file.link AS "Name",
+  race AS "Race",
+  location AS "Location"
+FROM ""
+WHERE type = "character" AND affiliation = this.file.link
+SORT file.name ASC
+```
+
+### Organisations within
+
+```dataview
+LIST FROM ""
+WHERE type = "organisation" AND parent_faction = this.file.link
+SORT file.name ASC
+```
+
+### Events involving this faction
+
+```dataview
+TABLE WITHOUT ID
+  file.link AS "Event",
+  era AS "Era",
+  year_display AS "When"
+FROM ""
+WHERE type = "event" AND contains(participants, this.file.link)
+SORT year ASC
+```
+
+### Other notes referencing this faction
+
+```dataview
+LIST WHERE contains(file.inlinks, this.file.link)
+  AND !contains(string(file.path), "_meta/")
+SORT file.name ASC
+```
+

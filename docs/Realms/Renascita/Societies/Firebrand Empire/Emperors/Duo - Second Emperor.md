@@ -1,8 +1,9 @@
 ---
-type: essay
+type: character
 status: draft
 tags: []
 realm: '[[Renascita]]'
+affiliation: '[[Firebrand Empire]]'
 ---
 - **Appearance**: Duo is portrayed as a powerful [[docs/Races/Kyojin/Leonin/Leonin|Leonin]] warrior with a mane of deep crimson, symbolizing his fierce spirit and passion for expanding the empire. His eyes are a fiery orange, and his armor is decorated with motifs of flames and swords, representing his conquests.
 - **Quote**: "An empire is not built on peace alone; it must be forged in the fires of battle."

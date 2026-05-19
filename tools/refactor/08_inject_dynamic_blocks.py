@@ -4,8 +4,10 @@ Each container type gets a tailored set of queries scoped via this.file.link
 so the same blocks adapt to whatever file they live in. Open Pyrosia.md
 and you see Pyrosia's contents; open Arcturia.md and you see Arcturia's.
 
-Idempotent via a marker comment. Re-running skips files that already
-have the marker.
+Idempotent + refresh-capable:
+- Without --refresh: skip files that already have the marker.
+- With --refresh: replace the existing AUTO-INJECTED section with the
+  current snippet content. Used when the snippet definitions change.
 
 Container types covered:
   - continent: regions, settlements, ranges, waterways, landmarks, characters, events
@@ -20,6 +22,7 @@ Container types covered:
 
 from __future__ import annotations
 
+import argparse
 import sys
 from pathlib import Path
 
@@ -29,6 +32,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from refactor.common import iter_md_files, read_frontmatter, write_frontmatter
 
 MARKER = "<!-- AUTO-INJECTED-DYNAMIC-CONTENTS — delete this comment and everything below to opt out; safe to edit otherwise -->"
+
+# The full preamble used when appending: `---` separator + heading + marker.
+SECTION_PREAMBLE = "\n\n---\n\n## Contents\n\n" + MARKER
 
 
 # ---------------------------------------------------------------------------
@@ -109,8 +115,8 @@ SORT year ASC
 ### Other notes referencing this place
 
 ```dataview
-LIST FROM [[]]
-WHERE !contains(string(file.path), "_meta/")
+LIST WHERE contains(file.inlinks, this.file.link)
+  AND !contains(string(file.path), "_meta/")
 SORT file.name ASC
 ```
 """
@@ -163,8 +169,8 @@ SORT year ASC
 ### Other notes referencing this region
 
 ```dataview
-LIST FROM [[]]
-WHERE !contains(string(file.path), "_meta/")
+LIST WHERE contains(file.inlinks, this.file.link)
+  AND !contains(string(file.path), "_meta/")
 SORT file.name ASC
 ```
 """
@@ -205,8 +211,8 @@ SORT year ASC
 ### Other notes referencing this settlement
 
 ```dataview
-LIST FROM [[]]
-WHERE !contains(string(file.path), "_meta/")
+LIST WHERE contains(file.inlinks, this.file.link)
+  AND !contains(string(file.path), "_meta/")
 SORT file.name ASC
 ```
 """
@@ -260,13 +266,21 @@ SORT file.name ASC
 ### Other notes referencing this era
 
 ```dataview
-LIST FROM [[]]
-WHERE !contains(string(file.path), "_meta/")
+LIST WHERE contains(file.inlinks, this.file.link)
+  AND !contains(string(file.path), "_meta/")
 SORT file.name ASC
 ```
 """
 
 FACTION = """
+### Sub-factions
+
+```dataview
+LIST FROM ""
+WHERE type = "faction" AND parent_faction = this.file.link
+SORT file.name ASC
+```
+
 ### Members
 
 ```dataview
@@ -302,8 +316,8 @@ SORT year ASC
 ### Other notes referencing this faction
 
 ```dataview
-LIST FROM [[]]
-WHERE !contains(string(file.path), "_meta/")
+LIST WHERE contains(file.inlinks, this.file.link)
+  AND !contains(string(file.path), "_meta/")
 SORT file.name ASC
 ```
 """
@@ -340,13 +354,21 @@ SORT file.name ASC
 ### Other notes referencing this culture
 
 ```dataview
-LIST FROM [[]]
-WHERE !contains(string(file.path), "_meta/")
+LIST WHERE contains(file.inlinks, this.file.link)
+  AND !contains(string(file.path), "_meta/")
 SORT file.name ASC
 ```
 """
 
 RACE = """
+### Variants
+
+```dataview
+LIST FROM ""
+WHERE type = "race" AND parent_race = this.file.link
+SORT file.name ASC
+```
+
 ### Characters of this race
 
 ```dataview
@@ -378,8 +400,8 @@ SORT file.name ASC
 ### Other notes referencing this race
 
 ```dataview
-LIST FROM [[]]
-WHERE !contains(string(file.path), "_meta/")
+LIST WHERE contains(file.inlinks, this.file.link)
+  AND !contains(string(file.path), "_meta/")
 SORT file.name ASC
 ```
 """
@@ -408,8 +430,8 @@ SORT year ASC
 ### Other notes referencing this house
 
 ```dataview
-LIST FROM [[]]
-WHERE !contains(string(file.path), "_meta/")
+LIST WHERE contains(file.inlinks, this.file.link)
+  AND !contains(string(file.path), "_meta/")
 SORT file.name ASC
 ```
 """
@@ -426,8 +448,38 @@ SNIPPETS = {
 }
 
 
+def _strip_existing_section(body: str) -> str:
+    """Remove any previously injected `## Contents` section.
+
+    Detects via the SECTION_PREAMBLE prefix; if found, truncates the body
+    at that point. Returns the body unchanged if no marker is present.
+    """
+    idx = body.find(SECTION_PREAMBLE)
+    if idx == -1:
+        # Fallback: look for the marker alone in case the preamble shape drifted.
+        idx = body.find(MARKER)
+        if idx == -1:
+            return body
+        # Walk back to the `---` separator or `## Contents` header preceding it.
+        prefix = body[:idx]
+        sep = prefix.rfind("\n---\n")
+        if sep != -1:
+            return body[:sep].rstrip() + "\n"
+        return body[:idx].rstrip() + "\n"
+    return body[:idx].rstrip() + "\n"
+
+
 def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--refresh",
+        action="store_true",
+        help="Replace existing AUTO-INJECTED sections with the current snippet.",
+    )
+    args = parser.parse_args()
+
     injected = 0
+    refreshed = 0
     skipped_marker = 0
     skipped_wrong_type = 0
     for md in iter_md_files():
@@ -436,19 +488,30 @@ def main() -> None:
         if type_ not in SNIPPETS:
             skipped_wrong_type += 1
             continue
-        if MARKER in body:
+        already = MARKER in body
+        if already and not args.refresh:
             skipped_marker += 1
             continue
+
+        if already:
+            body = _strip_existing_section(body)
+
         snippet = SNIPPETS[type_]
-        addition = "\n\n---\n\n## Contents\n\n{}\n{}".format(MARKER, snippet)
+        addition = "{}\n{}".format(SECTION_PREAMBLE, snippet)
         new_body = body.rstrip() + addition + "\n"
         write_frontmatter(md, meta, new_body)
-        print("Injected ({}): {}".format(type_, md.relative_to(md.parent.parent.parent.parent)))
-        injected += 1
+        label = "Refreshed" if already else "Injected"
+        rel = md.relative_to(md.parent.parent.parent.parent)
+        print("{} ({}): {}".format(label, type_, rel))
+        if already:
+            refreshed += 1
+        else:
+            injected += 1
 
     print("---")
     print("Injected: {}".format(injected))
-    print("Skipped (marker already present): {}".format(skipped_marker))
+    print("Refreshed: {}".format(refreshed))
+    print("Skipped (marker already present, --refresh not set): {}".format(skipped_marker))
     print("Skipped (non-container type): {}".format(skipped_wrong_type))
 
 

@@ -1,5 +1,5 @@
 ---
-type: essay
+type: technology
 status: draft
 tags: []
 realm: '[[Renascita]]'

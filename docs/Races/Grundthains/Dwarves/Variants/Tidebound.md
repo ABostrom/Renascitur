@@ -64,6 +64,14 @@ They believe that to let the sea forget its chains is to doom the world to hunge
 
 <!-- AUTO-INJECTED-DYNAMIC-CONTENTS — delete this comment and everything below to opt out; safe to edit otherwise -->
 
+### Variants
+
+```dataview
+LIST FROM ""
+WHERE type = "race" AND parent_race = this.file.link
+SORT file.name ASC
+```
+
 ### Characters of this race
 
 ```dataview
@@ -95,8 +103,8 @@ SORT file.name ASC
 ### Other notes referencing this race
 
 ```dataview
-LIST FROM [[]]
-WHERE !contains(string(file.path), "_meta/")
+LIST WHERE contains(file.inlinks, this.file.link)
+  AND !contains(string(file.path), "_meta/")
 SORT file.name ASC
 ```
 

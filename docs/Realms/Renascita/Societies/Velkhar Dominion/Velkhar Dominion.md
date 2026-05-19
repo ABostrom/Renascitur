@@ -26,6 +26,14 @@ The Dominion is ruled by [[Vaelira Lyrandar|Vaelira]], *The Lady of Velkhar* —
 
 <!-- AUTO-INJECTED-DYNAMIC-CONTENTS — delete this comment and everything below to opt out; safe to edit otherwise -->
 
+### Sub-factions
+
+```dataview
+LIST FROM ""
+WHERE type = "faction" AND parent_faction = this.file.link
+SORT file.name ASC
+```
+
 ### Members
 
 ```dataview
@@ -61,8 +69,8 @@ SORT year ASC
 ### Other notes referencing this faction
 
 ```dataview
-LIST FROM [[]]
-WHERE !contains(string(file.path), "_meta/")
+LIST WHERE contains(file.inlinks, this.file.link)
+  AND !contains(string(file.path), "_meta/")
 SORT file.name ASC
 ```
 
