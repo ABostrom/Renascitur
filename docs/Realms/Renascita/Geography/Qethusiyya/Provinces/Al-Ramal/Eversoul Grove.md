@@ -2,7 +2,10 @@
 type: region
 status: draft
 continent: '[[Qethusiyya]]'
-tags: []
+tags:
+- realm/renascita
+- continent/qethusiyya
+- region/al-ramal
 realm: '[[Renascita]]'
 region: '[[Al-Ramal]]'
 ---

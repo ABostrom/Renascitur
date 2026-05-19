@@ -3,6 +3,8 @@ tags:
 - zahirah
 - khadi
 - zinnarat
+- realm/renascita
+- faction/thraysian-magocracy
 aliases:
 - Khadi of Zinnarat
 - Razan

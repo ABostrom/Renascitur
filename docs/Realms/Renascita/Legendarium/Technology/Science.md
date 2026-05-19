@@ -1,6 +1,7 @@
 ---
 type: technology
 status: stub
-tags: []
+tags:
+- realm/renascita
 realm: '[[Renascita]]'
 ---

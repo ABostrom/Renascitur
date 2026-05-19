@@ -1,7 +1,9 @@
 ---
 type: deity
 status: draft
-tags: []
+tags:
+- era/age-of-stagnation
+- pantheon/noxar-gods
 pantheon: '[[Noxar Gods]]'
 era_of_emergence: '[[Age of Stagnation]]'
 ---

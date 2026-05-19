@@ -1,6 +1,8 @@
 ---
 type: essay
 status: stub
-tags: []
+tags:
+- realm/renascita
+- faction/blackiron-collective
 realm: '[[Renascita]]'
 ---

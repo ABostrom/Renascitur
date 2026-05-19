@@ -3,6 +3,9 @@ tags:
 - location
 - headquarters
 - House Silverhand
+- realm/renascita
+- continent/pyrosia
+- place/lions-rest
 aliases:
 - Gatherhold
 type: landmark

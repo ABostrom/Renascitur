@@ -2,7 +2,10 @@
 type: region
 status: stub
 continent: '[[Qethusiyya]]'
-tags: []
+tags:
+- realm/renascita
+- continent/qethusiyya
+- region/kaldar
 realm: '[[Renascita]]'
 ---
 ---

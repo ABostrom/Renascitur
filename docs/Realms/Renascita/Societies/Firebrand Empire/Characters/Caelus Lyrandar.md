@@ -2,6 +2,8 @@
 tags:
 - city-overseer
 - House Lyrandar
+- realm/renascita
+- faction/firebrand-empire
 aliases:
 - Lyrandar
 - The Raining Bay Overseer

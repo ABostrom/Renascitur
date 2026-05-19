@@ -4,6 +4,8 @@ tags:
 - khadi
 - azdaham
 - rahala
+- realm/renascita
+- faction/thraysian-magocracy
 aliases:
 - Khadi of Azdaham
 - Khadir

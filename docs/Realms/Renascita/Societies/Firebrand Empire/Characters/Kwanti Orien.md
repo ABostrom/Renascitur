@@ -2,6 +2,8 @@
 tags:
 - leader
 - House Orien
+- realm/renascita
+- faction/firebrand-empire
 aliases:
 - Kwanti
 type: character

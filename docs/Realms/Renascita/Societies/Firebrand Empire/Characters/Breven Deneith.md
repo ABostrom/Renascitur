@@ -2,6 +2,8 @@
 tags:
 - leader
 - House Deneith
+- realm/renascita
+- faction/firebrand-empire
 aliases:
 - Breven
 type: character

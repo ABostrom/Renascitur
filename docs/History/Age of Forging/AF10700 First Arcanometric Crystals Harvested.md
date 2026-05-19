@@ -7,7 +7,8 @@ timelines:
 type: event
 status: draft
 era: '[[Age of Forging]]'
-tags: []
+tags:
+- era/age-of-forging
 aliases:
 - First Arcanometric Crystals Harvested
 year_display: AF 10700

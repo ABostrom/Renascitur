@@ -5,7 +5,8 @@ aliases:
 type: event
 status: draft
 era: '[[Age of Stagnation]]'
-tags: []
+tags:
+- era/age-of-stagnation
 year_display: AS (undated)
 year: 0
 ---

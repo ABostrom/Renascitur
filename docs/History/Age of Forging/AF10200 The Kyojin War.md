@@ -8,7 +8,8 @@ timelines:
 type: event
 status: draft
 era: '[[Age of Forging]]'
-tags: []
+tags:
+- era/age-of-forging
 aliases:
 - The Kyojin War
 year_display: AF 10200

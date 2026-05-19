@@ -1,7 +1,8 @@
 ---
 type: organisation
 status: draft
-tags: []
+tags:
+- realm/renascita
 realm: '[[Renascita]]'
 ---
 Insignia: ∀

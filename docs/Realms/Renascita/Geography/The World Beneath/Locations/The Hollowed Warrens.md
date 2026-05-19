@@ -7,6 +7,8 @@ tags:
 - location
 - cult
 - worldbeneath
+- realm/renascita
+- continent/world-beneath
 type: landmark
 status: draft
 continent: '[[The World Beneath]]'

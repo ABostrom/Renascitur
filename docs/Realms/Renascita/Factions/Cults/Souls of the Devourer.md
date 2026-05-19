@@ -3,7 +3,9 @@ aliases:
 - The Souls of the Devourer
 type: faction
 status: draft
-tags: []
+tags:
+- realm/renascita
+- faction-kind/cult
 realm: '[[Renascita]]'
 kind: cult
 ---

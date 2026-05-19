@@ -1,6 +1,7 @@
 ---
 type: cosmic-force
 status: stub
-tags: []
+tags:
+- category/corruption
 ---
 ## Cronus, The Endless

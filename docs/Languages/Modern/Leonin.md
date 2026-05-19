@@ -6,6 +6,7 @@ tags:
 - language
 - leonin
 - derived
+- kind/modern
 language_family: '[[Natsugen]]'
 language_tier: derived
 spoken_by:

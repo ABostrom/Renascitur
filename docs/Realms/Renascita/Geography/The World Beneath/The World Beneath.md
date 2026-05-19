@@ -1,7 +1,9 @@
 ---
 type: continent
 status: stub
-tags: []
+tags:
+- realm/renascita
+- continent/world-beneath
 realm: '[[Renascita]]'
 ---
 ---

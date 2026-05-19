@@ -8,7 +8,8 @@ timelines:
 type: event
 status: draft
 era: '[[Age of Forging]]'
-tags: []
+tags:
+- era/age-of-forging
 aliases:
 - Sealing of Ishna
 year_display: AF 11990

@@ -6,6 +6,8 @@ tags:
 - cultural-variant
 - orcs
 - imperial
+- lineage/kyojin
+- race/orcs
 lineage: '[[Orc]]'
 origin_plane: '[[Renascita]]'
 aat-race-tier: variant

@@ -1,7 +1,9 @@
 ---
 type: technology
 status: stub
-tags: []
+tags:
+- realm/renascita
+- discipline/nature
 realm: '[[Renascita]]'
 discipline: Nature
 ---

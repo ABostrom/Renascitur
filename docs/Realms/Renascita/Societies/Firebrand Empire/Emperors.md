@@ -1,7 +1,9 @@
 ---
 type: essay
 status: draft
-tags: []
+tags:
+- realm/renascita
+- faction/firebrand-empire
 realm: '[[Renascita]]'
 ---
 ![[Unimus - First Emperor]]

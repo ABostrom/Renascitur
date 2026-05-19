@@ -7,6 +7,7 @@ tags:
 - npc
 - cult
 - hobgoblin
+- realm/renascita
 type: character
 status: draft
 realm: '[[Renascita]]'

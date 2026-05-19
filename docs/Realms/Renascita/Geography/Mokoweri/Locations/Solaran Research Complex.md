@@ -2,7 +2,9 @@
 type: landmark
 status: draft
 continent: '[[Mokoweri]]'
-tags: []
+tags:
+- realm/renascita
+- continent/mokoweri
 realm: '[[Renascita]]'
 ---
 ### The Research Complex

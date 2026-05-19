@@ -2,6 +2,8 @@
 tags:
 - leader
 - House Lyrandar
+- realm/renascita
+- faction/firebrand-empire
 aliases:
 - Esravash
 type: character

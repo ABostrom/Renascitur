@@ -3,7 +3,10 @@ aliases:
 - Icebound Thane
 type: character
 status: draft
-tags: []
+tags:
+- realm/renascita
+- faction/dwarven-holds
+- faction/icebound-of-uftine
 realm: '[[Renascita]]'
 affiliation: '[[The Icebound of Uftine]]'
 ---

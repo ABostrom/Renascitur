@@ -40,7 +40,9 @@ rivers:
 - '[[Razan Tributary]]'
 - '[[Sul Vahir]]'
 status: draft
-tags: []
+tags:
+- realm/renascita
+- continent/qethusiyya
 realm: '[[Renascita]]'
 ---
 **Qethusiyya** is a continent of sweeping contrasts — blistering desert plains, lush river deltas, and coastal cities forged in the aftermath of Solaran collapse. The ancient city of [[Solara]] still casts its long shadow over [[Eltabarr]] and [[Thelassia]], while the fractured empires of [[Thraysia]] and [[Vasir]] vie for dominance across windswept trade routes.

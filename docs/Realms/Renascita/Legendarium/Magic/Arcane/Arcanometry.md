@@ -5,6 +5,8 @@ tags:
 - magic
 - arcane
 - arcanometry
+- realm/renascita
+- discipline/arcane
 magic: arcane
 type: technology
 status: draft

@@ -6,6 +6,7 @@ tags:
 - cultural-variant
 - solarans
 - industrial
+- lineage/solarans
 lineage: '[[Solaran]]'
 origin_plane: '[[Renascita]]'
 aat-race-tier: variant

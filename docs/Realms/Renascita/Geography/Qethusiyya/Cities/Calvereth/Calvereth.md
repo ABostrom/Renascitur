@@ -2,7 +2,10 @@
 type: settlement
 status: stub
 continent: '[[Qethusiyya]]'
-tags: []
+tags:
+- realm/renascita
+- continent/qethusiyya
+- place/calvereth
 realm: '[[Renascita]]'
 ---
 ---

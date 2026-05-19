@@ -2,6 +2,8 @@
 type: range
 status: stub
 continent: '[[Pyrosia]]'
-tags: []
+tags:
+- realm/renascita
+- continent/pyrosia
 realm: '[[Renascita]]'
 ---

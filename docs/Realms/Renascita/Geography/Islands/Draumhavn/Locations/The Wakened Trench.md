@@ -2,7 +2,9 @@
 type: landmark
 status: draft
 continent: '[[Draumhavn]]'
-tags: []
+tags:
+- realm/renascita
+- continent/draumhavn
 realm: '[[Renascita]]'
 ---
 ## Overview

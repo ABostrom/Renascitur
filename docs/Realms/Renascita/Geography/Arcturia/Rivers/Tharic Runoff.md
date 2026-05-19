@@ -2,6 +2,8 @@
 type: waterway
 status: stub
 continent: '[[Arcturia]]'
-tags: []
+tags:
+- realm/renascita
+- continent/arcturia
 realm: '[[Renascita]]'
 ---

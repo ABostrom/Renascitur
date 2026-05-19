@@ -1,7 +1,10 @@
 ---
 type: artifact
 status: stub
-tags: []
+tags:
+- realm/renascita
+- faction/dwarven-holds
+- faction/tidebound-of-draumhavn
 realm: '[[Renascita]]'
 ---
 # Blackwake Ships

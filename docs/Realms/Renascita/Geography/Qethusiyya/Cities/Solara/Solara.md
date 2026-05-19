@@ -2,7 +2,10 @@
 type: settlement
 status: draft
 continent: '[[Qethusiyya]]'
-tags: []
+tags:
+- realm/renascita
+- continent/qethusiyya
+- place/solara
 realm: '[[Renascita]]'
 ---
 *The Radiant Crown of the [[Solaran|Solarans]]*

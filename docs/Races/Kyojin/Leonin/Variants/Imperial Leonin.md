@@ -6,6 +6,8 @@ tags:
 - cultural-variant
 - leonin
 - imperial
+- lineage/kyojin
+- race/leonin
 lineage: '[[docs/Races/Kyojin/Leonin/Leonin|Leonin]]'
 origin_plane: '[[Renascita]]'
 aat-race-tier: variant

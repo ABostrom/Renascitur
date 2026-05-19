@@ -2,7 +2,8 @@
 type: event
 status: stub
 era: '[[Age of Night]]'
-tags: []
+tags:
+- era/age-of-night
 aliases:
 - Night War
 year_display: AN (undated)

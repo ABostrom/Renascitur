@@ -2,7 +2,9 @@
 type: faction
 status: stub
 realm: '[[Renascita]]'
-tags: []
+tags:
+- realm/renascita
+- faction/blackiron-collective
 ---
 ---
 

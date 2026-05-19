@@ -3,6 +3,9 @@ tags:
 - location
 - headquarters
 - House Vadalis
+- realm/renascita
+- continent/pyrosia
+- place/old-westgate
 aliases:
 - Foalswood
 type: landmark

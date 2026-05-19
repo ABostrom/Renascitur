@@ -1,7 +1,8 @@
 ---
 type: deity
 status: stub
-tags: []
+tags:
+- era/age-of-stagnation
 era_of_emergence: '[[Age of Stagnation]]'
 ---
 ![[Luxan]]

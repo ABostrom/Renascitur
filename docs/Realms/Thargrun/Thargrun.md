@@ -1,6 +1,7 @@
 ---
 type: landmark
 status: stub
-tags: []
+tags:
+- realm/thargrun
 ---
 The plane of [[Chaor]] and [[Specular]]

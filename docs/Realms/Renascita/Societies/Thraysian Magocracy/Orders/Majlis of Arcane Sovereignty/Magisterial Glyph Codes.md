@@ -3,6 +3,8 @@ tags:
 - majlis
 - glyphs
 - law
+- realm/renascita
+- faction/thraysian-magocracy
 aliases:
 - Glyph Law Codes
 type: organisation

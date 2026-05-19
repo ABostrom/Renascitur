@@ -1,7 +1,9 @@
 ---
 type: essay
 status: draft
-tags: []
+tags:
+- realm/renascita
+- faction/firebrand-empire
 realm: '[[Renascita]]'
 ---
 # The Twelve Great Houses of the Firebrand Empire

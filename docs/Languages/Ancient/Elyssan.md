@@ -6,6 +6,7 @@ tags:
 - solaran
 - root
 - ancient
+- kind/ancient
 language_family: '[[Solaran]]'
 language_tier: root
 spoken_by:

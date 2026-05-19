@@ -2,6 +2,8 @@
 tags:
 - leader
 - House Tharashk
+- realm/renascita
+- faction/firebrand-empire
 aliases:
 - Broxiz
 type: character

@@ -1,7 +1,10 @@
 ---
 type: organisation
 status: draft
-tags: []
+tags:
+- realm/renascita
+- faction/dwarven-holds
+- faction/stormbound-of-thundrakar
 realm: '[[Renascita]]'
 parent_faction: '[[The Stormbound of Thundrakar]]'
 ---

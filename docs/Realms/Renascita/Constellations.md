@@ -1,7 +1,8 @@
 ---
 type: essay
 status: draft
-tags: []
+tags:
+- realm/renascita
 realm: '[[Renascita]]'
 ---
 ## The Sword of Ardanus

@@ -3,6 +3,9 @@ tags:
 - location
 - headquarters
 - House Lyrandar
+- realm/renascita
+- continent/pyrosia
+- place/raining-bay
 aliases:
 - Stormhome
 type: landmark

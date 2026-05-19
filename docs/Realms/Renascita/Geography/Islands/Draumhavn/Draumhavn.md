@@ -8,7 +8,9 @@ leadership:
 type: continent
 status: draft
 kind: island
-tags: []
+tags:
+- realm/renascita
+- continent/draumhavn
 realm: '[[Renascita]]'
 ---
 ![[f1e5b90b-25db-47d1-ab4a-f5ab53ee54af.png]]

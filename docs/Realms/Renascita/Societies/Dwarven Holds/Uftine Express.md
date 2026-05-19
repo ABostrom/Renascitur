@@ -1,7 +1,9 @@
 ---
 type: essay
 status: draft
-tags: []
+tags:
+- realm/renascita
+- faction/dwarven-holds
 realm: '[[Renascita]]'
 ---
 The **Uftine Express** is one of the most closely guarded secrets of the dwarven people, an underground railway network that spans multiple continents, linking some of the most powerful and industrious cities of the world. Built with masterful dwarven engineering and rune-infused steel, the Express allows for rapid travel and trade beneath the surface, far from the dangers of the overworld.

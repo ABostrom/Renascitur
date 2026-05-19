@@ -1,7 +1,9 @@
 ---
 type: character
 status: stub
-tags: []
+tags:
+- realm/renascita
+- faction/thraysian-magocracy
 realm: '[[Renascita]]'
 affiliation: '[[Thraysian Magocracy]]'
 ---

@@ -2,7 +2,10 @@
 type: settlement
 status: draft
 continent: '[[Qethusiyya]]'
-tags: []
+tags:
+- realm/renascita
+- continent/qethusiyya
+- place/thelassia
 realm: '[[Renascita]]'
 ---
 # Thelassia: The City of the Endless Flame

@@ -3,6 +3,9 @@ tags:
 - location
 - headquarters
 - House Kundarak
+- realm/renascita
+- continent/pyrosia
+- place/lux-oescus
 aliases:
 - Korunda Gate
 type: landmark

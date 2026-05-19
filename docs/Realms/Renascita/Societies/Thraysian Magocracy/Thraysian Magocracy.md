@@ -2,7 +2,9 @@
 type: faction
 status: draft
 realm: '[[Renascita]]'
-tags: []
+tags:
+- realm/renascita
+- faction/thraysian-magocracy
 ---
 ### The Majlis of Arcane Sovereignty
 

@@ -1,7 +1,9 @@
 ---
 type: resource
 status: draft
-tags: []
+tags:
+- realm/renascita
+- category/ores
 realm: '[[Renascita]]'
 category: Ores
 ---

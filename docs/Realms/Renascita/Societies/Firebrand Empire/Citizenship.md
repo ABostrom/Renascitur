@@ -1,6 +1,8 @@
 ---
 type: essay
 status: stub
-tags: []
+tags:
+- realm/renascita
+- faction/firebrand-empire
 realm: '[[Renascita]]'
 ---

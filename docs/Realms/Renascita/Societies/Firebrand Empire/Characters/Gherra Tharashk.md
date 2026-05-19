@@ -2,6 +2,8 @@
 tags:
 - city-overseer
 - House Tharashk
+- realm/renascita
+- faction/firebrand-empire
 aliases:
 - Tharashk
 - Ashgatar Overseer

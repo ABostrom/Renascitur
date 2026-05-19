@@ -2,7 +2,10 @@
 type: region
 status: stub
 continent: '[[Arcturia]]'
-tags: []
+tags:
+- realm/renascita
+- continent/arcturia
+- region/frosthold-glacier-md
 realm: '[[Renascita]]'
 ---
 ---

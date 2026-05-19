@@ -1,7 +1,8 @@
 ---
 type: deity
 status: draft
-tags: []
+tags:
+- era/age-of-forging
 era_of_emergence: '[[Age of Forging]]'
 ---
 [[Ishna|The god unborn]] could twist and contort the souls of mortals into unnatural [[aberrations]].

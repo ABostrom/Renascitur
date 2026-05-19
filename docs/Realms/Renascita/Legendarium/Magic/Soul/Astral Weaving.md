@@ -5,6 +5,8 @@ tags:
 - magic
 - soul
 - astralweaving
+- realm/renascita
+- discipline/soul
 type: technology
 status: draft
 realm: '[[Renascita]]'

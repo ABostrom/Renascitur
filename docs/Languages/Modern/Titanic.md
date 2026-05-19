@@ -7,6 +7,7 @@ tags:
 - language
 - titanic
 - derived
+- kind/modern
 language_family: '[[Karathic]]'
 language_tier: derived
 spoken_by:

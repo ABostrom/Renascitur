@@ -1,7 +1,8 @@
 ---
 type: artifact
 status: draft
-tags: []
+tags:
+- realm/renascita
 realm: '[[Renascita]]'
 ---
 Location: [[The Ruins of Baldur's Gate]]

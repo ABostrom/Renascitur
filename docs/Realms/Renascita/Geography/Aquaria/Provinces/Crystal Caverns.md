@@ -2,7 +2,10 @@
 type: region
 status: stub
 continent: '[[Aquaria]]'
-tags: []
+tags:
+- realm/renascita
+- continent/aquaria
+- region/crystal-caverns-md
 realm: '[[Renascita]]'
 ---
 ---

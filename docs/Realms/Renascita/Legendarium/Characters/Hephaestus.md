@@ -1,6 +1,7 @@
 ---
 type: character
 status: stub
-tags: []
+tags:
+- realm/renascita
 realm: '[[Renascita]]'
 ---

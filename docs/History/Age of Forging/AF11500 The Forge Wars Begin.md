@@ -8,7 +8,8 @@ timelines:
 type: event
 status: draft
 era: '[[Age of Forging]]'
-tags: []
+tags:
+- era/age-of-forging
 aliases:
 - The Forge Wars Begin
 year_display: AF 11500

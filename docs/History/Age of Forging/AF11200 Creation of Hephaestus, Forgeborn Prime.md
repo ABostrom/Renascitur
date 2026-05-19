@@ -8,7 +8,8 @@ timelines:
 type: event
 status: draft
 era: '[[Age of Forging]]'
-tags: []
+tags:
+- era/age-of-forging
 aliases:
 - Creation of Hephaestus, Forgeborn Prime
 year_display: AF 11200

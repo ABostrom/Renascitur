@@ -3,6 +3,8 @@ tags:
 - athenaeum
 - research
 - history
+- realm/renascita
+- faction/thraysian-magocracy
 aliases:
 - ECI
 - Eclipsed Civilizations

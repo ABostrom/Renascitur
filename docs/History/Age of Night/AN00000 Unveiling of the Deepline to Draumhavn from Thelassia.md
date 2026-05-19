@@ -2,7 +2,8 @@
 type: event
 status: draft
 era: '[[Age of Night]]'
-tags: []
+tags:
+- era/age-of-night
 aliases:
 - Unveiling of the Deepline to Draumhavn from Thelassia
 year_display: AN (undated)

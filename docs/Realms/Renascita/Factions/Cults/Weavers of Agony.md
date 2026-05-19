@@ -8,6 +8,8 @@ tags:
 - faction
 - cult
 - hobgoblin
+- realm/renascita
+- faction-kind/cult
 type: faction
 status: draft
 realm: '[[Renascita]]'

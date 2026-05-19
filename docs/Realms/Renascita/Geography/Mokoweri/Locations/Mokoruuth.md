@@ -2,7 +2,9 @@
 type: landmark
 status: draft
 continent: '[[Mokoweri]]'
-tags: []
+tags:
+- realm/renascita
+- continent/mokoweri
 realm: '[[Renascita]]'
 ---
 - **Cultural Influence**: Named by the [[Solaran]]'s, whose pursuit of knowledge and enlightenment shaped their civilization.

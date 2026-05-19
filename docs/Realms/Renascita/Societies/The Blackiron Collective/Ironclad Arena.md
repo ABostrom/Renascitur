@@ -1,7 +1,9 @@
 ---
 type: essay
 status: draft
-tags: []
+tags:
+- realm/renascita
+- faction/blackiron-collective
 realm: '[[Renascita]]'
 ---
 #### **Purpose and Function**

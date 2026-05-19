@@ -1,7 +1,8 @@
 ---
 type: era
 status: stub
-tags: []
+tags:
+- era/age-of-stagnation
 code: AS
 aliases:
 - Third Age

@@ -5,6 +5,7 @@ tags:
 - race
 - elder
 - elemental
+- lineage/grundthains
 origin_plane: '[[Thargrun]]'
 aat-race-tier: '[[Elder Races]]'
 spoken_language: '[[Karathic]]'

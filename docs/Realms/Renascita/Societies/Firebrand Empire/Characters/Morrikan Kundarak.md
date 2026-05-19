@@ -2,6 +2,8 @@
 tags:
 - leader
 - House Kundarak
+- realm/renascita
+- faction/firebrand-empire
 aliases:
 - Morrikan
 type: character

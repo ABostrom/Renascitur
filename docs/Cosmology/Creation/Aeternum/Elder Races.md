@@ -1,7 +1,8 @@
 ---
 type: essay
 status: draft
-tags: []
+tags:
+- category/aeternum
 ---
 **The Elder Races and Their Connection to [[Aeternum|the Aeternum]] and the Three World Trees**
 

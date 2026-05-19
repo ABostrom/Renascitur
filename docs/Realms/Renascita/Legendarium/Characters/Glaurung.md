@@ -1,7 +1,8 @@
 ---
 type: character
 status: stub
-tags: []
+tags:
+- realm/renascita
 realm: '[[Renascita]]'
 ---
 # Glaurung - The Deceiver 

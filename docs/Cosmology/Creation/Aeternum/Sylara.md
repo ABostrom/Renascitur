@@ -1,7 +1,8 @@
 ---
 type: essay
 status: draft
-tags: []
+tags:
+- category/aeternum
 ---
 # [[Sylara]], The Verdant [[Soul]]
 

@@ -2,6 +2,8 @@
 tags:
 - city-overseer
 - House Orien
+- realm/renascita
+- faction/firebrand-empire
 aliases:
 - Orien
 - Port Ardere Overseer

@@ -1,7 +1,9 @@
 ---
 type: essay
 status: draft
-tags: []
+tags:
+- realm/renascita
+- faction/saurian-enclave
 realm: '[[Renascita]]'
 ---
 The Rite of Ascension is a profound and solemn ceremony within the treetop city of Aeloria, marking the transition of a druid into the revered ranks of the Elders. This rite is not only a testament to the aspirant's mastery of knowledge and wisdom but also a sacred covenant, binding them to the guardianship of the [[Saurian]] people and their ancient secrets. The ceremony is deeply imbued with the traditions of the [[Saurian|Saurians]], reflecting their reverence for nature, the depth of their spirituality, and the solemnity of the responsibilities being undertaken.

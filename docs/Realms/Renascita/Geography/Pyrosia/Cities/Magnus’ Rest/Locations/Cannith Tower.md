@@ -3,6 +3,9 @@ tags:
 - location
 - headquarters
 - House Cannith
+- realm/renascita
+- continent/pyrosia
+- place/magnus-rest
 aliases:
 - Cannith Tower
 type: landmark

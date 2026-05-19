@@ -2,7 +2,10 @@
 type: region
 status: draft
 continent: '[[Qethusiyya]]'
-tags: []
+tags:
+- realm/renascita
+- continent/qethusiyya
+- region/vasir
 realm: '[[Renascita]]'
 ---
 Vasir is the lush heartland of the continent, a patchwork of farmland, rivers, and village glyphstones. Known as the breadbasket of [[Qethusiyya]], its trade capital—**[[Zahirah]]**—hosts one of the largest magical bazaars in the known world.

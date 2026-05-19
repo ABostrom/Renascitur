@@ -1,7 +1,9 @@
 ---
 type: organisation
 status: draft
-tags: []
+tags:
+- realm/renascita
+- faction/thraysian-magocracy
 realm: '[[Renascita]]'
 parent_faction: '[[Thraysian Magocracy]]'
 ---

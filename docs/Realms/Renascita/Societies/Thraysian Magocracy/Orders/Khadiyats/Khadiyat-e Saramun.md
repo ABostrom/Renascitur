@@ -5,6 +5,8 @@ tags:
 - stone
 - infrastructure
 - vaults
+- realm/renascita
+- faction/thraysian-magocracy
 aliases:
 - Khadiyat-e Saramun
 type: organisation

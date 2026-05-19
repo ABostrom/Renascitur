@@ -1,7 +1,8 @@
 ---
 type: landmark
 status: draft
-tags: []
+tags:
+- realm/infernum
 ---
 The plane of [[Ordar]] and [[Noxar]]
 

@@ -1,7 +1,9 @@
 ---
 type: essay
 status: draft
-tags: []
+tags:
+- realm/renascita
+- faction/solaran-federation-of-worlds
 realm: '[[Renascita]]'
 ---
 *Ancient Architects of Light, Harmony, and [[Weave|the Weave]]*

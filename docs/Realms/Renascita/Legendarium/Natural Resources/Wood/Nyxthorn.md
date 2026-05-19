@@ -1,7 +1,9 @@
 ---
 type: resource
 status: draft
-tags: []
+tags:
+- realm/renascita
+- category/wood
 realm: '[[Renascita]]'
 category: Wood
 ---

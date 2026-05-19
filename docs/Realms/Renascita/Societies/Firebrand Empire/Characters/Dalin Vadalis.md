@@ -2,6 +2,8 @@
 tags:
 - leader
 - House Vadalis
+- realm/renascita
+- faction/firebrand-empire
 aliases:
 - Dalin
 type: character

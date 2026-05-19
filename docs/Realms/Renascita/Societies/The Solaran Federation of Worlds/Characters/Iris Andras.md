@@ -1,7 +1,9 @@
 ---
 type: character
 status: draft
-tags: []
+tags:
+- realm/renascita
+- faction/solaran-federation-of-worlds
 realm: '[[Renascita]]'
 affiliation: '[[The Solaran Federation of Worlds]]'
 ---

@@ -6,6 +6,7 @@ tags:
 - language
 - mokoweran
 - derived
+- kind/modern
 language_family: '[[Elyssan]]'
 language_tier: derived
 spoken_by:

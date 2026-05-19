@@ -1,7 +1,9 @@
 ---
 type: race
 status: stub
-tags: []
+tags:
+- lineage/kyojin
+- race/orcs
 lineage: Kyojin
 ---
 # Orcs

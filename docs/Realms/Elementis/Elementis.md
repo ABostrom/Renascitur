@@ -1,7 +1,8 @@
 ---
 type: landmark
 status: draft
-tags: []
+tags:
+- realm/elementis
 ---
 The elemental plane surrounds the material plane, and is the only inner plane in the wheel of cosmology. It is a single plane shaped like a torus. At the boundaries of each elemental plane there are mixed elements. The planes consist of fire, water, air, and earth. 
 

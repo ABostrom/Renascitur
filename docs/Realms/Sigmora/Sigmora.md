@@ -1,7 +1,8 @@
 ---
 type: landmark
 status: draft
-tags: []
+tags:
+- realm/sigmora
 ---
 The plane of [[Ordar]] and [[Specular]]
 

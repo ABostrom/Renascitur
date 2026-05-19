@@ -1,7 +1,8 @@
 ---
 type: essay
 status: draft
-tags: []
+tags:
+- category/aeternum
 ---
 **Nature**: The primal language of the cosmos  
 **Used By**: [[Aeternum]]  

@@ -1,7 +1,10 @@
 ---
 type: organisation
 status: draft
-tags: []
+tags:
+- realm/renascita
+- faction/dwarven-holds
+- faction/icebound-of-uftine
 realm: '[[Renascita]]'
 parent_faction: '[[The Icebound of Uftine]]'
 ---

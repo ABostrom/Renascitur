@@ -2,7 +2,9 @@
 type: landmark
 status: stub
 continent: '[[Draumhavn]]'
-tags: []
+tags:
+- realm/renascita
+- continent/draumhavn
 realm: '[[Renascita]]'
 ---
 # Salt Cradle

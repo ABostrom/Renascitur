@@ -1,7 +1,8 @@
 ---
 type: era
 status: stub
-tags: []
+tags:
+- era/age-of-night
 code: AN
 aliases:
 - Fourth Age

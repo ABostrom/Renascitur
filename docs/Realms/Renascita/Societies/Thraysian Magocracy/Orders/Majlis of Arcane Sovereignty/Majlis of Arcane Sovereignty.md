@@ -3,6 +3,8 @@ tags:
 - eltabarr
 - majlis
 - institution
+- realm/renascita
+- faction/thraysian-magocracy
 aliases:
 - Majlis
 - Arcane Sovereignty

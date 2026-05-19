@@ -2,7 +2,10 @@
 type: region
 status: draft
 continent: '[[Qethusiyya]]'
-tags: []
+tags:
+- realm/renascita
+- continent/qethusiyya
+- region/thraysia
 realm: '[[Renascita]]'
 ---
 Thraysia is the bureaucratic and arcane seat of the Majlis of Arcane Sovereignty. At its center lies **Eltabarr**, the spired city of laws, memory control, and glyphic order. Thraysia is orderly, regulated, and powerful—and feared for it.

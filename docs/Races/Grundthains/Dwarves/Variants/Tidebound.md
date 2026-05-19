@@ -6,6 +6,8 @@ tags:
 - variant
 - dwarves
 - elemental
+- lineage/grundthains
+- race/dwarves
 lineage: '[[Dwarf|Dwarves]]'
 origin_plane: '[[Thargrun]]'
 aat-race-tier: variant

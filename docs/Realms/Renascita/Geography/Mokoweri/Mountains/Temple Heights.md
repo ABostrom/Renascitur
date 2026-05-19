@@ -2,6 +2,8 @@
 type: range
 status: stub
 continent: '[[Mokoweri]]'
-tags: []
+tags:
+- realm/renascita
+- continent/mokoweri
 realm: '[[Renascita]]'
 ---

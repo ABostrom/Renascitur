@@ -2,7 +2,8 @@
 type: event
 status: stub
 era: '[[Age of Forging]]'
-tags: []
+tags:
+- era/age-of-forging
 aliases:
 - Hexweave Binding
 year_display: AF (undated)

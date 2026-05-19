@@ -3,6 +3,9 @@ tags:
 - location
 - headquarters
 - House Jorasco
+- realm/renascita
+- continent/pyrosia
+- place/lions-rest
 aliases:
 - Vedkyar Enclave
 type: landmark

@@ -3,6 +3,8 @@ tags:
 - majlis
 - rites
 - arcane
+- realm/renascita
+- faction/thraysian-magocracy
 aliases:
 - Ascension Rites
 type: organisation

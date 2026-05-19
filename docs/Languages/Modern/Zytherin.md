@@ -7,6 +7,7 @@ tags:
 - solaran
 - dialect
 - infernal
+- kind/modern
 language_family: '[[Elyssan]]'
 language_tier: dialect
 spoken_by:

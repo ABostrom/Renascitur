@@ -6,6 +6,8 @@ tags:
 - race
 - mortal
 - adaptable
+- lineage/humans
+- race/terran
 origin_plane: '[[Renascita]]'
 spoken_language:
 - '[[Imperial Common|Imperial]]'

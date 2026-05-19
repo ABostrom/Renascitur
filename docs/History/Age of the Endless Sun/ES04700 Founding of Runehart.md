@@ -7,7 +7,8 @@ timelines:
 type: event
 status: draft
 era: '[[Age of the Endless Sun]]'
-tags: []
+tags:
+- era/age-of-the-endless-sun
 aliases:
 - Founding of Runehart
 year_display: ES 4700

@@ -2,6 +2,8 @@
 tags:
 - city-overseer
 - House Vadalis
+- realm/renascita
+- faction/firebrand-empire
 aliases:
 - Vadalis
 - Old Westgate Overseer

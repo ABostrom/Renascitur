@@ -1,7 +1,8 @@
 ---
 type: deity
 status: draft
-tags: []
+tags:
+- era/age-of-forging
 era_of_emergence: '[[Age of Forging]]'
 ---
 ### **The Life of Muradin: The Visionary, the Smith, the God**
