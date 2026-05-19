@@ -4,6 +4,15 @@ status: draft
 tags: []
 realm: '[[Renascita]]'
 affiliation: '[[The Blackiron Collective]]'
+nature: ''
+importance: ''
+alignment: ''
+gender: ''
+role: []
+magic: []
+living_status: ''
+era_of_birth: ''
+era_of_death: ''
 ---
 - **Role**: Chief inventor and de facto leader of Thelassia.
 - **Personality**: Pragmatic and visionary, Kael is a driving force behind Thelassia’s technological advancements. He believes that the city’s future lies in discovering a more sustainable energy source.

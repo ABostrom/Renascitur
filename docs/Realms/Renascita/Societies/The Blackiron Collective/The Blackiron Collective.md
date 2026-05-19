@@ -3,6 +3,17 @@ type: faction
 status: stub
 realm: '[[Renascita]]'
 tags: []
+nature: ''
+importance: ''
+alignment: ''
+society_form: ''
+government: ''
+economy: ''
+seat: ''
+size: ''
+allies: []
+rivals: []
+magic: []
 ---
 ---
 

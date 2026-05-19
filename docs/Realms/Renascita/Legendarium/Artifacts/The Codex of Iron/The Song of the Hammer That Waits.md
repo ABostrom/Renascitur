@@ -3,6 +3,12 @@ type: artifact
 status: draft
 tags: []
 realm: '[[Renascita]]'
+nature: ''
+importance: ''
+current_bearer: ''
+cursed: false
+divine: false
+magic: []
 ---
 # The Song of the Hammer That Waits
 

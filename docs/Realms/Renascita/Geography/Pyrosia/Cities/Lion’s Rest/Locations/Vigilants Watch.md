@@ -10,6 +10,8 @@ status: draft
 continent: '[[Pyrosia]]'
 realm: '[[Renascita]]'
 inside: '[[Lion’s Rest]]'
+nature: ''
+importance: ''
 ---
 ## Associated House
 - [[House Deneith]]

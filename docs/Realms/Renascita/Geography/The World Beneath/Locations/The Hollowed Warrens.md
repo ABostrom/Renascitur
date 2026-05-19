@@ -11,6 +11,8 @@ type: landmark
 status: draft
 continent: '[[The World Beneath]]'
 realm: '[[Renascita]]'
+nature: ''
+importance: ''
 ---
 # [[The Hollowed Warrens]]
 

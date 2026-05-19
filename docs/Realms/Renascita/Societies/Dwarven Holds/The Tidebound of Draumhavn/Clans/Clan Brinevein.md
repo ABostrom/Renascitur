@@ -4,6 +4,9 @@ status: stub
 tags: []
 realm: '[[Renascita]]'
 parent_faction: '[[The Tidebound of Draumhavn]]'
+nature: ''
+importance: ''
+alignment: ''
 ---
 # Clan Brinevein
 

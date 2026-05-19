@@ -12,6 +12,17 @@ type: faction
 status: draft
 realm: '[[Renascita]]'
 kind: cult
+nature: ''
+importance: ''
+alignment: ''
+society_form: ''
+government: ''
+economy: ''
+seat: ''
+size: ''
+allies: []
+rivals: []
+magic: []
 ---
 # [[Weavers of Agony]]
 

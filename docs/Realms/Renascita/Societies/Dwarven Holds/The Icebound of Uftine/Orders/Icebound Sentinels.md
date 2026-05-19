@@ -4,6 +4,9 @@ status: draft
 tags: []
 realm: '[[Renascita]]'
 parent_faction: '[[The Icebound of Uftine]]'
+nature: ''
+importance: ''
+alignment: ''
 ---
 # [[Icebound]] Sentinels
 

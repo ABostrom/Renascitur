@@ -4,6 +4,8 @@ status: stub
 continent: '[[Draumhavn]]'
 tags: []
 realm: '[[Renascita]]'
+nature: ''
+importance: ''
 ---
 # Salt Cradle
 

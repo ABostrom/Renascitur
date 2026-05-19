@@ -4,6 +4,12 @@ status: draft
 continent: '[[Qethusiyya]]'
 tags: []
 realm: '[[Renascita]]'
+importance: ''
+population: ''
+climate: ''
+terrain: ''
+defenses: ''
+predominant_economy: ''
 ---
 # Thelassia: The City of the Endless Flame
 

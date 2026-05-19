@@ -8,6 +8,10 @@ era: '[[Age of Stagnation]]'
 tags: []
 year_display: AS (undated)
 year: 0
+importance: ''
+victors: []
+casualties: []
+outcome: ''
 ---
 After the psychic schism, great swathes of the population were killed. The world reacted in utter terror at the devastation and destruction of civilization as they knew it. 
 

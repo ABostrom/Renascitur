@@ -13,5 +13,9 @@ aliases:
 - Vecna’s Descent Begins
 year_display: AF 11000
 year: 11000
+importance: ''
+victors: []
+casualties: []
+outcome: ''
 ---
 [[Vecna]] discovers [[Ishna]] is corrupting the [[soul]]-cycle. He becomes obsessed with creating incorruptible beings. Abandoning divine and arcane purity, he dives into necromancy and forbidden research.

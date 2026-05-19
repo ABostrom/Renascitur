@@ -4,6 +4,15 @@ status: draft
 tags: []
 realm: '[[Renascita]]'
 affiliation: '[[Firebrand Empire]]'
+nature: ''
+importance: ''
+alignment: ''
+gender: ''
+role: []
+magic: []
+living_status: ''
+era_of_birth: ''
+era_of_death: ''
 ---
 - **Appearance**: Tetrus is depicted as a stern and imposing [[docs/Races/Kyojin/Leonin/Leonin|Leonin]] with a dark brown mane streaked with silver. His green eyes are sharp and calculating, and he wears heavy, battle-worn armor, symbolizing his military prowess and relentless pursuit of victory.
 - **Quote**: "Peace is the prize of war, but war is the path to peace."

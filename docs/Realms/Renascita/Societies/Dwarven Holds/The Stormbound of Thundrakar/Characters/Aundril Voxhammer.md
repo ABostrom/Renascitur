@@ -6,6 +6,15 @@ status: draft
 tags: []
 realm: '[[Renascita]]'
 affiliation: '[[The Stormbound of Thundrakar]]'
+nature: ''
+importance: ''
+alignment: ''
+gender: ''
+role: []
+magic: []
+living_status: ''
+era_of_birth: ''
+era_of_death: ''
 ---
 ## Title  
 **High Conductor of Thundrakar**  

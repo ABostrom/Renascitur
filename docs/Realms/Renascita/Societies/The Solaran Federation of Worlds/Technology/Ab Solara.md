@@ -3,6 +3,9 @@ type: technology
 status: draft
 tags: []
 realm: '[[Renascita]]'
+nature: ''
+importance: ''
+magic: []
 ---
 *Gateways of Light, Folded [[Weave]], and [[Solaran]] Ambition*
 

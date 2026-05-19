@@ -4,6 +4,12 @@ status: draft
 continent: '[[Pyrosia]]'
 tags: []
 realm: '[[Renascita]]'
+importance: ''
+population: ''
+climate: ''
+terrain: ''
+defenses: ''
+predominant_economy: ''
 ---
 > *"We held the gates for a thousand nights, and in that furnace, the future was forged."*  
 > — [[Volgrin Flameward]], First [[Pyrethane]] of [[Magnus’ Rest]]

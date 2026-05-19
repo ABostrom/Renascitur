@@ -12,6 +12,10 @@ spoken_language:
 - '[[Titanic]]'
 type: race
 status: draft
+nature: ''
+importance: ''
+lifespan: ''
+magic_affinity: []
 ---
 # Varkuun
 

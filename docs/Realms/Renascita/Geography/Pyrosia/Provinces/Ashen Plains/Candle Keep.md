@@ -5,6 +5,10 @@ continent: '[[Pyrosia]]'
 tags: []
 realm: '[[Renascita]]'
 region: '[[Ashen Plains]]'
+climate: ''
+terrain: []
+dominant_culture: ''
+population_density: ''
 ---
 Candle Keep was a famous library of great renown the world over. Before the [[Psychic Schism]] it contained tomes that could change the very nature of the world. Since the [[Psychic Schism|schism]] the keep has fallen into disrepair, and a small number of scholars have managed to keep the library safeguarded. Though knowledge of its location, and the tomes contained within, are forbidden within the [[Firebrand Empire]] there are some that would seek the lore for their own purposes.
 

@@ -4,6 +4,15 @@ status: draft
 tags: []
 realm: '[[Renascita]]'
 affiliation: '[[Firebrand Empire]]'
+nature: ''
+importance: ''
+alignment: ''
+gender: ''
+role: []
+magic: []
+living_status: ''
+era_of_birth: ''
+era_of_death: ''
 ---
 - **Appearance**: [[Unimus]] is depicted as a towering [[docs/Races/Kyojin/Leonin/Leonin|Leonin]], his mane a brilliant gold that seems to shimmer with an inner light. His piercing amber eyes reflect both wisdom and the fierce determination that led him to ascend to godhood. He wears ornate armor adorned with celestial symbols, a cloak of lion's fur draped over his broad shoulders.
 - **Quote**: "In the darkness of the [[Night War]], I found the light within myself and led my people to a new dawn."

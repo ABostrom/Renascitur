@@ -7,6 +7,10 @@ aliases:
 - Unveiling of the Deepline to Draumhavn from Thelassia
 year_display: AN (undated)
 year: 0
+importance: ''
+victors: []
+casualties: []
+outcome: ''
 ---
 ### _The Unveiling of the Deep Line_
 

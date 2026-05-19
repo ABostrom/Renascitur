@@ -5,6 +5,10 @@ continent: '[[Pyrosia]]'
 tags: []
 realm: '[[Renascita]]'
 region: '[[Ashen Plains]]'
+climate: ''
+terrain: []
+dominant_culture: ''
+population_density: ''
 ---
 ---
 

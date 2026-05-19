@@ -2,16 +2,16 @@
 type: era
 status: draft
 tags: []
-code: ""      # e.g. AF for Age of Forging
+code: ''
 aliases: []
-preceded_by: ""
-followed_by: ""
+preceded_by: ''
+followed_by: ''
 defining_events: []
 defining_chronicles: []
 created: <% tp.date.now("YYYY-MM-DD") %>
 updated: <% tp.date.now("YYYY-MM-DD") %>
+importance: ''
 ---
-
 # {{title}}
 
 ## Overview

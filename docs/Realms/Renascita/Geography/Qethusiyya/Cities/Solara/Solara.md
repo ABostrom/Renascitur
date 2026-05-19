@@ -4,6 +4,12 @@ status: draft
 continent: '[[Qethusiyya]]'
 tags: []
 realm: '[[Renascita]]'
+importance: ''
+population: ''
+climate: ''
+terrain: ''
+defenses: ''
+predominant_economy: ''
 ---
 *The Radiant Crown of the [[Solaran|Solarans]]*
 

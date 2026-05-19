@@ -7,4 +7,7 @@ type: technology
 status: stub
 realm: '[[Renascita]]'
 discipline: Soul
+nature: ''
+importance: ''
+magic: []
 ---

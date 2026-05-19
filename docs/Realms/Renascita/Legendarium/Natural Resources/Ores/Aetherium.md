@@ -4,6 +4,8 @@ status: draft
 tags: []
 realm: '[[Renascita]]'
 category: Ores
+nature: ''
+importance: ''
 ---
 **"It is neither of this world nor beyond it, but of the spaces between—the breath of the heavens turned to steel."**  
 —Excerpt from _The Forgemaster’s Hymn_, carved within the Sanctuary of Iron

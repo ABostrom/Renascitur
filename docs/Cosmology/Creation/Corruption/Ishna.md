@@ -5,6 +5,9 @@ aliases:
 type: cosmic-force
 status: stub
 tags: []
+nature: aberrant
+importance: ''
+alignment: ''
 ---
 ![[The Forge Wars]]
 

@@ -12,6 +12,10 @@ spoken_language:
 - '[[Natsugen]]'
 type: race
 status: draft
+nature: ''
+importance: ''
+lifespan: ''
+magic_affinity: []
 ---
 # Kyojin
 

@@ -8,6 +8,10 @@ type: region
 status: draft
 continent: '[[Pyrosia]]'
 realm: '[[Renascita]]'
+climate: ''
+terrain: []
+dominant_culture: ''
+population_density: ''
 ---
 ## Province
 - [[Frontier's Edge]]

@@ -12,6 +12,10 @@ aliases:
 - The Second Age
 year_display: AF 10001
 year: 10001
+importance: ''
+victors: []
+casualties: []
+outcome: ''
 ---
 ## Age of Twilight’s Convergence
 

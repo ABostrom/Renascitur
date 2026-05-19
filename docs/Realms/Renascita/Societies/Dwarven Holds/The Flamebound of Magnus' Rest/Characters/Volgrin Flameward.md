@@ -7,6 +7,15 @@ status: draft
 tags: []
 realm: '[[Renascita]]'
 affiliation: '[[The Flamebound of Magnus'' Rest]]'
+nature: ''
+importance: ''
+alignment: ''
+gender: ''
+role: []
+magic: []
+living_status: ''
+era_of_birth: ''
+era_of_death: ''
 ---
 > *"I was a child when the night came. [[Magnus]] gave me fire. I have never let it go."*
 

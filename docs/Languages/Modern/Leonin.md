@@ -13,6 +13,8 @@ spoken_by:
 type: language
 status: draft
 kind: modern
+nature: ''
+importance: ''
 ---
 # [[docs/Races/Kyojin/Leonin/Leonin|Leonin]]
 

@@ -10,6 +10,9 @@ type: organisation
 status: draft
 realm: '[[Renascita]]'
 parent_faction: '[[Thraysian Magocracy]]'
+nature: ''
+importance: ''
+alignment: ''
 ---
 # Soulbound Instruments Registry
 

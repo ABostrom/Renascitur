@@ -4,6 +4,9 @@ status: draft
 tags: []
 realm: '[[Renascita]]'
 parent_faction: '[[Thraysian Magocracy]]'
+nature: ''
+importance: ''
+alignment: ''
 ---
 In the shadowed corridors of history, the Forgotten Pathways Network emerges as a pinnacle of the ancient [[Solaran]] civilization's achievements, a complex system intertwining the mystic with the scientific in ways that modern scholars of Eltabarr's Athenaeum of Arcane Arts and Sciences find both fascinating and unfathomable. This network, rediscovered through meticulous research and exploration, showcases Solara's unique approach to the amalgamation of magic and science, far beyond the understanding of contemporary Arcanometry.
 

@@ -12,5 +12,9 @@ aliases:
 - Collapse of Solara
 year_display: ES 9000
 year: 9000
+importance: ''
+victors: []
+casualties: []
+outcome: ''
 ---
 As [[Endless Sun]] breaks down, the [[Solaran]] empire fractures and burns. Cities vanish, stars go dark, and remnants of the empire are scattered across the cosmos. The Age of Wonder ends in silence and ruin.

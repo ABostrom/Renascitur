@@ -3,13 +3,17 @@ type: culture
 status: draft
 tags: []
 races: []
-homeland: ""
-era_bloom: ""
-era_decline: ""
+homeland: ''
+era_bloom: ''
+era_decline: ''
 created: <% tp.date.now("YYYY-MM-DD") %>
 updated: <% tp.date.now("YYYY-MM-DD") %>
+nature: ''
+importance: ''
+society_form: ''
+government: ''
+magic: []
 ---
-
 # {{title}}
 
 ## Overview

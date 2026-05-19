@@ -12,6 +12,10 @@ aat-race-tier: engineered
 spoken_language: '[[Denisovan]]'
 type: race
 status: draft
+nature: ''
+importance: ''
+lifespan: ''
+magic_affinity: []
 ---
 # Saurians
 

@@ -13,6 +13,10 @@ spoken_language:
 - '[[Valeshi]]'
 type: race
 status: draft
+nature: ''
+importance: ''
+lifespan: ''
+magic_affinity: []
 ---
 # Forgeborn
 

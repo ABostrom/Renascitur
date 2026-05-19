@@ -8,6 +8,12 @@ type: settlement
 status: draft
 continent: '[[Pyrosia]]'
 realm: '[[Renascita]]'
+importance: ''
+population: ''
+climate: ''
+terrain: ''
+defenses: ''
+predominant_economy: ''
 ---
 ## Province
 - [[Ashen Plains]]

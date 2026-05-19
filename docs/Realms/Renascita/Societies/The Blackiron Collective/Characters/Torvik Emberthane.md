@@ -4,6 +4,15 @@ status: draft
 tags: []
 realm: '[[Renascita]]'
 affiliation: '[[The Blackiron Collective]]'
+nature: ''
+importance: ''
+alignment: ''
+gender: ''
+role: []
+magic: []
+living_status: ''
+era_of_birth: ''
+era_of_death: ''
 ---
 - **Role**: Overseer of the Coalforge Engine and head of maintenance operations.
 - **Personality**: Obsessive and stern, Torvik is entirely devoted to the Coalforge Engine’s upkeep.

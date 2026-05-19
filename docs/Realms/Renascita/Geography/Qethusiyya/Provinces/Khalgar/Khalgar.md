@@ -4,6 +4,10 @@ status: draft
 continent: '[[Qethusiyya]]'
 tags: []
 realm: '[[Renascita]]'
+climate: ''
+terrain: []
+dominant_culture: ''
+population_density: ''
 ---
 A low mist-haunted region southeast of the [[Kaldar Range]], Khalgar is plagued by memory-warping fogs and abandoned villages. Glyphs distort here, refusing to hold form. Travelers lose track of time, and sometimes of self.
 

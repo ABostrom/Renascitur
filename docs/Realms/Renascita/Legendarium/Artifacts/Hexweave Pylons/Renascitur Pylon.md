@@ -3,6 +3,12 @@ type: artifact
 status: draft
 tags: []
 realm: '[[Renascita]]'
+nature: ''
+importance: ''
+current_bearer: ''
+cursed: false
+divine: false
+magic: []
 ---
 Location: [[The Ruins of Baldur's Gate]]
 Status: Online 

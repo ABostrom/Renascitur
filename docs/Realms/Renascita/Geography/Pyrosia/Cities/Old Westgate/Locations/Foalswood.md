@@ -10,6 +10,8 @@ status: draft
 continent: '[[Pyrosia]]'
 realm: '[[Renascita]]'
 inside: '[[Old Westgate]]'
+nature: ''
+importance: ''
 ---
 ## Associated House
 - [[House Vadalis]]

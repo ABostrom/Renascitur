@@ -6,6 +6,17 @@ status: draft
 tags: []
 realm: '[[Renascita]]'
 kind: cult
+nature: ''
+importance: ''
+alignment: ''
+society_form: ''
+government: ''
+economy: ''
+seat: ''
+size: ''
+allies: []
+rivals: []
+magic: []
 ---
 Symbol: שקש๔
 

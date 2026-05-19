@@ -13,5 +13,9 @@ aliases:
 - End of the First Age
 year_display: ES 10000
 year: 10000
+importance: ''
+victors: []
+casualties: []
+outcome: ''
 ---
 With [[Solara]] fallen, [[Syuul, The Devourer|Lord Syuul]] imprisoned, and the last echoes of the divine era fading, [[the First Age]] comes to a close. The stars dim, and a long silence settles across the world.

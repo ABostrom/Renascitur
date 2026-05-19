@@ -10,6 +10,15 @@ tags:
 type: character
 status: draft
 realm: '[[Renascita]]'
+nature: ''
+importance: ''
+alignment: ''
+gender: ''
+role: []
+magic: []
+living_status: ''
+era_of_birth: ''
+era_of_death: ''
 ---
 ## [[Varkhaal Bloodlash|Varkhaal, the Broken-Jawed]]
 

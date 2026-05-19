@@ -4,6 +4,10 @@ status: stub
 continent: '[[Arcturia]]'
 tags: []
 realm: '[[Renascita]]'
+climate: ''
+terrain: []
+dominant_culture: ''
+population_density: ''
 ---
 ---
 

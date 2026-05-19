@@ -5,6 +5,10 @@ continent: '[[Pyrosia]]'
 tags: []
 realm: '[[Renascita]]'
 region: '[[Ashen Plains]]'
+climate: ''
+terrain: []
+dominant_culture: ''
+population_density: ''
 ---
 The forge of souls is one of the ancient [[Animus|Vecnarite]] workshops, repurposing [[Vecna]]’s [[Arcanometry|Arcanometric]] tools to build machines to fuel the unending war against [[Ishna]].
 

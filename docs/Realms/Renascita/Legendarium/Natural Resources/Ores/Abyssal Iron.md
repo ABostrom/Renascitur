@@ -4,6 +4,8 @@ status: draft
 tags: []
 realm: '[[Renascita]]'
 category: Ores
+nature: ''
+importance: ''
 ---
 ## Location  
 Harvested from the deep veins beneath [[The Wakened Trench]], where the pressure of the ocean and the proximity to the ancient wound of [[Leviathan]] has twisted the ore into something alien and half-living.

@@ -12,5 +12,9 @@ aliases:
 - Muradin’s Pilgrimage Begins
 year_display: ES 4000
 year: 4000
+importance: ''
+victors: []
+casualties: []
+outcome: ''
 ---
 Sensing imbalance in [[Weave|the weave]] of the world, [[Muradin]] leaves his people to seek the elemental truths. His journey would reshape the fate of the [[Grundthain]] and echo across ages.

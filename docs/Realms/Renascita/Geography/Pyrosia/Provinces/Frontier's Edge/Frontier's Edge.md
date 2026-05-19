@@ -8,6 +8,10 @@ type: region
 status: draft
 continent: '[[Pyrosia]]'
 realm: '[[Renascita]]'
+climate: ''
+terrain: []
+dominant_culture: ''
+population_density: ''
 ---
 ## Overview
 A war-torn and reclaimed expanse once ruled by [[Orc|orcs]] and aberrant creatures. Now it stands as the Empire’s final shield wall, fiercely protected by border clans and militant orders.

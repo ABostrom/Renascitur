@@ -13,6 +13,10 @@ spoken_language: '[[Dwarven]]'
 type: race
 status: draft
 parent_race: '[[Dwarves]]'
+nature: ''
+importance: ''
+lifespan: ''
+magic_affinity: []
 ---
 # Flamebound [[Dwarf|Dwarves]]
 

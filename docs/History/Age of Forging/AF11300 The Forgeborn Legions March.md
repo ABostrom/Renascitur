@@ -13,5 +13,9 @@ aliases:
 - The Forgeborn Legions March
 year_display: AF 11300
 year: 11300
+importance: ''
+victors: []
+casualties: []
+outcome: ''
 ---
 [[Vecna]] mass-produces the [[Forgeborn]] using bound souls and dark magic. They are immune to corruption — but also to mercy. These legions bring destruction across the planes.

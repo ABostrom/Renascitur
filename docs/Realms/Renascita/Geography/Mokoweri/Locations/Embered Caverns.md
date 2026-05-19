@@ -4,6 +4,8 @@ status: draft
 continent: '[[Mokoweri]]'
 tags: []
 realm: '[[Renascita]]'
+nature: ''
+importance: ''
 ---
 # Entrance Chamber - Luminescent Foyer
 

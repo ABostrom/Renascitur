@@ -4,6 +4,10 @@ status: stub
 tags: []
 lineage: Humans
 parent_race: '[[Elasi]]'
+nature: mortal
+importance: ''
+lifespan: ''
+magic_affinity: []
 ---
 ---
 

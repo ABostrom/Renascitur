@@ -10,6 +10,8 @@ status: draft
 continent: '[[Pyrosia]]'
 realm: '[[Renascita]]'
 inside: '[[Raining Bay]]'
+nature: ''
+importance: ''
 ---
 ## Associated House
 - [[House Phiarlan]]

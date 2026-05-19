@@ -12,5 +12,9 @@ aliases:
 - The World Trees Take Root
 year_display: ES 1000
 year: 1000
+importance: ''
+victors: []
+casualties: []
+outcome: ''
 ---
 The great World Trees—such as [[Irasandra]]—emerge in sacred sites across the world. These ancient living conduits bind [[soul]], nature, and magic into one vast, interconnected lattice.

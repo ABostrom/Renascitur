@@ -2,6 +2,9 @@
 type: cosmic-force
 status: draft
 tags: []
+nature: eldritch
+importance: ''
+alignment: ''
 ---
 **Aspect**: Light, Revelation, Illumination, Truth  
 **Opposes**: [[Noxar]]  

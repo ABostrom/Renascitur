@@ -10,6 +10,8 @@ status: draft
 continent: '[[Pyrosia]]'
 realm: '[[Renascita]]'
 inside: '[[Magnus’ Rest]]'
+nature: ''
+importance: ''
 ---
 ## Associated House
 - [[House Cannith]]

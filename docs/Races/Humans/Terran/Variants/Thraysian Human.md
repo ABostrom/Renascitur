@@ -16,6 +16,10 @@ spoken_language:
 type: race
 status: draft
 parent_race: '[[Terran]]'
+nature: ''
+importance: ''
+lifespan: ''
+magic_affinity: []
 ---
 # Thraysian Humans
 

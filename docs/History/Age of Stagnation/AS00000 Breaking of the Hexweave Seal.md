@@ -7,4 +7,8 @@ aliases:
 - Breaking of the Hexweave Seal
 year_display: AS (undated)
 year: 0
+importance: ''
+victors: []
+casualties: []
+outcome: ''
 ---

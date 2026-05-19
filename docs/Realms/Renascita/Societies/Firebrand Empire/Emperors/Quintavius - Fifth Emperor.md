@@ -4,6 +4,15 @@ status: draft
 tags: []
 realm: '[[Renascita]]'
 affiliation: '[[Firebrand Empire]]'
+nature: ''
+importance: ''
+alignment: ''
+gender: ''
+role: []
+magic: []
+living_status: ''
+era_of_birth: ''
+era_of_death: ''
 ---
 - **Appearance**: Quintavius is portrayed as a vibrant and charismatic [[docs/Races/Kyojin/Leonin/Leonin|Leonin]] with a mane of golden-brown that shines with vitality. His eyes are a warm green, and he is depicted wearing elegant robes and a crown adorned with precious gems, symbolizing his love for culture and the arts.
 - **Quote**: "An empire's heart beats in the rhythm of its culture and the voices of its people."

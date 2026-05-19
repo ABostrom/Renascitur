@@ -3,6 +3,13 @@ type: deity
 status: draft
 tags: []
 era_of_emergence: '[[Age of Forging]]'
+nature: divine
+importance: ''
+alignment: ''
+worshippers: []
+temples: []
+holy_day: ''
+symbol: ''
 ---
 ### **The Life of Muradin: The Visionary, the Smith, the God**
 

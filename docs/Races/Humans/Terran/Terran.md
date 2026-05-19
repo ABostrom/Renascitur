@@ -12,6 +12,10 @@ spoken_language:
 type: race
 status: draft
 lineage: Human
+nature: ''
+importance: ''
+lifespan: ''
+magic_affinity: []
 ---
 # Terran Humans
 

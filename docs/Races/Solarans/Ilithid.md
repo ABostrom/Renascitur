@@ -5,6 +5,10 @@ type: race
 status: stub
 tags: []
 lineage: Solarans
+nature: celestial
+importance: ''
+lifespan: ''
+magic_affinity: []
 ---
 ![[Syuul, The Devourer]]
 

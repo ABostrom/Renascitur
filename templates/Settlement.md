@@ -2,16 +2,21 @@
 type: settlement
 status: draft
 tags: []
-size: village    # hamlet | village | town | city | great-city | hold
-continent: ""
-region: ""
-era_founded: ""
-controlled_by: ""
+size: village
+continent: ''
+region: ''
+era_founded: ''
+controlled_by: ''
 populated_by: []
 created: <% tp.date.now("YYYY-MM-DD") %>
 updated: <% tp.date.now("YYYY-MM-DD") %>
+importance: ''
+population: ''
+climate: ''
+terrain: ''
+defenses: ''
+predominant_economy: ''
 ---
-
 # {{title}}
 
 ## Overview

@@ -4,6 +4,10 @@ status: draft
 continent: '[[Qethusiyya]]'
 tags: []
 realm: '[[Renascita]]'
+climate: ''
+terrain: []
+dominant_culture: ''
+population_density: ''
 ---
 # Zakhmir
 **Original Root:** Zakhm-e Jān

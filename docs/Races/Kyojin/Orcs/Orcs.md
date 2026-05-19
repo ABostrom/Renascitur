@@ -3,6 +3,10 @@ type: race
 status: stub
 tags: []
 lineage: Kyojin
+nature: mortal
+importance: ''
+lifespan: ''
+magic_affinity: []
 ---
 # Orcs
 

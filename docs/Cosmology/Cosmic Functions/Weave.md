@@ -4,6 +4,9 @@ aliases:
 type: cosmic-force
 status: draft
 tags: []
+nature: eldritch
+importance: ''
+alignment: ''
 ---
 **Nature**: The foundational structure of reality—like the fabric of spacetime  
 **Created By**: The [[Aeternum]], using the [[Aetherglyphs]]  

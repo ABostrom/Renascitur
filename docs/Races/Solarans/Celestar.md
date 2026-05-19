@@ -13,6 +13,10 @@ spoken_language:
 - '[[Serethi]]'
 type: race
 status: draft
+nature: ''
+importance: ''
+lifespan: ''
+magic_affinity: []
 ---
 # Celestar
 

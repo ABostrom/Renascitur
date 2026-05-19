@@ -4,6 +4,9 @@ status: draft
 tags: []
 realm: '[[Renascita]]'
 parent_faction: '[[The Stormbound of Thundrakar]]'
+nature: ''
+importance: ''
+alignment: ''
 ---
 ## Overview  
 The [[Windscribes]] are a sacred order among the [[Stormbound]] [[Dwarf|dwarves]] of [[Thundrakar]] — keepers of resonance, loreweavers of thunder, and chroniclers of stormsong.

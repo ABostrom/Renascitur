@@ -5,4 +5,6 @@ continent: '[[Pyrosia]]'
 tags: []
 realm: '[[Renascita]]'
 inside: '[[Magnus’ Rest]]'
+nature: ''
+importance: ''
 ---

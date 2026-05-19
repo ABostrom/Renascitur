@@ -13,5 +13,9 @@ aliases:
 - Creation of Lord Syuul
 year_display: ES 9100
 year: 9100
+importance: ''
+victors: []
+casualties: []
+outcome: ''
 ---
 Born from the aberrant fusion of a [[divine soul]] and star-forged flesh, [[Syuul, The Devourer|Lord Syuul]] becomes the first of the true [[Quintumvirate|God Hand]]—a being of entropy and godhood.

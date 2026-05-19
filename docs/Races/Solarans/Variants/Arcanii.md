@@ -15,6 +15,10 @@ spoken_language:
 - '[[Zytherin]]'
 type: race
 status: draft
+nature: ''
+importance: ''
+lifespan: ''
+magic_affinity: []
 ---
 # Arcanii
 

@@ -15,6 +15,10 @@ spoken_language:
 - '[[Thraysian Common]]'
 type: race
 status: draft
+nature: ''
+importance: ''
+lifespan: ''
+magic_affinity: []
 ---
 # Mokuun
 

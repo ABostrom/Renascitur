@@ -4,6 +4,8 @@ status: draft
 tags: []
 realm: '[[Renascita]]'
 category: Metals
+nature: ''
+importance: ''
 ---
 # [[Salt Hardened Steel]]
 

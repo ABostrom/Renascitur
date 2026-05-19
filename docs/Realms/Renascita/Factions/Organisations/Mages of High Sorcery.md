@@ -3,5 +3,8 @@ type: organisation
 status: draft
 tags: []
 realm: '[[Renascita]]'
+nature: ''
+importance: ''
+alignment: ''
 ---
 The mages of a high sorcery are a pseudo-secret organisation that spans across the various civilisations of the world. With no particular allegiances, although most members choose to reside openly in the [[Thraysian Magocracy]]. This is more out of pragmatism than choice. The open hostility to mages within the [[Firebrand Empire]] makes it very difficult for them to operate openly and safely.

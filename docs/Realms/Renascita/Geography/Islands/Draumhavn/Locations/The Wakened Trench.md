@@ -4,6 +4,8 @@ status: draft
 continent: '[[Draumhavn]]'
 tags: []
 realm: '[[Renascita]]'
+nature: ''
+importance: ''
 ---
 ## Overview
 

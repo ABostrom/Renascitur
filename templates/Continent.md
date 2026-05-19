@@ -2,7 +2,7 @@
 type: continent
 status: draft
 tags: []
-era: ""
+era: ''
 terrain: []
 inhabited_by: []
 provinces: []
@@ -11,8 +11,10 @@ mountains: []
 rivers: []
 created: <% tp.date.now("YYYY-MM-DD") %>
 updated: <% tp.date.now("YYYY-MM-DD") %>
+climate: ''
+dominant_culture: ''
+population_density: ''
 ---
-
 # {{title}}
 
 ## Overview

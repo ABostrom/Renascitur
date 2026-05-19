@@ -7,6 +7,8 @@ status: draft
 tags: []
 realm: '[[Renascita]]'
 category: Crystals
+nature: ''
+importance: ''
 ---
 ## Location  
 Mined from glacial pockets and resonant chambers beneath the [[Pulsecore]], deep within the ice-wrought tunnels of the [[Icebound]] holds. It is found where the glacier itself pulses with faint, rhythmic vibrations.

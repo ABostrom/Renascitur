@@ -13,5 +13,9 @@ aliases:
 - Kas Finds the Blade of Typhon
 year_display: AF 11980
 year: 11980
+importance: ''
+victors: []
+casualties: []
+outcome: ''
 ---
 Kas, once [[Vecna]]’s most loyal general, finds the **Blade of [[Typhon, The Archon of Death|Typhon]]** among the ruins. The cursed weapon whispers to him, eroding his loyalty and preparing him for betrayal.

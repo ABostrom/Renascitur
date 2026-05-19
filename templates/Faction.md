@@ -2,16 +2,25 @@
 type: faction
 status: draft
 tags: []
-realm: ""
-era_founded: ""
-era_dissolved: ""
-alignment: ""
+realm: ''
+era_founded: ''
+era_dissolved: ''
+alignment: ''
 leadership: []
 seats_of_power: []
 created: <% tp.date.now("YYYY-MM-DD") %>
 updated: <% tp.date.now("YYYY-MM-DD") %>
+nature: ''
+importance: ''
+society_form: ''
+government: ''
+economy: ''
+seat: ''
+size: ''
+allies: []
+rivals: []
+magic: []
 ---
-
 # {{title}}
 
 ## Origins

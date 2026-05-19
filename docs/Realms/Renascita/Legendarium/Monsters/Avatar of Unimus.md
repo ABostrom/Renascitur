@@ -3,6 +3,15 @@ type: character
 status: draft
 tags: []
 realm: '[[Renascita]]'
+nature: ''
+importance: ''
+alignment: ''
+gender: ''
+role: []
+magic: []
+living_status: ''
+era_of_birth: ''
+era_of_death: ''
 ---
 Here is the 5e stat block for an Efreeti, lightly reskinned to represent a celestial being, the Avatar of [[Unimus]]:
 

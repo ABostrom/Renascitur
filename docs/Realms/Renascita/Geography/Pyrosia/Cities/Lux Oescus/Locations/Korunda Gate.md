@@ -10,6 +10,8 @@ status: draft
 continent: '[[Pyrosia]]'
 realm: '[[Renascita]]'
 inside: '[[Lux Oescus]]'
+nature: ''
+importance: ''
 ---
 ## Associated House
 - [[House Kundarak]]

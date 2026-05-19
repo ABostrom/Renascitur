@@ -41,6 +41,9 @@ rivers:
 status: draft
 tags: []
 realm: '[[Renascita]]'
+climate: ''
+dominant_culture: ''
+population_density: ''
 ---
 **Pyrosia** is a vast and diverse land of elemental tension, tectonic fire, and sprawling nations. Bordered by volcanic coastlines and inland mountain arcs, the continent hosts an enormous range of biomes — from the charred [[Ashgatar]] highlands to the verdant woodlands near [[Raining Bay]].
 

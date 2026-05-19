@@ -3,6 +3,13 @@ type: deity
 status: stub
 tags: []
 era_of_emergence: '[[Age of Stagnation]]'
+nature: divine
+importance: ''
+alignment: ''
+worshippers: []
+temples: []
+holy_day: ''
+symbol: ''
 ---
 ![[Luxan]]
 

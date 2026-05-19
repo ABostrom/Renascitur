@@ -3,6 +3,9 @@ type: organisation
 status: draft
 tags: []
 realm: '[[Renascita]]'
+nature: ''
+importance: ''
+alignment: ''
 ---
 Insignia: ∀
 

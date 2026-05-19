@@ -4,6 +4,13 @@ status: draft
 tags: []
 pantheon: '[[Noxar Gods]]'
 era_of_emergence: '[[Age of Stagnation]]'
+nature: divine
+importance: ''
+alignment: ''
+worshippers: []
+temples: []
+holy_day: ''
+symbol: ''
 ---
 # God of Death, The Anima Mea
 

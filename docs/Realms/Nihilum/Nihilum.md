@@ -2,5 +2,7 @@
 type: landmark
 status: stub
 tags: []
+nature: ''
+importance: ''
 ---
 The plane of [[Chaor]] and [[Noxar]]

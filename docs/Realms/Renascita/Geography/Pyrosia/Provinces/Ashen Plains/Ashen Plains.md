@@ -8,6 +8,10 @@ type: region
 status: draft
 continent: '[[Pyrosia]]'
 realm: '[[Renascita]]'
+climate: ''
+terrain: []
+dominant_culture: ''
+population_density: ''
 ---
 ## Overview
 The political and cultural heartland of the Empire. Fertile, stable, and heavily patrolled, this region is home to many noble houses, institutions of power, and imperial bureaucracy.

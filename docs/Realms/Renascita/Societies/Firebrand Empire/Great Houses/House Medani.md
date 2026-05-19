@@ -6,6 +6,13 @@ status: draft
 tags: []
 realm: '[[Renascita]]'
 parent_faction: '[[Firebrand Empire]]'
+nature: ''
+importance: ''
+alignment: ''
+government: ''
+size: ''
+allies: []
+rivals: []
 ---
 ## Domain
 *Detection*

@@ -2,14 +2,17 @@
 type: region
 status: draft
 tags: []
-continent: ""
-era: ""
+continent: ''
+era: ''
 features: []
 settlements: []
 created: <% tp.date.now("YYYY-MM-DD") %>
 updated: <% tp.date.now("YYYY-MM-DD") %>
+climate: ''
+terrain: []
+dominant_culture: ''
+population_density: ''
 ---
-
 # {{title}}
 
 ## Overview

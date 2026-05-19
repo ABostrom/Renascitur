@@ -15,6 +15,10 @@ written_language:
 - - Elemental Script
 type: race
 status: draft
+nature: ''
+importance: ''
+lifespan: ''
+magic_affinity: []
 ---
 # Elasi
 

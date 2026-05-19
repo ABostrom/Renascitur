@@ -12,5 +12,9 @@ aliases:
 - Ishna Corrupts Mortals
 year_display: ES 6300
 year: 6300
+importance: ''
+victors: []
+casualties: []
+outcome: ''
 ---
 [[Ishna]] begins whispering to mortals. Cults form in secret, ancient rites are twisted, and the first of the [[Quintumvirate|God Hand]] are born from these [[Entropy|Aberrant]]nt unions.

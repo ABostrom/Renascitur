@@ -11,6 +11,10 @@ spoken_language: '[[Karathic]]'
 type: race
 status: draft
 lineage: Grundthains
+nature: mortal
+importance: ''
+lifespan: ''
+magic_affinity: []
 ---
 # Grundthain
 

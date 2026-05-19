@@ -4,6 +4,10 @@ status: draft
 continent: '[[Mokoweri]]'
 tags: []
 realm: '[[Renascita]]'
+climate: ''
+terrain: []
+dominant_culture: ''
+population_density: ''
 ---
 This region is characterized by its vast, dense canopy that provides a home to countless creatures. Here, the trees are so tall and thick that sunlight barely penetrates the forest floor, creating a cool and shaded environment below.
 

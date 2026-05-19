@@ -13,6 +13,10 @@ spoken_language:
 - '[[docs/Languages/Modern/Leonin|Leonin]]'
 type: race
 status: draft
+nature: ''
+importance: ''
+lifespan: ''
+magic_affinity: []
 ---
 # Leonin
 

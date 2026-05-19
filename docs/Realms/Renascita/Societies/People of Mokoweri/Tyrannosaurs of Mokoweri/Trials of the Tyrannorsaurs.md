@@ -4,6 +4,15 @@ status: draft
 tags: []
 realm: '[[Renascita]]'
 affiliation: '[[People of Mokoweri]]'
+nature: ''
+importance: ''
+alignment: ''
+gender: ''
+role: []
+magic: []
+living_status: ''
+era_of_birth: ''
+era_of_death: ''
 ---
 "The [[Solaran|Solarans]] were guardians of wisdom and keepers of balance. They valued harmony between the natural world and the power they harnessed. Can you truly embody these ideals?"
 

@@ -6,6 +6,9 @@ aliases:
 type: cosmic-force
 status: draft
 tags: []
+nature: eldritch
+importance: ''
+alignment: ''
 ---
 **Aspect**: Unmaking, Dissolution, Void  
 **Opposes**: [[Weave]] itself  

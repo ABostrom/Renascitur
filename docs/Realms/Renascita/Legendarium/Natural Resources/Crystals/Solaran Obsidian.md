@@ -6,6 +6,8 @@ status: draft
 tags: []
 realm: '[[Renascita]]'
 category: Crystals
+nature: ''
+importance: ''
 ---
 ## Location
 

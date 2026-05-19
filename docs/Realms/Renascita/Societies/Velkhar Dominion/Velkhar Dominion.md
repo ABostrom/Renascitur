@@ -3,6 +3,17 @@ type: faction
 status: draft
 realm: '[[Renascita]]'
 tags: []
+nature: ''
+importance: ''
+alignment: ''
+society_form: ''
+government: ''
+economy: ''
+seat: ''
+size: ''
+allies: []
+rivals: []
+magic: []
 ---
 **Type**:: Sovereign Protectorate  
 **Capital**:: [[Calvereth]]  

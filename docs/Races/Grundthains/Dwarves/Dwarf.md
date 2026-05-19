@@ -12,6 +12,10 @@ aat-race-tier: distinct
 spoken_language: '[[Dwarven]]'
 type: race
 status: draft
+nature: ''
+importance: ''
+lifespan: ''
+magic_affinity: []
 ---
 # Dwarves
 

@@ -7,4 +7,8 @@ aliases:
 - Hexweave Binding
 year_display: AF (undated)
 year: 0
+importance: ''
+victors: []
+casualties: []
+outcome: ''
 ---

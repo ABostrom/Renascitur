@@ -2,5 +2,8 @@
 type: cosmic-force
 status: stub
 tags: []
+nature: eldritch
+importance: ''
+alignment: ''
 ---
 When [[Ordar]] and [[Chaor]] are found in equal measure they are said to form a perfectly harmonious system of energy systems. That form and destroy over and over again. 

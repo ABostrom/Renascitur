@@ -4,6 +4,12 @@ status: draft
 continent: '[[Arcturia]]'
 tags: []
 realm: '[[Renascita]]'
+importance: ''
+population: ''
+climate: ''
+terrain: ''
+defenses: ''
+predominant_economy: ''
 ---
 ### **Runehart: The Lost Hold of [[Muradin]]**
 

@@ -13,6 +13,8 @@ spoken_by:
 type: language
 status: draft
 kind: modern
+nature: ''
+importance: ''
 ---
 # Dwarven
 

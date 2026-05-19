@@ -15,6 +15,10 @@ spoken_language:
 type: race
 status: draft
 parent_race: '[[Leonin]]'
+nature: ''
+importance: ''
+lifespan: ''
+magic_affinity: []
 ---
 # Imperial [[docs/Races/Kyojin/Leonin/Leonin|Leonin]]
 

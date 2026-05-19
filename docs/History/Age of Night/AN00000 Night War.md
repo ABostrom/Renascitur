@@ -7,5 +7,9 @@ aliases:
 - Night War
 year_display: AN (undated)
 year: 0
+importance: ''
+victors: []
+casualties: []
+outcome: ''
 ---
 The night war was informal at first, and began nearly a decade after the [[Psychic Schism]].

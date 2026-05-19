@@ -2,15 +2,18 @@
 type: race
 status: draft
 tags: []
-lineage: ""
-origin_plane: ""
-era_of_origin: ""
+lineage: ''
+origin_plane: ''
+era_of_origin: ''
 spoken_languages: []
 related_cultures: []
 created: <% tp.date.now("YYYY-MM-DD") %>
 updated: <% tp.date.now("YYYY-MM-DD") %>
+nature: ''
+importance: ''
+lifespan: ''
+magic_affinity: []
 ---
-
 # {{title}}
 
 ## Origins

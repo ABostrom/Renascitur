@@ -11,6 +11,10 @@ aat-race-tier: elder
 spoken_language: '[[Elyssan]]'
 type: race
 status: draft
+nature: ''
+importance: ''
+lifespan: ''
+magic_affinity: []
 ---
 # Solaran
 

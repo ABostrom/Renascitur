@@ -3,6 +3,9 @@ type: continent
 status: stub
 tags: []
 realm: '[[Renascita]]'
+climate: ''
+dominant_culture: ''
+population_density: ''
 ---
 ![[Coral Reef Bay]]
 

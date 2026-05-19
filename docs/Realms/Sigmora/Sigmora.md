@@ -2,6 +2,8 @@
 type: landmark
 status: draft
 tags: []
+nature: ''
+importance: ''
 ---
 The plane of [[Ordar]] and [[Specular]]
 

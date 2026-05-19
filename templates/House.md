@@ -2,18 +2,24 @@
 type: house
 status: draft
 tags: []
-realm: ""
-era_founded: ""
-era_extinct: ""
-founder: ""
-seat: ""
-current_head: ""
+realm: ''
+era_founded: ''
+era_extinct: ''
+founder: ''
+seat: ''
+current_head: ''
 members: []
-sigil: ""
+sigil: ''
 created: <% tp.date.now("YYYY-MM-DD") %>
 updated: <% tp.date.now("YYYY-MM-DD") %>
+nature: ''
+importance: ''
+alignment: ''
+government: ''
+size: ''
+allies: []
+rivals: []
 ---
-
 # {{title}}
 
 ## Lineage

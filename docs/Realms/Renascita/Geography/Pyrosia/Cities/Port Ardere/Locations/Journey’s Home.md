@@ -10,6 +10,8 @@ status: draft
 continent: '[[Pyrosia]]'
 realm: '[[Renascita]]'
 inside: '[[Port Ardere]]'
+nature: ''
+importance: ''
 ---
 ## Associated House
 - [[House Orien]]

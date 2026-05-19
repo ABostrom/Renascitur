@@ -7,4 +7,8 @@ aliases:
 - The Forge Wars
 year_display: AF (undated)
 year: 0
+importance: ''
+victors: []
+casualties: []
+outcome: ''
 ---

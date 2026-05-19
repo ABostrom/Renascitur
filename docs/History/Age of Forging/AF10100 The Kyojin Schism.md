@@ -13,5 +13,9 @@ aliases:
 - The Kyojin Schism
 year_display: AF 10100
 year: 10100
+importance: ''
+victors: []
+casualties: []
+outcome: ''
 ---
 A spiritual divide fractures the [[Kyojin]] people. One faction embraces celestial order and discipline, becoming the **[[docs/Races/Kyojin/Leonin/Leonin|Leonin]]**. The other embraces primal chaos and raw spiritualism, becoming the **[[Orc|Orcs]]**. This split severs their connection to [[Sylara]] and marks the decline of their shared World Tree.

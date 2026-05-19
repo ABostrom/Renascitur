@@ -5,6 +5,8 @@ continent: '[[Arcturia]]'
 tags: []
 realm: '[[Renascita]]'
 inside: '[[Uftine]]'
+nature: ''
+importance: ''
 ---
 # Crystalward Gate
 

@@ -4,6 +4,17 @@ status: stub
 tags: []
 realm: '[[Renascita]]'
 parent_faction: '[[Dwarven Holds]]'
+nature: ''
+importance: ''
+alignment: ''
+society_form: ''
+government: ''
+economy: ''
+seat: ''
+size: ''
+allies: []
+rivals: []
+magic: []
 ---
 ---
 

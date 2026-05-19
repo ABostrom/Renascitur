@@ -13,5 +13,9 @@ aliases:
 - Collapse of Runehart
 year_display: AF 11751
 year: 11751
+importance: ''
+victors: []
+casualties: []
+outcome: ''
 ---
 The city of [[Runehart]] crumbles in the aftermath of [[Typhon, The Archon of Death|Typhon]]’s sealing. Survivors scatter, taking fragments of the Iron Codex with them. The [[Dwarf|dwarves]] lose their greatest sanctuary.

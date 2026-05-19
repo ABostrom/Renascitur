@@ -8,6 +8,10 @@ type: region
 status: draft
 continent: '[[Pyrosia]]'
 realm: '[[Renascita]]'
+climate: ''
+terrain: []
+dominant_culture: ''
+population_density: ''
 ---
 ## Overview
 Strategically vital, the Flame Coast manages the Empire’s naval strength, diplomatic outreach, and maritime commerce. Its skies are ever stormy, and its towers shine with arcane light.

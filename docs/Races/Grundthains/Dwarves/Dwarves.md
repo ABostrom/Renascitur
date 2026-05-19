@@ -3,6 +3,10 @@ type: race
 status: stub
 tags: []
 lineage: Grundthain
+nature: ''
+importance: ''
+lifespan: ''
+magic_affinity: []
 ---
 # Dwarves
 

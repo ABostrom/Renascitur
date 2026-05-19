@@ -3,6 +3,9 @@ type: technology
 status: draft
 tags: []
 realm: '[[Renascita]]'
+nature: ''
+importance: ''
+magic: []
 ---
 ### [[Solaran]] Airship: The Radiant Dawn
 

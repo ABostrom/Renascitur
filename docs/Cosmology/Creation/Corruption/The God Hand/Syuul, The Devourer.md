@@ -4,6 +4,9 @@ aliases:
 type: cosmic-force
 status: draft
 tags: []
+nature: corrupted
+importance: ''
+alignment: chaotic-evil
 ---
 ## Syuul, The Devourer
 ## The First [[Ilithid]]

@@ -4,6 +4,8 @@ status: draft
 continent: '[[Mokoweri]]'
 tags: []
 realm: '[[Renascita]]'
+nature: ''
+importance: ''
 ---
 - **Cultural Influence**: Named by the [[Solaran]]'s, whose pursuit of knowledge and enlightenment shaped their civilization.
 - **Meaning**:
