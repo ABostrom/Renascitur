@@ -1,16 +1,19 @@
 ---
 aliases:
-- Rahalan Humans
+- Mokoweri Humans
 tags:
 - race
 - cultural-variant
 - humans
 - tribal
-lineage: Terran
-origin_plane: '[[Renascita]]'
+lineage: Humans
+origin_plane:
+- '[[Renascita]]'
 aat-race-tier: variant
 spoken_language:
+- '[[Imperial Common]]'
 - '[[Thraysian Common]]'
+- '[[Mokoweran]]'
 type: race
 status: draft
 parent_race: '[[Terran]]'
@@ -19,48 +22,48 @@ importance: notable
 lifespan: ''
 magic_affinity: []
 ---
-# Rahalan Humans
+# [[Mokoweri]] Humans
 
 **Summary:**  
-The Rahalan are nomadic desert tribes descended from Terran humans. Known for their resilience and adaptability, they navigate the harsh desert and survive through tight-knit tribal bonds.
+The [[Mokoweri]] are tribal [[Terran|Terrans]] living in harmony with the natural world on the island of [[docs/Realms/Renascita/Locations and Cities/Mokoweri/Mokoweri|Mokoweri]]. They have embraced a lifestyle centred around community, nature, and coexistence.
 
 ---
 
 ## Origins
 
-- Exiles and wanderers who adapted to the [[Al-Ramal]] desert to the north of the [[Qethusiyya]].
+- Descendants of Terran humans adapted to island jungle life.
 
 ---
 
 ## Appearance
 
-- Sun-darkened skin, lean and muscular builds.  
-- Often adorned with practical desert garb and tribal markings.
+- Shorter, lean builds with skin tones ranging from light to dark brown.  
+- Often bear tribal tattoos and markings.
 
 ---
 
 ## Culture
 
-- Tribal, valuing honor, survival, and oral traditions.  
-- Skilled in desert navigation and resource management.
+- Deeply connected to nature and the [[Saurian|Saurians]].  
+- Communal and spiritual, with strong traditions in hunting and crafting.
 
 ---
 
 ## Abilities
 
-- Expert survivalists and desert warriors.  
-- Proficient in stealth, tracking, and desert combat.
+- Skilled hunters, gatherers, and craftsmen.  
+- Unique communication abilities with jungle creatures.
 
 ---
 
 ## Notes
 
-- Known for their independence and fierce loyalty to kin.  
-- Often traders, scouts, or raiders on the empire’s fringes.
+- Maintain a symbiotic relationship with the island’s ecosystem.  
+- Distrust outsiders and protect their homeland fiercely.
 
 ---
 
-> “The sands hide many secrets.”
+> “The jungle breathes through us.”
 
 ---
 

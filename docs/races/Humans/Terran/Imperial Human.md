@@ -1,17 +1,16 @@
 ---
 aliases:
-- Uftine Humans
+- Imperial Humans
 tags:
 - race
 - cultural-variant
 - humans
-- hardy
-lineage: Terran
+- imperial
+lineage: Humans
 origin_plane: '[[Renascita]]'
 aat-race-tier: variant
 spoken_language:
 - '[[Imperial Common]]'
-- '[[Dwarven]]'
 type: race
 status: draft
 parent_race: '[[Terran]]'
@@ -20,48 +19,48 @@ importance: notable
 lifespan: ''
 magic_affinity: []
 ---
-# Uftine Humans
+# Imperial Humans
 
 **Summary:**  
-The [[Uftine]] are hardy [[Terran|Terrans]] adapted to the frozen, harsh northern regions. They have developed thick builds and a resilience born of endless winters.
+Imperial Humans hail from the [[Firebrand Empire]], known for their strict adherence to order, honor, and martial prowess. They are disciplined, proud, and maintain a deep mistrust of magic.
 
 ---
 
 ## Origins
 
-- Descendants of [[Terran|Terrans]] who settled the icy north.
+- Descended from Terran humans integrated into the empire’s militaristic and political systems.
 
 ---
 
 ## Appearance
 
-- Fair to ruddy skin with rosy cheeks from cold exposure.  
-- Often light eyes and hair, suited for snowy environments.
+- Tall and muscular, with sharp features and usually dark hair.  
+- Favor fine clothes and armor denoting social status.
 
 ---
 
 ## Culture
 
-- Practical and community-focused, skilled in survival and craftsmanship.  
-- Strong bonds with nearby [[Icebound]] [[Dwarf|Dwarves]].
+- Hierarchical, valuing loyalty, discipline, and tradition.  
+- Fear and suppress magic, emphasizing structure and law.
 
 ---
 
 ## Abilities
 
-- Adapted for cold climates with endurance and fortitude.  
-- Skilled hunters, fishers, and craftspeople.
+- Skilled warriors and administrators.  
+- Adapt well to military and bureaucratic roles.
 
 ---
 
 ## Notes
 
-- Known for their stoic nature and strong family ties.  
-- Maintain trade and cultural exchanges with dwarven clans.
+- Central to maintaining the empire’s power and influence.  
+- Often at odds culturally with magic users and other races.
 
 ---
 
-> “The frost does not break us.”
+> “Strength through order, honor through discipline.”
 
 ---
 

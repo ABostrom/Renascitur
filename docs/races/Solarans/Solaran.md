@@ -5,7 +5,7 @@ tags:
 - race
 - elder
 - celestial
-lineage: Elder Races
+lineage: Solarans
 origin_plane: '[[Solirion]]'
 aat-race-tier: elder
 spoken_language: '[[Elyssan]]'

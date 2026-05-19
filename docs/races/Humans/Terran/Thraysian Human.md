@@ -6,8 +6,7 @@ tags:
 - cultural-variant
 - humans
 - magocratic
-lineage:
-- '[[Terran]]'
+lineage: Humans
 origin_plane:
 - '[[Renascita]]'
 aat-race-tier: variant

@@ -1,16 +1,17 @@
 ---
 aliases:
-- Imperial Humans
+- Uftine Humans
 tags:
 - race
 - cultural-variant
 - humans
-- imperial
-lineage: Terran
+- hardy
+lineage: Humans
 origin_plane: '[[Renascita]]'
 aat-race-tier: variant
 spoken_language:
 - '[[Imperial Common]]'
+- '[[Dwarven]]'
 type: race
 status: draft
 parent_race: '[[Terran]]'
@@ -19,48 +20,48 @@ importance: notable
 lifespan: ''
 magic_affinity: []
 ---
-# Imperial Humans
+# Uftine Humans
 
 **Summary:**  
-Imperial Humans hail from the [[Firebrand Empire]], known for their strict adherence to order, honor, and martial prowess. They are disciplined, proud, and maintain a deep mistrust of magic.
+The [[Uftine]] are hardy [[Terran|Terrans]] adapted to the frozen, harsh northern regions. They have developed thick builds and a resilience born of endless winters.
 
 ---
 
 ## Origins
 
-- Descended from Terran humans integrated into the empire’s militaristic and political systems.
+- Descendants of [[Terran|Terrans]] who settled the icy north.
 
 ---
 
 ## Appearance
 
-- Tall and muscular, with sharp features and usually dark hair.  
-- Favor fine clothes and armor denoting social status.
+- Fair to ruddy skin with rosy cheeks from cold exposure.  
+- Often light eyes and hair, suited for snowy environments.
 
 ---
 
 ## Culture
 
-- Hierarchical, valuing loyalty, discipline, and tradition.  
-- Fear and suppress magic, emphasizing structure and law.
+- Practical and community-focused, skilled in survival and craftsmanship.  
+- Strong bonds with nearby [[Icebound]] [[Dwarf|Dwarves]].
 
 ---
 
 ## Abilities
 
-- Skilled warriors and administrators.  
-- Adapt well to military and bureaucratic roles.
+- Adapted for cold climates with endurance and fortitude.  
+- Skilled hunters, fishers, and craftspeople.
 
 ---
 
 ## Notes
 
-- Central to maintaining the empire’s power and influence.  
-- Often at odds culturally with magic users and other races.
+- Known for their stoic nature and strong family ties.  
+- Maintain trade and cultural exchanges with dwarven clans.
 
 ---
 
-> “Strength through order, honor through discipline.”
+> “The frost does not break us.”
 
 ---
 

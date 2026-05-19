@@ -5,7 +5,7 @@ tags:
 - race
 - elder
 - primal
-lineage: Elder Races
+lineage: Kyojin
 origin_plane: '[[Veltharyn]]'
 aat-race-tier: elder
 spoken_language:
