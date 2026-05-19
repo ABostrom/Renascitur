@@ -1,11 +1,20 @@
-"""Rename History/<age>/<title>.md to <CODE><YYYY> <title>.md.
+"""Rename History/<age>/<title>.md to <CODE><YYYYY> <title>.md.
 
-Year is extracted from frontmatter `year:` if present and integer,
-otherwise defaults to 0000 (undated within era). Skips the era
-summary file itself (matches "<age folder>/<canonical name>.md").
+The numeric portion is the in-world year, sourced in priority order from:
+  1. frontmatter `aat-event-start-date` (Advanced Timeline plugin field —
+     Aaron's existing per-event dating system)
+  2. frontmatter `year`
+  3. 0 (undated within era)
 
-Adds the old title as an alias in frontmatter so existing
-[[Hexweave Binding]] wikilinks still resolve to the renamed file.
+Padded to 5 digits to handle the existing absolute-timeline range
+(current max ~12000) with headroom up to 99999.
+
+Skips the era summary file itself. Idempotent: re-running after dates
+are updated will re-rename to the corrected prefix; existing aliases
+are preserved.
+
+Adds the original (pre-prefix) title as an alias in frontmatter so
+existing [[Hexweave Binding]] wikilinks still resolve.
 """
 
 from __future__ import annotations
@@ -18,7 +27,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from refactor.common import (
-    DOCS_DIR, read_frontmatter, write_frontmatter, git_mv, merge_metadata
+    DOCS_DIR, read_frontmatter, write_frontmatter, git_mv
 )
 
 AGE_CODE = {
@@ -28,7 +37,36 @@ AGE_CODE = {
     "Age of Night":           "AN",
 }
 
-PREFIX_RE = re.compile(r"^(ES|AF|AS|AN)\d{4} ")
+# Matches any of our age codes followed by 4-6 digits and 1+ trailing spaces.
+# Tolerates both old 4-digit and new 5-digit padding, and double-space artifacts
+# from a prior buggy run, so this script is idempotent.
+PREFIX_RE = re.compile(r"^(ES|AF|AS|AN)\d{4,6} +")
+
+PAD_WIDTH = 5
+
+
+def extract_year(meta: dict) -> int:
+    """Return an integer year from frontmatter, in priority order."""
+    for key in ("aat-event-start-date", "year"):
+        val = meta.get(key)
+        if isinstance(val, int) and val >= 0:
+            return val
+        if isinstance(val, str):
+            try:
+                n = int(val)
+                if n >= 0:
+                    return n
+            except ValueError:
+                pass
+    return 0
+
+
+def strip_prefix(stem: str) -> str:
+    """Remove a leading <CODE><digits> + whitespace prefix from a filename stem."""
+    m = PREFIX_RE.match(stem)
+    if m:
+        return stem[m.end():]
+    return stem
 
 
 def main() -> None:
@@ -43,37 +81,55 @@ def main() -> None:
             if md == era_summary:
                 continue
             name = md.name
-            if PREFIX_RE.match(name):
-                print("Skip (already prefixed): {}".format(name))
-                continue
             meta, body = read_frontmatter(md)
-            year = meta.get("year", 0)
-            if not isinstance(year, int) or year < 0:
-                year = 0
-            year_str = "{:04d}".format(year)
-            stem = md.stem  # filename without .md
-            new_name = "{}{} {}.md".format(code, year_str, stem)
-            new_path = md.with_name(new_name)
-            if new_path.exists():
-                print("WARN: target exists, skipping: {}".format(new_name))
+            year = extract_year(meta)
+            year_str = "{:0{w}d}".format(year, w=PAD_WIDTH)
+
+            # Canonical stem without any existing CODE-digits prefix.
+            current_stem = md.stem
+            canonical_stem = strip_prefix(current_stem)
+            new_name = "{}{} {}.md".format(code, year_str, canonical_stem)
+
+            # Build the cleaned/canonical metadata that should be on the file
+            # whether or not we rename.
+            raw_aliases = meta.get("aliases", [])
+            if not isinstance(raw_aliases, list):
+                raw_aliases = [raw_aliases]
+            seen = set()
+            cleaned_aliases = []
+            for a in raw_aliases:
+                if isinstance(a, str):
+                    cleaned = a.strip()
+                    if cleaned and cleaned not in seen:
+                        seen.add(cleaned)
+                        cleaned_aliases.append(cleaned)
+            if canonical_stem not in seen:
+                cleaned_aliases.append(canonical_stem)
+            year_display = "{} {}".format(code, year) if year else "{} (undated)".format(code)
+
+            metadata_needs_write = (
+                meta.get("aliases") != cleaned_aliases
+                or meta.get("year") != year
+                or meta.get("year-display") != year_display
+            )
+
+            if metadata_needs_write:
+                meta["aliases"] = cleaned_aliases
+                meta["year"] = year
+                meta["year-display"] = year_display
+                write_frontmatter(md, meta, body)
+
+            if name == new_name:
+                if metadata_needs_write:
+                    print("Updated metadata: {}".format(name))
+                else:
+                    print("Skip (already correct): {}".format(name))
                 continue
 
-            # Add old title as alias before rename
-            existing_aliases = meta.get("aliases", [])
-            if not isinstance(existing_aliases, list):
-                existing_aliases = [existing_aliases]
-            if stem not in existing_aliases:
-                existing_aliases.append(stem)
-            year_display = "{} {}".format(code, year) if year else "{} (undated)".format(code)
-            updated_meta = merge_metadata(meta, {
-                "aliases": existing_aliases,
-                "year-display": year_display,
-            })
-            # Force overwrite of aliases/year-display since merge_metadata
-            # preserves existing values for non-list keys.
-            updated_meta["aliases"] = existing_aliases
-            updated_meta["year-display"] = year_display
-            write_frontmatter(md, updated_meta, body)
+            new_path = md.with_name(new_name)
+            if new_path.exists() and new_path != md:
+                print("WARN: target exists, skipping: {}".format(new_name))
+                continue
 
             git_mv(md, new_path)
             print("Renamed: {}/{} -> {}".format(age_folder, name, new_name))
