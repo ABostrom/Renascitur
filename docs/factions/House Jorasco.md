@@ -46,7 +46,7 @@ House Jorasco serves a critical role within the Firebrand Empire, overseeing med
 
 ```dataview
 LIST FROM ""
-WHERE type = "character" AND string(affiliation) = string(this.file.link)
+WHERE type = "character" AND contains(file.outlinks, this.file.link)
 SORT file.name ASC
 ```
 

@@ -92,7 +92,7 @@ For the Rahalans, the Gaia vessels are more than architectural marvels; they are
 
 ```dataview
 LIST FROM ""
-WHERE type = "faction" AND string(parent_faction) = string(this.file.link)
+WHERE type = "faction" AND contains(file.outlinks, this.file.link)
 SORT file.name ASC
 ```
 
@@ -104,7 +104,7 @@ TABLE WITHOUT ID
   race AS "Race",
   location AS "Location"
 FROM ""
-WHERE type = "character" AND string(affiliation) = string(this.file.link)
+WHERE type = "character" AND contains(file.outlinks, this.file.link)
 SORT file.name ASC
 ```
 
@@ -112,7 +112,7 @@ SORT file.name ASC
 
 ```dataview
 LIST FROM ""
-WHERE type = "organisation" AND string(parent_faction) = string(this.file.link)
+WHERE type = "organisation" AND contains(file.outlinks, this.file.link)
 SORT file.name ASC
 ```
 

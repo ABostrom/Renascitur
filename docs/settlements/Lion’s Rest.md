@@ -45,7 +45,7 @@ The proud capital of the Firebrand Empire, seat of the Emperor and the great cou
 
 ```dataview
 LIST FROM ""
-WHERE type = "landmark" AND string(inside) = string(this.file.link)
+WHERE type = "landmark" AND contains(file.outlinks, this.file.link)
 SORT file.name ASC
 ```
 
@@ -57,7 +57,7 @@ TABLE WITHOUT ID
   race AS "Race",
   affiliation AS "Affiliation"
 FROM ""
-WHERE type = "character" AND string(location) = string(this.file.link)
+WHERE type = "character" AND contains(file.outlinks, this.file.link)
 SORT file.name ASC
 ```
 
@@ -69,7 +69,7 @@ TABLE WITHOUT ID
   era AS "Era",
   year_display AS "When"
 FROM ""
-WHERE type = "event" AND string(location) = string(this.file.link)
+WHERE type = "event" AND contains(file.outlinks, this.file.link)
 SORT year ASC
 ```
 

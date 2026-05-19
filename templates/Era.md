@@ -37,7 +37,7 @@ TABLE WITHOUT ID
   location AS "Where",
   status AS "Status"
 FROM ""
-WHERE type = "event" AND string(era) = string(this.file.link)
+WHERE type = "event" AND contains(file.outlinks, this.file.link)
 SORT year ASC
 ```
 
@@ -45,7 +45,7 @@ SORT year ASC
 
 ```dataview
 LIST FROM ""
-WHERE type = "chronicle" AND string(era_of_composition) = string(this.file.link)
+WHERE type = "chronicle" AND contains(file.outlinks, this.file.link)
 SORT file.name ASC
 ```
 
@@ -53,7 +53,7 @@ SORT file.name ASC
 
 ```dataview
 LIST FROM ""
-WHERE type = "myth" AND string(era) = string(this.file.link)
+WHERE type = "myth" AND contains(file.outlinks, this.file.link)
 SORT file.name ASC
 ```
 
@@ -61,7 +61,7 @@ SORT file.name ASC
 
 ```dataview
 LIST FROM ""
-WHERE type = "character" AND string(era) = string(this.file.link)
+WHERE type = "character" AND contains(file.outlinks, this.file.link)
 SORT file.name ASC
 ```
 
@@ -69,7 +69,7 @@ SORT file.name ASC
 
 ```dataview
 LIST FROM ""
-WHERE type = "settlement" AND string(era_founded) = string(this.file.link)
+WHERE type = "settlement" AND contains(file.outlinks, this.file.link)
 SORT file.name ASC
 ```
 

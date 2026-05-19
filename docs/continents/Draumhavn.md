@@ -47,7 +47,7 @@ No tunnel runs south. The earth there falls away into the void.
 
 ```dataview
 LIST FROM ""
-WHERE type = "region" AND string(continent) = string(this.file.link)
+WHERE type = "region" AND contains(file.outlinks, this.file.link)
 SORT file.name ASC
 ```
 
@@ -60,7 +60,7 @@ TABLE WITHOUT ID
   controlled_by AS "Held by",
   status AS "Status"
 FROM ""
-WHERE type = "settlement" AND string(continent) = string(this.file.link)
+WHERE type = "settlement" AND contains(file.outlinks, this.file.link)
 SORT file.name ASC
 ```
 
@@ -68,7 +68,7 @@ SORT file.name ASC
 
 ```dataview
 LIST FROM ""
-WHERE type = "range" AND string(continent) = string(this.file.link)
+WHERE type = "range" AND contains(file.outlinks, this.file.link)
 SORT file.name ASC
 ```
 
@@ -76,7 +76,7 @@ SORT file.name ASC
 
 ```dataview
 LIST FROM ""
-WHERE type = "waterway" AND string(continent) = string(this.file.link)
+WHERE type = "waterway" AND contains(file.outlinks, this.file.link)
 SORT file.name ASC
 ```
 
@@ -84,7 +84,7 @@ SORT file.name ASC
 
 ```dataview
 LIST FROM ""
-WHERE type = "landmark" AND string(continent) = string(this.file.link)
+WHERE type = "landmark" AND contains(file.outlinks, this.file.link)
 SORT file.name ASC
 ```
 
@@ -96,7 +96,7 @@ TABLE WITHOUT ID
   race AS "Race",
   affiliation AS "Affiliation"
 FROM ""
-WHERE type = "character" AND string(location) = string(this.file.link)
+WHERE type = "character" AND contains(file.outlinks, this.file.link)
 SORT file.name ASC
 ```
 
@@ -108,7 +108,7 @@ TABLE WITHOUT ID
   era AS "Era",
   year_display AS "When"
 FROM ""
-WHERE type = "event" AND string(location) = string(this.file.link)
+WHERE type = "event" AND contains(file.outlinks, this.file.link)
 SORT year ASC
 ```
 

@@ -34,7 +34,7 @@ magic_affinity: []
 
 ```dataview
 LIST FROM ""
-WHERE type = "race" AND string(parent_race) = string(this.file.link)
+WHERE type = "race" AND contains(file.outlinks, this.file.link)
 SORT file.name ASC
 ```
 
@@ -46,7 +46,7 @@ TABLE WITHOUT ID
   culture AS "Culture",
   affiliation AS "Affiliation"
 FROM ""
-WHERE type = "character" AND string(race) = string(this.file.link)
+WHERE type = "character" AND contains(file.outlinks, this.file.link)
 SORT file.name ASC
 ```
 

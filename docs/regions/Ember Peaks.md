@@ -39,7 +39,7 @@ TABLE WITHOUT ID
   size AS "Size",
   controlled_by AS "Held by"
 FROM ""
-WHERE type = "settlement" AND string(region) = string(this.file.link)
+WHERE type = "settlement" AND contains(file.outlinks, this.file.link)
 SORT file.name ASC
 ```
 
@@ -47,7 +47,7 @@ SORT file.name ASC
 
 ```dataview
 LIST FROM ""
-WHERE type = "landmark" AND string(region) = string(this.file.link)
+WHERE type = "landmark" AND contains(file.outlinks, this.file.link)
 SORT file.name ASC
 ```
 
@@ -59,7 +59,7 @@ TABLE WITHOUT ID
   race AS "Race",
   affiliation AS "Affiliation"
 FROM ""
-WHERE type = "character" AND string(location) = string(this.file.link)
+WHERE type = "character" AND contains(file.outlinks, this.file.link)
 SORT file.name ASC
 ```
 
@@ -71,7 +71,7 @@ TABLE WITHOUT ID
   era AS "Era",
   year_display AS "When"
 FROM ""
-WHERE type = "event" AND string(location) = string(this.file.link)
+WHERE type = "event" AND contains(file.outlinks, this.file.link)
 SORT year ASC
 ```
 

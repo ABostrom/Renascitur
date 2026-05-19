@@ -47,7 +47,7 @@ CONTINENT = """
 
 ```dataview
 LIST FROM ""
-WHERE type = "region" AND string(continent) = string(this.file.link)
+WHERE type = "region" AND contains(file.outlinks, this.file.link)
 SORT file.name ASC
 ```
 
@@ -60,7 +60,7 @@ TABLE WITHOUT ID
   controlled_by AS "Held by",
   status AS "Status"
 FROM ""
-WHERE type = "settlement" AND string(continent) = string(this.file.link)
+WHERE type = "settlement" AND contains(file.outlinks, this.file.link)
 SORT file.name ASC
 ```
 
@@ -68,7 +68,7 @@ SORT file.name ASC
 
 ```dataview
 LIST FROM ""
-WHERE type = "range" AND string(continent) = string(this.file.link)
+WHERE type = "range" AND contains(file.outlinks, this.file.link)
 SORT file.name ASC
 ```
 
@@ -76,7 +76,7 @@ SORT file.name ASC
 
 ```dataview
 LIST FROM ""
-WHERE type = "waterway" AND string(continent) = string(this.file.link)
+WHERE type = "waterway" AND contains(file.outlinks, this.file.link)
 SORT file.name ASC
 ```
 
@@ -84,7 +84,7 @@ SORT file.name ASC
 
 ```dataview
 LIST FROM ""
-WHERE type = "landmark" AND string(continent) = string(this.file.link)
+WHERE type = "landmark" AND contains(file.outlinks, this.file.link)
 SORT file.name ASC
 ```
 
@@ -96,7 +96,7 @@ TABLE WITHOUT ID
   race AS "Race",
   affiliation AS "Affiliation"
 FROM ""
-WHERE type = "character" AND string(location) = string(this.file.link)
+WHERE type = "character" AND contains(file.outlinks, this.file.link)
 SORT file.name ASC
 ```
 
@@ -108,7 +108,7 @@ TABLE WITHOUT ID
   era AS "Era",
   year_display AS "When"
 FROM ""
-WHERE type = "event" AND string(location) = string(this.file.link)
+WHERE type = "event" AND contains(file.outlinks, this.file.link)
 SORT year ASC
 ```
 
@@ -130,7 +130,7 @@ TABLE WITHOUT ID
   size AS "Size",
   controlled_by AS "Held by"
 FROM ""
-WHERE type = "settlement" AND string(region) = string(this.file.link)
+WHERE type = "settlement" AND contains(file.outlinks, this.file.link)
 SORT file.name ASC
 ```
 
@@ -138,7 +138,7 @@ SORT file.name ASC
 
 ```dataview
 LIST FROM ""
-WHERE type = "landmark" AND string(region) = string(this.file.link)
+WHERE type = "landmark" AND contains(file.outlinks, this.file.link)
 SORT file.name ASC
 ```
 
@@ -150,7 +150,7 @@ TABLE WITHOUT ID
   race AS "Race",
   affiliation AS "Affiliation"
 FROM ""
-WHERE type = "character" AND string(location) = string(this.file.link)
+WHERE type = "character" AND contains(file.outlinks, this.file.link)
 SORT file.name ASC
 ```
 
@@ -162,7 +162,7 @@ TABLE WITHOUT ID
   era AS "Era",
   year_display AS "When"
 FROM ""
-WHERE type = "event" AND string(location) = string(this.file.link)
+WHERE type = "event" AND contains(file.outlinks, this.file.link)
 SORT year ASC
 ```
 
@@ -180,7 +180,7 @@ SETTLEMENT = """
 
 ```dataview
 LIST FROM ""
-WHERE type = "landmark" AND string(inside) = string(this.file.link)
+WHERE type = "landmark" AND contains(file.outlinks, this.file.link)
 SORT file.name ASC
 ```
 
@@ -192,7 +192,7 @@ TABLE WITHOUT ID
   race AS "Race",
   affiliation AS "Affiliation"
 FROM ""
-WHERE type = "character" AND string(location) = string(this.file.link)
+WHERE type = "character" AND contains(file.outlinks, this.file.link)
 SORT file.name ASC
 ```
 
@@ -204,7 +204,7 @@ TABLE WITHOUT ID
   era AS "Era",
   year_display AS "When"
 FROM ""
-WHERE type = "event" AND string(location) = string(this.file.link)
+WHERE type = "event" AND contains(file.outlinks, this.file.link)
 SORT year ASC
 ```
 
@@ -227,7 +227,7 @@ TABLE WITHOUT ID
   location AS "Where",
   status AS "Status"
 FROM ""
-WHERE type = "event" AND string(era) = string(this.file.link)
+WHERE type = "event" AND contains(file.outlinks, this.file.link)
 SORT year ASC
 ```
 
@@ -235,7 +235,7 @@ SORT year ASC
 
 ```dataview
 LIST FROM ""
-WHERE type = "chronicle" AND string(era_of_composition) = string(this.file.link)
+WHERE type = "chronicle" AND contains(file.outlinks, this.file.link)
 SORT file.name ASC
 ```
 
@@ -243,7 +243,7 @@ SORT file.name ASC
 
 ```dataview
 LIST FROM ""
-WHERE type = "myth" AND string(era) = string(this.file.link)
+WHERE type = "myth" AND contains(file.outlinks, this.file.link)
 SORT file.name ASC
 ```
 
@@ -251,7 +251,7 @@ SORT file.name ASC
 
 ```dataview
 LIST FROM ""
-WHERE type = "character" AND string(era) = string(this.file.link)
+WHERE type = "character" AND contains(file.outlinks, this.file.link)
 SORT file.name ASC
 ```
 
@@ -259,7 +259,7 @@ SORT file.name ASC
 
 ```dataview
 LIST FROM ""
-WHERE type = "settlement" AND string(era_founded) = string(this.file.link)
+WHERE type = "settlement" AND contains(file.outlinks, this.file.link)
 SORT file.name ASC
 ```
 
@@ -277,7 +277,7 @@ FACTION = """
 
 ```dataview
 LIST FROM ""
-WHERE type = "faction" AND string(parent_faction) = string(this.file.link)
+WHERE type = "faction" AND contains(file.outlinks, this.file.link)
 SORT file.name ASC
 ```
 
@@ -289,7 +289,7 @@ TABLE WITHOUT ID
   race AS "Race",
   location AS "Location"
 FROM ""
-WHERE type = "character" AND string(affiliation) = string(this.file.link)
+WHERE type = "character" AND contains(file.outlinks, this.file.link)
 SORT file.name ASC
 ```
 
@@ -297,7 +297,7 @@ SORT file.name ASC
 
 ```dataview
 LIST FROM ""
-WHERE type = "organisation" AND string(parent_faction) = string(this.file.link)
+WHERE type = "organisation" AND contains(file.outlinks, this.file.link)
 SORT file.name ASC
 ```
 
@@ -331,7 +331,7 @@ TABLE WITHOUT ID
   race AS "Race",
   affiliation AS "Affiliation"
 FROM ""
-WHERE type = "character" AND string(culture) = string(this.file.link)
+WHERE type = "character" AND contains(file.outlinks, this.file.link)
 SORT file.name ASC
 ```
 
@@ -339,7 +339,7 @@ SORT file.name ASC
 
 ```dataview
 LIST FROM ""
-WHERE type = "tradition" AND string(culture) = string(this.file.link)
+WHERE type = "tradition" AND contains(file.outlinks, this.file.link)
 SORT file.name ASC
 ```
 
@@ -365,7 +365,7 @@ RACE = """
 
 ```dataview
 LIST FROM ""
-WHERE type = "race" AND string(parent_race) = string(this.file.link)
+WHERE type = "race" AND contains(file.outlinks, this.file.link)
 SORT file.name ASC
 ```
 
@@ -377,7 +377,7 @@ TABLE WITHOUT ID
   culture AS "Culture",
   affiliation AS "Affiliation"
 FROM ""
-WHERE type = "character" AND string(race) = string(this.file.link)
+WHERE type = "character" AND contains(file.outlinks, this.file.link)
 SORT file.name ASC
 ```
 
@@ -411,7 +411,7 @@ HOUSE = """
 
 ```dataview
 LIST FROM ""
-WHERE type = "character" AND string(affiliation) = string(this.file.link)
+WHERE type = "character" AND contains(file.outlinks, this.file.link)
 SORT file.name ASC
 ```
 

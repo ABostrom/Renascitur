@@ -11,7 +11,7 @@ view: Qethusiyya — Overview
 
 ## Regions
 ```dataview
-LIST FROM "" WHERE type = "region" AND string(continent) = "[[Qethusiyya]]"
+LIST FROM "" WHERE type = "region" AND contains(file.outlinks, [[Qethusiyya]])
 SORT file.name ASC
 ```
 
@@ -22,25 +22,25 @@ TABLE WITHOUT ID
   size AS "Size",
   controlled_by AS "Held by"
 FROM ""
-WHERE type = "settlement" AND string(continent) = "[[Qethusiyya]]"
+WHERE type = "settlement" AND contains(file.outlinks, [[Qethusiyya]])
 SORT file.name ASC
 ```
 
 ## Landmarks
 ```dataview
-LIST FROM "" WHERE type = "landmark" AND string(continent) = "[[Qethusiyya]]"
+LIST FROM "" WHERE type = "landmark" AND contains(file.outlinks, [[Qethusiyya]])
 SORT file.name ASC
 ```
 
 ## Ranges
 ```dataview
-LIST FROM "" WHERE type = "range" AND string(continent) = "[[Qethusiyya]]"
+LIST FROM "" WHERE type = "range" AND contains(file.outlinks, [[Qethusiyya]])
 SORT file.name ASC
 ```
 
 ## Waterways
 ```dataview
-LIST FROM "" WHERE type = "waterway" AND string(continent) = "[[Qethusiyya]]"
+LIST FROM "" WHERE type = "waterway" AND contains(file.outlinks, [[Qethusiyya]])
 SORT file.name ASC
 ```
 
@@ -51,13 +51,13 @@ TABLE WITHOUT ID
   race AS "Race",
   affiliation AS "Faction"
 FROM ""
-WHERE type = "character" AND string(location) = "[[Qethusiyya]]"
+WHERE type = "character" AND contains(file.outlinks, [[Qethusiyya]])
 SORT file.name ASC
 ```
 
 ## Events here
 ```dataview
 TABLE WITHOUT ID file.link AS "Event", era AS "Era", year_display AS "When"
-FROM "" WHERE type = "event" AND string(location) = "[[Qethusiyya]]"
+FROM "" WHERE type = "event" AND contains(file.outlinks, [[Qethusiyya]])
 SORT year ASC
 ```

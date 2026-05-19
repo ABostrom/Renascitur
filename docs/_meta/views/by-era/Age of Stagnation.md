@@ -18,30 +18,30 @@ TABLE WITHOUT ID
   importance AS "Importance",
   status AS "Status"
 FROM ""
-WHERE type = "event" AND string(era) = "[[Age of Stagnation]]"
+WHERE type = "event" AND contains(file.outlinks, [[Age of Stagnation]])
 SORT year ASC
 ```
 
 ## Chronicles
 ```dataview
-LIST FROM "" WHERE type = "chronicle" AND string(era_of_composition) = "[[Age of Stagnation]]"
+LIST FROM "" WHERE type = "chronicle" AND contains(file.outlinks, [[Age of Stagnation]])
 SORT file.name ASC
 ```
 
 ## Myths from this era
 ```dataview
-LIST FROM "" WHERE type = "myth" AND string(era) = "[[Age of Stagnation]]"
+LIST FROM "" WHERE type = "myth" AND contains(file.outlinks, [[Age of Stagnation]])
 SORT file.name ASC
 ```
 
 ## Deities emerging
 ```dataview
-LIST FROM "" WHERE type = "deity" AND string(era_of_emergence) = "[[Age of Stagnation]]"
+LIST FROM "" WHERE type = "deity" AND contains(file.outlinks, [[Age of Stagnation]])
 SORT file.name ASC
 ```
 
 ## Characters living in this era
 ```dataview
-LIST FROM "" WHERE type = "character" AND string(era) = "[[Age of Stagnation]]"
+LIST FROM "" WHERE type = "character" AND contains(file.outlinks, [[Age of Stagnation]])
 SORT file.name ASC
 ```
