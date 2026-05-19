@@ -2,8 +2,6 @@
 tags:
 - leader
 - House Medani
-- realm/renascita
-- faction/firebrand-empire
 aliases:
 - Trelib
 type: character

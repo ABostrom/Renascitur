@@ -7,8 +7,7 @@ timelines:
 type: event
 status: draft
 era: '[[Age of the Endless Sun]]'
-tags:
-- era/age-of-the-endless-sun
+tags: []
 aliases:
 - The Elder Races Are Blessed
 year_display: ES 500

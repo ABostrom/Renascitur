@@ -4,10 +4,7 @@ aliases:
 type: landmark
 status: draft
 continent: '[[Arcturia]]'
-tags:
-- realm/renascita
-- continent/arcturia
-- place/uftine
+tags: []
 realm: '[[Renascita]]'
 inside: '[[Uftine]]'
 ---

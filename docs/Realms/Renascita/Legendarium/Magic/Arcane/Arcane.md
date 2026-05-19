@@ -1,9 +1,7 @@
 ---
 type: technology
 status: stub
-tags:
-- realm/renascita
-- discipline/arcane
+tags: []
 realm: '[[Renascita]]'
 discipline: Arcane
 ---

@@ -1,10 +1,7 @@
 ---
 type: tradition
 status: draft
-tags:
-- realm/renascita
-- faction/dwarven-holds
-- faction/icebound-of-uftine
+tags: []
 realm: '[[Renascita]]'
 culture: '[[The Icebound of Uftine]]'
 ---

@@ -8,8 +8,7 @@ timelines:
 type: event
 status: draft
 era: '[[Age of the Endless Sun]]'
-tags:
-- era/age-of-the-endless-sun
+tags: []
 aliases:
 - The Fall of the Endless Sun
 year_display: ES 8500

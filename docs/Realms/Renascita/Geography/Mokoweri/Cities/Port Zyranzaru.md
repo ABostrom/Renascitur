@@ -2,10 +2,7 @@
 type: settlement
 status: draft
 continent: '[[Mokoweri]]'
-tags:
-- realm/renascita
-- continent/mokoweri
-- place/port-zyranzaru-md
+tags: []
 realm: '[[Renascita]]'
 ---
 Port Zyranzaru is the largest and most important city in [[Mokoweri]]. It is located on the coast, with easy access to the sea and other nearby islands. The city is a bustling hub of activity, with traders, merchants, and sailors from all over the world coming to do business.

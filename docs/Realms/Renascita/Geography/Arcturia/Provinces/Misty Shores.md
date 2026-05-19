@@ -2,10 +2,7 @@
 type: region
 status: stub
 continent: '[[Arcturia]]'
-tags:
-- realm/renascita
-- continent/arcturia
-- region/misty-shores-md
+tags: []
 realm: '[[Renascita]]'
 ---
 ---

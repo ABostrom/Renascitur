@@ -1,9 +1,7 @@
 ---
 type: technology
 status: draft
-tags:
-- realm/renascita
-- faction/solaran-federation-of-worlds
+tags: []
 realm: '[[Renascita]]'
 ---
 ### [[Solaran]] Airship: The Radiant Dawn

@@ -5,8 +5,6 @@ tags:
 - race
 - elemental
 - mortal-descendant
-- lineage/humans
-- race/elasi
 lineage: Mortal Race
 origin_plane:
 - - Elemental Plane

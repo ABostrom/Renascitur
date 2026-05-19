@@ -7,8 +7,7 @@ timelines:
 type: event
 status: draft
 era: '[[Age of the Endless Sun]]'
-tags:
-- era/age-of-the-endless-sun
+tags: []
 aliases:
 - The Endless Sun Is Constructed
 year_display: ES 7000

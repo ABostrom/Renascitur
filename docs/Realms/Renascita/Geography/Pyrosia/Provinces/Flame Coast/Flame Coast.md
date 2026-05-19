@@ -4,9 +4,6 @@ aliases:
 tags:
 - province
 - region
-- realm/renascita
-- continent/pyrosia
-- region/flame-coast
 type: region
 status: draft
 continent: '[[Pyrosia]]'

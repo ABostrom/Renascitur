@@ -2,8 +2,6 @@
 tags:
 - leader
 - House Silverhand
-- realm/renascita
-- faction/firebrand-empire
 aliases:
 - Yoren
 type: character

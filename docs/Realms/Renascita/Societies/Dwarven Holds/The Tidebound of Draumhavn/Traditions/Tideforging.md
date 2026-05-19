@@ -1,10 +1,7 @@
 ---
 type: tradition
 status: stub
-tags:
-- realm/renascita
-- faction/dwarven-holds
-- faction/tidebound-of-draumhavn
+tags: []
 realm: '[[Renascita]]'
 culture: '[[The Tidebound of Draumhavn]]'
 ---

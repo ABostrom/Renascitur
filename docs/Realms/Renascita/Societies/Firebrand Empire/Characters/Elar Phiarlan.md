@@ -2,8 +2,6 @@
 tags:
 - leader
 - House Phiarlan
-- realm/renascita
-- faction/firebrand-empire
 aliases:
 - Elar
 type: character

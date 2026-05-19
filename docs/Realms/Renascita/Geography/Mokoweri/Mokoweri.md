@@ -32,9 +32,7 @@ rivers:
 - '[[Mira''ko Stream]]'
 - '[[River of Ancients]]'
 status: draft
-tags:
-- realm/renascita
-- continent/mokoweri
+tags: []
 realm: '[[Renascita]]'
 ---
 **Mokoweri** is a lush and vibrant continent of tangled life — a primeval realm where rivers run like veins and trees stretch toward the sun in layers of living canopy. It is the home of the [[Mokuun]], the [[Mokoweri Human]], and the bioengineered [[Saurian]], all united in their reverence for the sacred world tree [[Irasandra]].

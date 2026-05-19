@@ -3,7 +3,6 @@ aliases:
 - Typhon
 type: cosmic-force
 status: stub
-tags:
-- category/corruption
+tags: []
 ---
 ## Typhon, The Archon of Death

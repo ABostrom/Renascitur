@@ -1,9 +1,7 @@
 ---
 type: continent
 status: stub
-tags:
-- realm/renascita
-- continent/aquaria
+tags: []
 realm: '[[Renascita]]'
 ---
 ![[Coral Reef Bay]]

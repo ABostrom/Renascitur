@@ -7,7 +7,6 @@ tags:
 - solaran
 - dialect
 - celestial
-- kind/modern
 language_family: '[[Elyssan]]'
 language_tier: dialect
 spoken_by:

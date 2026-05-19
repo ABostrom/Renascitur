@@ -3,9 +3,6 @@ tags:
 - location
 - headquarters
 - House Tharashk
-- realm/renascita
-- continent/pyrosia
-- place/lions-rest
 aliases:
 - The Den
 type: landmark

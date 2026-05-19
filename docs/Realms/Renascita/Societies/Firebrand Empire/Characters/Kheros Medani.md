@@ -2,8 +2,6 @@
 tags:
 - city-overseer
 - House Medani
-- realm/renascita
-- faction/firebrand-empire
 aliases:
 - Medani
 - Lion’s Rest Overseer

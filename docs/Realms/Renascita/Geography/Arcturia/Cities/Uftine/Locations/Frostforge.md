@@ -2,10 +2,7 @@
 type: landmark
 status: stub
 continent: '[[Arcturia]]'
-tags:
-- realm/renascita
-- continent/arcturia
-- place/uftine
+tags: []
 realm: '[[Renascita]]'
 inside: '[[Uftine]]'
 ---

@@ -3,8 +3,7 @@ aliases:
 - Valtor, The Unfettered Wind
 type: essay
 status: draft
-tags:
-- category/aeternum
+tags: []
 ---
 # [[Valtor|Valtor, The Unfettered Wind]]
 

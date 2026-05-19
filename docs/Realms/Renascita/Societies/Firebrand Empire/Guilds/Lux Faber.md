@@ -1,9 +1,7 @@
 ---
 type: organisation
 status: stub
-tags:
-- realm/renascita
-- faction/firebrand-empire
+tags: []
 realm: '[[Renascita]]'
 parent_faction: '[[Firebrand Empire]]'
 ---

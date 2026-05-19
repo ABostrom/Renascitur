@@ -1,9 +1,7 @@
 ---
 type: tradition
 status: stub
-tags:
-- realm/renascita
-- faction/thraysian-magocracy
+tags: []
 realm: '[[Renascita]]'
 culture: '[[Thraysian Magocracy]]'
 ---

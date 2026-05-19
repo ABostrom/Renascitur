@@ -1,8 +1,7 @@
 ---
 type: character
 status: draft
-tags:
-- realm/renascita
+tags: []
 realm: '[[Renascita]]'
 ---
 # Ormr - Thunder of the deep 

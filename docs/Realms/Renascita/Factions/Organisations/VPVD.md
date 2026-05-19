@@ -1,8 +1,7 @@
 ---
 type: organisation
 status: draft
-tags:
-- realm/renascita
+tags: []
 realm: '[[Renascita]]'
 ---
 # Vox Populei, Vox Dei

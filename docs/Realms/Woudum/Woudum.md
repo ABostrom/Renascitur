@@ -1,7 +1,6 @@
 ---
 type: landmark
 status: stub
-tags:
-- realm/woudum
+tags: []
 ---
 The plane of [[Chaor]] and [[Luxar]]

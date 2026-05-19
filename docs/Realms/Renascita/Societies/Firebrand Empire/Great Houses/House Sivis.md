@@ -3,9 +3,7 @@ aliases:
 - Sivis
 type: house
 status: draft
-tags:
-- realm/renascita
-- faction/firebrand-empire
+tags: []
 realm: '[[Renascita]]'
 parent_faction: '[[Firebrand Empire]]'
 ---

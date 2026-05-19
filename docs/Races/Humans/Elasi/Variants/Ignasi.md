@@ -1,9 +1,7 @@
 ---
 type: race
 status: stub
-tags:
-- lineage/humans
-- race/elasi
+tags: []
 lineage: Humans
 parent_race: '[[Elasi]]'
 ---

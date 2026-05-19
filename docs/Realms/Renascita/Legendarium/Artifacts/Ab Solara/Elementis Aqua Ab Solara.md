@@ -1,8 +1,7 @@
 ---
 type: artifact
 status: stub
-tags:
-- realm/renascita
+tags: []
 realm: '[[Renascita]]'
 ---
 A planar gate leading to the Plane of Water.

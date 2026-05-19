@@ -1,8 +1,7 @@
 ---
 type: artifact
 status: stub
-tags:
-- realm/renascita
+tags: []
 realm: '[[Renascita]]'
 ---
 Hidden beneath the Tomb of the Emperors

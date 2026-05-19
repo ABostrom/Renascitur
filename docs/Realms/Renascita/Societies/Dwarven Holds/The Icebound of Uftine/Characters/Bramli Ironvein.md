@@ -1,10 +1,7 @@
 ---
 type: character
 status: draft
-tags:
-- realm/renascita
-- faction/dwarven-holds
-- faction/icebound-of-uftine
+tags: []
 realm: '[[Renascita]]'
 affiliation: '[[The Icebound of Uftine]]'
 ---

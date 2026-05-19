@@ -1,10 +1,7 @@
 ---
 type: tradition
 status: draft
-tags:
-- realm/renascita
-- faction/dwarven-holds
-- faction/stormbound-of-thundrakar
+tags: []
 realm: '[[Renascita]]'
 culture: '[[The Stormbound of Thundrakar]]'
 ---

@@ -1,8 +1,7 @@
 ---
 type: continent
 status: stub
-tags:
-- realm/renascita
+tags: []
 realm: '[[Renascita]]'
 ---
 ---

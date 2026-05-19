@@ -4,9 +4,7 @@ aliases:
 type: landmark
 status: draft
 continent: '[[Arcturia]]'
-tags:
-- realm/renascita
-- continent/arcturia
+tags: []
 realm: '[[Renascita]]'
 ---
 aliases:  [[Dürrenholt]] / [[Dürrenholt|Wyrmholt]]

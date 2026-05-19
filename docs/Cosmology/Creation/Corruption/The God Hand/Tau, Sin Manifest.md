@@ -1,8 +1,7 @@
 ---
 type: cosmic-force
 status: stub
-tags:
-- category/corruption
+tags: []
 ---
 ## Tau, Sin Manifest
 

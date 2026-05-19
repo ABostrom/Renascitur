@@ -3,8 +3,6 @@ tags:
 - athenaeum
 - soulmagic
 - relics
-- realm/renascita
-- faction/thraysian-magocracy
 aliases:
 - Instrument Registry
 - Soulbound Catalog

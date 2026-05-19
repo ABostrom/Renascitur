@@ -3,9 +3,7 @@ aliases:
 - Seshem-tem
 type: tradition
 status: draft
-tags:
-- realm/renascita
-- faction/solaran-federation-of-worlds
+tags: []
 realm: '[[Renascita]]'
 culture: '[[The Solaran Federation of Worlds]]'
 ---

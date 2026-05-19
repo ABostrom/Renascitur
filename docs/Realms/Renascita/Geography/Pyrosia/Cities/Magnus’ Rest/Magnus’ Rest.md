@@ -2,10 +2,7 @@
 type: settlement
 status: draft
 continent: '[[Pyrosia]]'
-tags:
-- realm/renascita
-- continent/pyrosia
-- place/magnus-rest
+tags: []
 realm: '[[Renascita]]'
 ---
 > *"We held the gates for a thousand nights, and in that furnace, the future was forged."*  

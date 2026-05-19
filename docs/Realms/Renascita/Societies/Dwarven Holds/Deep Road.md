@@ -1,8 +1,6 @@
 ---
 type: essay
 status: stub
-tags:
-- realm/renascita
-- faction/dwarven-holds
+tags: []
 realm: '[[Renascita]]'
 ---

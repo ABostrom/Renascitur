@@ -3,9 +3,6 @@ tags:
 - location
 - headquarters
 - House Phiarlan
-- realm/renascita
-- continent/pyrosia
-- place/raining-bay
 aliases:
 - The Serpentine Citadel
 type: landmark

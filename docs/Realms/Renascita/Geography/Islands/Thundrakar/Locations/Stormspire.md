@@ -2,9 +2,7 @@
 type: landmark
 status: draft
 continent: '[[Thundrakar]]'
-tags:
-- realm/renascita
-- continent/thundrakar
+tags: []
 realm: '[[Renascita]]'
 ---
 ## Overview  

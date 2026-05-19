@@ -6,8 +6,6 @@ tags:
 - cultural-variant
 - humans
 - tribal
-- lineage/humans
-- race/terran
 lineage:
 - '[[Terran]]'
 origin_plane:

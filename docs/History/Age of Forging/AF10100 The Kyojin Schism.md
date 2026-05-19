@@ -8,8 +8,7 @@ timelines:
 type: event
 status: draft
 era: '[[Age of Forging]]'
-tags:
-- era/age-of-forging
+tags: []
 aliases:
 - The Kyojin Schism
 year_display: AF 10100

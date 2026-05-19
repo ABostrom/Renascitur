@@ -1,7 +1,6 @@
 ---
 type: deity
 status: stub
-tags:
-- pantheon/elementals
+tags: []
 pantheon: Elementals
 ---

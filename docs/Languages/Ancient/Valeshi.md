@@ -6,7 +6,6 @@ tags:
 - language
 - human
 - ancient
-- kind/ancient
 language_family: '[[Human]]'
 language_tier: root
 spoken_by:

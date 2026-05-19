@@ -1,10 +1,7 @@
 ---
 type: faction
 status: stub
-tags:
-- realm/renascita
-- faction/dwarven-holds
-- faction/stormbound-of-thundrakar
+tags: []
 realm: '[[Renascita]]'
 parent_faction: '[[Dwarven Holds]]'
 ---

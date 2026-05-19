@@ -3,10 +3,7 @@ aliases:
 - High Conductor
 type: character
 status: draft
-tags:
-- realm/renascita
-- faction/dwarven-holds
-- faction/stormbound-of-thundrakar
+tags: []
 realm: '[[Renascita]]'
 affiliation: '[[The Stormbound of Thundrakar]]'
 ---

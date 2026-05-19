@@ -3,8 +3,7 @@ aliases:
 - Kas
 type: character
 status: stub
-tags:
-- realm/renascita
+tags: []
 realm: '[[Renascita]]'
 ---
 # Kasabian - First General of [[Vecna]]

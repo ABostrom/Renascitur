@@ -4,9 +4,6 @@ aliases:
 tags:
 - city
 - location
-- realm/renascita
-- continent/pyrosia
-- place/lux-oescus
 type: settlement
 status: draft
 continent: '[[Pyrosia]]'

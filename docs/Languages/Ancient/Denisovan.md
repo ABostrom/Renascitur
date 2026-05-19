@@ -6,7 +6,6 @@ tags:
 - language
 - saurian
 - ancient
-- kind/ancient
 language_family: '[[Saurian]]'
 language_tier: root
 spoken_by:

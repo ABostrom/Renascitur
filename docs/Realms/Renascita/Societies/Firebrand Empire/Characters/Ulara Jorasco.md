@@ -2,8 +2,6 @@
 tags:
 - leader
 - House Jorasco
-- realm/renascita
-- faction/firebrand-empire
 aliases:
 - Ulara
 type: character

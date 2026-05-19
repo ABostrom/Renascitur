@@ -6,7 +6,6 @@ tags:
 - elemental
 - grundthain
 - nomadic
-- lineage/grundthains
 lineage: '[[Dwarf|Dwarves]]'
 origin_plane: '[[Renascita]]'
 aat-race-tier: distinct

@@ -5,7 +5,6 @@ tags:
 - race
 - elemental
 - grundthain
-- lineage/grundthains
 lineage: '[[Dwarf|Dwarves]]'
 origin_plane: '[[Thargrun]]'
 aat-race-tier: distinct

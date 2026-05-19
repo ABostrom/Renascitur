@@ -8,8 +8,7 @@ timelines:
 type: event
 status: draft
 era: '[[Age of Forging]]'
-tags:
-- era/age-of-forging
+tags: []
 aliases:
 - Vecna’s Descent Begins
 year_display: AF 11000

@@ -2,10 +2,7 @@
 type: region
 status: stub
 continent: '[[Arcturia]]'
-tags:
-- realm/renascita
-- continent/arcturia
-- region/calderian-mountains-md
+tags: []
 realm: '[[Renascita]]'
 ---
 ---

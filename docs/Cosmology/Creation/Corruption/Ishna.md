@@ -4,8 +4,7 @@ aliases:
 - Ishna's
 type: cosmic-force
 status: stub
-tags:
-- category/corruption
+tags: []
 ---
 ![[The Forge Wars]]
 

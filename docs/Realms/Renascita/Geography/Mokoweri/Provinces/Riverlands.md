@@ -2,10 +2,7 @@
 type: region
 status: draft
 continent: '[[Mokoweri]]'
-tags:
-- realm/renascita
-- continent/mokoweri
-- region/riverlands-md
+tags: []
 realm: '[[Renascita]]'
 ---
 This region is dominated by the winding rivers that snake their way through the dense jungle. The rivers provide a source of freshwater and fish, and the land around them is rich and fertile, making it an important agricultural region for the people of [[Mokoweri]].

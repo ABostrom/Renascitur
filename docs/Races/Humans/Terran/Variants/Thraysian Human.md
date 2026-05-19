@@ -6,8 +6,6 @@ tags:
 - cultural-variant
 - humans
 - magocratic
-- lineage/humans
-- race/terran
 lineage:
 - '[[Terran]]'
 origin_plane:

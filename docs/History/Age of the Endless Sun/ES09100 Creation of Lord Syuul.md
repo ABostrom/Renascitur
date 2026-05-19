@@ -8,8 +8,7 @@ timelines:
 type: event
 status: draft
 era: '[[Age of the Endless Sun]]'
-tags:
-- era/age-of-the-endless-sun
+tags: []
 aliases:
 - Creation of Lord Syuul
 year_display: ES 9100

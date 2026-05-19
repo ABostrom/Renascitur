@@ -1,8 +1,7 @@
 ---
 type: artifact
 status: stub
-tags:
-- realm/renascita
+tags: []
 realm: '[[Renascita]]'
 ---
 The now-severed gate that once bridged to the storm-wracked plane.

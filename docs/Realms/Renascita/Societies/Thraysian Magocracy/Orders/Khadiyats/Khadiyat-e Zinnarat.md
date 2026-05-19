@@ -5,8 +5,6 @@ tags:
 - port
 - coral
 - trade
-- realm/renascita
-- faction/thraysian-magocracy
 aliases:
 - Khadiyat-e Zinnarat
 type: organisation

@@ -1,9 +1,7 @@
 ---
 type: character
 status: draft
-tags:
-- realm/renascita
-- faction/people-of-mokoweri
+tags: []
 realm: '[[Renascita]]'
 parent_faction: '[[People of Mokoweri]]'
 affiliation: '[[People of Mokoweri]]'

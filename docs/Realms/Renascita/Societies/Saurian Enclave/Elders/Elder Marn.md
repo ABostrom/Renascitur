@@ -1,9 +1,7 @@
 ---
 type: character
 status: draft
-tags:
-- realm/renascita
-- faction/saurian-enclave
+tags: []
 realm: '[[Renascita]]'
 affiliation: '[[Saurian Enclave]]'
 ---

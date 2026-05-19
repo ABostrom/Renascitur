@@ -1,9 +1,7 @@
 ---
 type: character
 status: draft
-tags:
-- realm/renascita
-- faction/blackiron-collective
+tags: []
 realm: '[[Renascita]]'
 affiliation: '[[The Blackiron Collective]]'
 ---

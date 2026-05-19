@@ -3,9 +3,6 @@ tags:
 - location
 - headquarters
 - House Sivis
-- realm/renascita
-- continent/pyrosia
-- place/lux-oescus
 aliases:
 - The Labyrinth
 type: landmark

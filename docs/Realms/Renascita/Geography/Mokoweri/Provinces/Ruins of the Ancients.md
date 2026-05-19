@@ -2,10 +2,7 @@
 type: region
 status: draft
 continent: '[[Mokoweri]]'
-tags:
-- realm/renascita
-- continent/mokoweri
-- region/ruins-of-the-ancients-md
+tags: []
 realm: '[[Renascita]]'
 ---
 This region is shrouded in mystery and legend, as it is said to be the site of ancient ruins left by a long-gone civilization. The ruins are overgrown with vines and vegetation, making them difficult to explore, but those who do are often rewarded with treasure and knowledge.

@@ -3,8 +3,6 @@ tags:
 - zahirah
 - khadi
 - talvareh
-- realm/renascita
-- faction/thraysian-magocracy
 aliases:
 - Khadi of Talvareh
 - Sariv

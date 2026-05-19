@@ -1,9 +1,7 @@
 ---
 type: essay
 status: draft
-tags:
-- realm/renascita
-- faction/dwarven-holds
+tags: []
 realm: '[[Renascita]]'
 ---
 ## Overview

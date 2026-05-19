@@ -1,8 +1,7 @@
 ---
 type: character
 status: draft
-tags:
-- realm/renascita
+tags: []
 realm: '[[Renascita]]'
 ---
 Here is the 5e stat block for an Efreeti, lightly reskinned to represent a celestial being, the Avatar of [[Unimus]]:

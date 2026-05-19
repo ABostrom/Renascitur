@@ -1,9 +1,7 @@
 ---
 type: faction
 status: draft
-tags:
-- realm/renascita
-- faction/devouts-of-muradin
+tags: []
 realm: '[[Renascita]]'
 parent_faction: '[[Devouts of Muradin]]'
 ---

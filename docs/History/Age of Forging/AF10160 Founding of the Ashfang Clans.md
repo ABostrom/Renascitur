@@ -7,8 +7,7 @@ timelines:
 type: event
 status: draft
 era: '[[Age of Forging]]'
-tags:
-- era/age-of-forging
+tags: []
 aliases:
 - Founding of the Ashfang Clans
 year_display: AF 10160

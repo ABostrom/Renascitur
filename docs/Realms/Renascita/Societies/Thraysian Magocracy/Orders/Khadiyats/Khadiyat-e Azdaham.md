@@ -5,8 +5,6 @@ tags:
 - monsters
 - relics
 - rahalan
-- realm/renascita
-- faction/thraysian-magocracy
 aliases:
 - Khadiyat-e Azdaham
 type: organisation

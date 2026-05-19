@@ -3,8 +3,7 @@ aliases:
 - Lord Syuul
 type: cosmic-force
 status: draft
-tags:
-- category/corruption
+tags: []
 ---
 ## Syuul, The Devourer
 ## The First [[Ilithid]]

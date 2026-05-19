@@ -2,8 +2,6 @@
 tags:
 - leader
 - House Cannith
-- realm/renascita
-- faction/firebrand-empire
 aliases:
 - Zorlan
 type: character

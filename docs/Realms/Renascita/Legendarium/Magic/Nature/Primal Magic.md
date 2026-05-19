@@ -3,8 +3,6 @@ tags:
 - magic
 - nature
 - primal
-- realm/renascita
-- discipline/nature
 type: technology
 status: stub
 realm: '[[Renascita]]'

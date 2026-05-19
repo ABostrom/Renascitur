@@ -25,9 +25,7 @@ rivers:
 - '[[Icevein River]]'
 - '[[Shadelake Tributary]]'
 status: draft
-tags:
-- realm/renascita
-- continent/arcturia
+tags: []
 realm: '[[Renascita]]'
 ---
 **Arcturia** is a frigid, rugged continent shaped by ice, stone, and ancestral memory. Its frozen forests and jagged ridgelines conceal the remnants of [[Solaran]] influence and the enduring legacy of the [[Grundthain]].

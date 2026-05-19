@@ -7,8 +7,7 @@ timelines:
 type: event
 status: draft
 era: '[[Age of Forging]]'
-tags:
-- era/age-of-forging
+tags: []
 aliases:
 - The Second Age
 year_display: AF 10001

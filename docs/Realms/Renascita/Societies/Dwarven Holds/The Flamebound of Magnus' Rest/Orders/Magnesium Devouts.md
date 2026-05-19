@@ -1,10 +1,7 @@
 ---
 type: organisation
 status: draft
-tags:
-- realm/renascita
-- faction/dwarven-holds
-- faction/flamebound-of-magnus-rest
+tags: []
 realm: '[[Renascita]]'
 parent_faction: '[[The Flamebound of Magnus'' Rest]]'
 ---

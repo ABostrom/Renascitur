@@ -2,8 +2,6 @@
 tags:
 - leader
 - House Sivis
-- realm/renascita
-- faction/firebrand-empire
 aliases:
 - Lysse
 type: character

@@ -2,8 +2,6 @@
 tags:
 - city-overseer
 - House Cannith
-- realm/renascita
-- faction/firebrand-empire
 aliases:
 - Cannith
 - Magnus' Rest Overseer

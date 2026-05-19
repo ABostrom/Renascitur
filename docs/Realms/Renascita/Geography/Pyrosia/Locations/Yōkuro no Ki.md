@@ -2,9 +2,7 @@
 type: landmark
 status: draft
 continent: '[[Pyrosia]]'
-tags:
-- realm/renascita
-- continent/pyrosia
+tags: []
 realm: '[[Renascita]]'
 ---
 ---

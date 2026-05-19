@@ -3,9 +3,6 @@ tags:
 - location
 - headquarters
 - House Orien
-- realm/renascita
-- continent/pyrosia
-- place/port-ardere
 aliases:
 - Journey’s Home
 type: landmark

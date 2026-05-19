@@ -1,8 +1,7 @@
 ---
 type: technology
 status: draft
-tags:
-- realm/renascita
+tags: []
 realm: '[[Renascita]]'
 ---
 The **[[Soul]] Engine** is a forbidden fusion of [[Solaran]] [[Astral Weaving|Soul Magic]], [[Ferrun]] craftsmanship and [[Astral Weaving]]. It is a construct designed to anchor a [[soul]] to a mortal body when the natural cycle of life and death has failed. Unlike necromantic reanimation, which forcibly binds a [[soul]] against its will, the [[Soul]] Engine acts as a **synthetic afterlife tether**, preserving the [[soul]]'s integrity within a contained system.

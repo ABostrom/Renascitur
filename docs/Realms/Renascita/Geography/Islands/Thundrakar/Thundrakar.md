@@ -8,9 +8,7 @@ leadership:
 - '[[Aundril Voxhammer]]'
 status: draft
 kind: island
-tags:
-- realm/renascita
-- continent/thundrakar
+tags: []
 realm: '[[Renascita]]'
 ---
 ![[Pasted image 20250419175154.png]]

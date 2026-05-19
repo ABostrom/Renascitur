@@ -7,8 +7,7 @@ timelines:
 type: event
 status: draft
 era: '[[Age of Forging]]'
-tags:
-- era/age-of-forging
+tags: []
 aliases:
 - Founding of the Pride of Sunreach
 year_display: AF 10150

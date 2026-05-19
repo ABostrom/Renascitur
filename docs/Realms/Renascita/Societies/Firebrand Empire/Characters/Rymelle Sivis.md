@@ -2,8 +2,6 @@
 tags:
 - city-overseer
 - House Sivis
-- realm/renascita
-- faction/firebrand-empire
 aliases:
 - Sivis
 - Lux Oescus Overseer

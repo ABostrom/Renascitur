@@ -1,9 +1,7 @@
 ---
 type: resource
 status: draft
-tags:
-- realm/renascita
-- category/minerals
+tags: []
 realm: '[[Renascita]]'
 category: Minerals
 ---

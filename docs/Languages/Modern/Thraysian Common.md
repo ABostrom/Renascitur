@@ -7,7 +7,6 @@ tags:
 - thraysian
 - dialect
 - magic
-- kind/modern
 language_family: '[[Valeshi]]'
 language_tier: dialect
 spoken_by:

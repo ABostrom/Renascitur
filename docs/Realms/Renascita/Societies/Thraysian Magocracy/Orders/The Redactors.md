@@ -1,9 +1,7 @@
 ---
 type: organisation
 status: stub
-tags:
-- realm/renascita
-- faction/thraysian-magocracy
+tags: []
 realm: '[[Renascita]]'
 parent_faction: '[[Thraysian Magocracy]]'
 ---

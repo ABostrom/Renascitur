@@ -5,7 +5,6 @@ tags:
 - race
 - elder
 - celestial
-- lineage/solarans
 lineage: '[[Elder Races]]'
 origin_plane: '[[Solirion]]'
 aat-race-tier: elder

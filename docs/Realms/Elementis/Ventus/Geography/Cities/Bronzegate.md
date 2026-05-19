@@ -1,7 +1,6 @@
 ---
 type: landmark
 status: draft
-tags:
-- realm/elementis
+tags: []
 ---
 The islands dot the sky, and the city of Bronzegate is built atop the largest of the floating islands. Smaller islands have been added to the city by great chains that are driven into the side of the rocks to pull them together.

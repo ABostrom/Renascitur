@@ -4,9 +4,6 @@ aliases:
 tags:
 - city
 - location
-- realm/renascita
-- continent/pyrosia
-- place/raining-bay
 type: settlement
 status: draft
 continent: '[[Pyrosia]]'

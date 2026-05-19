@@ -2,9 +2,7 @@
 type: landmark
 status: stub
 continent: '[[Draumhavn]]'
-tags:
-- realm/renascita
-- continent/draumhavn
+tags: []
 realm: '[[Renascita]]'
 ---
 # Stormgates

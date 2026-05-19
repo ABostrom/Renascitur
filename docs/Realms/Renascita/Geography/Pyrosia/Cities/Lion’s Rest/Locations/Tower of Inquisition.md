@@ -3,9 +3,6 @@ tags:
 - location
 - headquarters
 - House Medani
-- realm/renascita
-- continent/pyrosia
-- place/lions-rest
 aliases:
 - Tower of Inquisition
 type: landmark

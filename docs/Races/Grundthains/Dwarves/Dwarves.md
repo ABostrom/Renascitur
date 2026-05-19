@@ -1,9 +1,7 @@
 ---
 type: race
 status: stub
-tags:
-- lineage/grundthains
-- race/dwarves
+tags: []
 lineage: Grundthain
 ---
 # Dwarves

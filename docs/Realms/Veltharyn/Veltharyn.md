@@ -1,7 +1,6 @@
 ---
 type: landmark
 status: stub
-tags:
-- realm/veltharyn
+tags: []
 ---
 The plane of [[Concorda]] and [[Noxar]]

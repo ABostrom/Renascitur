@@ -3,8 +3,6 @@ tags:
 - zahirah
 - khadi
 - nehrun
-- realm/renascita
-- faction/thraysian-magocracy
 aliases:
 - Khadi of Nehrun
 - Tamirah

@@ -1,9 +1,7 @@
 ---
 type: technology
 status: draft
-tags:
-- realm/renascita
-- faction/solaran-federation-of-worlds
+tags: []
 realm: '[[Renascita]]'
 ---
 *Gateways of Light, Folded [[Weave]], and [[Solaran]] Ambition*

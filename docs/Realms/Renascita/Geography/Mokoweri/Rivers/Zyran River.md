@@ -2,8 +2,6 @@
 type: waterway
 status: stub
 continent: '[[Mokoweri]]'
-tags:
-- realm/renascita
-- continent/mokoweri
+tags: []
 realm: '[[Renascita]]'
 ---

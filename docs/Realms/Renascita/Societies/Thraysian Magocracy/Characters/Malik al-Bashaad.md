@@ -3,8 +3,6 @@ tags:
 - zahirah
 - khadi
 - saramun
-- realm/renascita
-- faction/thraysian-magocracy
 aliases:
 - Khadi of Saramun
 - Malik

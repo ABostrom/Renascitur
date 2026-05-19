@@ -1,8 +1,7 @@
 ---
 type: prophecy
 status: draft
-tags:
-- realm/renascita
+tags: []
 realm: '[[Renascita]]'
 ---
 [[Vecna]] wrote a single prophecy in the [[Book of Vile Darkness]] before he was destroyed. 

@@ -3,8 +3,7 @@ aliases:
 - Tharamos, The Worldforger
 type: essay
 status: draft
-tags:
-- category/aeternum
+tags: []
 ---
 # [[Tharamos]], The Worldforger
 

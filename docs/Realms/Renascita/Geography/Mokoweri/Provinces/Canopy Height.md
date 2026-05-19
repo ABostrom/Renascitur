@@ -2,10 +2,7 @@
 type: region
 status: draft
 continent: '[[Mokoweri]]'
-tags:
-- realm/renascita
-- continent/mokoweri
-- region/canopy-height-md
+tags: []
 realm: '[[Renascita]]'
 ---
 This region is characterized by its vast, dense canopy that provides a home to countless creatures. Here, the trees are so tall and thick that sunlight barely penetrates the forest floor, creating a cool and shaded environment below.

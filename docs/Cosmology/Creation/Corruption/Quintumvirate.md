@@ -3,8 +3,7 @@ aliases:
 - God Hand
 type: cosmic-force
 status: draft
-tags:
-- category/corruption
+tags: []
 ---
 The god hand is a quintumvirate of aberration sovereigns who act as executors of the [[Ishna|Ishna's]] will.
 After [[Tau, Sin Manifest]] was slain by [[Unimus]]

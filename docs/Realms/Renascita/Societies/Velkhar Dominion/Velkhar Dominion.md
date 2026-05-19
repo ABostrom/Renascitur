@@ -2,9 +2,7 @@
 type: faction
 status: draft
 realm: '[[Renascita]]'
-tags:
-- realm/renascita
-- faction/velkhar-dominion
+tags: []
 ---
 **Type**:: Sovereign Protectorate  
 **Capital**:: [[Calvereth]]  

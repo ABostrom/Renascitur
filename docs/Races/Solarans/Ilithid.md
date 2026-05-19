@@ -3,8 +3,7 @@ aliases:
 - Ilithids
 type: race
 status: stub
-tags:
-- lineage/solarans
+tags: []
 lineage: Solarans
 ---
 ![[Syuul, The Devourer]]

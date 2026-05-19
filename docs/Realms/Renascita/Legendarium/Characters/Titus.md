@@ -1,8 +1,7 @@
 ---
 type: character
 status: draft
-tags:
-- realm/renascita
+tags: []
 realm: '[[Renascita]]'
 ---
 Titus, the imposing and majestic leader of the Tyrannosaurs in the jungle region of Canopy Heights, is a sight to behold. Towering over all other creatures in the area, he is a formidable Tyrannosaurus Rex with gleaming golden eyes that exude both intelligence and ferocity. His scales are a rich mix of deep green and earthy tones, camouflaging him effectively amidst the lush foliage of the jungle.

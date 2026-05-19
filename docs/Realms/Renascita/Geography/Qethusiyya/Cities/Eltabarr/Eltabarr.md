@@ -2,10 +2,7 @@
 type: settlement
 status: draft
 continent: '[[Qethusiyya]]'
-tags:
-- realm/renascita
-- continent/qethusiyya
-- place/eltabarr
+tags: []
 realm: '[[Renascita]]'
 ---
 In the heart of Thraysia lies Eltabarr, a city where the sands of time and the gears of progress turn in unison, weaving a tapestry of culture and innovation unrivaled in the known world. Governed by the esteemed Majlis of Arcane Sovereignty, this magocracy stands as a testament to the power of unity and the pursuit of knowledge.

@@ -5,8 +5,6 @@ tags:
 - grain
 - agriculture
 - food
-- realm/renascita
-- faction/thraysian-magocracy
 aliases:
 - Khadiyat-e Talvareh
 type: organisation

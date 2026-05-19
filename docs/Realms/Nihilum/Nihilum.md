@@ -1,7 +1,6 @@
 ---
 type: landmark
 status: stub
-tags:
-- realm/nihilum
+tags: []
 ---
 The plane of [[Chaor]] and [[Noxar]]

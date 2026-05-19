@@ -1,9 +1,7 @@
 ---
 type: deity
 status: stub
-tags:
-- era/age-of-stagnation
-- pantheon/luxar-gods
+tags: []
 pantheon: '[[Luxar Gods]]'
 era_of_emergence: '[[Age of Stagnation]]'
 ---

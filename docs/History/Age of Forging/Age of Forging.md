@@ -1,8 +1,7 @@
 ---
 type: era
 status: stub
-tags:
-- era/age-of-forging
+tags: []
 code: AF
 aliases:
 - Second Age

@@ -6,7 +6,6 @@ tags:
 - engineered
 - undead
 - constructs
-- lineage/engineered
 lineage: Engineered Race
 origin_plane: '[[Renascita]]'
 aat-race-tier: engineered

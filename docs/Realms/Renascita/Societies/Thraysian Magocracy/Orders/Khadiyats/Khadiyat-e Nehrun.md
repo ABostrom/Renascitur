@@ -5,8 +5,6 @@ tags:
 - ink
 - glyphs
 - writing
-- realm/renascita
-- faction/thraysian-magocracy
 aliases:
 - Khadiyat-e Nehrun
 type: organisation

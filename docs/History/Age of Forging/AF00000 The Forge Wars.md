@@ -2,8 +2,7 @@
 type: event
 status: stub
 era: '[[Age of Forging]]'
-tags:
-- era/age-of-forging
+tags: []
 aliases:
 - The Forge Wars
 year_display: AF (undated)

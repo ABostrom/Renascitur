@@ -2,9 +2,7 @@
 type: landmark
 status: draft
 continent: '[[Mokoweri]]'
-tags:
-- realm/renascita
-- continent/mokoweri
+tags: []
 realm: '[[Renascita]]'
 ---
 # Entrance Chamber - Luminescent Foyer

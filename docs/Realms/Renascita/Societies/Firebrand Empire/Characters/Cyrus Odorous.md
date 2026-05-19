@@ -1,9 +1,7 @@
 ---
 type: character
 status: stub
-tags:
-- realm/renascita
-- faction/firebrand-empire
+tags: []
 realm: '[[Renascita]]'
 affiliation: '[[Firebrand Empire]]'
 ---

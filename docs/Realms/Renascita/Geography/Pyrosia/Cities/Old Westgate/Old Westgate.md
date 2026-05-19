@@ -4,9 +4,6 @@ aliases:
 tags:
 - city
 - location
-- realm/renascita
-- continent/pyrosia
-- place/old-westgate
 type: settlement
 status: draft
 continent: '[[Pyrosia]]'

@@ -39,9 +39,7 @@ rivers:
 - '[[Glowtongue Stream]]'
 - '[[Moltren Delta]]'
 status: draft
-tags:
-- realm/renascita
-- continent/pyrosia
+tags: []
 realm: '[[Renascita]]'
 ---
 **Pyrosia** is a vast and diverse land of elemental tension, tectonic fire, and sprawling nations. Bordered by volcanic coastlines and inland mountain arcs, the continent hosts an enormous range of biomes — from the charred [[Ashgatar]] highlands to the verdant woodlands near [[Raining Bay]].

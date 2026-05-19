@@ -2,10 +2,7 @@
 type: settlement
 status: draft
 continent: '[[Arcturia]]'
-tags:
-- realm/renascita
-- continent/arcturia
-- place/runehart-md
+tags: []
 realm: '[[Renascita]]'
 ---
 ### **Runehart: The Lost Hold of [[Muradin]]**

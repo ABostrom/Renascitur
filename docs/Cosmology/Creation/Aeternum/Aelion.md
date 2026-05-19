@@ -1,8 +1,7 @@
 ---
 type: essay
 status: draft
-tags:
-- category/aeternum
+tags: []
 ---
 # [[Aelion]], The First Dawn
 

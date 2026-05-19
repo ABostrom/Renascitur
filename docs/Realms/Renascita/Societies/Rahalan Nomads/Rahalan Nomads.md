@@ -2,9 +2,7 @@
 type: faction
 status: draft
 realm: '[[Renascita]]'
-tags:
-- realm/renascita
-- faction/rahalan-nomads
+tags: []
 ---
 In the heart of the vast deserts surrounding the mystical city of Eltabarr lies the nomadic and enigmatic culture of the Rahalans. Governed by the principles of matriarchy and reverence for their elders, the Rahalans have cultivated a society deeply rooted in spiritual connections and a harmonious relationship with nature.
 

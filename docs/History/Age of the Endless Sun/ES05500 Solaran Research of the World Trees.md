@@ -8,8 +8,7 @@ timelines:
 type: event
 status: draft
 era: '[[Age of the Endless Sun]]'
-tags:
-- era/age-of-the-endless-sun
+tags: []
 aliases:
 - Solaran Research of the World Trees
 year_display: ES 5500

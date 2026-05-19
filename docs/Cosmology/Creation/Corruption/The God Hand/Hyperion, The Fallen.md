@@ -1,7 +1,6 @@
 ---
 type: cosmic-force
 status: stub
-tags:
-- category/corruption
+tags: []
 ---
 the ## Hyperion, The Fallen

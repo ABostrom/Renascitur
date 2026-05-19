@@ -7,8 +7,7 @@ timelines:
 type: event
 status: draft
 era: '[[Age of the Endless Sun]]'
-tags:
-- era/age-of-the-endless-sun
+tags: []
 aliases:
 - Golden Age of Harmony
 year_display: ES 1500

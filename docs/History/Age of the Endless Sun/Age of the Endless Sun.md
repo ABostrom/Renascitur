@@ -1,8 +1,7 @@
 ---
 type: era
 status: stub
-tags:
-- era/age-of-the-endless-sun
+tags: []
 code: ES
 aliases:
 - First Age

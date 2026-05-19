@@ -8,8 +8,7 @@ timelines:
 type: event
 status: draft
 era: '[[Age of Forging]]'
-tags:
-- era/age-of-forging
+tags: []
 aliases:
 - Invention of Arcanometry
 year_display: AF 10500

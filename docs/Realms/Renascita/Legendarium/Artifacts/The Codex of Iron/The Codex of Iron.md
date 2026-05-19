@@ -4,8 +4,7 @@ aliases:
 - Iron Codex
 type: artifact
 status: draft
-tags:
-- realm/renascita
+tags: []
 realm: '[[Renascita]]'
 ---
 ### **The Codex of Iron**

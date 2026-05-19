@@ -1,8 +1,7 @@
 ---
 type: essay
 status: draft
-tags:
-- realm/planes
+tags: []
 ---
 ## Planes of [[Luxar]]
 ![[Imperium]]

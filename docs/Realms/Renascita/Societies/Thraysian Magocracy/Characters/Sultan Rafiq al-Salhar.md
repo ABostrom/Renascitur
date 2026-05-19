@@ -3,8 +3,6 @@ tags:
 - zahirah
 - sultan
 - politics
-- realm/renascita
-- faction/thraysian-magocracy
 aliases:
 - Sultan of Zahirah
 - Rafiq al-Salhar

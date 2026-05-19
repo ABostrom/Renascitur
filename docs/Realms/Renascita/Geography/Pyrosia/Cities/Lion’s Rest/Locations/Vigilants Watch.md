@@ -3,9 +3,6 @@ tags:
 - location
 - headquarters
 - House Deneith
-- realm/renascita
-- continent/pyrosia
-- place/lions-rest
 aliases:
 - Vigilants Watch
 type: landmark

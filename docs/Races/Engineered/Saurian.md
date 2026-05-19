@@ -6,7 +6,6 @@ tags:
 - engineered
 - reptilian
 - spiritual
-- lineage/engineered
 lineage: Engineered Race
 origin_plane: '[[Renascita]]'
 aat-race-tier: engineered

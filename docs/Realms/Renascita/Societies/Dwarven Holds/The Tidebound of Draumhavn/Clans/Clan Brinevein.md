@@ -1,10 +1,7 @@
 ---
 type: organisation
 status: stub
-tags:
-- realm/renascita
-- faction/dwarven-holds
-- faction/tidebound-of-draumhavn
+tags: []
 realm: '[[Renascita]]'
 parent_faction: '[[The Tidebound of Draumhavn]]'
 ---

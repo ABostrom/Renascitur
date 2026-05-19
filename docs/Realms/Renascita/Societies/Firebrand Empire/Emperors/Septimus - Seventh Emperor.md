@@ -1,9 +1,7 @@
 ---
 type: character
 status: draft
-tags:
-- realm/renascita
-- faction/firebrand-empire
+tags: []
 realm: '[[Renascita]]'
 affiliation: '[[Firebrand Empire]]'
 ---

@@ -4,9 +4,6 @@ aliases:
 tags:
 - city
 - location
-- realm/renascita
-- continent/pyrosia
-- region/ashgatar
 type: region
 status: draft
 continent: '[[Pyrosia]]'

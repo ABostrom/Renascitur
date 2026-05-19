@@ -4,10 +4,7 @@ aliases:
 - High Pyrethane Volgrin Flameward
 type: character
 status: draft
-tags:
-- realm/renascita
-- faction/dwarven-holds
-- faction/flamebound-of-magnus-rest
+tags: []
 realm: '[[Renascita]]'
 affiliation: '[[The Flamebound of Magnus'' Rest]]'
 ---

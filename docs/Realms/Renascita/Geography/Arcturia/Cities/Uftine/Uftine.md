@@ -7,10 +7,7 @@ society: '[[Icebound of Uftine]]'
 leadership:
 - '[[Gromdir Stillhand]]'
 status: draft
-tags:
-- realm/renascita
-- continent/arcturia
-- place/uftine
+tags: []
 realm: '[[Renascita]]'
 ---
 ![[2a6dc07c-2481-498a-96e7-b1cbae589bb1.png]]

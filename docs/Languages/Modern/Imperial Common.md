@@ -6,7 +6,6 @@ tags:
 - language
 - trade
 - common
-- kind/modern
 language_family: '[[Valeshi]]'
 language_tier: derived
 spoken_by:

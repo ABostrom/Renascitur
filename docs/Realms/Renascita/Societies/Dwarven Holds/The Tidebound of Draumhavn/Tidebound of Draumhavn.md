@@ -1,10 +1,7 @@
 ---
 type: faction
 status: draft
-tags:
-- realm/renascita
-- faction/dwarven-holds
-- faction/tidebound-of-draumhavn
+tags: []
 realm: '[[Renascita]]'
 parent_faction: '[[Dwarven Holds]]'
 ---

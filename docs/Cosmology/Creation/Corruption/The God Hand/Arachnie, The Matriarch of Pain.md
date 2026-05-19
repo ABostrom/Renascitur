@@ -1,7 +1,6 @@
 ---
 type: cosmic-force
 status: stub
-tags:
-- category/corruption
+tags: []
 ---
 ## Arachnie, The Matriarch of Pain

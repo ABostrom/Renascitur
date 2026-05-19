@@ -3,8 +3,6 @@ tags:
 - magic
 - arcane
 - glyph
-- realm/renascita
-- discipline/arcane
 type: technology
 status: draft
 realm: '[[Renascita]]'

@@ -2,10 +2,7 @@
 type: region
 status: draft
 continent: '[[Pyrosia]]'
-tags:
-- realm/renascita
-- continent/pyrosia
-- region/ashen-plains
+tags: []
 realm: '[[Renascita]]'
 region: '[[Ashen Plains]]'
 ---

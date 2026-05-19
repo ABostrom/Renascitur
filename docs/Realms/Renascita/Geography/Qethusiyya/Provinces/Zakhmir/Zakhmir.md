@@ -2,10 +2,7 @@
 type: region
 status: draft
 continent: '[[Qethusiyya]]'
-tags:
-- realm/renascita
-- continent/qethusiyya
-- region/zakhmir
+tags: []
 realm: '[[Renascita]]'
 ---
 # Zakhmir

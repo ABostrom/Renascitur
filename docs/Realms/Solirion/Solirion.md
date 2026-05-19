@@ -1,7 +1,6 @@
 ---
 type: landmark
 status: stub
-tags:
-- realm/solirion
+tags: []
 ---
 The plane of [[Concorda]] and [[Luxar]]
