@@ -7,9 +7,9 @@ realm: '[[Renascita]]'
 importance: legendary
 population: ''
 climate: arctic
-terrain: ''
-defenses: ''
-predominant_economy: ''
+terrain: mountains
+defenses: fortified
+predominant_economy: industrial
 ---
 ### **Runehart: The Lost Hold of [[Muradin]]**
 

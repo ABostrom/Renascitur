@@ -7,8 +7,10 @@ affiliation: '[[The Solaran Federation of Worlds]]'
 nature: mortal
 importance: ''
 alignment: ''
-gender: ''
-role: []
+gender: female
+role:
+- warrior
+- mage
 magic: []
 living_status: ''
 era_of_birth: ''

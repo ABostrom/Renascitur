@@ -4,7 +4,7 @@ status: draft
 continent: '[[Mokoweri]]'
 tags: []
 realm: '[[Renascita]]'
-nature: ''
+nature: aberrant
 importance: minor
 ---
 ### The Research Complex

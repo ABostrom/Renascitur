@@ -5,7 +5,8 @@ continent: '[[Qethusiyya]]'
 tags: []
 realm: '[[Renascita]]'
 climate: arid
-terrain: []
+terrain:
+- coast
 dominant_culture: ''
 population_density: ''
 ---

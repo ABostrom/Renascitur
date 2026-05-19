@@ -13,7 +13,8 @@ seat: ''
 size: regional
 allies: []
 rivals: []
-magic: []
+magic:
+- '[[Glyph Magic]]'
 ---
 **Type**:: Sovereign Protectorate  
 **Capital**:: [[Calvereth]]  

@@ -11,6 +11,8 @@ worshippers: []
 temples: []
 holy_day: ''
 symbol: ''
+domain:
+- sea
 ---
 # God of Storms and Destruction, The Maelstrom
 

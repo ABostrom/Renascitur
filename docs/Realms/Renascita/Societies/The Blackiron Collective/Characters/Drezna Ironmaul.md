@@ -7,7 +7,7 @@ affiliation: '[[The Blackiron Collective]]'
 nature: forgeborn
 importance: ''
 alignment: ''
-gender: ''
+gender: female
 role: []
 magic: []
 living_status: ''

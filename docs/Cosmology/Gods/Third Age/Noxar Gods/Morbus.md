@@ -11,6 +11,8 @@ worshippers: []
 temples: []
 holy_day: ''
 symbol: ''
+domain:
+- pestilence
 ---
 # God of Pestilence, The Blight Spreader
 

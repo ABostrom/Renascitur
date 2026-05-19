@@ -7,9 +7,9 @@ realm: '[[Renascita]]'
 importance: notable
 population: ''
 climate: arid
-terrain: ''
+terrain: underground
 defenses: ''
-predominant_economy: ''
+predominant_economy: mining
 ---
 # Thelassia: The City of the Endless Flame
 

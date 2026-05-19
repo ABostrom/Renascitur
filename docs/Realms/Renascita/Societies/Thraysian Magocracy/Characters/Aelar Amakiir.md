@@ -8,7 +8,8 @@ nature: mortal
 importance: ''
 alignment: ''
 gender: ''
-role: []
+role:
+- scholar
 magic: []
 living_status: ''
 era_of_birth: ''

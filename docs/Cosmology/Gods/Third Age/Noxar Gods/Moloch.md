@@ -11,6 +11,8 @@ worshippers: []
 temples: []
 holy_day: ''
 symbol: ''
+domain:
+- war
 ---
 # God of Conquest, The Spear of Vengeance
 

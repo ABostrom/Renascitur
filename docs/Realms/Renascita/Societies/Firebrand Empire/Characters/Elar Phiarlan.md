@@ -11,7 +11,7 @@ affiliation: '[[Firebrand Empire]]'
 nature: mortal
 importance: ''
 alignment: ''
-gender: ''
+gender: male
 role: []
 magic: []
 living_status: ''

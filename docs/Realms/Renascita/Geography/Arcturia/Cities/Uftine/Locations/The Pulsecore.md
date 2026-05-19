@@ -7,7 +7,7 @@ continent: '[[Arcturia]]'
 tags: []
 realm: '[[Renascita]]'
 inside: '[[Uftine]]'
-nature: ''
+nature: corrupted
 importance: minor
 ---
 ## Overview

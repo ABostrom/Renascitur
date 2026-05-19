@@ -7,13 +7,14 @@ affiliation: '[[Firebrand Empire]]'
 nature: mortal
 importance: ''
 alignment: ''
-gender: ''
-role: []
+gender: male
+role:
+- ruler
 magic: []
-living_status: ''
+living_status: deceased
 era_of_birth: ''
 era_of_death: ''
-race: '[[Imperial Human]]'
+race: '[[Leonin]]'
 culture: '[[Firebrand]]'
 ---
 - **Appearance**: Quintavius is portrayed as a vibrant and charismatic [[docs/Races/Kyojin/Leonin/Leonin|Leonin]] with a mane of golden-brown that shines with vitality. His eyes are a warm green, and he is depicted wearing elegant robes and a crown adorned with precious gems, symbolizing his love for culture and the arts.

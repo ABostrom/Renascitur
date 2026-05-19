@@ -11,6 +11,9 @@ worshippers: []
 temples: []
 holy_day: ''
 symbol: ''
+domain:
+- death
+- war
 ---
 # God of Death, The Anima Mea
 

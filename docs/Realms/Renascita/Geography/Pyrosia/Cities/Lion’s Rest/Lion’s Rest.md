@@ -11,9 +11,9 @@ realm: '[[Renascita]]'
 importance: notable
 population: ''
 climate: volcanic
-terrain: ''
-defenses: ''
-predominant_economy: ''
+terrain: plains
+defenses: fortified
+predominant_economy: military
 ---
 ## Province
 - [[Ashen Plains]]

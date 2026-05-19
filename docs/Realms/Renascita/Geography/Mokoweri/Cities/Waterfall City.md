@@ -7,7 +7,7 @@ realm: '[[Renascita]]'
 importance: notable
 population: ''
 climate: tropical
-terrain: ''
+terrain: forest
 defenses: ''
 predominant_economy: ''
 ---

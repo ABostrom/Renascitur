@@ -13,8 +13,11 @@ realm: '[[Renascita]]'
 nature: ''
 importance: ''
 alignment: ''
-gender: ''
-role: []
+gender: male
+role:
+- ruler
+- warrior
+- prophet
 magic: []
 living_status: ''
 era_of_birth: ''

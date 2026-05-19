@@ -14,7 +14,8 @@ nature: mortal
 importance: ''
 alignment: ''
 gender: ''
-role: []
+role:
+- ruler
 magic: []
 living_status: ''
 era_of_birth: ''

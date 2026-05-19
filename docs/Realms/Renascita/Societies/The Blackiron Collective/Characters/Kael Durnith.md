@@ -8,7 +8,8 @@ nature: forgeborn
 importance: ''
 alignment: ''
 gender: ''
-role: []
+role:
+- prophet
 magic: []
 living_status: ''
 era_of_birth: ''

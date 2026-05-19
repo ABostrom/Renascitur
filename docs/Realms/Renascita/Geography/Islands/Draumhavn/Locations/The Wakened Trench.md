@@ -4,7 +4,7 @@ status: draft
 continent: '[[Draumhavn]]'
 tags: []
 realm: '[[Renascita]]'
-nature: ''
+nature: corrupted
 importance: minor
 ---
 ## Overview

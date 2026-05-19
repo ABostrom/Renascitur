@@ -11,8 +11,8 @@ realm: '[[Renascita]]'
 importance: notable
 population: ''
 climate: volcanic
-terrain: ''
-defenses: ''
+terrain: plains
+defenses: fortified
 predominant_economy: ''
 ---
 ## Province

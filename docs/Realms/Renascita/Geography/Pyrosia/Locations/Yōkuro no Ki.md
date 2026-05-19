@@ -4,7 +4,7 @@ status: draft
 continent: '[[Pyrosia]]'
 tags: []
 realm: '[[Renascita]]'
-nature: ''
+nature: divine
 importance: minor
 ---
 ---

@@ -11,6 +11,8 @@ worshippers: []
 temples: []
 holy_day: ''
 symbol: ''
+domain:
+- nature
 ---
 ## Goddess of Nature and Life, The Earth Mother
 

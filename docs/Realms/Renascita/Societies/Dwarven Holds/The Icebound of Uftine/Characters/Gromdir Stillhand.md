@@ -9,8 +9,10 @@ affiliation: '[[The Icebound of Uftine]]'
 nature: mortal
 importance: ''
 alignment: ''
-gender: ''
-role: []
+gender: male
+role:
+- ruler
+- mentor
 magic: []
 living_status: ''
 era_of_birth: ''

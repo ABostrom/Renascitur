@@ -4,7 +4,7 @@ status: draft
 continent: '[[Mokoweri]]'
 tags: []
 realm: '[[Renascita]]'
-nature: ''
+nature: eldritch
 importance: minor
 ---
 # Entrance Chamber - Luminescent Foyer

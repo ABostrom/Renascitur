@@ -4,7 +4,7 @@ status: draft
 continent: '[[Mokoweri]]'
 tags: []
 realm: '[[Renascita]]'
-nature: ''
+nature: divine
 importance: minor
 ---
 The Eversoul Grove, a realm of unparalleled mystique and beauty, unfolds in a secluded valley, encircled by the stark, volcanic caverns and sheer, obsidian rock faces that define the landscape. This verdant sanctuary stands as a vivid contrast to its harsh surroundings, a testament to the ancient and profound magic that shields and sustains it. The air within the grove is thick with the essence of magic, carrying the scent of a myriad of exotic plants and the fresh purity of the oasis at its heart.

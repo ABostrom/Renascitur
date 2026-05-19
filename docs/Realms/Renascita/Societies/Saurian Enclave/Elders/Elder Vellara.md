@@ -7,8 +7,9 @@ affiliation: '[[Saurian Enclave]]'
 nature: bioengineered
 importance: ''
 alignment: ''
-gender: ''
-role: []
+gender: female
+role:
+- mentor
 magic: []
 living_status: ''
 era_of_birth: ''

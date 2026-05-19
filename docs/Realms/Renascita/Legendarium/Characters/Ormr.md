@@ -3,15 +3,17 @@ type: character
 status: draft
 tags: []
 realm: '[[Renascita]]'
-nature: ''
+nature: mortal
 importance: ''
 alignment: ''
 gender: ''
-role: []
+role:
+- craftsman
 magic: []
 living_status: ''
 era_of_birth: ''
 era_of_death: ''
+race: '[[Stormbound]]'
 ---
 # Ormr - Thunder of the deep 
 Ancient Bronze Dragon

@@ -6,7 +6,8 @@ tags: []
 realm: '[[Renascita]]'
 region: '[[Ashen Plains]]'
 climate: volcanic
-terrain: []
+terrain:
+- river
 dominant_culture: ''
 population_density: ''
 ---

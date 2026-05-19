@@ -6,8 +6,9 @@ realm: '[[Renascita]]'
 nature: ''
 importance: ''
 alignment: ''
-gender: ''
-role: []
+gender: male
+role:
+- warrior
 magic: []
 living_status: ''
 era_of_birth: ''

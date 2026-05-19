@@ -7,8 +7,9 @@ affiliation: '[[Firebrand Empire]]'
 nature: mortal
 importance: ''
 alignment: ''
-gender: ''
-role: []
+gender: male
+role:
+- ruler
 magic: []
 living_status: ''
 era_of_birth: ''

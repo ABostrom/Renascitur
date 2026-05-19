@@ -7,7 +7,7 @@ affiliation: '[[The Icebound of Uftine]]'
 nature: mortal
 importance: ''
 alignment: ''
-gender: ''
+gender: male
 role: []
 magic: []
 living_status: ''

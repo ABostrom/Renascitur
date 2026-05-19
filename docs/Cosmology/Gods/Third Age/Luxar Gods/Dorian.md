@@ -11,6 +11,8 @@ worshippers: []
 temples: []
 holy_day: ''
 symbol: ''
+domain:
+- knowledge
 ---
 # God of Knowledge, The Weaver
 

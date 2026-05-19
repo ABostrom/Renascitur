@@ -6,7 +6,7 @@ status: draft
 continent: '[[Arcturia]]'
 tags: []
 realm: '[[Renascita]]'
-nature: ''
+nature: divine
 importance: minor
 ---
 aliases:  [[Dürrenholt]] / [[Dürrenholt|Wyrmholt]]

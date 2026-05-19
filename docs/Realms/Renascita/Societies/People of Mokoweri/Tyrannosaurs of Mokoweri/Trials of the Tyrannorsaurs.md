@@ -7,8 +7,9 @@ affiliation: '[[People of Mokoweri]]'
 nature: mortal
 importance: ''
 alignment: ''
-gender: ''
-role: []
+gender: nonbinary
+role:
+- warrior
 magic: []
 living_status: ''
 era_of_birth: ''

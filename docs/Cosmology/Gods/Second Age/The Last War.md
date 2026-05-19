@@ -5,11 +5,14 @@ tags: []
 era_of_emergence: '[[Age of Forging]]'
 nature: divine
 importance: major
-alignment: ''
+alignment: lawful-good
 worshippers: []
 temples: []
 holy_day: ''
 symbol: ''
+domain:
+- death
+- war
 ---
 [[Ishna|The god unborn]] could twist and contort the souls of mortals into unnatural [[aberrations]].
 

@@ -6,11 +6,13 @@ pantheon: '[[Noxar Gods]]'
 era_of_emergence: '[[Age of Stagnation]]'
 nature: divine
 importance: major
-alignment: ''
+alignment: chaotic-neutral
 worshippers: []
 temples: []
 holy_day: ''
 symbol: ''
+domain:
+- trickery
 ---
 # God of Trickery, The Deceiver
 

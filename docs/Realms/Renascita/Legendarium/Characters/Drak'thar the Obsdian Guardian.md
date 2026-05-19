@@ -3,15 +3,17 @@ type: character
 status: draft
 tags: []
 realm: '[[Renascita]]'
-nature: ''
+nature: mortal
 importance: ''
 alignment: ''
 gender: ''
-role: []
+role:
+- warrior
 magic: []
-living_status: ''
+living_status: imprisoned
 era_of_birth: ''
 era_of_death: ''
+race: '[[Solaran]]'
 ---
 _Species_: Ancient Obsidian Dragon
 

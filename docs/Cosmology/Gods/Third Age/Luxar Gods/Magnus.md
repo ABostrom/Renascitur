@@ -6,11 +6,13 @@ pantheon: '[[Luxar Gods]]'
 era_of_emergence: '[[Age of Stagnation]]'
 nature: divine
 importance: major
-alignment: ''
+alignment: neutral-good
 worshippers: []
 temples: []
 holy_day: ''
 symbol: ''
+domain:
+- forge
 ---
 # God of Craft, The All Father
 

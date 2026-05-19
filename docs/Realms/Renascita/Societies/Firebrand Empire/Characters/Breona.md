@@ -7,7 +7,7 @@ affiliation: '[[Firebrand Empire]]'
 nature: mortal
 importance: ''
 alignment: ''
-gender: ''
+gender: female
 role: []
 magic: []
 living_status: ''

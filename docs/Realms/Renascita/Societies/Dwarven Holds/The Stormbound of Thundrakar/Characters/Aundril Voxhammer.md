@@ -9,10 +9,10 @@ affiliation: '[[The Stormbound of Thundrakar]]'
 nature: mortal
 importance: ''
 alignment: ''
-gender: ''
+gender: female
 role: []
 magic: []
-living_status: ''
+living_status: deceased
 era_of_birth: ''
 era_of_death: ''
 race: '[[Dwarf]]'

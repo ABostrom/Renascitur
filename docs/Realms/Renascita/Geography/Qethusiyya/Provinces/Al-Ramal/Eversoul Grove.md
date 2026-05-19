@@ -6,7 +6,8 @@ tags: []
 realm: '[[Renascita]]'
 region: '[[Al-Ramal]]'
 climate: arid
-terrain: []
+terrain:
+- forest
 dominant_culture: ''
 population_density: ''
 ---

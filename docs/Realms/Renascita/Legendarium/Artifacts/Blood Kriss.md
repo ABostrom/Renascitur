@@ -6,7 +6,7 @@ realm: '[[Renascita]]'
 nature: ''
 importance: notable
 current_bearer: ''
-cursed: false
+cursed: true
 divine: false
 magic: []
 ---

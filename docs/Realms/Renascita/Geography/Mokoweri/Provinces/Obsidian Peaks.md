@@ -5,7 +5,9 @@ continent: '[[Mokoweri]]'
 tags: []
 realm: '[[Renascita]]'
 climate: tropical
-terrain: []
+terrain:
+- mountains
+- coast
 dominant_culture: ''
 population_density: ''
 ---

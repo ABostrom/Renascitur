@@ -5,11 +5,13 @@ tags: []
 era_of_emergence: '[[Age of Forging]]'
 nature: divine
 importance: major
-alignment: ''
+alignment: chaotic-evil
 worshippers: []
 temples: []
 holy_day: ''
 symbol: ''
+domain:
+- death
 ---
 ### **The Life of Muradin: The Visionary, the Smith, the God**
 

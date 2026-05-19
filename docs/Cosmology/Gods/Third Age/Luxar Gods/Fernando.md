@@ -11,6 +11,8 @@ worshippers: []
 temples: []
 holy_day: ''
 symbol: ''
+domain:
+- trickery
 ---
 # God of Luck and Truth, The Trickster
 

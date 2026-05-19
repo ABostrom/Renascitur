@@ -7,13 +7,15 @@ affiliation: '[[Firebrand Empire]]'
 nature: mortal
 importance: ''
 alignment: ''
-gender: ''
-role: []
+gender: male
+role:
+- ruler
+- priest
 magic: []
-living_status: ''
+living_status: deceased
 era_of_birth: ''
 era_of_death: ''
-race: '[[Imperial Human]]'
+race: '[[Leonin]]'
 culture: '[[Firebrand]]'
 ---
 - **Appearance**: Septimus is portrayed as a solemn and introspective [[docs/Races/Kyojin/Leonin/Leonin|Leonin]] with a mane of deep black, symbolizing his connection to the mysteries of life and death. His piercing grey eyes reflect his understanding of mortality and the afterlife. He wears a cloak of midnight blue, adorned with symbols of the afterlife.

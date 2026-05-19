@@ -7,10 +7,11 @@ affiliation: '[[Firebrand Empire]]'
 nature: mortal
 importance: ''
 alignment: ''
-gender: ''
-role: []
+gender: male
+role:
+- ruler
 magic: []
-living_status: ''
+living_status: deceased
 era_of_birth: ''
 era_of_death: ''
 race: '[[Imperial Human]]'

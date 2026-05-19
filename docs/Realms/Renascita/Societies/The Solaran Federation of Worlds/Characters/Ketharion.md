@@ -7,8 +7,9 @@ affiliation: '[[The Solaran Federation of Worlds]]'
 nature: mortal
 importance: ''
 alignment: ''
-gender: ''
-role: []
+gender: male
+role:
+- priest
 magic: []
 living_status: ''
 era_of_birth: ''

@@ -7,7 +7,7 @@ nature: ''
 importance: notable
 current_bearer: ''
 cursed: false
-divine: false
+divine: true
 magic: []
 ---
 ---

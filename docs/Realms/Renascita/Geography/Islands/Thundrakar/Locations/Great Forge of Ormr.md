@@ -4,7 +4,7 @@ status: draft
 continent: '[[Thundrakar]]'
 tags: []
 realm: '[[Renascita]]'
-nature: ''
+nature: divine
 importance: minor
 ---
 ## Overview  
