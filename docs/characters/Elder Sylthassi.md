@@ -2,8 +2,8 @@
 type: character
 status: draft
 tags: []
-realm: '[[Renascita]]'
-affiliation: '[[Saurian Enclave]]'
+realm: [[Renascita]]
+affiliation: [[Saurian Enclave]]
 nature: bioengineered
 importance: ''
 alignment: ''
@@ -14,9 +14,9 @@ magic: []
 living_status: ''
 era_of_birth: ''
 era_of_death: ''
-race: '[[Saurian]]'
-culture: '[[Saurian]]'
-location: '[[Aeloria]]'
+race: [[Saurian]]
+culture: [[Saurian]]
+location: [[Aeloria]]
 ---
 ### Elder Sylthassi
 

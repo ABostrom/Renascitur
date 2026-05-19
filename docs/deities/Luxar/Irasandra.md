@@ -2,8 +2,8 @@
 type: deity
 status: stub
 tags: []
-pantheon: '[[Luxar Gods]]'
-era_of_emergence: '[[Age of Stagnation]]'
+pantheon: [[Luxar Gods]]
+era_of_emergence: [[Age of Stagnation]]
 nature: divine
 importance: major
 alignment: ''

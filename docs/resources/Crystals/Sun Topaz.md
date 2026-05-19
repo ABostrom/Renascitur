@@ -2,7 +2,7 @@
 type: resource
 status: draft
 tags: []
-realm: '[[Renascita]]'
+realm: [[Renascita]]
 category: Crystals
 nature: ''
 importance: minor
@@ -10,7 +10,7 @@ importance: minor
 ## Location  
 [[Sun Topaz]] occurs **naturally in the land surrounding [[the Eternal Flame]]**, crystallized from molten stone infused with divine radiance. These raw stones are embedded in the obsidian veins and golden faults of the region, glowing faintly even underground.
 
-The [[Solaran]] were the first to recognize its potential, mining and refining [[Sun Topaz]] for use across their civilization. Today, it is most often found in **[[Solaran]] ruins**, embedded in broken latticework, containment cores, or lightforged devices — but its **origin is the sacred heart of the [[Flamebound]] homeland**.
+The [[Solaran]] were the first to recognize its potential, mining and refining [[Sun Topaz]] for use across their civilization. Today, it is most often found in **[[Solaran]] ruins**, embedded in broken latticework, containment cores, or lightforged devices — but its **origin is the sacred heart of the [[The Flamebound of Magnus' Rest]] homeland**.
 
 ## Description  
 A luminous gold gemstone that retains a subtle inner warmth, even in shadow. When exposed to direct sunlight, it glows brighter, and pulses slowly — almost like breath. Fully charged Sun Topaz radiates a steady light and is warm to the touch, emitting soft solar harmonics when set in arcane devices.
@@ -25,7 +25,7 @@ Its color ranges from honey-gold to deep amber, and its structure holds radiant 
 ## Uses  
 - Used by the [[Solaran]] to power skyforges, radiant engines, and containment pylons.
 - Integrated into [[Flameforging]] rituals as a stabilizer for divine flame and radiant runes.
-- Carried by [[Flamebound]] navigators and seers as a symbol of guidance, illumination, and balance.
+- Carried by [[The Flamebound of Magnus' Rest]] navigators and seers as a symbol of guidance, illumination, and balance.
 
 ## Lore  
 [[Sun Topaz]] is one of the few known materials to form naturally in proximity to divine energy. Found in the stone near [[the Eternal Flame]], it is believed to be crystallized essence — a manifestation of **pure solar intent** fused with the bones of the world.

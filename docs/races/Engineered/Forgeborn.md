@@ -7,10 +7,10 @@ tags:
 - undead
 - constructs
 lineage: Engineered
-origin_plane: '[[Renascita]]'
+origin_plane: [[Renascita]]
 aat-race-tier: engineered
 spoken_language:
-- '[[Valeshi]]'
+- [[Valeshi]]
 type: race
 status: draft
 nature: forgeborn

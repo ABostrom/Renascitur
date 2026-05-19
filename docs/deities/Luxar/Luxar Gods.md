@@ -3,8 +3,15 @@ type: essay
 status: stub
 tags: []
 topic: pantheon
-realm: '[[Renascitur]]'
-era: '[[Age of Stagnation]]'
+realm:
+- - Renascitur
+era:
+- - Age of Stagnation
+aliases:
+- Luxar
+- Luxar Pantheon
+- Pantheon Of Luxar
+- Luxan
 ---
 # The Luxar Pantheon
 

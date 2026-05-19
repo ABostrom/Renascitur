@@ -7,7 +7,7 @@ timelines:
 - forge-wars
 type: event
 status: draft
-era: '[[Age of Forging]]'
+era: [[Age of Forging]]
 tags: []
 aliases:
 - The Forge Wars Begin

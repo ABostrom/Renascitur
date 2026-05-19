@@ -2,7 +2,7 @@
 type: artifact
 status: draft
 tags: []
-realm: '[[Renascita]]'
+realm: [[Renascita]]
 nature: ''
 importance: notable
 current_bearer: ''
@@ -59,7 +59,7 @@ When it closed, it did not sleep.
 
 It **watched**.
 
-The [[Dwarf|dwarves]] who dwell above are known as the **[[Tidebound]]**. Born of salt and stone, they are sea-hardened smiths and salvagers, whose armor glistens with brine and whose runes echo like whalesong. They dive where others fear to tread and dream of trenches that breathe. They build not temples but breakwaters, and they do not pray—they endure.
+The [[Dwarf|dwarves]] who dwell above are known as the **[[The Tidebound of Draumhavn]]**. Born of salt and stone, they are sea-hardened smiths and salvagers, whose armor glistens with brine and whose runes echo like whalesong. They dive where others fear to tread and dream of trenches that breathe. They build not temples but breakwaters, and they do not pray—they endure.
 
 ---
 **The Pulsecore** — Stillness of the North
@@ -72,7 +72,7 @@ With trembling hands, he forged a beating core from silver-veined ice and bound 
 
 The [[Dwarf|dwarves]] who dwell above feel it in their bones. They sleep little. They hear the heartbeat beneath the frost.
 
-They are the **[[Icebound]]**—carvers of frost and silence. Their forges burn cold, their tools sing in the key of winter. Their eyes reflect the stillness, their breath the quiet of the grave. They craft with crystal and ice-steel, and they keep their dead in standing tombs of memory. Theirs is the craft of endurance, the patience of glaciers, and the certainty that silence holds secrets even the gods forgot.
+They are the **[[The Icebound of Uftine]]**—carvers of frost and silence. Their forges burn cold, their tools sing in the key of winter. Their eyes reflect the stillness, their breath the quiet of the grave. They craft with crystal and ice-steel, and they keep their dead in standing tombs of memory. Theirs is the craft of endurance, the patience of glaciers, and the certainty that silence holds secrets even the gods forgot.
 
 ---
 **The Stormspire** — Madness of the Sky
@@ -89,7 +89,7 @@ When the carving was done, the clouds spiraled inward. Lightning cracked the wor
 
 The [[Dwarf|dwarves]] do not dwell there. They maintain its pylons, they respect its silence. And when the thunder calls, they listen for what it might remember.
 
-They are the **[[Stormbound]]**—those shaped by skyfire and thunder, whose craft is born of stormglass and whose speech carries the memory of wind. Their forges spark without flame, and their eyes flash with distant lightning. They are both sentinel and inheritor of the sky’s madness.
+They are the **[[The Stormbound of Thundrakar]]**—those shaped by skyfire and thunder, whose craft is born of stormglass and whose speech carries the memory of wind. Their forges spark without flame, and their eyes flash with distant lightning. They are both sentinel and inheritor of the sky’s madness.
 
 ---
 
@@ -103,13 +103,13 @@ He forged a great brazier around the wound and filled it with Aetherium—whispe
   
 The flame still burns. It burns bright.
 
-The [[Dwarf|dwarves]] of the [[Flamebound]] do not quench it.
+The [[Dwarf|dwarves]] of the [[The Flamebound of Magnus' Rest]] do not quench it.
 
 They **tend** it.
 
 They say [[Muradin]] did not seal this wound. He gave it purpose.
 
-They are the **[[Flamebound]]**—keepers of heat that never dies. Their forges are altars. Their hammers fall like sermons. Every ember they stoke is a hymn to control. They speak softly, for their rage is hidden, tempered. Their creations gleam with purpose and warning, and the warmth they share is hard-earned. They are both stewards and prisoners of the fire, bound to contain the wrath of the world’s heart.
+They are the **[[The Flamebound of Magnus' Rest]]**—keepers of heat that never dies. Their forges are altars. Their hammers fall like sermons. Every ember they stoke is a hymn to control. They speak softly, for their rage is hidden, tempered. Their creations gleam with purpose and warning, and the warmth they share is hard-earned. They are both stewards and prisoners of the fire, bound to contain the wrath of the world’s heart.
 
 ---
 ### The Pact Forged in Silence
@@ -136,7 +136,7 @@ They still do not.
 
 But their shapes changed. Their crafts became strange. Their spirits tuned to the slumbering fragments of wounded gods.
 
-They became the [[Tidebound]], the [[Icebound]], the [[Stormbound]], and the [[Flamebound]].
+They became the [[The Tidebound of Draumhavn]], the [[The Icebound of Uftine]], the [[The Stormbound of Thundrakar]], and the [[The Flamebound of Magnus' Rest]].
 
 They became the wards against the second breaking.
 

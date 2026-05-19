@@ -8,7 +8,7 @@ timelines:
 - solaran
 type: event
 status: draft
-era: '[[Age of the Endless Sun]]'
+era: [[Age of the Endless Sun]]
 tags: []
 aliases:
 - Imprisonment of Lord Syuul

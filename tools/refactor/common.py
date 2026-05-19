@@ -52,10 +52,44 @@ def read_frontmatter(path: Path) -> Tuple[Dict, str]:
     return metadata, body
 
 
+_WIKILINK_QUOTED_LINE_RE = re.compile(
+    r"""^([ \t]*[A-Za-z_][\w-]*:[ \t]*)'(\[\[(?:[^'\[\]]|'')*\]\])'(\s*)$""",
+    re.MULTILINE,
+)
+_WIKILINK_QUOTED_LIST_RE = re.compile(
+    r"""^([ \t]*-[ \t]+)'(\[\[(?:[^'\[\]]|'')*\]\])'(\s*)$""",
+    re.MULTILINE,
+)
+
+
+def _unescape_yaml_apos(inner: str) -> str:
+    return inner.replace("''", "'")
+
+
+def _unquote_wikilinks(yaml_text: str) -> str:
+    """Post-process PyYAML output to unquote wikilink-only values.
+
+    Obsidian/Dataview requires unquoted wikilinks in frontmatter to be
+    auto-detected as Link objects (and thus appear in file.outlinks).
+    PyYAML defaults to single-quoting any string with brackets.
+    """
+    def _sub_single(m):
+        return m.group(1) + _unescape_yaml_apos(m.group(2)) + m.group(3)
+
+    def _sub_list(m):
+        return m.group(1) + _unescape_yaml_apos(m.group(2)) + m.group(3)
+
+    out = _WIKILINK_QUOTED_LINE_RE.sub(_sub_single, yaml_text)
+    out = _WIKILINK_QUOTED_LIST_RE.sub(_sub_list, out)
+    return out
+
+
 def write_frontmatter(path: Path, metadata: Dict, body: str) -> None:
     """Write a markdown file with the given frontmatter and body.
 
     Empty metadata writes the body alone (no frontmatter block).
+    Wikilink-only string values are post-processed to be unquoted so
+    Obsidian/Dataview parses them as Link objects.
     """
     if metadata:
         # Preserve wikilink quoting; default_flow_style=False for block style.
@@ -66,6 +100,8 @@ def write_frontmatter(path: Path, metadata: Dict, body: str) -> None:
             allow_unicode=True,
             width=10**9,  # don't line-wrap long strings
         )
+        # Unquote pure-wikilink values so Obsidian recognises them as Links.
+        front = _unquote_wikilinks(front)
         # Ensure exactly one blank line between body and frontmatter.
         if not body.startswith("\n"):
             body = "\n" + body

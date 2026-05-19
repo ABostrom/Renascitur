@@ -7,7 +7,7 @@ timelines:
 - innovation
 type: event
 status: draft
-era: '[[Age of Forging]]'
+era: [[Age of Forging]]
 tags: []
 aliases:
 - Invention of Arcanometry

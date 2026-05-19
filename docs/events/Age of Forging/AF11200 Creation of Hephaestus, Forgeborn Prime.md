@@ -7,7 +7,7 @@ timelines:
 - vecna
 type: event
 status: draft
-era: '[[Age of Forging]]'
+era: [[Age of Forging]]
 tags: []
 aliases:
 - Creation of Hephaestus, Forgeborn Prime

@@ -4,8 +4,8 @@ aliases:
 type: house
 status: draft
 tags: []
-realm: '[[Renascita]]'
-parent_faction: '[[Firebrand Empire]]'
+realm: [[Renascita]]
+parent_faction: [[Firebrand Empire]]
 nature: mortal
 importance: notable
 alignment: ''
@@ -24,7 +24,7 @@ _Responsible for internal defense, lawkeeping, and martial order within the Fire
 - **Race**: [[Leonin]]
 
 ## Headquarters
-- **City**: [[Lion’s Rest]]
+- **City**: [[Lion's Rest]]
 - **Primary Seat**: [[Vigilants Watch]]
 
 ## Political Alignment
@@ -34,7 +34,7 @@ _Responsible for internal defense, lawkeeping, and martial order within the Fire
 
 ## Overview
 
-House Deneith serves a critical role within the Firebrand Empire, overseeing internal defense, lawkeeping, and martial order. Known for their domain of sentinel, they are headquartered in [[Lion’s Rest]] at the [[Vigilants Watch]].
+House Deneith serves a critical role within the Firebrand Empire, overseeing internal defense, lawkeeping, and martial order. Known for their domain of sentinel, they are headquartered in [[Lion's Rest]] at the [[Vigilants Watch]].
 
 ---
 

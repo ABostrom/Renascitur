@@ -6,8 +6,8 @@ aliases:
 - Broxiz
 type: character
 status: draft
-realm: '[[Renascita]]'
-affiliation: '[[Firebrand Empire]]'
+realm: [[Renascita]]
+affiliation: [[Firebrand Empire]]
 nature: mortal
 importance: ''
 alignment: ''
@@ -17,8 +17,8 @@ magic: []
 living_status: ''
 era_of_birth: ''
 era_of_death: ''
-race: '[[Imperial Human]]'
-culture: '[[Firebrand]]'
+race: [[Imperial Human]]
+culture: [[Firebrand Empire]]
 ---
 ## Affiliation
 - **House**: [[House Tharashk]]

@@ -2,7 +2,7 @@
 type: deity
 status: stub
 tags: []
-era_of_emergence: '[[Age of Stagnation]]'
+era_of_emergence: [[Age of Stagnation]]
 nature: divine
 importance: major
 alignment: ''
@@ -11,7 +11,7 @@ temples: []
 holy_day: ''
 symbol: ''
 ---
-![[Luxan]]
+![[Luxar Gods]]
 
 ![[Magnus]]
 

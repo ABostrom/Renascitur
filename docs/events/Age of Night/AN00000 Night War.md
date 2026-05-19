@@ -1,7 +1,7 @@
 ---
 type: event
 status: stub
-era: '[[Age of Night]]'
+era: [[Age of Night]]
 tags: []
 aliases:
 - Night War

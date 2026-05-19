@@ -9,8 +9,8 @@ aliases:
 - Khadir
 type: character
 status: draft
-realm: '[[Renascita]]'
-affiliation: '[[Thraysian Magocracy]]'
+realm: [[Renascita]]
+affiliation: [[Thraysian Magocracy]]
 nature: mortal
 importance: ''
 alignment: ''
@@ -20,9 +20,9 @@ magic: []
 living_status: ''
 era_of_birth: ''
 era_of_death: ''
-race: '[[Thraysian Human]]'
-culture: '[[Thraysian]]'
-location: '[[Eltabarr]]'
+race: [[Thraysian Human]]
+culture: [[Thraysian]]
+location: [[Eltabarr]]
 ---
 # Khadir Zahir
 

@@ -7,9 +7,9 @@ tags:
 - grundthain
 - crafts
 lineage: Grundthains
-origin_plane: '[[Thargrun]]'
+origin_plane: [[Thargrun]]
 aat-race-tier: distinct
-spoken_language: '[[Dwarven]]'
+spoken_language: [[Dwarven]]
 type: race
 status: draft
 nature: mortal
@@ -60,7 +60,7 @@ The Dwarves are descendants of the [[Grundthain]] who embraced Metal as a fifth 
 
 ## Notes
 
-- Clans include [[Tidebound]], [[Stormbound]], [[Icebound]], and [[Flamebound]].  
+- Clans include [[The Tidebound of Draumhavn]], [[The Stormbound of Thundrakar]], [[The Icebound of Uftine]], and [[The Flamebound of Magnus' Rest]].  
 - Maintain close ties to [[Grundthain]] roots and elemental gods.
 
 ---

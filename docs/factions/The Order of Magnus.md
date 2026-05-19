@@ -2,8 +2,8 @@
 type: faction
 status: draft
 tags: []
-realm: '[[Renascita]]'
-parent_faction: '[[Devouts of Muradin]]'
+realm: [[Renascita]]
+parent_faction: [[Devouts of Muradin]]
 nature: mortal
 importance: notable
 alignment: ''

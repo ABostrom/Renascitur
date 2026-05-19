@@ -2,7 +2,7 @@
 type: deity
 status: stub
 tags: []
-era_of_emergence: '[[Age of Stagnation]]'
+era_of_emergence: [[Age of Stagnation]]
 nature: divine
 importance: major
 alignment: ''

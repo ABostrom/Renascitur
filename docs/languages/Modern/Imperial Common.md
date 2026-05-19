@@ -6,13 +6,13 @@ tags:
 - language
 - trade
 - common
-language_family: '[[Valeshi]]'
+language_family: [[Valeshi]]
 language_tier: derived
 spoken_by:
-- '[[Imperial Human]]'
-- '[[Goliath]]'
-- '[[Imperial Orcs]]'
-- '[[Imperial Leonin]]'
+- [[Imperial Human]]
+- [[Goliath]]
+- [[Imperial Orcs]]
+- [[Imperial Leonin]]
 type: language
 status: draft
 kind: modern
@@ -27,7 +27,7 @@ importance: notable
 
 ## Overview
 
-- A pidgin language drawing from many roots, including [[Valeshi]] and [[Luxan]].
+- A pidgin language drawing from many roots, including [[Valeshi]] and [[Luxar Gods]].
 - Simplified grammar and vocabulary to facilitate communication.
 
 ---

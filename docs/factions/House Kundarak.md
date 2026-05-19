@@ -4,8 +4,8 @@ aliases:
 type: house
 status: draft
 tags: []
-realm: '[[Renascita]]'
-parent_faction: '[[Firebrand Empire]]'
+realm: [[Renascita]]
+parent_faction: [[Firebrand Empire]]
 nature: mortal
 importance: notable
 alignment: ''

@@ -2,30 +2,36 @@
 type: faction
 status: draft
 tags: []
-realm: '[[Renascita]]'
-parent_faction: '[[Dwarven Holds]]'
+realm:
+- - Renascita
+parent_faction:
+- - Dwarven Holds
 nature: mortal
 importance: notable
 alignment: lawful-neutral
 society_form: martial
 government: monarchy
 economy: mercantile
-seat: '[[Draumhavn]]'
+seat:
+- - Draumhavn
 size: regional
 allies: []
 rivals: []
 magic:
-- '[[Rune Magic]]'
+- - - Rune Magic
 leadership: []
+aliases:
+- Tidebound
+- Tidebound of Draumhavn
 ---
-The [[Dwarf|dwarves]] of [[Draumhavn]] are known as the **[[Tidebound]]**. They are not mountain-folk but sea-dwellers, their lives shaped by storm and salt. Rather than religion, they follow a **Creed**—a philosophy of survival, discipline, and bond.
+The [[Dwarf|dwarves]] of [[Draumhavn]] are known as the **[[The Tidebound of Draumhavn]]**. They are not mountain-folk but sea-dwellers, their lives shaped by storm and salt. Rather than religion, they follow a **Creed**—a philosophy of survival, discipline, and bond.
 
 They revere the elemental forces of the sea without worshipping them, naming them:
 
 - He Who Hungers ([[Leviathan]]): hunger, darkness, pressure
 - She Who Wakes ([[Tempus]]): fury, rebirth, awakening
 
-> _“We do not pray. We endure.”_ —[[Tidebound]] Saying
+> _“We do not pray. We endure.”_ —[[The Tidebound of Draumhavn]] Saying
 
 ## Government: Naval Hierarchy
 Draumhavn is ruled like a fleet, not a kingdom.

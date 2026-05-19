@@ -4,8 +4,8 @@ aliases:
 type: house
 status: draft
 tags: []
-realm: '[[Renascita]]'
-parent_faction: '[[Firebrand Empire]]'
+realm: [[Renascita]]
+parent_faction: [[Firebrand Empire]]
 nature: mortal
 importance: notable
 alignment: ''
@@ -24,7 +24,7 @@ _Responsible for medicine, healing, and battlefield care within the Firebrand Em
 - **Race**: [[Human]]
 
 ## Headquarters
-- **City**: [[Lion’s Rest]]
+- **City**: [[Lion's Rest]]
 - **Primary Seat**: [[Vedkyar Enclave]]
 
 ## Political Alignment
@@ -34,7 +34,7 @@ _Responsible for medicine, healing, and battlefield care within the Firebrand Em
 
 ## Overview
 
-House Jorasco serves a critical role within the Firebrand Empire, overseeing medicine, healing, and battlefield care. Known for their domain of healing, they are headquartered in [[Lion’s Rest]] at the [[Vedkyar Enclave]].
+House Jorasco serves a critical role within the Firebrand Empire, overseeing medicine, healing, and battlefield care. Known for their domain of healing, they are headquartered in [[Lion's Rest]] at the [[Vedkyar Enclave]].
 
 ---
 

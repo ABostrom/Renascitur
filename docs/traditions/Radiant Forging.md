@@ -2,8 +2,8 @@
 type: tradition
 status: draft
 tags: []
-realm: '[[Renascita]]'
-culture: '[[The Flamebound of Magnus'' Rest]]'
+realm: [[Renascita]]
+culture: [[The Flamebound of Magnus' Rest]]
 nature: mortal
 importance: minor
 magic: []
@@ -15,7 +15,7 @@ magic: []
 
 ## Overview
 
-**Radiant Forging** is the sacred forging tradition of the [[Flamebound]] [[Dwarf|dwarves]] of [[Magnus’ Rest]]. Unlike other elemental forging arts, Radiant Forging is not merely a method of shaping metal—it is a **spiritual rite**, a means of purifying, binding, and preserving intention through fire.
+**Radiant Forging** is the sacred forging tradition of the [[The Flamebound of Magnus' Rest]] [[Dwarf|dwarves]] of [[Magnus' Rest]]. Unlike other elemental forging arts, Radiant Forging is not merely a method of shaping metal—it is a **spiritual rite**, a means of purifying, binding, and preserving intention through fire.
 
 Only those who have undergone the **Rite of Emberbinding**—a trial overseen by the [[Magnesium Devouts]]—may wield the Eternal Flame in the act of creation. These master smiths are known as **Radiant Forgers**.
 
@@ -72,4 +72,4 @@ Failure to complete the rite without faltering spiritually or physically results
 
 ## Cultural Significance
 
-To the [[Flamebound]], Radiant Forging is not simply a craft—it is a **covenant**. Through fire, they commune with the will of [[Muradin]] and [[Magnus]], forging legacy from loss and light from ruin. In a world beset by shadows, a Radiant-forged blade is not just a weapon. It is a **promise**.
+To the [[The Flamebound of Magnus' Rest]], Radiant Forging is not simply a craft—it is a **covenant**. Through fire, they commune with the will of [[Muradin]] and [[Magnus]], forging legacy from loss and light from ruin. In a world beset by shadows, a Radiant-forged blade is not just a weapon. It is a **promise**.

@@ -1,9 +1,9 @@
 ---
 type: settlement
 status: draft
-continent: '[[Qethusiyya]]'
+continent: [[Qethusiyya]]
 tags: []
-realm: '[[Renascita]]'
+realm: [[Renascita]]
 importance: legendary
 population: ''
 climate: arid

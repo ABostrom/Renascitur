@@ -2,7 +2,7 @@
 type: essay
 status: draft
 tags: []
-realm: '[[Renascita]]'
+realm: [[Renascita]]
 ---
 *Ancient Architects of Light, Harmony, and [[Weave|the Weave]]*
 
@@ -27,7 +27,7 @@ At the height of their power, the [[Solaran|Solarans]] constructed the [[Ab Sola
 
 - [[Aelion]], the Everburning Light, was regarded not as a deity to be worshipped but as a cosmic force representing order, [[soul]], and illumination.
 - [[Divine Soul]]—rare [[Solaran]] children born once per century—were seen as prophetic figures, destined to bring change or rebalance the [[soul]] cycle. Their existence was a cosmic event, and their upbringing was a matter of cultural significance.
-- [[Psionic]] were strictly forbidden. To the [[Solaran|Solarans]], opening the mind beyond its natural boundaries was an invitation to [[Chaor]] and [[Noxar]], forces of aberrant madness and entropy. Those who dabbled in mind-altering powers risked corruption, both physical and spiritual.
+- [[Psionic]] were strictly forbidden. To the [[Solaran|Solarans]], opening the mind beyond its natural boundaries was an invitation to [[Chaor]] and [[Noxar Gods]], forces of aberrant madness and entropy. Those who dabbled in mind-altering powers risked corruption, both physical and spiritual.
 
 ---
 

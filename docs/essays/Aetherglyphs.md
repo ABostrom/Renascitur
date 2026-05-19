@@ -27,8 +27,8 @@ The Aetherglyphs gave rise to **five foundational functions** of the universe:
 
 | Function | Manifestation |
 |----------|----------------|
-| **[[Luxar]]** | Revelation, light, and clarity |
-| **[[Noxar]]** | Mystery, shadow, and depth |
+| **[[Luxar Gods]]** | Revelation, light, and clarity |
+| **[[Noxar Gods]]** | Mystery, shadow, and depth |
 | **[[Ordar]]** | Structure, memory, and law |
 | **[[Chaor]]** | Motion, instinct, and change |
 | **Time**  | The constant that binds progression and sequence |

@@ -6,10 +6,10 @@ tags:
 - language
 - mokoweran
 - derived
-language_family: '[[Elyssan]]'
+language_family: [[Elyssan]]
 language_tier: derived
 spoken_by:
-- '[[Mokuun]]'
+- [[Mokuun]]
 type: language
 status: draft
 kind: modern

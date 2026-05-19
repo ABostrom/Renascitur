@@ -1,9 +1,9 @@
 ---
 type: waterway
 status: stub
-continent: '[[Pyrosia]]'
+continent: [[Pyrosia]]
 tags: []
-realm: '[[Renascita]]'
+realm: [[Renascita]]
 nature: ''
 importance: minor
 ---

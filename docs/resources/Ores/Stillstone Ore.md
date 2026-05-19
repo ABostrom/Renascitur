@@ -2,7 +2,7 @@
 type: resource
 status: draft
 tags: []
-realm: '[[Renascita]]'
+realm: [[Renascita]]
 category: Ores
 nature: ''
 importance: minor
@@ -11,7 +11,7 @@ importance: minor
 Mined from beneath the ancient glacial veins surrounding [[The Pulsecore]], [[Stillstone Ore]] is buried deep within bedrock frozen since [[the First Age]]. It is found only in the coldest vaults of the north, where silence is thick enough to press against the skin and the ice never melts.
 
 ## Description  
-[[Stillstone Ore]] appears as a dull, blue-gray mineral with veins of pale white that glow faintly under moonlight. It is unnaturally heavy, and it absorbs sound around it, creating a strange aura of quiet. The [[Icebound]] believe the ore was touched by the wound of [[Zaratan]], the stillness buried at the heart of the world, and treat it with reverence.
+[[Stillstone Ore]] appears as a dull, blue-gray mineral with veins of pale white that glow faintly under moonlight. It is unnaturally heavy, and it absorbs sound around it, creating a strange aura of quiet. The [[The Icebound of Uftine]] believe the ore was touched by the wound of [[Zaratan]], the stillness buried at the heart of the world, and treat it with reverence.
 
 ## Properties  
 - Absorbs sound and vibration, creating a muffling aura around stored chunks.
@@ -21,4 +21,4 @@ Mined from beneath the ancient glacial veins surrounding [[The Pulsecore]], [[St
 ## Uses  
 - Smelted into [[Icevein Steel]], where it enhances silence and resilience.
 - Crushed into dust and used in coldwarding enchantments and armor linings.
-- Kept raw and carved into echo-dampening talismans or grave-seals in [[Icebound]] tombs.
+- Kept raw and carved into echo-dampening talismans or grave-seals in [[The Icebound of Uftine]] tombs.

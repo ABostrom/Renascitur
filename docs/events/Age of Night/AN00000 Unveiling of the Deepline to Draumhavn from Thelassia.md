@@ -1,7 +1,7 @@
 ---
 type: event
 status: draft
-era: '[[Age of Night]]'
+era: [[Age of Night]]
 tags: []
 aliases:
 - Unveiling of the Deepline to Draumhavn from Thelassia
@@ -16,7 +16,7 @@ outcome: ''
 
 The air inside the **Grand Concourse of Thelassia Station** is thick with steam, sweat, and anticipation. From towering platforms carved straight into the obsidian bedrock, citizens from every walk of life press forward. Ferrun engineers in brass-trimmed coats, dwarven runepriests bearing hammers of office, guildmasters with braids woven in silver wire—all have gathered beneath the immense vaulted ceiling, hundreds of feet above.
 
-The walls are smooth-cut stone, burnished to a mirror sheen, with veins of copper and electrum channelling soft pulses of light that arc across the ceiling like veins of the earth itself. Inlaid along the arches are names—cities, holds, and lost outposts of every dwarven clan, glowing with pale gold script: [[Draumhavn]], [[Thundrakar]], [[Magnus’ Rest]], [[Uftine]]. Murmured prayers are whispered to the stone.
+The walls are smooth-cut stone, burnished to a mirror sheen, with veins of copper and electrum channelling soft pulses of light that arc across the ceiling like veins of the earth itself. Inlaid along the arches are names—cities, holds, and lost outposts of every dwarven clan, glowing with pale gold script: [[Draumhavn]], [[Thundrakar]], [[Magnus' Rest]], [[Uftine]]. Murmured prayers are whispered to the stone.
 
 Then, silence.
 

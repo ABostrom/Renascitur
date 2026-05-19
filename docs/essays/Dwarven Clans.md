@@ -2,15 +2,15 @@
 type: essay
 status: draft
 tags: []
-realm: '[[Renascita]]'
+realm: [[Renascita]]
 ---
 ## Overview
 Each dwarven city is descended from the ancient [[Grundthain]] and shaped by an elemental tradition tied unknowingly to a Great Elemental:
 
-- **[[Tidebound]]** of [[Draumhavn]] – Linked to [[Leviathan]]
-- **[[Icebound]]** of [[Uftine Human]] – Linked to [[Zaratan]]
-- **[[Stormbound]]** of [[Thundrakar]]] – Linked to [[Tempus]]
-- **[[Flamebound]]** of [[Magnus’ Rest]] – Linked to [[Phenos]]
+- **[[The Tidebound of Draumhavn]]** of [[Draumhavn]] – Linked to [[Leviathan]]
+- **[[The Icebound of Uftine]]** of [[Uftine Human]] – Linked to [[Zaratan]]
+- **[[The Stormbound of Thundrakar]]** of [[Thundrakar]]] – Linked to [[Tempus]]
+- **[[The Flamebound of Magnus' Rest]]** of [[Magnus' Rest]] – Linked to [[Phenos]]
 
 Each dwarven city is also built atop a sealed corruption of that elemental, entombed by [[Muradin]].
 

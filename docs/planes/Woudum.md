@@ -5,4 +5,4 @@ tags: []
 nature: ''
 importance: minor
 ---
-The plane of [[Chaor]] and [[Luxar]]
+The plane of [[Chaor]] and [[Luxar Gods]]

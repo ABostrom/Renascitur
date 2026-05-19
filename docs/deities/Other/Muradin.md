@@ -2,7 +2,7 @@
 type: deity
 status: draft
 tags: []
-era_of_emergence: '[[Age of Forging]]'
+era_of_emergence: [[Age of Forging]]
 nature: divine
 importance: major
 alignment: chaotic-evil
@@ -39,7 +39,7 @@ In Runehart, Muradin and his followers perfected their craft. They forged mighty
 
 #### **The Siege of Runehart**
 
-Muradin’s foresight was again proven true when [[Ishna]]’s corruption reached the peaks of Arcturia. [[Aberrations]] poured forth, led by **[[Typhon, The Archon of Death|Typhon]]**, the **Archon of Death**, a former [[Grundthain]] corrupted by [[Ishna]]’s power and transformed into one of her [[Quintumvirate|God Hand]]. [[Typhon, The Archon of Death|Typhon]], commanding an army of horrors, besieged Runehart, intent on claiming the **Anvil of Eternity**, the legendary artifact Muradin had forged to embody his people’s defiance and power.
+Muradin’s foresight was again proven true when [[Ishna]]’s corruption reached the peaks of Arcturia. [[Aberrations]] poured forth, led by **[[Typhon, The Archon of Death|Typhon]]**, the **Archon of Death**, a former [[Grundthain]] corrupted by [[Ishna]]’s power and transformed into one of her [[The God Hand|God Hand]]. [[Typhon, The Archon of Death|Typhon]], commanding an army of horrors, besieged Runehart, intent on claiming the **Anvil of Eternity**, the legendary artifact Muradin had forged to embody his people’s defiance and power.
 
 The battle raged for weeks. The defenders of Runehart, armed with rune-forged weapons and Muradin’s guidance, held their ground against the tide. But [[Typhon, The Archon of Death|Typhon]]’s might proved insurmountable. With Runehart on the brink of collapse, Muradin made the ultimate sacrifice.
 

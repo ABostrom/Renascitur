@@ -7,9 +7,9 @@ aliases:
 - Cannith Tower
 type: landmark
 status: draft
-continent: '[[Pyrosia]]'
-realm: '[[Renascita]]'
-inside: '[[Magnus’ Rest]]'
+continent: [[Pyrosia]]
+realm: [[Renascita]]
+inside: [[Magnus' Rest]]
 nature: ''
 importance: minor
 ---
@@ -17,7 +17,7 @@ importance: minor
 - [[House Cannith]]
 
 ## City
-- [[Magnus’ Rest]]
+- [[Magnus' Rest]]
 
 ## Description
-Cannith Tower serves as the central stronghold or operational base of House Cannith. Situated in the city of [[Magnus’ Rest]], it reflects the culture and function of the house it represents.
+Cannith Tower serves as the central stronghold or operational base of House Cannith. Situated in the city of [[Magnus' Rest]], it reflects the culture and function of the house it represents.

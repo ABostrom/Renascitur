@@ -7,12 +7,12 @@ tags:
 - grundthain
 - nomadic
 lineage: Grundthains
-origin_plane: '[[Renascita]]'
+origin_plane: [[Renascita]]
 aat-race-tier: distinct
 spoken_language:
-- '[[Karathic]]'
-- '[[Titanic]]'
-- '[[Imperial Common]]'
+- [[Karathic]]
+- [[Titanic]]
+- [[Imperial Common]]
 type: race
 status: draft
 nature: mortal

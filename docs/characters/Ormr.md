@@ -2,7 +2,7 @@
 type: character
 status: draft
 tags: []
-realm: '[[Renascita]]'
+realm: [[Renascita]]
 nature: mortal
 importance: ''
 alignment: ''
@@ -13,13 +13,13 @@ magic: []
 living_status: ''
 era_of_birth: ''
 era_of_death: ''
-race: '[[Stormbound]]'
+race: [[The Stormbound of Thundrakar]]
 ---
 # Ormr - Thunder of the deep 
 Ancient Bronze Dragon
 
 
-Taught the [[Stormbound|Stormbound Dwarves]] how to smith [[Skyforged Steel]] through [[Stormforging]]
+Taught the [[The Stormbound of Thundrakar|Stormbound Dwarves]] how to smith [[Skyforged Steel]] through [[Stormforging]]
 
 Location: [[Thundrakar]]
 Possesion: [[Rotor of return]]

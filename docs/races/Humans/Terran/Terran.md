@@ -6,9 +6,9 @@ tags:
 - race
 - mortal
 - adaptable
-origin_plane: '[[Renascita]]'
+origin_plane: [[Renascita]]
 spoken_language:
-- '[[Imperial Common|Imperial]]'
+- [[Imperial Common|Imperial]]
 type: race
 status: draft
 lineage: Humans

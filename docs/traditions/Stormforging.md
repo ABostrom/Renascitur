@@ -2,14 +2,14 @@
 type: tradition
 status: draft
 tags: []
-realm: '[[Renascita]]'
-culture: '[[The Stormbound of Thundrakar]]'
+realm: [[Renascita]]
+culture: [[The Stormbound of Thundrakar]]
 nature: mortal
 importance: minor
 magic: []
 ---
 ## Overview  
-[[Stormforging]] is the sacred art of the [[Stormbound]] [[Dwarf|dwarves]] of [[Thundrakar]], a form of elemental smithing unlike any other. Where other forges burn coal or channel flame, a stormforge draws power from **lightning itself**, shaping not just metal, but **memory and resonance**.
+[[Stormforging]] is the sacred art of the [[The Stormbound of Thundrakar]] [[Dwarf|dwarves]] of [[Thundrakar]], a form of elemental smithing unlike any other. Where other forges burn coal or channel flame, a stormforge draws power from **lightning itself**, shaping not just metal, but **memory and resonance**.
 
 To stormforge is not to bend the storm to your will — it is to strike in time with it.
 

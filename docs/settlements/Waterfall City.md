@@ -1,9 +1,9 @@
 ---
 type: settlement
 status: draft
-continent: '[[Mokoweri]]'
+continent: [[Mokoweri]]
 tags: []
-realm: '[[Renascita]]'
+realm: [[Renascita]]
 importance: notable
 population: ''
 climate: tropical

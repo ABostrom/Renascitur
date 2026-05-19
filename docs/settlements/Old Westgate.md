@@ -6,8 +6,8 @@ tags:
 - location
 type: settlement
 status: draft
-continent: '[[Pyrosia]]'
-realm: '[[Renascita]]'
+continent: [[Pyrosia]]
+realm: [[Renascita]]
 importance: major
 population: ''
 climate: volcanic

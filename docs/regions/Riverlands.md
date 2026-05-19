@@ -1,9 +1,9 @@
 ---
 type: region
 status: draft
-continent: '[[Mokoweri]]'
+continent: [[Mokoweri]]
 tags: []
-realm: '[[Renascita]]'
+realm: [[Renascita]]
 climate: tropical
 terrain:
 - forest

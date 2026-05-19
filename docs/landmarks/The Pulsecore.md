@@ -3,10 +3,10 @@ aliases:
 - Pulsecore
 type: landmark
 status: draft
-continent: '[[Arcturia]]'
+continent: [[Arcturia]]
 tags: []
-realm: '[[Renascita]]'
-inside: '[[Uftine]]'
+realm: [[Renascita]]
+inside: [[Uftine]]
 nature: corrupted
 importance: minor
 ---
@@ -50,6 +50,6 @@ The Pulsecore is reflected in Uftine’s architecture and rituals:
 ## Beliefs
 Some among the deep lorekeepers believe the Pulsecore is part of a network. They speak of **four pulses** across the world—slow heartbeats echoing from beneath the dwarven cities.
 
-The [[Icebound]] do not seek to awaken, destroy, or understand what lies beneath. They seek only to **endure**, for the sake of the world above.
+The [[The Icebound of Uftine]] do not seek to awaken, destroy, or understand what lies beneath. They seek only to **endure**, for the sake of the world above.
 
 > “Even stone remembers. Even ice dreams. We simply make sure it stays asleep.” — Inscription outside the Sentinel Gate

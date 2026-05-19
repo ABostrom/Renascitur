@@ -1,14 +1,17 @@
 ---
 aliases:
 - Solarans
+- Solaran
 tags:
 - race
 - elder
 - celestial
 lineage: Solarans
-origin_plane: '[[Solirion]]'
+origin_plane:
+- - Solirion
 aat-race-tier: elder
-spoken_language: '[[Elyssan]]'
+spoken_language:
+- - Elyssan
 type: race
 status: draft
 nature: mortal
@@ -57,7 +60,7 @@ The Solarans are an ancient and advanced civilization deeply connected to celest
 
 ## Languages
 
-- Speak and write [[Luxan]], the ancient language of the Solarans.
+- Speak and write [[Luxar Gods]], the ancient language of the Solarans.
 
 ---
 

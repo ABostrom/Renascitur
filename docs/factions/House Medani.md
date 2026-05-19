@@ -4,8 +4,8 @@ aliases:
 type: house
 status: draft
 tags: []
-realm: '[[Renascita]]'
-parent_faction: '[[Firebrand Empire]]'
+realm: [[Renascita]]
+parent_faction: [[Firebrand Empire]]
 nature: mortal
 importance: notable
 alignment: ''
@@ -24,7 +24,7 @@ _Responsible for internal security, inquisition, and rooting out cultists within
 - **Race**: [[Leonin]]
 
 ## Headquarters
-- **City**: [[Lion’s Rest]]
+- **City**: [[Lion's Rest]]
 - **Primary Seat**: [[Tower of Inquisition]]
 
 ## Political Alignment
@@ -34,7 +34,7 @@ _Responsible for internal security, inquisition, and rooting out cultists within
 
 ## Overview
 
-House Medani serves a critical role within the Firebrand Empire, overseeing internal security, inquisition, and rooting out cultists. Known for their domain of detection, they are headquartered in [[Lion’s Rest]] at the [[Tower of Inquisition]].
+House Medani serves a critical role within the Firebrand Empire, overseeing internal security, inquisition, and rooting out cultists. Known for their domain of detection, they are headquartered in [[Lion's Rest]] at the [[Tower of Inquisition]].
 
 ---
 

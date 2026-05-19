@@ -1,7 +1,8 @@
 ---
 type: faction
 status: draft
-realm: '[[Renascita]]'
+realm:
+- - Renascita
 tags: []
 nature: mortal
 importance: notable
@@ -14,8 +15,10 @@ size: regional
 allies: []
 rivals: []
 magic:
-- '[[Glyph Magic]]'
+- - - Glyph Magic
 leadership: []
+aliases:
+- Velkhar
 ---
 **Type**:: Sovereign Protectorate  
 **Capital**:: [[Calvereth]]  

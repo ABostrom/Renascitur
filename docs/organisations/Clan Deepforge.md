@@ -2,8 +2,8 @@
 type: organisation
 status: stub
 tags: []
-realm: '[[Renascita]]'
-parent_faction: '[[The Tidebound of Draumhavn]]'
+realm: [[Renascita]]
+parent_faction: [[The Tidebound of Draumhavn]]
 nature: mortal
 importance: minor
 alignment: ''

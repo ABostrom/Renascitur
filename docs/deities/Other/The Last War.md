@@ -2,7 +2,7 @@
 type: deity
 status: draft
 tags: []
-era_of_emergence: '[[Age of Forging]]'
+era_of_emergence: [[Age of Forging]]
 nature: divine
 importance: major
 alignment: lawful-good

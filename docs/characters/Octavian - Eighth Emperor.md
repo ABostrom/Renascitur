@@ -2,8 +2,8 @@
 type: character
 status: draft
 tags: []
-realm: '[[Renascita]]'
-affiliation: '[[Firebrand Empire]]'
+realm: [[Renascita]]
+affiliation: [[Firebrand Empire]]
 nature: mortal
 importance: ''
 alignment: ''
@@ -14,8 +14,8 @@ magic: []
 living_status: ''
 era_of_birth: ''
 era_of_death: ''
-race: '[[Imperial Human]]'
-culture: '[[Firebrand]]'
+race: [[Imperial Human]]
+culture: [[Firebrand Empire]]
 ---
 - **Appearance**: Octavian is depicted as a proud and powerful [[docs/Races/Kyojin/Leonin/Leonin|Leonin]] with a mane of rich auburn. His bright blue eyes shine with intelligence and authority, and he is shown wearing a majestic robe and a crown of gold, symbolizing the empire at its height.
 - **Quote**: "An empire’s true strength lies in the unity of its people and the wisdom of its leaders."

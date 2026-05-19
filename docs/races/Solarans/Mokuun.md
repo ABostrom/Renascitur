@@ -7,12 +7,12 @@ tags:
 - solarans
 - nature
 lineage: Solarans
-origin_plane: '[[Renascita]]'
+origin_plane: [[Renascita]]
 aat-race-tier: variant
 spoken_language:
-- '[[Mokoweran]]'
-- '[[Imperial Common]]'
-- '[[Thraysian Common]]'
+- [[Mokoweran]]
+- [[Imperial Common]]
+- [[Thraysian Common]]
 type: race
 status: draft
 nature: ''

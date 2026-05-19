@@ -6,10 +6,10 @@ tags:
 - language
 - leonin
 - derived
-language_family: '[[Natsugen]]'
+language_family: [[Natsugen]]
 language_tier: derived
 spoken_by:
-- '[[Leonin]]'
+- [[Leonin]]
 type: language
 status: draft
 kind: modern

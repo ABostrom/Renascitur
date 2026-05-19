@@ -7,10 +7,10 @@ timelines:
 - corruption
 type: event
 status: draft
-era: '[[Age of Forging]]'
+era: [[Age of Forging]]
 tags: []
 aliases:
-- Vecna’s Descent Begins
+- Vecna's Descent Begins
 year_display: AF 11000
 year: 11000
 importance: ''

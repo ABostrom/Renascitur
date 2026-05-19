@@ -2,8 +2,8 @@
 type: character
 status: draft
 tags: []
-realm: '[[Renascita]]'
-affiliation: '[[The Blackiron Collective]]'
+realm: [[Renascita]]
+affiliation: [[The Blackiron Collective]]
 nature: forgeborn
 importance: ''
 alignment: ''
@@ -13,7 +13,7 @@ magic: []
 living_status: ''
 era_of_birth: ''
 era_of_death: ''
-race: '[[Forgeborn]]'
+race: [[Forgeborn]]
 ---
 - **Role**: Voice of the working class in the Council of Sparks.
 - **Personality**: Passionate and determined, Veyna advocates for the miners and laborers who keep the city running.

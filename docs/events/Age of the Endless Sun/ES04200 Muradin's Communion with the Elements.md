@@ -6,7 +6,7 @@ timelines:
 - dwarf
 type: event
 status: draft
-era: '[[Age of the Endless Sun]]'
+era: [[Age of the Endless Sun]]
 tags: []
 aliases:
 - Muradin's Communion with the Elements

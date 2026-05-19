@@ -4,7 +4,7 @@ aliases:
 type: character
 status: stub
 tags: []
-realm: '[[Renascita]]'
+realm: [[Renascita]]
 nature: ''
 importance: ''
 alignment: ''

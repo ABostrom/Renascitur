@@ -4,8 +4,8 @@ aliases:
 type: house
 status: draft
 tags: []
-realm: '[[Renascita]]'
-parent_faction: '[[Firebrand Empire]]'
+realm: [[Renascita]]
+parent_faction: [[Firebrand Empire]]
 nature: mortal
 importance: notable
 alignment: ''
@@ -25,7 +25,7 @@ _Responsible for transport, travel, and logistics within the Firebrand Empire._
 
 ## Headquarters
 - **City**: [[Port Ardere]]
-- **Primary Seat**: [[Journey’s Home]]
+- **Primary Seat**: [[Journey's Home]]
 
 ## Political Alignment
 - **Primary Faction(s)**: Stability Bloc
@@ -34,7 +34,7 @@ _Responsible for transport, travel, and logistics within the Firebrand Empire._
 
 ## Overview
 
-House Orien serves a critical role within the Firebrand Empire, overseeing transport, travel, and logistics. Known for their domain of passage, they are headquartered in [[Port Ardere]] at the [[Journey’s Home]].
+House Orien serves a critical role within the Firebrand Empire, overseeing transport, travel, and logistics. Known for their domain of passage, they are headquartered in [[Port Ardere]] at the [[Journey's Home]].
 
 ---
 

@@ -6,8 +6,8 @@ tags:
 - location
 type: region
 status: draft
-continent: '[[Pyrosia]]'
-realm: '[[Renascita]]'
+continent: [[Pyrosia]]
+realm: [[Renascita]]
 climate: volcanic
 terrain: []
 dominant_culture: ''

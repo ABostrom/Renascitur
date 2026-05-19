@@ -7,12 +7,12 @@ tags:
 - dwarves
 - elemental
 lineage: Grundthains
-origin_plane: '[[Thargrun]]'
+origin_plane: [[Thargrun]]
 aat-race-tier: variant
-spoken_language: '[[Dwarven]]'
+spoken_language: [[Dwarven]]
 type: race
 status: draft
-parent_race: '[[Dwarves]]'
+parent_race: [[Dwarves]]
 nature: mortal
 importance: notable
 lifespan: ''
@@ -21,7 +21,7 @@ magic_affinity: []
 # Icebound [[Dwarf|Dwarves]]
 
 ## Overview  
-The [[Icebound|Icebound Dwarves]] are a stoic and enduring clan who dwell in the frost-veined city of [[Uftine Human]], nestled amid the glaciers and frozen peaks of the far North. They are the wardens of the **Pulsecore**, a slumbering wound where [[Zaratan]] — the elemental of earth and endurance — was fractured by corruption in [[the First Age]] and sealed by [[Muradin]].
+The [[The Icebound of Uftine|Icebound Dwarves]] are a stoic and enduring clan who dwell in the frost-veined city of [[Uftine Human]], nestled amid the glaciers and frozen peaks of the far North. They are the wardens of the **Pulsecore**, a slumbering wound where [[Zaratan]] — the elemental of earth and endurance — was fractured by corruption in [[the First Age]] and sealed by [[Muradin]].
 
 Their hearts beat slow, like the mountains they inhabit.  
 They do not rage. They endure — and remember.

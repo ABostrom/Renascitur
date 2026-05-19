@@ -1,9 +1,9 @@
 ---
 type: range
 status: draft
-continent: '[[Qethusiyya]]'
+continent: [[Qethusiyya]]
 tags: []
-realm: '[[Renascita]]'
+realm: [[Renascita]]
 nature: ''
 importance: notable
 ---

@@ -7,12 +7,12 @@ tags:
 - solarans
 - industrial
 lineage: Solarans
-origin_plane: '[[Renascita]]'
+origin_plane: [[Renascita]]
 aat-race-tier: variant
 spoken_language:
-- '[[Thraysian Common]]'
-- '[[Elyssan]]'
-- '[[Dwarven]]'
+- [[Thraysian Common]]
+- [[Elyssan]]
+- [[Dwarven]]
 type: race
 status: draft
 nature: ''

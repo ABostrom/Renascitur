@@ -6,11 +6,11 @@ tags:
 - language
 - human
 - ancient
-language_family: '[[Human]]'
+language_family: [[Human]]
 language_tier: root
 spoken_by:
-- '[[Human]]'
-- '[[Elasi]]'
+- [[Human]]
+- [[Elasi]]
 type: language
 status: draft
 kind: ancient

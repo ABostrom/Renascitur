@@ -10,7 +10,7 @@ tags:
 - hobgoblin
 type: faction
 status: draft
-realm: '[[Renascita]]'
+realm: [[Renascita]]
 kind: cult
 nature: mortal
 importance: notable

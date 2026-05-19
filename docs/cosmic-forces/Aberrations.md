@@ -5,4 +5,8 @@ tags: []
 nature: aberrant
 importance: major
 alignment: ''
+aliases:
+- Aberrations
+- Aberration
+- aberrant
 ---

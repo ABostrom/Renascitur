@@ -6,10 +6,10 @@ tags:
 - elemental
 - grundthain
 lineage: Grundthains
-origin_plane: '[[Thargrun]]'
+origin_plane: [[Thargrun]]
 aat-race-tier: distinct
 spoken_language:
-- '[[Titanic]]'
+- [[Titanic]]
 type: race
 status: draft
 nature: mortal

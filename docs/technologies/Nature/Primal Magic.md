@@ -5,12 +5,12 @@ tags:
 - primal
 type: technology
 status: stub
-realm: '[[Renascita]]'
+realm: [[Renascita]]
 discipline: Nature
 nature: ''
 importance: notable
 magic:
-- '[[Primal]]'
+- [[Primal]]
 ---
 ## Description
 Magic as instinct. Wild, emotional, and untamed, primal casting channels [[Weave|the Weave]] directly without structure or filter. 

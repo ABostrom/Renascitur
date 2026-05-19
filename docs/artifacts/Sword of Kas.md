@@ -4,7 +4,7 @@ aliases:
 type: artifact
 status: stub
 tags: []
-realm: '[[Renascita]]'
+realm: [[Renascita]]
 nature: ''
 importance: notable
 current_bearer: ''

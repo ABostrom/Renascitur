@@ -7,12 +7,12 @@ tags:
 - dwarves
 - elemental
 lineage: Grundthains
-origin_plane: '[[Thargrun]]'
+origin_plane: [[Thargrun]]
 aat-race-tier: variant
-spoken_language: '[[Dwarven]]'
+spoken_language: [[Dwarven]]
 type: race
 status: draft
-parent_race: '[[Dwarves]]'
+parent_race: [[Dwarves]]
 nature: mortal
 importance: notable
 lifespan: ''
@@ -21,13 +21,13 @@ magic_affinity: []
 # Stormbound [[Dwarf|Dwarves]]
 
 ## Overview  
-The [[Stormbound|Stormbound Dwarves]] are a proud and austere branch of dwarvenkind who dwell in [[Thundrakar]], the lightning-wreathed city carved into the heights and depths of the [[Stormspire]]. They are shaped — body and [[soul]] — by the unceasing storm that roars above and the sacred burden they carry: the **custodianship of the sealed fragment of [[Tempus]]**, the elemental god of storm and sky.
+The [[The Stormbound of Thundrakar|Stormbound Dwarves]] are a proud and austere branch of dwarvenkind who dwell in [[Thundrakar]], the lightning-wreathed city carved into the heights and depths of the [[Stormspire]]. They are shaped — body and [[soul]] — by the unceasing storm that roars above and the sacred burden they carry: the **custodianship of the sealed fragment of [[Tempus]]**, the elemental god of storm and sky.
 
 They are not merely miners or smiths.  
 They are **translators of thunder**, **scribes of lightning**, and **guardians of resonance**.
 
 ## Ancestry and Legacy  
-Descended from the ancient [[Grundthain]], the Stormbound are one of the four major dwarven clans — alongside the [[Tidebound]], [[Icebound]], and [[Flamebound]] — each of whom guards a piece of the broken world.
+Descended from the ancient [[Grundthain]], the Stormbound are one of the four major dwarven clans — alongside the [[The Tidebound of Draumhavn]], [[The Icebound of Uftine]], and [[The Flamebound of Magnus' Rest]] — each of whom guards a piece of the broken world.
 
 Their elemental burden, sealed by [[Muradin]] in [[the First Age]], has shaped their traditions, their craft, and their spirits. They alone dwell in the storm’s shadow — and **thrive within it**.
 

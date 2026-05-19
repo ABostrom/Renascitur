@@ -7,12 +7,12 @@ tags:
 - dwarves
 - elemental
 lineage: Grundthains
-origin_plane: '[[Thargrun]]'
+origin_plane: [[Thargrun]]
 aat-race-tier: variant
-spoken_language: '[[Dwarven]]'
+spoken_language: [[Dwarven]]
 type: race
 status: draft
-parent_race: '[[Dwarves]]'
+parent_race: [[Dwarves]]
 nature: mortal
 importance: notable
 lifespan: ''
@@ -21,7 +21,7 @@ magic_affinity: []
 # Flamebound [[Dwarf|Dwarves]]
 
 ## Overview  
-The [[Flamebound|Flamebound Dwarves]] are the fiery clan of [[Dwarf|dwarves]] who dwell in the city of [[Magnus’ Rest]]. They guard the sacred embers and the flame-fragment sealed by [[Muradin]] in [[the First Age]], channelling the power of [[Phenos]], the elemental god of fire and renewal.
+The [[The Flamebound of Magnus' Rest|Flamebound Dwarves]] are the fiery clan of [[Dwarf|dwarves]] who dwell in the city of [[Magnus' Rest]]. They guard the sacred embers and the flame-fragment sealed by [[Muradin]] in [[the First Age]], channelling the power of [[Phenos]], the elemental god of fire and renewal.
 
 Their spirits burn bright, fuelled by both creation and destruction.
 

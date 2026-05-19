@@ -6,7 +6,7 @@ timelines:
 - orcs
 type: event
 status: draft
-era: '[[Age of Forging]]'
+era: [[Age of Forging]]
 tags: []
 aliases:
 - Founding of the Ashfang Clans

@@ -28,4 +28,4 @@ His radiance shaped the heavens, setting the stars in their eternal paths and es
 Despite his wisdom, [[Aelion]] did not perceive the shadow hidden within his own light. It was within his cosmic illumination that [[Ishna]] first took form, a flaw woven into [[Creation Story]] itself. His failure to account for entropy led to the corruption that now spreads across existence.
 
 ## Worship and Legacy
-Among the [[Solaran]], [[Aelion]] is revered as the First Light and the Eternal Guide. His ancient teachings are preserved in the [[Lex Solara]], a collection of celestial laws written in the language of [[Luxan]]. Some sects believe that rekindling the [[Celestial Flame]] could undo the flaw of [[Ishna]] and restore the perfection of the original cycle.
+Among the [[Solaran]], [[Aelion]] is revered as the First Light and the Eternal Guide. His ancient teachings are preserved in the [[Lex Solara]], a collection of celestial laws written in the language of [[Luxar Gods]]. Some sects believe that rekindling the [[Celestial Flame]] could undo the flaw of [[Ishna]] and restore the perfection of the original cycle.

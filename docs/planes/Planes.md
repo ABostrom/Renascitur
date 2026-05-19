@@ -3,12 +3,12 @@ type: essay
 status: draft
 tags: []
 ---
-## Planes of [[Luxar]]
+## Planes of [[Luxar Gods]]
 ![[Imperium]]
 ![[Solirion]]
 ![[Woudum]]
 
-## Planes of [[Noxar]]
+## Planes of [[Noxar Gods]]
 ![[Infernum]]
 ![[Veltharyn]]
 ![[Nihilum]]

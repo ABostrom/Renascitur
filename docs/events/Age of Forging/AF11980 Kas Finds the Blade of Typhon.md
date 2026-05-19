@@ -7,7 +7,7 @@ timelines:
 - corruption
 type: event
 status: draft
-era: '[[Age of Forging]]'
+era: [[Age of Forging]]
 tags: []
 aliases:
 - Kas Finds the Blade of Typhon

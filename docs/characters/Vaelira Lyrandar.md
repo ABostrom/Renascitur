@@ -4,8 +4,8 @@ aliases:
 type: character
 status: stub
 tags: []
-realm: '[[Renascita]]'
-affiliation: '[[Velkhar Dominion]]'
+realm: [[Renascita]]
+affiliation: [[Velkhar Dominion]]
 nature: mortal
 importance: ''
 alignment: ''
@@ -15,5 +15,5 @@ magic: []
 living_status: ''
 era_of_birth: ''
 era_of_death: ''
-race: '[[Imperial Human]]'
+race: [[Imperial Human]]
 ---

@@ -7,9 +7,9 @@ aliases:
 - The Serpentine Citadel
 type: landmark
 status: draft
-continent: '[[Pyrosia]]'
-realm: '[[Renascita]]'
-inside: '[[Raining Bay]]'
+continent: [[Pyrosia]]
+realm: [[Renascita]]
+inside: [[Raining Bay]]
 nature: ''
 importance: minor
 ---

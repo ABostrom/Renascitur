@@ -5,11 +5,11 @@ tags:
 - divine
 type: technology
 status: stub
-realm: '[[Renascita]]'
+realm: [[Renascita]]
 discipline: Soul
 nature: ''
 importance: notable
 magic:
-- '[[Soul Magic]]'
-- '[[Divine]]'
+- [[Soul Magic]]
+- [[Divine]]
 ---

@@ -4,7 +4,7 @@ aliases:
 type: faction
 status: draft
 tags: []
-realm: '[[Renascita]]'
+realm: [[Renascita]]
 kind: cult
 nature: mortal
 importance: notable

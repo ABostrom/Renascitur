@@ -4,8 +4,8 @@ aliases:
 type: house
 status: draft
 tags: []
-realm: '[[Renascita]]'
-parent_faction: '[[Firebrand Empire]]'
+realm: [[Renascita]]
+parent_faction: [[Firebrand Empire]]
 nature: mortal
 importance: notable
 alignment: ''
@@ -24,7 +24,7 @@ _Responsible for construction, weapons development, and engineering within the F
 - **Race**: [[Human]]
 
 ## Headquarters
-- **City**: [[Magnus’ Rest]]
+- **City**: [[Magnus' Rest]]
 - **Primary Seat**: [[Cannith Tower]]
 
 ## Political Alignment
@@ -34,7 +34,7 @@ _Responsible for construction, weapons development, and engineering within the F
 
 ## Overview
 
-House Cannith serves a critical role within the Firebrand Empire, overseeing construction, weapons development, and engineering. Known for their domain of making, they are headquartered in [[Magnus’ Rest]] at the [[Cannith Tower]].
+House Cannith serves a critical role within the Firebrand Empire, overseeing construction, weapons development, and engineering. Known for their domain of making, they are headquartered in [[Magnus' Rest]] at the [[Cannith Tower]].
 
 ---
 

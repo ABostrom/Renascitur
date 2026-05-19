@@ -2,10 +2,14 @@
 type: continent
 status: stub
 tags: []
-realm: '[[Renascita]]'
+realm:
+- - Renascita
 climate: ''
 dominant_culture: ''
 population_density: ''
+aliases:
+- Renascitur
+- Renascita
 ---
 ---
 

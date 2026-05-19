@@ -1,9 +1,9 @@
 ---
 type: landmark
 status: draft
-continent: '[[Mokoweri]]'
+continent: [[Mokoweri]]
 tags: []
-realm: '[[Renascita]]'
+realm: [[Renascita]]
 nature: eldritch
 importance: minor
 ---

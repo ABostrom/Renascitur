@@ -1,9 +1,9 @@
 ---
 type: settlement
 status: draft
-continent: '[[Arcturia]]'
+continent: [[Arcturia]]
 tags: []
-realm: '[[Renascita]]'
+realm: [[Renascita]]
 importance: legendary
 population: ''
 climate: arctic
@@ -29,7 +29,7 @@ At the heart of Runehart rested the **Anvil of Eternity**, [[Muradin]]'s masterw
 
 #### **The Siege of Runehart**
 
-Runehart thrived as a bastion of ingenuity and defiance until the rise of **[[Typhon, The Archon of Death|Typhon]]**, the **Archon of Death** and one of [[Ishna]]’s **[[Quintumvirate|God Hand]]**. [[Typhon, The Archon of Death|Typhon]], a former **[[Grundthain]]** corrupted by [[Ishna]]’s power, led a massive army of [[aberrations]] to claim the hold and the Anvil of Eternity for his dark mistress.
+Runehart thrived as a bastion of ingenuity and defiance until the rise of **[[Typhon, The Archon of Death|Typhon]]**, the **Archon of Death** and one of [[Ishna]]’s **[[The God Hand|God Hand]]**. [[Typhon, The Archon of Death|Typhon]], a former **[[Grundthain]]** corrupted by [[Ishna]]’s power, led a massive army of [[aberrations]] to claim the hold and the Anvil of Eternity for his dark mistress.
 
 The siege of Runehart was a battle of unmatched ferocity. The defenders, armed with rune-forged weapons crafted on the Anvil, held the line against [[Typhon, The Archon of Death|Typhon]]’s horde. [[Muradin]] himself fought alongside his people, wielding both his hammer and his boundless determination to protect what they had built. Despite their bravery, the [[aberrations]]’ numbers and [[Typhon, The Archon of Death|Typhon]]’s devastating power began to overwhelm Runehart’s defences.
 

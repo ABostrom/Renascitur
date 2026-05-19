@@ -7,14 +7,14 @@ tags:
 - leonin
 - imperial
 lineage: Kyojin
-origin_plane: '[[Renascita]]'
+origin_plane: [[Renascita]]
 aat-race-tier: variant
 spoken_language:
-- '[[Imperial Common]]'
-- '[[docs/Languages/Modern/Leonin|Leonin]]'
+- [[Imperial Common]]
+- [[docs/Languages/Modern/Leonin|Leonin]]
 type: race
 status: draft
-parent_race: '[[Leonin]]'
+parent_race: [[Leonin]]
 nature: mortal
 importance: notable
 lifespan: ''

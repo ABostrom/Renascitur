@@ -7,7 +7,7 @@ timelines:
 - ishna
 type: event
 status: draft
-era: '[[Age of Forging]]'
+era: [[Age of Forging]]
 tags: []
 aliases:
 - Sealing of Ishna

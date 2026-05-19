@@ -1,18 +1,21 @@
 ---
-aliases: null
+aliases:
+- Draumhavn
 continent: ''
 province: ''
 leadership:
-- '[[Dagrin Thorne]]'
+- - - Dagrin Thorne
 type: continent
 status: draft
 kind: island
 tags: []
-realm: '[[Renascita]]'
+realm:
+- - Renascita
 climate: ''
 dominant_culture: ''
 population_density: ''
-controlled_by: '[[Tidebound of Draumhavn]]'
+controlled_by:
+- - Tidebound of Draumhavn
 ---
 ![[f1e5b90b-25db-47d1-ab4a-f5ab53ee54af.png]]
 ## Overview
@@ -30,7 +33,7 @@ Its lifeline lies beneath the earth: the **Deep Road**, a vast subterranean rail
 A secret, rune-reinforced tunnel system that connects Draumhavn to:
 - [[Uftine Human]]
 - [[Thundrakar]]
-- [[Magnus’ Rest]]
+- [[Magnus' Rest]]
 - [[Thelassia]]
 
 No tunnel runs south. The earth there falls away into the void.

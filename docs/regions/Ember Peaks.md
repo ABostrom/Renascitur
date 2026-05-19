@@ -6,8 +6,8 @@ tags:
 - region
 type: region
 status: draft
-continent: '[[Pyrosia]]'
-realm: '[[Renascita]]'
+continent: [[Pyrosia]]
+realm: [[Renascita]]
 climate: volcanic
 terrain:
 - mountains
@@ -19,7 +19,7 @@ settlements: []
 Mountainous and smog-choked, the Ember Peaks house vast forges, industrial hubs, and deep-mining operations. It is the beating iron heart of the Empire’s military-industrial power.
 
 ## Major Cities
-- [[Magnus’ Rest]]
+- [[Magnus' Rest]]
 - [[Old Westgate]]
 
 ## Notes

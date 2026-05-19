@@ -5,7 +5,7 @@ aliases:
 type: resource
 status: draft
 tags: []
-realm: '[[Renascita]]'
+realm: [[Renascita]]
 category: Crystals
 nature: ''
 importance: minor
@@ -14,7 +14,7 @@ importance: minor
 Formed in the upper peaks around the [[Stormspire]], [[Storm Quartz]] is grown within storm-scarred geodes where thunder has split stone and rain has etched runes over centuries. It is often found in caverns where sound never dies and lightning echoes through the air like breath.
 
 ## Description  
-[[Storm Quartz]] is a translucent, bluish crystal threaded with jagged inclusions that flicker with dormant energy. When held, it vibrates faintly in rhythm with nearby voices, and can emit a sharp chime when exposed to pressure shifts. It is said to remember the winds that shaped it. Only the [[Stormbound]] can safely tune its resonance through the ritual of [[Stormforging]].
+[[Storm Quartz]] is a translucent, bluish crystal threaded with jagged inclusions that flicker with dormant energy. When held, it vibrates faintly in rhythm with nearby voices, and can emit a sharp chime when exposed to pressure shifts. It is said to remember the winds that shaped it. Only the [[The Stormbound of Thundrakar]] can safely tune its resonance through the ritual of [[Stormforging]].
 
 ## Properties  
 - Stores and refracts sound and kinetic energy.
@@ -24,7 +24,7 @@ Formed in the upper peaks around the [[Stormspire]], [[Storm Quartz]] is grown w
 ## Uses  
 - Set into [[Skyforged Steel]] weapons and armor to allow silent communication during battle.
 - Inlaid into pylons and storm beacons as passive signal conduits.
-- Shards are sometimes embedded into the palms of [[Stormbound]] initiates, allowing them to “feel” the wind’s memory and detect shifting sky patterns.
+- Shards are sometimes embedded into the palms of [[The Stormbound of Thundrakar]] initiates, allowing them to “feel” the wind’s memory and detect shifting sky patterns.
 
 
 ## Lore

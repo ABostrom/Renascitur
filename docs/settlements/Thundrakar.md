@@ -3,12 +3,12 @@ aliases: null
 type: settlement
 continent: ''
 leadership:
-- '[[Aundril Voxhammer]]'
+- [[Aundril Voxhammer]]
 status: draft
 kind: island
 tags: []
-realm: '[[Renascita]]'
-controlled_by: '[[Stormbound of Thundrakar]]'
+realm: [[Renascita]]
+controlled_by: [[The Stormbound of Thundrakar]]
 region: ''
 size: ''
 populated_by: []
@@ -16,12 +16,12 @@ era_founded: ''
 ---
 ![[Pasted image 20250419175154.png]]
 ## Overview  
-[[Thundrakar]] is the mountain city of the [[Stormbound]], carved into and around the base of the colossal [[Stormspire]] — the tallest peak in the world. Here, the [[Dwarf|dwarves]] live suspended between earth and sky — their towers crowned with lightning rods and their halls echoing with the voice of the storm.
+[[Thundrakar]] is the mountain city of the [[The Stormbound of Thundrakar]], carved into and around the base of the colossal [[Stormspire]] — the tallest peak in the world. Here, the [[Dwarf|dwarves]] live suspended between earth and sky — their towers crowned with lightning rods and their halls echoing with the voice of the storm.
 
 Bridges arc between peaks. Wind tunnels sing through open-arched halls. The air is always charged, the sky never still.
 
 ## Cultural Theme  
-The [[Stormbound]] are not architects of dominion, but custodians of resonance. They believe **memory rides the thunder** and dedicate their lives to listening, recording, and transcribing the will of the storm.
+The [[The Stormbound of Thundrakar]] are not architects of dominion, but custodians of resonance. They believe **memory rides the thunder** and dedicate their lives to listening, recording, and transcribing the will of the storm.
 
 They shape runes not to control lightning, but to **honor its message**. The most honored among them are the [[Windscribes]] — those who can hear prophecy in static and story in the roar of thunder.
 

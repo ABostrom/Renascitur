@@ -4,8 +4,8 @@ aliases:
 type: house
 status: draft
 tags: []
-realm: '[[Renascita]]'
-parent_faction: '[[Firebrand Empire]]'
+realm: [[Renascita]]
+parent_faction: [[Firebrand Empire]]
 nature: mortal
 importance: notable
 alignment: ''
@@ -24,7 +24,7 @@ _Responsible for trade, inns, taverns, and diplomacy within the Firebrand Empire
 - **Race**: [[Gnome]]
 
 ## Headquarters
-- **City**: [[Lion’s Rest]]
+- **City**: [[Lion's Rest]]
 - **Primary Seat**: [[Gatherhold]]
 
 ## Political Alignment
@@ -34,7 +34,7 @@ _Responsible for trade, inns, taverns, and diplomacy within the Firebrand Empire
 
 ## Overview
 
-House Silverhand serves a critical role within the Firebrand Empire, overseeing trade, inns, taverns, and diplomacy. Known for their domain of hospitality, they are headquartered in [[Lion’s Rest]] at the [[Gatherhold]].
+House Silverhand serves a critical role within the Firebrand Empire, overseeing trade, inns, taverns, and diplomacy. Known for their domain of hospitality, they are headquartered in [[Lion's Rest]] at the [[Gatherhold]].
 
 ---
 

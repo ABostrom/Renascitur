@@ -1,9 +1,9 @@
 ---
 type: region
 status: stub
-continent: '[[Arcturia]]'
+continent: [[Arcturia]]
 tags: []
-realm: '[[Renascita]]'
+realm: [[Renascita]]
 climate: arctic
 terrain: []
 dominant_culture: ''

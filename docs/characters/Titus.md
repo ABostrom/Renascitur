@@ -2,7 +2,7 @@
 type: character
 status: draft
 tags: []
-realm: '[[Renascita]]'
+realm: [[Renascita]]
 nature: ''
 importance: ''
 alignment: ''

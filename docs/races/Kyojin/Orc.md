@@ -7,10 +7,10 @@ tags:
 - kyojin
 - primal
 lineage: Kyojin
-origin_plane: '[[Renascita]]'
+origin_plane: [[Renascita]]
 aat-race-tier: distinct
 spoken_language:
-- '[[Orcish]]'
+- [[Orcish]]
 type: race
 status: draft
 nature: mortal

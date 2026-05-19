@@ -7,13 +7,13 @@ tags:
 - humans
 - imperial
 lineage: Humans
-origin_plane: '[[Renascita]]'
+origin_plane: [[Renascita]]
 aat-race-tier: variant
 spoken_language:
-- '[[Imperial Common]]'
+- [[Imperial Common]]
 type: race
 status: draft
-parent_race: '[[Terran]]'
+parent_race: [[Terran]]
 nature: mortal
 importance: notable
 lifespan: ''

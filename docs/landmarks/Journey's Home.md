@@ -4,12 +4,12 @@ tags:
 - headquarters
 - House Orien
 aliases:
-- Journey’s Home
+- Journey's Home
 type: landmark
 status: draft
-continent: '[[Pyrosia]]'
-realm: '[[Renascita]]'
-inside: '[[Port Ardere]]'
+continent: [[Pyrosia]]
+realm: [[Renascita]]
+inside: [[Port Ardere]]
 nature: ''
 importance: minor
 ---

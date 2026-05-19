@@ -7,10 +7,10 @@ tags:
 - solarans
 - celestial
 lineage: Solarans
-origin_plane: '[[Imperium]]'
+origin_plane: [[Imperium]]
 aat-race-tier: distinct
 spoken_language:
-- '[[Serethi]]'
+- [[Serethi]]
 type: race
 status: draft
 nature: celestial

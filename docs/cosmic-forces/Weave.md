@@ -10,7 +10,7 @@ alignment: ''
 ---
 **Nature**: The foundational structure of reality—like the fabric of spacetime  
 **Created By**: The [[Aeternum]], using the [[Aetherglyphs]]  
-**Composed Of**: The four cosmic forces ([[Luxar]], [[Noxar]], [[Ordar]], [[Chaor]]) + [[Time]]  
+**Composed Of**: The four cosmic forces ([[Luxar Gods]], [[Noxar Gods]], [[Ordar]], [[Chaor]]) + [[Time]]  
 **Opposed By**: [[Entropy]], the anomaly  
 **Role**: The universal substrate that governs existence, consciousness, motion, and meaning
 
@@ -39,8 +39,8 @@ The Weave was formed from the interplay of **five glyphic forces**:
 
 | Force | Function |
 |-------|----------|
-| [[Luxar]] | Illumination, clarity, revelation |
-| [[Noxar]] | Mystery, concealment, potential |
+| [[Luxar Gods]] | Illumination, clarity, revelation |
+| [[Noxar Gods]] | Mystery, concealment, potential |
 | [[Ordar]] | Structure, memory, continuity |
 | [[Chaor]] | Instinct, change, spontaneity |
 | **Time** | The universal constant that sequences all things |

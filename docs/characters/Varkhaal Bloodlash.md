@@ -9,7 +9,7 @@ tags:
 - hobgoblin
 type: character
 status: draft
-realm: '[[Renascita]]'
+realm: [[Renascita]]
 nature: ''
 importance: ''
 alignment: ''

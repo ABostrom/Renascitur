@@ -7,12 +7,12 @@ tags:
 - dwarves
 - elemental
 lineage: Grundthains
-origin_plane: '[[Thargrun]]'
+origin_plane: [[Thargrun]]
 aat-race-tier: variant
-spoken_language: '[[Dwarven]]'
+spoken_language: [[Dwarven]]
 type: race
 status: draft
-parent_race: '[[Dwarves]]'
+parent_race: [[Dwarves]]
 nature: mortal
 importance: notable
 lifespan: ''
@@ -21,7 +21,7 @@ magic_affinity: []
 # Tidebound [[Dwarf|Dwarves]]
 
 ## Overview  
-The [[Tidebound|Tidebound Dwarves]] are the seafaring clan of dwarvenkind who dwell in the fortified island-city of [[Draumhavn]], nestled between the continents of [[Pyrosia]] and [[Qethusiyya]]. Hardened by salt, storm, and deepwater dread, they are guardians of the **Wakened Trench** — the bound wound of [[Leviathan]] sealed by [[Muradin]] in [[the First Age]].
+The [[The Tidebound of Draumhavn|Tidebound Dwarves]] are the seafaring clan of dwarvenkind who dwell in the fortified island-city of [[Draumhavn]], nestled between the continents of [[Pyrosia]] and [[Qethusiyya]]. Hardened by salt, storm, and deepwater dread, they are guardians of the **Wakened Trench** — the bound wound of [[Leviathan]] sealed by [[Muradin]] in [[the First Age]].
 
 To the Tidebound, the sea is not a mystery — it is a memory.  
 They do not fear its hunger. They endure it.

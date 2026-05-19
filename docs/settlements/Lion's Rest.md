@@ -1,13 +1,13 @@
 ---
 aliases:
-- Lion’s Rest
+- Lion's Rest
 tags:
 - city
 - location
 type: settlement
 status: draft
-continent: '[[Pyrosia]]'
-realm: '[[Renascita]]'
+continent: [[Pyrosia]]
+realm: [[Renascita]]
 importance: notable
 population: ''
 climate: volcanic

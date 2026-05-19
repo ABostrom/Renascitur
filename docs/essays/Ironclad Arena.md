@@ -2,7 +2,7 @@
 type: essay
 status: draft
 tags: []
-realm: '[[Renascita]]'
+realm: [[Renascita]]
 ---
 #### **Purpose and Function**
 

@@ -6,8 +6,8 @@ tags:
 - region
 type: region
 status: draft
-continent: '[[Pyrosia]]'
-realm: '[[Renascita]]'
+continent: [[Pyrosia]]
+realm: [[Renascita]]
 climate: volcanic
 terrain: []
 dominant_culture: ''
@@ -18,7 +18,7 @@ settlements: []
 The political and cultural heartland of the Empire. Fertile, stable, and heavily patrolled, this region is home to many noble houses, institutions of power, and imperial bureaucracy.
 
 ## Major Cities
-- [[Lion’s Rest]]
+- [[Lion's Rest]]
 - [[Lux Oescus]]
 - [[Candle Keep]]
 - [[Port Ardere]]

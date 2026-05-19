@@ -2,7 +2,7 @@
 type: resource
 status: draft
 tags: []
-realm: '[[Renascita]]'
+realm: [[Renascita]]
 category: Ores
 nature: ''
 importance: minor
@@ -11,7 +11,7 @@ importance: minor
 Found only in exposed cliff veins near the [[Stormspire]], [[Skyshatter Ore]] is formed where raw lightning has struck the same high-altitude rock repeatedly over centuries. These veins run deep beneath storm-tempered peaks and require dangerous mining expeditions during lulls in the weather.
 
 ## Description  
-[[Skyshatter Ore]] is a jagged, brittle mineral with veins that shimmer like shattered glass and smell faintly of ozone. It pulses with stored electrical energy and is considered too unstable for most traditional smelting methods. Only the [[Stormbound]] dare to mine it, let alone forge with it. It is often harvested in insulated gauntlets and handled with ironwood crates lined with rune-dampening clay.
+[[Skyshatter Ore]] is a jagged, brittle mineral with veins that shimmer like shattered glass and smell faintly of ozone. It pulses with stored electrical energy and is considered too unstable for most traditional smelting methods. Only the [[The Stormbound of Thundrakar]] dare to mine it, let alone forge with it. It is often harvested in insulated gauntlets and handled with ironwood crates lined with rune-dampening clay.
 
 ## Properties  
 - Highly conductive and naturally charged; can discharge violently if mishandled.

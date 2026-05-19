@@ -2,7 +2,7 @@
 type: essay
 status: draft
 tags: []
-realm: '[[Renascita]]'
+realm: [[Renascita]]
 ---
 Elder Vellara, as the keeper of the Archives of the Ancients and a scholar of [[Solaran]] technology, would oversee a treasure trove of ancient and possibly arcane technology. Given her role and the historical context of the [[Saurian|Saurians]] being created by the [[Solaran|Solarans]] as a form of biological weaponry against cosmic corruption, the archives could contain various types of technology that range from everyday utility to powerful artifacts designed for protection and healing. Here are some examples of what types of technology Elder Vellara might safeguard in the archives:
 

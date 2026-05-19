@@ -6,10 +6,10 @@ timelines:
 - dwarf
 type: event
 status: draft
-era: '[[Age of the Endless Sun]]'
+era: [[Age of the Endless Sun]]
 tags: []
 aliases:
-- Muradin’s Pilgrimage Begins
+- Muradin's Pilgrimage Begins
 year_display: ES 4000
 year: 4000
 importance: ''

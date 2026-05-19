@@ -2,7 +2,7 @@
 type: technology
 status: stub
 tags: []
-realm: '[[Renascita]]'
+realm: [[Renascita]]
 discipline: Nature
 nature: ''
 importance: notable

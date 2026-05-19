@@ -2,7 +2,7 @@
 type: resource
 status: draft
 tags: []
-realm: '[[Renascita]]'
+realm: [[Renascita]]
 category: Minerals
 nature: ''
 importance: minor
@@ -19,7 +19,7 @@ Found only at the heart of [[the Eternal Flame]], [[Radiant Obsidian]] forms whe
 - Reacts to intent: becomes more reflective in the hands of the focused, more chaotic in the hands of the uncertain.
 
 ## Uses  
-- Used in [[Flameforging]] to create relics, lenses, and weapon cores for the [[Flamebound]].  
+- Used in [[Flameforging]] to create relics, lenses, and weapon cores for the [[The Flamebound of Magnus' Rest]].  
 - Integral to high ceremonial tools and flame-channeling constructs.  
 - When refined through [[Solaran]] techniques, it produces [[Solaran Obsidian]] — a material vital to containment technology and ancient starforges.
 

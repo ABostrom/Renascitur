@@ -2,8 +2,8 @@
 type: character
 status: draft
 tags: []
-realm: '[[Renascita]]'
-affiliation: '[[The Solaran Federation of Worlds]]'
+realm: [[Renascita]]
+affiliation: [[The Solaran Federation of Worlds]]
 nature: mortal
 importance: ''
 alignment: ''
@@ -13,7 +13,7 @@ magic: []
 living_status: ''
 era_of_birth: ''
 era_of_death: ''
-race: '[[Solaran]]'
+race: [[Solaran]]
 ---
 SOL-4R is a squat, spherical robot about the size of a large beach ball, with a polished, golden exterior. Its spherical body has several compartments and extensions, with a single large eye at the top of its body, glowing with a warm orange light. As the players enter the room, SOL-4R will hum to life, and its eye will blink, focusing on the adventurers.
 

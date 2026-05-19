@@ -1,9 +1,9 @@
 ---
 type: landmark
 status: draft
-continent: '[[Draumhavn]]'
+continent: [[Draumhavn]]
 tags: []
-realm: '[[Renascita]]'
+realm: [[Renascita]]
 nature: corrupted
 importance: minor
 ---
@@ -12,7 +12,7 @@ importance: minor
 To the south of [[Draumhavn]], beyond the edge of the last charted reefs, lies a yawning abyss known only as **The Wakened Trench**. A fault in the world’s crust, it plunges into unknowable darkness—a place where even light forgets to return. It is said that when the trench first opened during the [[end of the First Age]], the tides themselves recoiled, and the water grew still with dread.
 
   
-The [[Tidebound]] of Draumhavn do not speak of the trench lightly. Its existence predates their city, yet it is the reason they built their stronghold where they did. Every rune-seal, every tide-bound watchtower, and every salt-washed warship exists to ensure nothing ever rises from that abyss.
+The [[The Tidebound of Draumhavn]] of Draumhavn do not speak of the trench lightly. Its existence predates their city, yet it is the reason they built their stronghold where they did. Every rune-seal, every tide-bound watchtower, and every salt-washed warship exists to ensure nothing ever rises from that abyss.
 
 ## The [[Leviathan]] Fragment
 
@@ -34,4 +34,4 @@ The [[Draumhavn]] maintain an unbroken watch over the Wakened Trench. Generation
 
 The trench is not just a prison—it is a wound. The [[The Salt-Blessed|Tidebound]] believe it bleeds into the sea, poisoning the current with [[Leviathan]]’s rage. They do not seek to purify or cleanse it. They seek only to **endure**—to stand as a bulwark between the deep and the world above.
 
-> “We do not tame the tide. We bear its burden.” — [[Tidebound]] Creed
+> “We do not tame the tide. We bear its burden.” — [[The Tidebound of Draumhavn]] Creed

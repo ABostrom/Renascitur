@@ -7,7 +7,7 @@ importance: major
 alignment: ''
 ---
 **Aspect**: Shadow, Mystery, Depth, Potential  
-**Opposes**: [[Luxar]]  
+**Opposes**: [[Luxar Gods]]  
 **Domain**: Dreams, the unknown, reflection, secrecy  
 **Associated Races**: [[Solaran|Solarans]]  
 **Place in [[Weave|the Weave]]**: One of the four cosmic forces that sustain reality.
@@ -23,7 +23,7 @@ It is the veil, the hidden path, the memory left unsaid. Without Noxar, no truth
 - A closed eye within a circle.
 
 ## Cultural Notes
-- [[Solaran|Solarans]] saw Noxar not as a threat to [[Luxar]], but as its **mirror**.
+- [[Solaran|Solarans]] saw Noxar not as a threat to [[Luxar Gods]], but as its **mirror**.
 - Dream-mages, shadow-priests, and spiritwalkers trace their magic to Noxar’s influence.
 
 ## In Opposition

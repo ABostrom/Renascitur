@@ -2,30 +2,35 @@
 type: faction
 status: draft
 tags: []
-realm: '[[Renascita]]'
-parent_faction: '[[Dwarven Holds]]'
+realm:
+- - Renascita
+parent_faction:
+- - Dwarven Holds
 nature: mortal
 importance: notable
 alignment: lawful-neutral
 society_form: martial
 government: monarchy
 economy: mining
-seat: '[[Magnus'' Rest]]'
+seat: [[Magnus' Rest]]
 size: regional
 allies: []
 rivals: []
 magic:
-- '[[Rune Magic]]'
-- '[[Forge Magic]]'
+- - - Rune Magic
+- - - Forge Magic
 leadership: []
+aliases:
+- Flamebound
+- Flamebound of Magnus' Rest
 ---
-## Cultural Themes – The [[Flamebound]] [[Dwarf|Dwarves]]
+## Cultural Themes – The [[The Flamebound of Magnus' Rest]] [[Dwarf|Dwarves]]
 
-The [[Dwarf|dwarves]] of Magnus’ Rest are known as the **[[Flamebound]]**, and they live by the creed of **rebirth through fire**. Fire is more than a tool—it is a crucible of the [[soul]]. Through radiant heat, they believe that all things are tested, all weakness burned away.
+The [[Dwarf|dwarves]] of Magnus’ Rest are known as the **[[The Flamebound of Magnus' Rest]]**, and they live by the creed of **rebirth through fire**. Fire is more than a tool—it is a crucible of the [[soul]]. Through radiant heat, they believe that all things are tested, all weakness burned away.
 
 They revere [[Magnus]] not only as a divine protector but as the living embodiment of radiant defiance. His doctrine, passed down through the [[Magnesium Devouts]], teaches that in the face of overwhelming night, the only righteous answer is to burn brighter.
 
-The [[Flamebound]] value:
+The [[The Flamebound of Magnus' Rest]] value:
 - **Sacrifice through hardship**
 - **Perseverance under pressure**
 - **Creation as a sacred act**
@@ -33,11 +38,11 @@ The [[Flamebound]] value:
 To forge is to pray. To endure is to worship.
 
 
-## Radiant Forging – Sacred Craft of the [[Flamebound]]
+## Radiant Forging – Sacred Craft of the [[The Flamebound of Magnus' Rest]]
 
-The [[Flamebound]] are masters of **Radiant Forging**, a sacred and arduous discipline that merges divine heat, volcanic material, and dwarven craftsmanship.
+The [[The Flamebound of Magnus' Rest]] are masters of **Radiant Forging**, a sacred and arduous discipline that merges divine heat, volcanic material, and dwarven craftsmanship.
 
-All true Radiant Forging is performed within the [[Everburn Forges]], which are powered directly by the [[Eternal Flame]]. The process requires not only metallurgical skill but spiritual worthiness—flame, in [[Flamebound]] belief, reveals the truth of all things.
+All true Radiant Forging is performed within the [[Everburn Forges]], which are powered directly by the [[Eternal Flame]]. The process requires not only metallurgical skill but spiritual worthiness—flame, in [[The Flamebound of Magnus' Rest]] belief, reveals the truth of all things.
 
 Radiant-forged weapons and armor:
 

@@ -7,7 +7,7 @@ timelines:
 - war
 type: event
 status: draft
-era: '[[Age of Forging]]'
+era: [[Age of Forging]]
 tags: []
 aliases:
 - The Forgeborn Legions March

@@ -1,7 +1,8 @@
 ---
 type: faction
 status: stub
-realm: '[[Renascita]]'
+realm:
+- - Renascita
 tags: []
 nature: mortal
 importance: notable
@@ -15,6 +16,9 @@ allies: []
 rivals: []
 magic: []
 leadership: []
+aliases:
+- Blackiron Collective
+- Blackiron
 ---
 ---
 

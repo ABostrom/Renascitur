@@ -6,7 +6,7 @@ timelines:
 - corruption
 type: event
 status: draft
-era: '[[Age of the Endless Sun]]'
+era: [[Age of the Endless Sun]]
 tags: []
 aliases:
 - Ishna Corrupts Mortals
@@ -17,4 +17,4 @@ victors: []
 casualties: []
 outcome: ''
 ---
-[[Ishna]] begins whispering to mortals. Cults form in secret, ancient rites are twisted, and the first of the [[Quintumvirate|God Hand]] are born from these [[Entropy|Aberrant]]nt unions.
+[[Ishna]] begins whispering to mortals. Cults form in secret, ancient rites are twisted, and the first of the [[The God Hand|God Hand]] are born from these [[Entropy|Aberrant]]nt unions.

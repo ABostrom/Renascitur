@@ -7,9 +7,9 @@ tags:
 - reptilian
 - spiritual
 lineage: Engineered
-origin_plane: '[[Renascita]]'
+origin_plane: [[Renascita]]
 aat-race-tier: engineered
-spoken_language: '[[Denisovan]]'
+spoken_language: [[Denisovan]]
 type: race
 status: draft
 nature: bioengineered

@@ -6,7 +6,7 @@ timelines:
 - arcane-tech
 type: event
 status: draft
-era: '[[Age of Forging]]'
+era: [[Age of Forging]]
 tags: []
 aliases:
 - First Arcanometric Crystals Harvested

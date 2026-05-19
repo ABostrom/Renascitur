@@ -7,9 +7,9 @@ aliases:
 - Foalswood
 type: landmark
 status: draft
-continent: '[[Pyrosia]]'
-realm: '[[Renascita]]'
-inside: '[[Old Westgate]]'
+continent: [[Pyrosia]]
+realm: [[Renascita]]
+inside: [[Old Westgate]]
 nature: ''
 importance: minor
 ---

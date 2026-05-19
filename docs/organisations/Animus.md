@@ -2,7 +2,7 @@
 type: organisation
 status: draft
 tags: []
-realm: '[[Renascita]]'
+realm: [[Renascita]]
 nature: mortal
 importance: minor
 alignment: ''

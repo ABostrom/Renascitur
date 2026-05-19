@@ -1,9 +1,9 @@
 ---
 type: settlement
 status: draft
-continent: '[[Pyrosia]]'
+continent: [[Pyrosia]]
 tags: []
-realm: '[[Renascita]]'
+realm: [[Renascita]]
 importance: notable
 population: ''
 climate: volcanic
@@ -16,7 +16,7 @@ populated_by: []
 era_founded: ''
 ---
 > *"We held the gates for a thousand nights, and in that furnace, the future was forged."*  
-> — [[Volgrin Flameward]], First [[Pyrethane]] of [[Magnus’ Rest]]
+> — [[Volgrin Flameward]], First [[Pyrethane]] of [[Magnus' Rest]]
 
 
 ## Province
@@ -27,7 +27,7 @@ era_founded: ''
 ![[Pasted image 20250419175621.png]]
 ## Overview
 
-[[Magnus’ Rest]] was the city founded by the god-forged hero [[Magnus]] shortly after the [[Psychic Schism]]. In the chaos that followed, he gathered a band of [[Dwarf|dwarves]], humans, and other refugees and led them into the volcanic mountains of southern [[Pyrosia]].
+[[Magnus' Rest]] was the city founded by the god-forged hero [[Magnus]] shortly after the [[Psychic Schism]]. In the chaos that followed, he gathered a band of [[Dwarf|dwarves]], humans, and other refugees and led them into the volcanic mountains of southern [[Pyrosia]].
 
 There, beside a smouldering caldera of [[Mount Earthspur]], [[Magnus]] and his [[Forge Clerics]] defended the entrance to the nascent city for **a thousand nights**, waging endless battle against the horrors of the night. When at last the final stones were laid and the forges lit, the gates were sealed—not in retreat, but in preparation.
 
@@ -83,7 +83,7 @@ Millennia later, in the chaos following the [[Psychic Schism]], it was the dying
 
 The Eternal Flame:
 - Burns with **divine radiance**, purifying [[aberrations]] and shielding the city from corruption  
-- **Empowers the [[Everburn Forges]]**, allowing the [[Flamebound]] to craft weapons of [[Radiant Obsidian]] and [[Sun Topaz]]  
+- **Empowers the [[Everburn Forges]]**, allowing the [[The Flamebound of Magnus' Rest]] to craft weapons of [[Radiant Obsidian]] and [[Sun Topaz]]  
 - Serves as a **spiritual anchor** for the [[Magnesium Devouts]], who tend its heart and preserve its song  
 
 > “We are not its masters. We are its stewards. And should the Flame ever fall… the last hope of the world may fall with it.”  

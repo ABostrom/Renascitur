@@ -7,9 +7,9 @@ aliases:
 - Vedkyar Enclave
 type: landmark
 status: draft
-continent: '[[Pyrosia]]'
-realm: '[[Renascita]]'
-inside: '[[Lion’s Rest]]'
+continent: [[Pyrosia]]
+realm: [[Renascita]]
+inside: [[Lion's Rest]]
 nature: ''
 importance: minor
 ---
@@ -17,7 +17,7 @@ importance: minor
 - [[House Jorasco]]
 
 ## City
-- [[Lion’s Rest]]
+- [[Lion's Rest]]
 
 ## Description
-Vedkyar Enclave serves as the central stronghold or operational base of House Jorasco. Situated in the city of [[Lion’s Rest]], it reflects the culture and function of the house it represents.
+Vedkyar Enclave serves as the central stronghold or operational base of House Jorasco. Situated in the city of [[Lion's Rest]], it reflects the culture and function of the house it represents.

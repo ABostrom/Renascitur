@@ -4,7 +4,7 @@ aliases:
 - Psychic Schism
 type: event
 status: draft
-era: '[[Age of Stagnation]]'
+era: [[Age of Stagnation]]
 tags: []
 year_display: AS (undated)
 year: 0

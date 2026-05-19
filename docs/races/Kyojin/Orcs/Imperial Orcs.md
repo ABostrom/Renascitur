@@ -7,14 +7,14 @@ tags:
 - orcs
 - imperial
 lineage: Kyojin
-origin_plane: '[[Renascita]]'
+origin_plane: [[Renascita]]
 aat-race-tier: variant
 spoken_language:
-- '[[Imperial Common]]'
-- '[[Orcish]]'
+- [[Imperial Common]]
+- [[Orcish]]
 type: race
 status: draft
-parent_race: '[[Orcs]]'
+parent_race: [[Orcs]]
 nature: mortal
 importance: notable
 lifespan: ''

@@ -2,23 +2,30 @@
 type: faction
 status: stub
 tags: []
-realm: '[[Renascita]]'
+realm:
+- - Renascita
 nature: celestial
 importance: legendary
 alignment: lawful-good
 society_form: imperial
 government: magocratic-council
 economy: magical
-seat: '[[Solara]]'
+seat:
+- - Solara
 size: cosmic
-era_founded: '[[Age of the Endless Sun]]'
-era_dissolved: '[[Age of the Endless Sun]]'
+era_founded:
+- - Age of the Endless Sun
+era_dissolved:
+- - Age of the Endless Sun
 allies: []
 rivals: []
 magic:
-- '[[Arcanometry]]'
-- '[[Astral Weaving]]'
+- - - Arcanometry
+- - - Astral Weaving
 leadership: []
+aliases:
+- Solaran Federation
+- Solaran Federation of Worlds
 ---
 # The Solaran Federation of Worlds
 

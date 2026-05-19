@@ -2,21 +2,27 @@
 type: faction
 status: stub
 tags: []
-realm: '[[Renascita]]'
-parent_faction: '[[Dwarven Holds]]'
+realm:
+- - Renascita
+parent_faction:
+- - Dwarven Holds
 nature: mortal
 importance: notable
 alignment: lawful-neutral
 society_form: martial
 government: monarchy
 economy: mining
-seat: '[[Thundrakar]]'
+seat:
+- - Thundrakar
 size: regional
 allies: []
 rivals: []
 magic:
-- '[[Rune Magic]]'
+- - - Rune Magic
 leadership: []
+aliases:
+- Stormbound
+- Stormbound of Thundrakar
 ---
 ---
 

@@ -5,8 +5,8 @@ aliases:
 type: character
 status: draft
 tags: []
-realm: '[[Renascita]]'
-affiliation: '[[The Flamebound of Magnus'' Rest]]'
+realm: [[Renascita]]
+affiliation: [[The Flamebound of Magnus' Rest]]
 nature: mortal
 importance: ''
 alignment: ''
@@ -18,9 +18,9 @@ magic: []
 living_status: deceased
 era_of_birth: ''
 era_of_death: ''
-race: '[[Dwarf]]'
-culture: '[[Flamebound]]'
-location: '[[Magnus'' Rest]]'
+race: [[Dwarf]]
+culture: [[The Flamebound of Magnus' Rest]]
+location: [[Magnus' Rest]]
 ---
 > *"I was a child when the night came. [[Magnus]] gave me fire. I have never let it go."*
 
@@ -28,11 +28,11 @@ location: '[[Magnus'' Rest]]'
 
 ## Overview
 
-**Volgrin Flameward**, First [[Pyrethane]] of [[Magnus’ Rest]], was not born a leader, warrior, or prophet. He was a frightened young [[dwarf]]—barely into his second decade—when the [[Psychic Schism]] shattered his home and stole his family. He would have died in the dark, if not for a stranger wreathed in flame who pulled him from the rubble.
+**Volgrin Flameward**, First [[Pyrethane]] of [[Magnus' Rest]], was not born a leader, warrior, or prophet. He was a frightened young [[dwarf]]—barely into his second decade—when the [[Psychic Schism]] shattered his home and stole his family. He would have died in the dark, if not for a stranger wreathed in flame who pulled him from the rubble.
 
 That stranger was [[Magnus]].
 
-In the centuries since, Volgrin has become a **grizzled, enduring legend**—a master [[Radiant Forger]], living bulwark, and the only [[dwarf]] alive who remembers the founding of the city firsthand. He is **the [[soul]] of the [[Flamebound]]**, shaped not by birthright, but by fire, loss, and an unbreakable promise.
+In the centuries since, Volgrin has become a **grizzled, enduring legend**—a master [[Radiant Forger]], living bulwark, and the only [[dwarf]] alive who remembers the founding of the city firsthand. He is **the [[soul]] of the [[The Flamebound of Magnus' Rest]]**, shaped not by birthright, but by fire, loss, and an unbreakable promise.
 
 ---
 
@@ -50,7 +50,7 @@ He never left his side again.
 
 ## The Thousand Nights
 
-Volgrin grew up with the [[Forge Clerics]] during the building of [[Magnus’ Rest]], learning to wield hammer and shield while the walls rose. Though still young, he fought during the **Thousand Nights of Flamegate**, defending the mountain pass from endless waves of aberrant horrors.
+Volgrin grew up with the [[Forge Clerics]] during the building of [[Magnus' Rest]], learning to wield hammer and shield while the walls rose. Though still young, he fought during the **Thousand Nights of Flamegate**, defending the mountain pass from endless waves of aberrant horrors.
 
 It was during this siege that he received his soulmark and forged the first [[Everburn Blade]], guided by the hand of [[Magnus]].
 

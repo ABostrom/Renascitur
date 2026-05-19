@@ -2,8 +2,8 @@
 type: landmark
 status: draft
 tags: []
-realm: '[[Renascita]]'
-controlled_by: '[[The Flamebound of Magnus'' Rest]]'
+realm: [[Renascita]]
+controlled_by: [[The Flamebound of Magnus' Rest]]
 nature: corrupted
 importance: minor
 ---
@@ -14,7 +14,7 @@ importance: minor
 
 ## Overview
 
-The **Eternal Flame** is a divine, radiant fire that burns at the heart of [[Magnus’ Rest]], housed within the volcanic summit known as [[The Ember Crown]]. It is the bound essence of the [[Great Elemental]] [[Phenos]], sealed long ago by [[Muradin]] to protect the world from corruption and to preserve one untainted element of flame.
+The **Eternal Flame** is a divine, radiant fire that burns at the heart of [[Magnus' Rest]], housed within the volcanic summit known as [[The Ember Crown]]. It is the bound essence of the [[Great Elemental]] [[Phenos]], sealed long ago by [[Muradin]] to protect the world from corruption and to preserve one untainted element of flame.
 
 It serves as both the **spiritual heart** and the **arcane engine** of the city—a source of divine light, purifying heat, and sacred authority.
 
@@ -26,7 +26,7 @@ In the twilight of the [[First Age]], as [[Ishna]]’s entropy began to corrupt 
 
 There the flame remained hidden and protected, its power untouched by corruption.
 
-After the [[Psychic Schism]], it was the **dying will of [[Muradin]]** that guided [[Magnus]] to the mountain. He built [[Magnus’ Rest]] atop the seal, vowing to protect the flame—and the world—from what might come if it were ever extinguished… or unbound.
+After the [[Psychic Schism]], it was the **dying will of [[Muradin]]** that guided [[Magnus]] to the mountain. He built [[Magnus' Rest]] atop the seal, vowing to protect the flame—and the world—from what might come if it were ever extinguished… or unbound.
 
 ---
 
@@ -78,13 +78,13 @@ Some fear that **if the seal fails**, [[Phenos]] will awaken—but whether he re
 
 ## Cultural Significance
 
-To the people of [[Magnus’ Rest]], the Eternal Flame is not just protection—it is **purpose**.
+To the people of [[Magnus' Rest]], the Eternal Flame is not just protection—it is **purpose**.
 
 - It is the **divine legacy of [[Muradin]]**  
 - The **spiritual compass of the Pyrethane**  
 - The **source of Radiant Forging**, and thus the city’s survival  
 - And the **light in the dark**, when all other fires fail
 
-Every [[Flamebound]] child is brought to the Flame for naming. Every hero is cremated before it. Every oath of office is sworn in its glow.
+Every [[The Flamebound of Magnus' Rest]] child is brought to the Flame for naming. Every hero is cremated before it. Every oath of office is sworn in its glow.
 
 ---

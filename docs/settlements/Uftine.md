@@ -1,14 +1,14 @@
 ---
 aliases: []
 type: settlement
-continent: '[[Arcturia]]'
+continent: [[Arcturia]]
 leadership:
-- '[[Gromdir Stillhand]]'
+- [[Gromdir Stillhand]]
 status: draft
 tags: []
-realm: '[[Renascita]]'
-controlled_by: '[[Icebound of Uftine]]'
-region: '[[Calderian Mountains]]'
+realm: [[Renascita]]
+controlled_by: [[The Icebound of Uftine]]
+region: [[Calderian Mountains]]
 size: ''
 populated_by: []
 era_founded: ''
@@ -16,7 +16,7 @@ era_founded: ''
 ![[2a6dc07c-2481-498a-96e7-b1cbae589bb1.png]]
 ## Overview
 
-Uftine is the glacial capital of the [[Icebound]], a dwarven city-state carved from stone and ice deep in the northern reaches of the world. Built into a frozen mountainside and fortified by nature itself, Uftine is a bastion of cold precision, ancestral duty, and unbreakable engineering.
+Uftine is the glacial capital of the [[The Icebound of Uftine]], a dwarven city-state carved from stone and ice deep in the northern reaches of the world. Built into a frozen mountainside and fortified by nature itself, Uftine is a bastion of cold precision, ancestral duty, and unbreakable engineering.
 
 The city is lit by ice-embedded glowcrystals, its buildings carved with runes of frost and stability. Despite the endless winter beyond its walls, Uftine thrives through mastery of rune-bound [[Iceforging]], powerful frost-infused forges, and a culture of unshakable resilience.
 
@@ -34,7 +34,7 @@ Each dwarven city was founded over such a prison, and each holds vigil over a co
 ## Relations
 
 - View the [[Draumhavn|Tidebound]] of [[Draumhavn]] as bold but reckless
-- Respect the silence of [[Magnus’ Rest]], though find them overly insular
+- Respect the silence of [[Magnus' Rest]], though find them overly insular
 - Collaborate closely with [[Thundrakar]] on rune engineering, though debate philosophy  
 
 > “Ice breaks slowly. That is its strength.”

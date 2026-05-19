@@ -5,4 +5,4 @@ tags: []
 nature: ''
 importance: minor
 ---
-The plane of [[Concorda]] and [[Luxar]]
+The plane of [[Concorda]] and [[Luxar Gods]]

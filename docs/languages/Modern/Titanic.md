@@ -7,11 +7,11 @@ tags:
 - language
 - titanic
 - derived
-language_family: '[[Karathic]]'
+language_family: [[Karathic]]
 language_tier: derived
 spoken_by:
-- '[[Varkuun]]'
-- '[[Goliath]]'
+- [[Varkuun]]
+- [[Goliath]]
 type: language
 status: draft
 kind: modern

@@ -1,13 +1,17 @@
 ---
 aliases:
 - Grundthain
+- Grundthains
 tags:
 - race
 - elder
 - elemental
-origin_plane: '[[Thargrun]]'
-aat-race-tier: '[[Elder Races]]'
-spoken_language: '[[Karathic]]'
+origin_plane:
+- - Thargrun
+aat-race-tier:
+- - Elder Races
+spoken_language:
+- - Karathic
 type: race
 status: draft
 lineage: Grundthains

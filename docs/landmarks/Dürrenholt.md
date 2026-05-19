@@ -3,9 +3,9 @@ aliases:
 - Wyrmholt
 type: landmark
 status: draft
-continent: '[[Arcturia]]'
+continent: [[Arcturia]]
 tags: []
-realm: '[[Renascita]]'
+realm: [[Renascita]]
 nature: divine
 importance: minor
 ---
