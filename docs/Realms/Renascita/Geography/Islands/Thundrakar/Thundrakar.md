@@ -9,6 +9,7 @@ leadership:
 status: draft
 kind: island
 tags: []
+realm: '[[Renascita]]'
 ---
 ![[Pasted image 20250419175154.png]]
 ## Overview  

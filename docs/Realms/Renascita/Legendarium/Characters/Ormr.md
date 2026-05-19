@@ -2,6 +2,7 @@
 type: character
 status: draft
 tags: []
+realm: '[[Renascita]]'
 ---
 # Ormr - Thunder of the deep 
 Ancient Bronze Dragon

@@ -3,6 +3,8 @@ type: region
 status: draft
 continent: '[[Pyrosia]]'
 tags: []
+realm: '[[Renascita]]'
+region: '[[Ashen Plains]]'
 ---
 Owner: [Breona](https://docs.google.com/document/d/17UBeTKd3Fl4TwHLNa-uxBUu0vXz8Ud6m6s0cmIC5HpY/edit#heading=h.w5rdmvg40p64)
 

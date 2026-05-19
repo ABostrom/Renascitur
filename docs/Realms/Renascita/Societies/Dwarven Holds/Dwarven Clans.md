@@ -2,6 +2,7 @@
 type: essay
 status: draft
 tags: []
+realm: '[[Renascita]]'
 ---
 ## Overview
 Each dwarven city is descended from the ancient [[Grundthain]] and shaped by an elemental tradition tied unknowingly to a Great Elemental:

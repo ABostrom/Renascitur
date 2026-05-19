@@ -2,6 +2,8 @@
 type: organisation
 status: draft
 tags: []
+realm: '[[Renascita]]'
+parent_faction: '[[The Flamebound of Magnus'' Rest]]'
 ---
 > *"We do not worship the flame. We serve it. There is a difference."*  
 > — [[Maerra Vulkess]], High Devout of the [[Watch of the Dying Flame]]

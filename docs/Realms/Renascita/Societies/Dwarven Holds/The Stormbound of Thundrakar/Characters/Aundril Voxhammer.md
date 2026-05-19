@@ -4,6 +4,8 @@ aliases:
 type: character
 status: draft
 tags: []
+realm: '[[Renascita]]'
+affiliation: '[[The Stormbound of Thundrakar]]'
 ---
 ## Title  
 **High Conductor of Thundrakar**  

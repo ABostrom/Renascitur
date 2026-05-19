@@ -2,6 +2,8 @@
 type: faction
 status: draft
 tags: []
+realm: '[[Renascita]]'
+parent_faction: '[[Devouts of Muradin]]'
 ---
 The order of [[Magnus]] was formerly recognised following the death of [[Magnus]] Hammerfell in 100 AS. During his life [[Magnus]] has founded his order of Clerics to spread the teachings of the Old God [[Muradin]]. Knowing that [[Muradin]] had saved his life, he felt it his holy duty to spread his teachings to all [[Dwarf|Dwarves]] of the new world.
 

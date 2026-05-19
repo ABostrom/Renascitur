@@ -2,6 +2,8 @@
 type: character
 status: draft
 tags: []
+realm: '[[Renascita]]'
+affiliation: '[[The Solaran Federation of Worlds]]'
 ---
 Iris Andras, the esteemed [[Solaran]] scientist, is renowned for her pioneering work in bio-engineering [[Saurian|Saurians]] into sentient creatures, breathing intelligence into their ancient forms. Her legacy echoes through the annals of [[Solaran]] history.
 

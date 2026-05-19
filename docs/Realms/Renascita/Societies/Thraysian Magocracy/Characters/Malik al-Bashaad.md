@@ -8,6 +8,8 @@ aliases:
 - Malik
 type: character
 status: draft
+realm: '[[Renascita]]'
+affiliation: '[[Thraysian Magocracy]]'
 ---
 # Malik al-Bashaad
 

@@ -14,6 +14,7 @@ spoken_language:
 - '[[Orcish]]'
 type: race
 status: draft
+parent_race: '[[Orcs]]'
 ---
 # Imperial [[Orc|Orcs]]
 

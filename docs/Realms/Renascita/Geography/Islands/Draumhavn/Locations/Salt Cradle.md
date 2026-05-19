@@ -3,6 +3,7 @@ type: landmark
 status: stub
 continent: '[[Draumhavn]]'
 tags: []
+realm: '[[Renascita]]'
 ---
 # Salt Cradle
 

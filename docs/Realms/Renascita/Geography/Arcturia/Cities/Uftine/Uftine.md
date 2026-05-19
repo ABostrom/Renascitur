@@ -8,6 +8,7 @@ leadership:
 - '[[Gromdir Stillhand]]'
 status: draft
 tags: []
+realm: '[[Renascita]]'
 ---
 ![[2a6dc07c-2481-498a-96e7-b1cbae589bb1.png]]
 ## Overview

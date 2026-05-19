@@ -12,6 +12,7 @@ spoken_by:
 - '[[Mokuun]]'
 type: language
 status: draft
+kind: modern
 ---
 # Mokoweran
 

@@ -2,6 +2,7 @@
 type: essay
 status: draft
 tags: []
+realm: '[[Renascita]]'
 ---
 - **Appearance**: Septimus is portrayed as a solemn and introspective [[docs/Races/Kyojin/Leonin/Leonin|Leonin]] with a mane of deep black, symbolizing his connection to the mysteries of life and death. His piercing grey eyes reflect his understanding of mortality and the afterlife. He wears a cloak of midnight blue, adorned with symbols of the afterlife.
 - **Quote**: "In understanding death, we find the true meaning of life."

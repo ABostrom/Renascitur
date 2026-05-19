@@ -2,6 +2,7 @@
 type: artifact
 status: draft
 tags: []
+realm: '[[Renascita]]'
 ---
 # The Song of the Hammer That Waits
 

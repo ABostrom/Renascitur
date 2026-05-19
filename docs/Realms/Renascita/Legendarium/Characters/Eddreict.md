@@ -2,6 +2,7 @@
 type: character
 status: stub
 tags: []
+realm: '[[Renascita]]'
 ---
 # Eddreict - Lord of Ice
 

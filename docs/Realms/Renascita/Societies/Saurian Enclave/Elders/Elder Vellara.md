@@ -2,6 +2,7 @@
 type: essay
 status: draft
 tags: []
+realm: '[[Renascita]]'
 ---
 ### Elder Vellara
 

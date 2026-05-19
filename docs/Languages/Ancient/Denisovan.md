@@ -12,6 +12,7 @@ spoken_by:
 - '[[Saurian]]'
 type: language
 status: draft
+kind: ancient
 ---
 # Denisovan
 

@@ -15,6 +15,7 @@ spoken_language:
 - '[[Thraysian Common]]'
 type: race
 status: draft
+parent_race: '[[Terran]]'
 ---
 # Thraysian Humans
 

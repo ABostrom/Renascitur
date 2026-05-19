@@ -5,6 +5,8 @@ type: landmark
 status: draft
 continent: '[[Arcturia]]'
 tags: []
+realm: '[[Renascita]]'
+inside: '[[Uftine]]'
 ---
 ## Overview
 

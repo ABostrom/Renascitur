@@ -2,6 +2,8 @@
 type: resource
 status: draft
 tags: []
+realm: '[[Renascita]]'
+category: Metals
 ---
 ## Location  
 Forged high in the wind-scoured peaks surrounding the [[Stormspire]], [[Skyforged Steel]] is created from refined iron alloyed with trace amounts of [[Skyshatter Ore]] and tempered using lightning energy channeled through shards of [[Storm Quartz]]. Only the [[Stormbound]] possess the knowledge and precision to shape it through the volatile method known as [[Stormforging]].

@@ -3,8 +3,9 @@ type: region
 status: stub
 continent: '[[Pyrosia]]'
 tags: []
+realm: '[[Renascita]]'
+region: '[[Ashen Plains]]'
 ---
-
 ---
 
 ## Contents

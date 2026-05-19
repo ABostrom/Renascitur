@@ -2,6 +2,7 @@
 type: essay
 status: draft
 tags: []
+realm: '[[Renascita]]'
 ---
 - **Appearance**: Tertia is depicted as a regal [[docs/Races/Kyojin/Leonin/Leonin|Leonin]] with a mane of silvery-white, symbolizing her wisdom and fairness. Her eyes are a soft blue, and she is dressed in robes of deep purple, representing justice and the rule of law.
 - **Quote**: "The strength of an empire lies not in its swords, but in the justice of its laws."

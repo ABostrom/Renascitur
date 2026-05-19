@@ -2,10 +2,8 @@
 type: organisation
 status: draft
 tags: []
+realm: '[[Renascita]]'
 ---
-
-  
-
 ## Codex Heretica
 “Heresy is like a tree, its roots lie in the darkness whilst its leaves wave in the sun and to those who suspect nought, it has an attractive and pleasing appearance. Truly, you can prune away its branches, or even cut the tree to the ground, but it will grow up again ever the stronger and ever more comely. Yet all awhile the root grows thick and black, gnawing at the bitter soil, drawing its nourishment from the darkness, and growing even greater and more deeply entrenched.
 

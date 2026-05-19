@@ -2,6 +2,7 @@
 type: essay
 status: draft
 tags: []
+realm: '[[Renascita]]'
 ---
 *Gateways of Light, Folded [[Weave]], and [[Solaran]] Ambition*
 

@@ -8,6 +8,8 @@ aliases:
 type: landmark
 status: draft
 continent: '[[Pyrosia]]'
+realm: '[[Renascita]]'
+inside: '[[Lux Oescus]]'
 ---
 ## Associated House
 - [[House Kundarak]]

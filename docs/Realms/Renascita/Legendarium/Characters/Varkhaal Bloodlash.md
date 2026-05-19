@@ -9,6 +9,7 @@ tags:
 - hobgoblin
 type: character
 status: draft
+realm: '[[Renascita]]'
 ---
 ## [[Varkhaal Bloodlash|Varkhaal, the Broken-Jawed]]
 

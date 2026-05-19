@@ -5,6 +5,8 @@ aliases:
 type: resource
 status: draft
 tags: []
+realm: '[[Renascita]]'
+category: Minerals
 ---
 ## Location  
 Harvested from the trench-walls and deep reef caverns near [[The Wakened Trench]], [[Deepsea Coral]] grows only in lightless places where the water churns and whispers. It is drawn toward vibration, sound, and blood. The [[Tidebound]] say it feeds on memory, not flesh.

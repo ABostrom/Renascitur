@@ -5,6 +5,7 @@ type: landmark
 status: draft
 continent: '[[Arcturia]]'
 tags: []
+realm: '[[Renascita]]'
 ---
 aliases:  [[Dürrenholt]] / [[Dürrenholt|Wyrmholt]]
 ## The [[Grundthain]] World Tree – The Tree of Power  

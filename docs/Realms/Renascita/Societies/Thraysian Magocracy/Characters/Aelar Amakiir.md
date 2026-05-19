@@ -2,6 +2,8 @@
 type: character
 status: stub
 tags: []
+realm: '[[Renascita]]'
+affiliation: '[[Thraysian Magocracy]]'
 ---
 # The Verdant Sage
 

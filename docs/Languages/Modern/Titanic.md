@@ -14,6 +14,7 @@ spoken_by:
 - '[[Goliath]]'
 type: language
 status: draft
+kind: modern
 ---
 # Titanic
 

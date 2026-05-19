@@ -13,6 +13,7 @@ spoken_by:
 - '[[Velastri]]'
 type: language
 status: draft
+kind: modern
 ---
 # Zytherin
 

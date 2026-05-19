@@ -2,6 +2,8 @@
 type: character
 status: stub
 tags: []
+realm: '[[Renascita]]'
+affiliation: '[[The Tidebound of Draumhavn]]'
 ---
 # Dagrin Thorne
 

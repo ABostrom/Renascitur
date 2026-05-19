@@ -7,6 +7,8 @@ aliases:
 - Lux Oescus Overseer
 type: character
 status: draft
+realm: '[[Renascita]]'
+affiliation: '[[Firebrand Empire]]'
 ---
 ## Title
 - Overseer of [[Lux Oescus]]

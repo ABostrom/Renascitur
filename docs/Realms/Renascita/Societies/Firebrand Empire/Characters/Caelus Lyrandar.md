@@ -7,6 +7,8 @@ aliases:
 - The Raining Bay Overseer
 type: character
 status: draft
+realm: '[[Renascita]]'
+affiliation: '[[Firebrand Empire]]'
 ---
 ## Title
 - Overseer of [[The Raining Bay]]

@@ -2,6 +2,8 @@
 type: resource
 status: draft
 tags: []
+realm: '[[Renascita]]'
+category: Ores
 ---
 ## Location  
 Mined from beneath the ancient glacial veins surrounding [[The Pulsecore]], [[Stillstone Ore]] is buried deep within bedrock frozen since [[the First Age]]. It is found only in the coldest vaults of the north, where silence is thick enough to press against the skin and the ice never melts.

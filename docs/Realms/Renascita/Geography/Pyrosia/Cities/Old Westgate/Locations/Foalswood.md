@@ -8,6 +8,8 @@ aliases:
 type: landmark
 status: draft
 continent: '[[Pyrosia]]'
+realm: '[[Renascita]]'
+inside: '[[Old Westgate]]'
 ---
 ## Associated House
 - [[House Vadalis]]

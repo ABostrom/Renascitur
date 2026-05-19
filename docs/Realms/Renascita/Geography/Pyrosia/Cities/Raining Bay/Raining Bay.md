@@ -7,6 +7,7 @@ tags:
 type: settlement
 status: draft
 continent: '[[Pyrosia]]'
+realm: '[[Renascita]]'
 ---
 ![[Pasted image 20250420165543.png]]
 ## Province

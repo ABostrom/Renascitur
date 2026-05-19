@@ -15,6 +15,7 @@ spoken_by:
 - '[[Mokoweri Human|Mokoweri Humans]]'
 type: language
 status: draft
+kind: ancient
 ---
 # Natsugen
 

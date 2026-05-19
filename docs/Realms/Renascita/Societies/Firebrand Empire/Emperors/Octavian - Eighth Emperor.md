@@ -2,6 +2,7 @@
 type: essay
 status: draft
 tags: []
+realm: '[[Renascita]]'
 ---
 - **Appearance**: Octavian is depicted as a proud and powerful [[docs/Races/Kyojin/Leonin/Leonin|Leonin]] with a mane of rich auburn. His bright blue eyes shine with intelligence and authority, and he is shown wearing a majestic robe and a crown of gold, symbolizing the empire at its height.
 - **Quote**: "An empire’s true strength lies in the unity of its people and the wisdom of its leaders."

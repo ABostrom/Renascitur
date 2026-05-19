@@ -7,6 +7,7 @@ tags:
 type: region
 status: draft
 continent: '[[Pyrosia]]'
+realm: '[[Renascita]]'
 ---
 ## Overview
 A sun-blasted southern wasteland connected only by a narrow land bridge. It holds no known value, but whispers speak of ruins beneath the ash, and strange lights beyond the mountains.

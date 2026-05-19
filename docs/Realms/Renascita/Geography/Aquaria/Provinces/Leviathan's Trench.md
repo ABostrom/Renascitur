@@ -3,8 +3,8 @@ type: region
 status: stub
 continent: '[[Aquaria]]'
 tags: []
+realm: '[[Renascita]]'
 ---
-
 ---
 
 ## Contents

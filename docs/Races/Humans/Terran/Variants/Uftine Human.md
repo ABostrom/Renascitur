@@ -14,6 +14,7 @@ spoken_language:
 - '[[Dwarven]]'
 type: race
 status: draft
+parent_race: '[[Terran]]'
 ---
 # Uftine Humans
 

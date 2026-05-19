@@ -2,6 +2,8 @@
 type: deity
 status: draft
 tags: []
+pantheon: '[[Noxar Gods]]'
+era_of_emergence: '[[Age of Stagnation]]'
 ---
 # God of Pestilence, The Blight Spreader
 

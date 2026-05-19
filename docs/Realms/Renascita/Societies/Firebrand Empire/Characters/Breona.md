@@ -2,6 +2,8 @@
 type: character
 status: draft
 tags: []
+realm: '[[Renascita]]'
+affiliation: '[[Firebrand Empire]]'
 ---
 Breona is a formidable woman with broad shoulders and bulging muscles. She stands tall and proud, with a fierce glint in her eye that warns others not to underestimate her.
 

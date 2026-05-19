@@ -2,6 +2,8 @@
 type: character
 status: draft
 tags: []
+realm: '[[Renascita]]'
+affiliation: '[[The Blackiron Collective]]'
 ---
 ![[0744ebd3-db41-44bd-b9f9-592ee36a808b.webp]]
 

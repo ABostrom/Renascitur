@@ -9,6 +9,8 @@ aliases:
 - Khadiyat-e Nehrun
 type: organisation
 status: draft
+realm: '[[Renascita]]'
+parent_faction: '[[Thraysian Magocracy]]'
 ---
 # Khadiyat-e Nehrun
 

@@ -8,6 +8,8 @@ aliases:
 type: landmark
 status: draft
 continent: '[[Pyrosia]]'
+realm: '[[Renascita]]'
+inside: '[[Raining Bay]]'
 ---
 ## Associated House
 - [[House Lyrandar]]

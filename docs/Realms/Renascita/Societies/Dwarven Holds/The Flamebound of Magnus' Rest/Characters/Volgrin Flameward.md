@@ -5,6 +5,8 @@ aliases:
 type: character
 status: draft
 tags: []
+realm: '[[Renascita]]'
+affiliation: '[[The Flamebound of Magnus'' Rest]]'
 ---
 > *"I was a child when the night came. [[Magnus]] gave me fire. I have never let it go."*
 

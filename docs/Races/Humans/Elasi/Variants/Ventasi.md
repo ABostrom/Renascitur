@@ -2,8 +2,9 @@
 type: race
 status: stub
 tags: []
+lineage: Humans
+parent_race: '[[Elasi]]'
 ---
-
 ---
 
 ## Contents

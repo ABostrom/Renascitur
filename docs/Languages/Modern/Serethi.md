@@ -13,6 +13,7 @@ spoken_by:
 - '[[Celestar]]'
 type: language
 status: draft
+kind: modern
 ---
 # Serethi
 

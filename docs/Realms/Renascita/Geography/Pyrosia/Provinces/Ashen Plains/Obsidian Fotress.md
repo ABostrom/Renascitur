@@ -3,6 +3,8 @@ type: region
 status: draft
 continent: '[[Pyrosia]]'
 tags: []
+realm: '[[Renascita]]'
+region: '[[Ashen Plains]]'
 ---
 The Obsidian Fortress, the formidable stronghold of General Tau and the central bastion of [[Ishna]]'s forces, is located in a desolate and inhospitable region of [[Pyrosia]] known as the Scorched Wastes. This harsh, barren expanse of land stretches for miles in every direction, with little sign of life or vegetation.
 

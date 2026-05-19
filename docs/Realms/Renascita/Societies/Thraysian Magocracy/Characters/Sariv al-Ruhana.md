@@ -8,6 +8,8 @@ aliases:
 - Sariv
 type: character
 status: draft
+realm: '[[Renascita]]'
+affiliation: '[[Thraysian Magocracy]]'
 ---
 # Sariv al-Ruhana
 

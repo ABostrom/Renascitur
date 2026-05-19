@@ -2,6 +2,7 @@
 type: essay
 status: draft
 tags: []
+realm: '[[Renascita]]'
 ---
 "The [[Solaran|Solarans]] were guardians of wisdom and keepers of balance. They valued harmony between the natural world and the power they harnessed. Can you truly embody these ideals?"
 

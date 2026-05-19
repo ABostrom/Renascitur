@@ -4,6 +4,7 @@ aliases:
 type: essay
 status: draft
 tags: []
+realm: '[[Renascita]]'
 ---
 ## Domain
 *Passage*

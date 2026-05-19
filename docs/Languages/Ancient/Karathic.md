@@ -14,6 +14,7 @@ spoken_by:
 - '[[Dwarf|Dwarves]]'
 type: language
 status: draft
+kind: ancient
 ---
 # Karathic
 

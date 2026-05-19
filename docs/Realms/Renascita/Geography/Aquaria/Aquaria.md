@@ -2,6 +2,7 @@
 type: continent
 status: stub
 tags: []
+realm: '[[Renascita]]'
 ---
 ![[Coral Reef Bay]]
 

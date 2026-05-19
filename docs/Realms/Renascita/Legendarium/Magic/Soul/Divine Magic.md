@@ -5,4 +5,6 @@ tags:
 - divine
 type: technology
 status: stub
+realm: '[[Renascita]]'
+discipline: Soul
 ---

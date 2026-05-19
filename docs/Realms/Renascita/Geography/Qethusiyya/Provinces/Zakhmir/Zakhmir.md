@@ -3,6 +3,7 @@ type: region
 status: draft
 continent: '[[Qethusiyya]]'
 tags: []
+realm: '[[Renascita]]'
 ---
 # Zakhmir
 **Original Root:** Zakhm-e Jān

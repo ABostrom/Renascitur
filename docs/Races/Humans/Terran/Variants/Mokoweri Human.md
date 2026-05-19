@@ -17,6 +17,7 @@ spoken_language:
 - '[[Mokoweran]]'
 type: race
 status: draft
+parent_race: '[[Terran]]'
 ---
 # [[Mokoweri]] Humans
 

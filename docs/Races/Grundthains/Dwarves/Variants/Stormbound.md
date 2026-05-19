@@ -12,6 +12,7 @@ aat-race-tier: variant
 spoken_language: '[[Dwarven]]'
 type: race
 status: draft
+parent_race: '[[Dwarves]]'
 ---
 # Stormbound [[Dwarf|Dwarves]]
 

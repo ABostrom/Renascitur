@@ -8,6 +8,8 @@ aliases:
 - Rafiq al-Salhar
 type: character
 status: draft
+realm: '[[Renascita]]'
+affiliation: '[[Thraysian Magocracy]]'
 ---
 # Sultan Rafiq al-Salhar
 

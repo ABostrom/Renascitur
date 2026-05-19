@@ -2,6 +2,8 @@
 type: landmark
 status: draft
 tags: []
+realm: '[[Renascita]]'
+controlled_by: '[[The Flamebound of Magnus'' Rest]]'
 ---
 > *"It is not a fire. It is a promise made by gods, kept by [[Dwarf|dwarves]]."*  
 > — [[Maerra Vulkess]], High Devout of the [[Watch of the Dying Flame]]

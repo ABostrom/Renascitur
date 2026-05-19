@@ -13,6 +13,7 @@ spoken_by:
 - '[[Elasi]]'
 type: language
 status: draft
+kind: ancient
 ---
 # Valeshi
 

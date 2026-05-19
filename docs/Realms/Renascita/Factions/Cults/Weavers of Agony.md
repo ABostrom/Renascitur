@@ -10,6 +10,8 @@ tags:
 - hobgoblin
 type: faction
 status: draft
+realm: '[[Renascita]]'
+kind: cult
 ---
 # [[Weavers of Agony]]
 

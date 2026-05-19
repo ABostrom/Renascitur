@@ -8,6 +8,8 @@ aliases:
 - Tamirah
 type: character
 status: stub
+realm: '[[Renascita]]'
+affiliation: '[[Thraysian Magocracy]]'
 ---
 # Tamirah Qadat
 

@@ -2,6 +2,8 @@
 type: organisation
 status: stub
 tags: []
+realm: '[[Renascita]]'
+parent_faction: '[[The Tidebound of Draumhavn]]'
 ---
 # Clan Blackwake
 

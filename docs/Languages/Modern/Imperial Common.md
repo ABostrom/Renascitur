@@ -15,6 +15,7 @@ spoken_by:
 - '[[Imperial Leonin]]'
 type: language
 status: draft
+kind: modern
 ---
 # Imperial
 

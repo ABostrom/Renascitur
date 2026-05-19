@@ -4,6 +4,8 @@ aliases:
 type: faction
 status: draft
 tags: []
+realm: '[[Renascita]]'
+kind: cult
 ---
 Symbol: שקש๔
 

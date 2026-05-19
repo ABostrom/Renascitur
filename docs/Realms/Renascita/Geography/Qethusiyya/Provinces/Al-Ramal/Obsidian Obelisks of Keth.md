@@ -3,6 +3,8 @@ type: region
 status: draft
 continent: '[[Qethusiyya]]'
 tags: []
+realm: '[[Renascita]]'
+region: '[[Al-Ramal]]'
 ---
 Beneath the shadowed canopies of the Forgotten Forest, near the southern borders of Eltabarr, stand the Obsidian Obelisks of Keth. Shrouded in mystery and pulsating with an almost tangible aura of ancient magic, these monoliths are believed to be remnants of a civilization that predated even the earliest records of known history. Recent explorations led by the [[Eclipsed Civilisations Initiative|Eclipsed Civilizations]] Initiative ([[Eclipsed Civilisations Initiative|ECI]]) have unearthed connections to the obscure practice of Arcanometry—a form of magic that manipulates the very fabric of arcane energy.
 

@@ -13,6 +13,7 @@ spoken_language:
 - '[[Imperial Common]]'
 type: race
 status: draft
+parent_race: '[[Terran]]'
 ---
 # Imperial Humans
 

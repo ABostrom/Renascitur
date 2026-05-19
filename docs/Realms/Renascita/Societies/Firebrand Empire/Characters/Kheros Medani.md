@@ -7,6 +7,8 @@ aliases:
 - Lion’s Rest Overseer
 type: character
 status: draft
+realm: '[[Renascita]]'
+affiliation: '[[Firebrand Empire]]'
 ---
 ## Title
 - Overseer of [[Lion’s Rest]]

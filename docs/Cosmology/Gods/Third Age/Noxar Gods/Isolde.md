@@ -2,6 +2,8 @@
 type: deity
 status: draft
 tags: []
+pantheon: '[[Noxar Gods]]'
+era_of_emergence: '[[Age of Stagnation]]'
 ---
 # Goddess of Fear and Pain, The Wailing [[Soul]]
 

@@ -7,6 +7,7 @@ tags:
 type: region
 status: draft
 continent: '[[Pyrosia]]'
+realm: '[[Renascita]]'
 ---
 ## Overview
 Mountainous and smog-choked, the Ember Peaks house vast forges, industrial hubs, and deep-mining operations. It is the beating iron heart of the Empire’s military-industrial power.

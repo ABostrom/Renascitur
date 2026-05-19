@@ -2,9 +2,8 @@
 type: artifact
 status: draft
 tags: []
+realm: '[[Renascita]]'
 ---
- 
-
 ---
 When [[Muradin]] returned from his pilgrimage across the Elemental Planes, the silence of the material world struck him as wrong.
 

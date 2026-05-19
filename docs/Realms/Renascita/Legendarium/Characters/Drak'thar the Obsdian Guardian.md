@@ -2,6 +2,7 @@
 type: character
 status: draft
 tags: []
+realm: '[[Renascita]]'
 ---
 _Species_: Ancient Obsidian Dragon
 

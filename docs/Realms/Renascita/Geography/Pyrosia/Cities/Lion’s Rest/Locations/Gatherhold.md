@@ -8,6 +8,8 @@ aliases:
 type: landmark
 status: draft
 continent: '[[Pyrosia]]'
+realm: '[[Renascita]]'
+inside: '[[Lion’s Rest]]'
 ---
 ## Associated House
 - [[House Silverhand]]

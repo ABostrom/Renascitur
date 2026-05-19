@@ -3,6 +3,8 @@ type: landmark
 status: stub
 continent: '[[Arcturia]]'
 tags: []
+realm: '[[Renascita]]'
+inside: '[[Uftine]]'
 ---
 # Glacier Library
 

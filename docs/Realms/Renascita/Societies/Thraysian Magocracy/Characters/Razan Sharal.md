@@ -8,6 +8,8 @@ aliases:
 - Razan
 type: character
 status: draft
+realm: '[[Renascita]]'
+affiliation: '[[Thraysian Magocracy]]'
 ---
 # Razan Sharal
 

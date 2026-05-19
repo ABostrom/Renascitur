@@ -2,6 +2,8 @@
 type: character
 status: draft
 tags: []
+realm: '[[Renascita]]'
+affiliation: '[[The Blackiron Collective]]'
 ---
 - **Role**: Voice of the working class in the Council of Sparks.
 - **Personality**: Passionate and determined, Veyna advocates for the miners and laborers who keep the city running.

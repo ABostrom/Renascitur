@@ -8,6 +8,8 @@ aliases:
 - Eclipsed Civilizations
 type: organisation
 status: draft
+realm: '[[Renascita]]'
+parent_faction: '[[Thraysian Magocracy]]'
 ---
 **Research Lead:** Professor Arthur Denison, with contributions from various faculties
 

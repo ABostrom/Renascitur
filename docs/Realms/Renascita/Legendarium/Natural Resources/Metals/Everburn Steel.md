@@ -2,6 +2,8 @@
 type: resource
 status: draft
 tags: []
+realm: '[[Renascita]]'
+category: Metals
 ---
 ## Location  
 [[Everburn Steel]] cannot be mined — it must be **forged** through sacred [[Flameforging]] rituals within the heart of the Eternal Flame. The process combines shards of [[Radiant Obsidian]], infused with molten [[Sun Topaz]], and sacred dwarven steel inscribed with the oldest [[Muradin|Muradinic]] runes of containment and devotion.

@@ -3,6 +3,7 @@ type: landmark
 status: draft
 continent: '[[Thundrakar]]'
 tags: []
+realm: '[[Renascita]]'
 ---
 ## Overview  
 The [[Great Forge of Ormr]] is the sacred heart of [[Thundrakar]], the [[soul]]-ember of the [[Stormbound]] [[Dwarf|dwarves]], and the only known place in the world where **true [[Stormforging]]** can occur.

@@ -7,6 +7,8 @@ aliases:
 - Glyph Law Codes
 type: organisation
 status: stub
+realm: '[[Renascita]]'
+parent_faction: '[[Thraysian Magocracy]]'
 ---
 # Magisterial Glyph Codes
 

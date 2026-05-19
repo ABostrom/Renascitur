@@ -14,6 +14,7 @@ spoken_language:
 - '[[docs/Languages/Modern/Leonin|Leonin]]'
 type: race
 status: draft
+parent_race: '[[Leonin]]'
 ---
 # Imperial [[docs/Races/Kyojin/Leonin/Leonin|Leonin]]
 

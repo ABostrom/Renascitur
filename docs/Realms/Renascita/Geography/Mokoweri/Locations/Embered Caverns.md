@@ -3,8 +3,8 @@ type: landmark
 status: draft
 continent: '[[Mokoweri]]'
 tags: []
+realm: '[[Renascita]]'
 ---
-
 # Entrance Chamber - Luminescent Foyer
 
 The entrance to the Embered Caverns opens into a mystical realm of mesmerizing luminescence, known as the Luminescent Foyer. This is where the journey into the heart of the caverns begins. The very air shimmers with enchanting warmth, a stark contrast to the cool, dark shadows of the outside world. As you step into the chamber, you are enveloped by a soft, radiant glow that emanates from an array of bioluminescent flora and fungi adorning the walls, ceiling, and floor. The soft light creates an ethereal atmosphere, casting gentle, shifting hues of blues and purples across the space, reminiscent of a twilight dreamscape. The vibrant plant life creates a sweet, intoxicating scent that drifts through the air, a fragrance that both soothes and beckons.

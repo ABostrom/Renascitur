@@ -2,6 +2,8 @@
 type: resource
 status: draft
 tags: []
+realm: '[[Renascita]]'
+category: Minerals
 ---
 ## Location  
 Found only at the heart of [[the Eternal Flame]], [[Radiant Obsidian]] forms where divine fire meets primordial earth. It is not mined — it is born, cooled into being from flame that remembers the shape of purpose. The deepest crucibles beneath the Flameforges may yield slivers, but only with ritual, reverence, and risk.

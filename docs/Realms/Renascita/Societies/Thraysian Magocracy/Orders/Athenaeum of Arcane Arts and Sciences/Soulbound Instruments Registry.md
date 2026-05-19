@@ -8,6 +8,8 @@ aliases:
 - Soulbound Catalog
 type: organisation
 status: draft
+realm: '[[Renascita]]'
+parent_faction: '[[Thraysian Magocracy]]'
 ---
 # Soulbound Instruments Registry
 

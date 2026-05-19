@@ -6,6 +6,8 @@ aliases:
 - Breven
 type: character
 status: draft
+realm: '[[Renascita]]'
+affiliation: '[[Firebrand Empire]]'
 ---
 ## Affiliation
 - **House**: [[House Deneith]]

@@ -7,6 +7,7 @@ tags:
 type: settlement
 status: draft
 continent: '[[Pyrosia]]'
+realm: '[[Renascita]]'
 ---
 ## Province
 - [[Ashen Plains]]

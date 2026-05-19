@@ -4,6 +4,8 @@ aliases:
 type: character
 status: draft
 tags: []
+realm: '[[Renascita]]'
+affiliation: '[[The Icebound of Uftine]]'
 ---
 ## Title: [[Icebound]] Thane of Uftine
 

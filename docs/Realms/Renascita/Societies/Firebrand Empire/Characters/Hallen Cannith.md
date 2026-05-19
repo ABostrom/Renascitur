@@ -7,6 +7,8 @@ aliases:
 - Magnus' Rest Overseer
 type: character
 status: draft
+realm: '[[Renascita]]'
+affiliation: '[[Firebrand Empire]]'
 ---
 ## Title
 - Overseer of [[Magnus' Rest]]

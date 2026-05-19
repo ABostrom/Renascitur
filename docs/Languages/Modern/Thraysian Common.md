@@ -13,6 +13,7 @@ spoken_by:
 - '[[Thraysian Common]]'
 type: language
 status: draft
+kind: modern
 ---
 # Thraysian
 

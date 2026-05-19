@@ -2,6 +2,8 @@
 type: deity
 status: draft
 tags: []
+pantheon: '[[Luxar Gods]]'
+era_of_emergence: '[[Age of Stagnation]]'
 ---
 # God of Craft, The All Father
 

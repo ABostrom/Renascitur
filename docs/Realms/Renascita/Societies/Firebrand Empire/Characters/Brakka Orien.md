@@ -7,6 +7,8 @@ aliases:
 - Port Ardere Overseer
 type: character
 status: draft
+realm: '[[Renascita]]'
+affiliation: '[[Firebrand Empire]]'
 ---
 ## Title
 - Overseer of [[Port Ardere]]

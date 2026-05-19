@@ -9,6 +9,8 @@ aliases:
 - Khadir
 type: character
 status: draft
+realm: '[[Renascita]]'
+affiliation: '[[Thraysian Magocracy]]'
 ---
 # Khadir Zahir
 

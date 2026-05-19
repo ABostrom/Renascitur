@@ -7,6 +7,8 @@ aliases:
 - Ascension Rites
 type: organisation
 status: stub
+realm: '[[Renascita]]'
+parent_faction: '[[Thraysian Magocracy]]'
 ---
 # Rites of Ascension
 

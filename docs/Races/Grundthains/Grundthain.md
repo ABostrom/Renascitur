@@ -10,6 +10,7 @@ aat-race-tier: '[[Elder Races]]'
 spoken_language: '[[Karathic]]'
 type: race
 status: draft
+lineage: Grundthains
 ---
 # Grundthain
 

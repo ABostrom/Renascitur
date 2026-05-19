@@ -4,6 +4,8 @@ aliases:
 type: resource
 status: draft
 tags: []
+realm: '[[Renascita]]'
+category: Crystals
 ---
 ## Location
 
