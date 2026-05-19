@@ -2,12 +2,12 @@
 type: language
 status: draft
 tags: []
-era-bloom: ""
-era-decline: ""
-still-spoken: false
-spoken-by: []
+era_bloom: ""
+era_decline: ""
+still_spoken: false
+spoken_by: []
 script: ""
-parent-language: ""
+parent_language: ""
 created: <% tp.date.now("YYYY-MM-DD") %>
 updated: <% tp.date.now("YYYY-MM-DD") %>
 ---

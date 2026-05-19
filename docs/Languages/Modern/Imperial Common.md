@@ -6,9 +6,9 @@ tags:
 - language
 - trade
 - common
-language-family: '[[Valeshi]]'
-language-tier: derived
-spoken-by:
+language_family: '[[Valeshi]]'
+language_tier: derived
+spoken_by:
 - '[[Imperial Human]]'
 - '[[Goliath]]'
 - '[[Imperial Orcs]]'

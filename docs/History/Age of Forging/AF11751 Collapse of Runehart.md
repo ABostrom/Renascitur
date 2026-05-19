@@ -11,7 +11,7 @@ era: '[[Age of Forging]]'
 tags: []
 aliases:
 - Collapse of Runehart
-year-display: AF 11751
+year_display: AF 11751
 year: 11751
 ---
 The city of [[Runehart]] crumbles in the aftermath of [[Typhon, The Archon of Death|Typhon]]’s sealing. Survivors scatter, taking fragments of the Iron Codex with them. The [[Dwarf|dwarves]] lose their greatest sanctuary.

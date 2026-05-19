@@ -2,8 +2,8 @@
 type: technology
 status: draft
 tags: []
-era-of-invention: ""
-invented-by: ""
+era_of_invention: ""
+invented_by: ""
 discipline: ""
 created: <% tp.date.now("YYYY-MM-DD") %>
 updated: <% tp.date.now("YYYY-MM-DD") %>

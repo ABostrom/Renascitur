@@ -12,7 +12,7 @@ era: '[[Age of the Endless Sun]]'
 tags: []
 aliases:
 - Imprisonment of Lord Syuul
-year-display: ES 9200
+year_display: ES 9200
 year: 9200
 ---
 [[Ketharion]] lures [[Syuul, The Devourer|Lord Syuul]] to a hidden vault where a [[Divine Soul]] [[Saurian]] egg is kept. He seals Syuul inside, hoping that the divine presence might weaken his corruption over millennia.

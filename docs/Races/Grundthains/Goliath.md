@@ -7,9 +7,9 @@ tags:
 - grundthain
 - nomadic
 lineage: '[[Dwarf|Dwarves]]'
-origin-plane: '[[Renascita]]'
+origin_plane: '[[Renascita]]'
 aat-race-tier: distinct
-spoken-language:
+spoken_language:
 - '[[Karathic]]'
 - '[[Titanic]]'
 - '[[Imperial Common]]'
@@ -59,3 +59,46 @@ The Goliaths are a nomadic, hardy people descended from the [[Grundthain]], know
 ---
 
 > “The herd survives as one.”
+
+---
+
+## Contents
+
+<!-- AUTO-INJECTED-DYNAMIC-CONTENTS — delete this comment and everything below to opt out; safe to edit otherwise -->
+
+### Characters of this race
+
+```dataview
+TABLE WITHOUT ID
+  file.link AS "Name",
+  culture AS "Culture",
+  affiliation AS "Affiliation"
+FROM ""
+WHERE type = "character" AND race = this.file.link
+SORT file.name ASC
+```
+
+### Languages spoken
+
+```dataview
+LIST FROM ""
+WHERE type = "language" AND contains(spoken_by, this.file.link)
+SORT file.name ASC
+```
+
+### Cultures associated with this race
+
+```dataview
+LIST FROM ""
+WHERE type = "culture" AND contains(races, this.file.link)
+SORT file.name ASC
+```
+
+### Other notes referencing this race
+
+```dataview
+LIST FROM [[]]
+WHERE !contains(string(file.path), "_meta/")
+SORT file.name ASC
+```
+

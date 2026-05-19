@@ -6,7 +6,7 @@ type: event
 status: draft
 era: '[[Age of Stagnation]]'
 tags: []
-year-display: AS (undated)
+year_display: AS (undated)
 year: 0
 ---
 After the psychic schism, great swathes of the population were killed. The world reacted in utter terror at the devastation and destruction of civilization as they knew it. 

@@ -6,9 +6,9 @@ tags:
 - language
 - mokoweran
 - derived
-language-family: '[[Elyssan]]'
-language-tier: derived
-spoken-by:
+language_family: '[[Elyssan]]'
+language_tier: derived
+spoken_by:
 - '[[Mokuun]]'
 type: language
 status: draft

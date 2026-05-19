@@ -5,6 +5,6 @@ era: '[[Age of Forging]]'
 tags: []
 aliases:
 - Hexweave Binding
-year-display: AF (undated)
+year_display: AF (undated)
 year: 0
 ---

@@ -6,9 +6,9 @@ tags:
 - language
 - human
 - ancient
-language-family: '[[Human]]'
-language-tier: root
-spoken-by:
+language_family: '[[Human]]'
+language_tier: root
+spoken_by:
 - '[[Human]]'
 - '[[Elasi]]'
 type: language

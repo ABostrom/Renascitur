@@ -11,7 +11,7 @@ era: '[[Age of the Endless Sun]]'
 tags: []
 aliases:
 - The Fall of the Endless Sun
-year-display: ES 8500
+year_display: ES 8500
 year: 8500
 ---
 The Endless Sun is corrupted by [[Ishna]]’s influence. What was meant to heal begins to unravel reality. Aberrant storms sweep across [[Solaran]] space. The age of collapse begins.

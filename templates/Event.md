@@ -4,13 +4,13 @@ status: draft
 tags: []
 era: ""
 year: 0
-year-display: ""
-account-type: canonical   # canonical | mythic | contested
+year_display: ""
+account_type: canonical   # canonical | mythic | contested
 location: ""
 participants: []
-caused-by: []
+caused_by: []
 caused: []
-chronicled-in: []
+chronicled_in: []
 aliases: []
 created: <% tp.date.now("YYYY-MM-DD") %>
 updated: <% tp.date.now("YYYY-MM-DD") %>

@@ -6,9 +6,9 @@ tags:
 - solaran
 - root
 - ancient
-language-family: '[[Solaran]]'
-language-tier: root
-spoken-by:
+language_family: '[[Solaran]]'
+language_tier: root
+spoken_by:
 - '[[Solaran]]'
 - '[[Arcanii]]'
 - '[[Ferrun]]'

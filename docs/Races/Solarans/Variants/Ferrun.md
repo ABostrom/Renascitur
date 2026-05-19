@@ -7,9 +7,9 @@ tags:
 - solarans
 - industrial
 lineage: '[[Solaran]]'
-origin-plane: '[[Renascita]]'
+origin_plane: '[[Renascita]]'
 aat-race-tier: variant
-spoken-language:
+spoken_language:
 - '[[Thraysian Common]]'
 - '[[Elyssan]]'
 - '[[Dwarven]]'
@@ -59,3 +59,46 @@ The Ferrun are descendants of the [[Solaran|Solarans]] who rejected the arcane a
 ---
 
 > “Progress is the forge where the future is born.”
+
+---
+
+## Contents
+
+<!-- AUTO-INJECTED-DYNAMIC-CONTENTS — delete this comment and everything below to opt out; safe to edit otherwise -->
+
+### Characters of this race
+
+```dataview
+TABLE WITHOUT ID
+  file.link AS "Name",
+  culture AS "Culture",
+  affiliation AS "Affiliation"
+FROM ""
+WHERE type = "character" AND race = this.file.link
+SORT file.name ASC
+```
+
+### Languages spoken
+
+```dataview
+LIST FROM ""
+WHERE type = "language" AND contains(spoken_by, this.file.link)
+SORT file.name ASC
+```
+
+### Cultures associated with this race
+
+```dataview
+LIST FROM ""
+WHERE type = "culture" AND contains(races, this.file.link)
+SORT file.name ASC
+```
+
+### Other notes referencing this race
+
+```dataview
+LIST FROM [[]]
+WHERE !contains(string(file.path), "_meta/")
+SORT file.name ASC
+```
+

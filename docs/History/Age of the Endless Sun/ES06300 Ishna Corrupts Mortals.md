@@ -10,7 +10,7 @@ era: '[[Age of the Endless Sun]]'
 tags: []
 aliases:
 - Ishna Corrupts Mortals
-year-display: ES 6300
+year_display: ES 6300
 year: 6300
 ---
 [[Ishna]] begins whispering to mortals. Cults form in secret, ancient rites are twisted, and the first of the [[Quintumvirate|God Hand]] are born from these [[Entropy|Aberrant]]nt unions.

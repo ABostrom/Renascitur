@@ -6,9 +6,9 @@ tags:
 - language
 - orcish
 - derived
-language-family: '[[Natsugen]]'
-language-tier: derived
-spoken-by:
+language_family: '[[Natsugen]]'
+language_tier: derived
+spoken_by:
 - '[[Orc]]'
 type: language
 status: draft

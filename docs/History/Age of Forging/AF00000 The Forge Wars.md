@@ -5,6 +5,6 @@ era: '[[Age of Forging]]'
 tags: []
 aliases:
 - The Forge Wars
-year-display: AF (undated)
+year_display: AF (undated)
 year: 0
 ---

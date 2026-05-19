@@ -10,7 +10,7 @@ era: '[[Age of Forging]]'
 tags: []
 aliases:
 - The Second Age
-year-display: AF 10001
+year_display: AF 10001
 year: 10001
 ---
 ## Age of Twilight’s Convergence

@@ -83,3 +83,50 @@ At the center of the Hatchery is the Sacred Pool, a natural spring believed to b
 Beyond its function as a nurturing ground, the Hatchery also serves an educational role. Young [[Saurian|Saurians]] are brought here to learn about the cycle of life, the importance of community, and their responsibilities towards one another and the natural world. It's a place where the foundations of their society's values are passed down, ensuring that even from a young age, [[Saurian|Saurians]] understand their place in the broader tapestry of life.
 
 The Hatchery is not just a place of birth; it is where the very essence of being [[Saurian]] begins. It stands as a beacon of hope, unity, and continuity, symbolizing the endless cycle of life and the unwavering bond between the [[Saurian|Saurians]] and the sacred world they inhabit.
+
+---
+
+## Contents
+
+<!-- AUTO-INJECTED-DYNAMIC-CONTENTS — delete this comment and everything below to opt out; safe to edit otherwise -->
+
+### Districts and landmarks inside
+
+```dataview
+LIST FROM ""
+WHERE type = "landmark" AND inside = this.file.link
+SORT file.name ASC
+```
+
+### Characters here
+
+```dataview
+TABLE WITHOUT ID
+  file.link AS "Name",
+  race AS "Race",
+  affiliation AS "Affiliation"
+FROM ""
+WHERE type = "character" AND location = this.file.link
+SORT file.name ASC
+```
+
+### Events here
+
+```dataview
+TABLE WITHOUT ID
+  file.link AS "Event",
+  era AS "Era",
+  year_display AS "When"
+FROM ""
+WHERE type = "event" AND location = this.file.link
+SORT year ASC
+```
+
+### Other notes referencing this settlement
+
+```dataview
+LIST FROM [[]]
+WHERE !contains(string(file.path), "_meta/")
+SORT file.name ASC
+```
+

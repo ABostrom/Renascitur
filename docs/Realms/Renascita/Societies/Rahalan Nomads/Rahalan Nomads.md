@@ -67,3 +67,50 @@ The Rahalan people maintain a series of rituals and traditions that reflect thei
 #### Cultural and Spiritual Significance
 
 For the Rahalans, the Gaia vessels are more than architectural marvels; they are a living symbol of the tribe's identity, resilience, and unity. The ships embody the Rahalan's reverence for their ancestors, the natural world, and the mystical forces that govern their existence. The care and nurturing of these vessels represent a covenant between the Rahalans and the land they traverse, a promise of mutual respect and protection.
+
+---
+
+## Contents
+
+<!-- AUTO-INJECTED-DYNAMIC-CONTENTS — delete this comment and everything below to opt out; safe to edit otherwise -->
+
+### Members
+
+```dataview
+TABLE WITHOUT ID
+  file.link AS "Name",
+  race AS "Race",
+  location AS "Location"
+FROM ""
+WHERE type = "character" AND affiliation = this.file.link
+SORT file.name ASC
+```
+
+### Organisations within
+
+```dataview
+LIST FROM ""
+WHERE type = "organisation" AND parent_faction = this.file.link
+SORT file.name ASC
+```
+
+### Events involving this faction
+
+```dataview
+TABLE WITHOUT ID
+  file.link AS "Event",
+  era AS "Era",
+  year_display AS "When"
+FROM ""
+WHERE type = "event" AND contains(participants, this.file.link)
+SORT year ASC
+```
+
+### Other notes referencing this faction
+
+```dataview
+LIST FROM [[]]
+WHERE !contains(string(file.path), "_meta/")
+SORT file.name ASC
+```
+

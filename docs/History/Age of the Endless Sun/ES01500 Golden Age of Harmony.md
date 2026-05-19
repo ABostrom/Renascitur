@@ -10,7 +10,7 @@ era: '[[Age of the Endless Sun]]'
 tags: []
 aliases:
 - Golden Age of Harmony
-year-display: ES 1500
+year_display: ES 1500
 year: 1500
 ---
 The [[Elder Races]] flourish under the guidance of the Primal Forces. Peace, creation, and discovery define this long period of balance between mortal and divine.

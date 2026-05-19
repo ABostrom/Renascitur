@@ -2,12 +2,12 @@
 type: artifact
 status: draft
 tags: []
-era-of-creation: ""
-created-by: ""
-created-in: ""
+era_of_creation: ""
+created_by: ""
+created_in: ""
 material: []
-current-location: ""
-historical-bearers: []
+current_location: ""
+historical_bearers: []
 created: <% tp.date.now("YYYY-MM-DD") %>
 updated: <% tp.date.now("YYYY-MM-DD") %>
 ---

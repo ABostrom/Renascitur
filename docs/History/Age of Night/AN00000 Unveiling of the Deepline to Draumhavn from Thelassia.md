@@ -5,7 +5,7 @@ era: '[[Age of Night]]'
 tags: []
 aliases:
 - Unveiling of the Deepline to Draumhavn from Thelassia
-year-display: AN (undated)
+year_display: AN (undated)
 year: 0
 ---
 ### _The Unveiling of the Deep Line_

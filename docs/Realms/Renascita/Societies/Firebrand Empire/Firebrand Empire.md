@@ -11,3 +11,50 @@ The Firebrand Empire is known for its strict policies against the use of magic, 
 The Firebrand Empire values order, discipline, and hierarchy, with power and influence concentrated in the hands of the ruling elite. The common people have limited say in the affairs of the Empire, and dissent or rebellion is likely to be met with harsh punishment. [[The 12 Great Houses]] use citizenship as a form of control, rewarding their own supporters and punishing those who oppose them. Some cities within the empire are separated in two, where the citizenry live in comfort and the other half where the “[[Stained]]” live. 
 
 Despite its aversion to magic, the Firebrand Empire is technologically advanced, with a sophisticated infrastructure and military. The Empire's defensive capabilities are impressive, with the [[Lux Lapis]] walls and barriers providing strong protection against external threats.
+
+---
+
+## Contents
+
+<!-- AUTO-INJECTED-DYNAMIC-CONTENTS — delete this comment and everything below to opt out; safe to edit otherwise -->
+
+### Members
+
+```dataview
+TABLE WITHOUT ID
+  file.link AS "Name",
+  race AS "Race",
+  location AS "Location"
+FROM ""
+WHERE type = "character" AND affiliation = this.file.link
+SORT file.name ASC
+```
+
+### Organisations within
+
+```dataview
+LIST FROM ""
+WHERE type = "organisation" AND parent_faction = this.file.link
+SORT file.name ASC
+```
+
+### Events involving this faction
+
+```dataview
+TABLE WITHOUT ID
+  file.link AS "Event",
+  era AS "Era",
+  year_display AS "When"
+FROM ""
+WHERE type = "event" AND contains(participants, this.file.link)
+SORT year ASC
+```
+
+### Other notes referencing this faction
+
+```dataview
+LIST FROM [[]]
+WHERE !contains(string(file.path), "_meta/")
+SORT file.name ASC
+```
+

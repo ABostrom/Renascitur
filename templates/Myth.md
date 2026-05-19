@@ -3,9 +3,9 @@ type: myth
 status: draft
 tags: []
 era: ""
-cultures-of-origin: []
-related-events: []
-chronicled-in: []
+cultures_of_origin: []
+related_events: []
+chronicled_in: []
 aliases: []
 created: <% tp.date.now("YYYY-MM-DD") %>
 updated: <% tp.date.now("YYYY-MM-DD") %>

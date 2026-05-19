@@ -2,9 +2,9 @@
 type: chronicle
 status: draft
 tags: []
-attributed-to: ""
-era-of-composition: ""
-housed-in: ""
+attributed_to: ""
+era_of_composition: ""
+housed_in: ""
 records: []
 language: ""
 created: <% tp.date.now("YYYY-MM-DD") %>

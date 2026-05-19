@@ -4,8 +4,8 @@ status: draft
 tags: []
 races: []
 homeland: ""
-era-bloom: ""
-era-decline: ""
+era_bloom: ""
+era_decline: ""
 created: <% tp.date.now("YYYY-MM-DD") %>
 updated: <% tp.date.now("YYYY-MM-DD") %>
 ---
@@ -19,3 +19,46 @@ updated: <% tp.date.now("YYYY-MM-DD") %>
 ## Practices
 
 ## History
+
+---
+
+## Contents
+
+<!-- AUTO-INJECTED-DYNAMIC-CONTENTS — delete this comment and everything below to opt out; safe to edit otherwise -->
+
+### Characters of this culture
+
+```dataview
+TABLE WITHOUT ID
+  file.link AS "Name",
+  race AS "Race",
+  affiliation AS "Affiliation"
+FROM ""
+WHERE type = "character" AND culture = this.file.link
+SORT file.name ASC
+```
+
+### Traditions
+
+```dataview
+LIST FROM ""
+WHERE type = "tradition" AND culture = this.file.link
+SORT file.name ASC
+```
+
+### Languages spoken
+
+```dataview
+LIST FROM ""
+WHERE type = "language" AND contains(spoken_by, this.file.link)
+SORT file.name ASC
+```
+
+### Other notes referencing this culture
+
+```dataview
+LIST FROM [[]]
+WHERE !contains(string(file.path), "_meta/")
+SORT file.name ASC
+```
+

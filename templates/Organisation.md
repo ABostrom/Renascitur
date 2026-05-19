@@ -2,9 +2,9 @@
 type: organisation
 status: draft
 tags: []
-parent-faction: ""
+parent_faction: ""
 realm: ""
-era-founded: ""
+era_founded: ""
 created: <% tp.date.now("YYYY-MM-DD") %>
 updated: <% tp.date.now("YYYY-MM-DD") %>
 ---

@@ -7,9 +7,9 @@ tags:
 - solaran
 - dialect
 - infernal
-language-family: '[[Elyssan]]'
-language-tier: dialect
-spoken-by:
+language_family: '[[Elyssan]]'
+language_tier: dialect
+spoken_by:
 - '[[Velastri]]'
 type: language
 status: draft

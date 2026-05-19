@@ -76,3 +76,50 @@ Farid al-Hakim represents the humans in the Majlis and is known as "The Arcane A
 The Majlis operates on principles of mutual respect, dialogue, and the collective welfare of Eltabarr. Each leader brings their unique strengths and perspectives to the council, ensuring a balanced approach to governance that reflects the city's diverse magical and cultural heritage. The council meets in the "Hall of Elements," a magnificent building at the heart of Eltabarr, where they discuss matters of state, magical research, and external threats. Their decisions are made through consensus, with each leader having an equal voice in the governance of the city.
 
 Together, Aelar, Zariel, and Farid embody the spirit of Eltabarr, guiding it through challenges and ensuring its prosperity. Their leadership is a testament to the city's values of diversity, magical supremacy, and cultural richness, making Eltabarr a beacon of peace and magical power in the land of Thraysia.
+
+---
+
+## Contents
+
+<!-- AUTO-INJECTED-DYNAMIC-CONTENTS — delete this comment and everything below to opt out; safe to edit otherwise -->
+
+### Districts and landmarks inside
+
+```dataview
+LIST FROM ""
+WHERE type = "landmark" AND inside = this.file.link
+SORT file.name ASC
+```
+
+### Characters here
+
+```dataview
+TABLE WITHOUT ID
+  file.link AS "Name",
+  race AS "Race",
+  affiliation AS "Affiliation"
+FROM ""
+WHERE type = "character" AND location = this.file.link
+SORT file.name ASC
+```
+
+### Events here
+
+```dataview
+TABLE WITHOUT ID
+  file.link AS "Event",
+  era AS "Era",
+  year_display AS "When"
+FROM ""
+WHERE type = "event" AND location = this.file.link
+SORT year ASC
+```
+
+### Other notes referencing this settlement
+
+```dataview
+LIST FROM [[]]
+WHERE !contains(string(file.path), "_meta/")
+SORT file.name ASC
+```
+

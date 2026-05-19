@@ -6,9 +6,9 @@ tags:
 - elder
 - celestial
 lineage: '[[Elder Races]]'
-origin-plane: '[[Solirion]]'
+origin_plane: '[[Solirion]]'
 aat-race-tier: elder
-spoken-language: '[[Elyssan]]'
+spoken_language: '[[Elyssan]]'
 type: race
 status: draft
 ---
@@ -66,3 +66,46 @@ The Solarans are an ancient and advanced civilization deeply connected to celest
 ---
 
 > “Each dawn carries the light of our ancestors and the hope of balance renewed.”
+
+---
+
+## Contents
+
+<!-- AUTO-INJECTED-DYNAMIC-CONTENTS — delete this comment and everything below to opt out; safe to edit otherwise -->
+
+### Characters of this race
+
+```dataview
+TABLE WITHOUT ID
+  file.link AS "Name",
+  culture AS "Culture",
+  affiliation AS "Affiliation"
+FROM ""
+WHERE type = "character" AND race = this.file.link
+SORT file.name ASC
+```
+
+### Languages spoken
+
+```dataview
+LIST FROM ""
+WHERE type = "language" AND contains(spoken_by, this.file.link)
+SORT file.name ASC
+```
+
+### Cultures associated with this race
+
+```dataview
+LIST FROM ""
+WHERE type = "culture" AND contains(races, this.file.link)
+SORT file.name ASC
+```
+
+### Other notes referencing this race
+
+```dataview
+LIST FROM [[]]
+WHERE !contains(string(file.path), "_meta/")
+SORT file.name ASC
+```
+

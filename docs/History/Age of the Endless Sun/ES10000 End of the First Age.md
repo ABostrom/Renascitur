@@ -11,7 +11,7 @@ era: '[[Age of the Endless Sun]]'
 tags: []
 aliases:
 - End of the First Age
-year-display: ES 10000
+year_display: ES 10000
 year: 10000
 ---
 With [[Solara]] fallen, [[Syuul, The Devourer|Lord Syuul]] imprisoned, and the last echoes of the divine era fading, [[the First Age]] comes to a close. The stars dim, and a long silence settles across the world.

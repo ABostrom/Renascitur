@@ -4,7 +4,7 @@ status: draft
 tags: []
 pantheon: ""
 domain: []
-era-of-emergence: ""
+era_of_emergence: ""
 aliases: []
 created: <% tp.date.now("YYYY-MM-DD") %>
 updated: <% tp.date.now("YYYY-MM-DD") %>

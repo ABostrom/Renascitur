@@ -6,9 +6,9 @@ tags:
 - language
 - saurian
 - ancient
-language-family: '[[Saurian]]'
-language-tier: root
-spoken-by:
+language_family: '[[Saurian]]'
+language_tier: root
+spoken_by:
 - '[[Saurian]]'
 type: language
 status: draft

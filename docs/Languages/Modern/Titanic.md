@@ -7,9 +7,9 @@ tags:
 - language
 - titanic
 - derived
-language-family: '[[Karathic]]'
-language-tier: derived
-spoken-by:
+language_family: '[[Karathic]]'
+language_tier: derived
+spoken_by:
 - '[[Varkuun]]'
 - '[[Goliath]]'
 type: language

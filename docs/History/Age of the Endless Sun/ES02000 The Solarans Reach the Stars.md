@@ -10,7 +10,7 @@ era: '[[Age of the Endless Sun]]'
 tags: []
 aliases:
 - The Solarans Reach the Stars
-year-display: ES 2000
+year_display: ES 2000
 year: 2000
 ---
 The [[Solaran|Solarans]] complete the [[Ab Solara]], allowing them to travel between worlds and map the leylines of the cosmos. Their golden age of celestial expansion begins.
