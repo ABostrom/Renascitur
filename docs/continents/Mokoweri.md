@@ -24,13 +24,13 @@ cities:
 mountains:
 - [[Obsidian Spine]]
 - [[Jal'korran Ridge]]
-- - - Temple Heights
+- Temple Heights
 rivers:
 - [[Zyran River]]
 - [[Tir'Zal Tributary]]
 - [[Coatl's Vein]]
 - [[Mira'ko Stream]]
-- - - River of Ancients
+- River of Ancients
 status: draft
 tags: []
 realm: [[Renascita]]

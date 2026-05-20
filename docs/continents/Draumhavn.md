@@ -14,6 +14,20 @@ climate: ''
 dominant_culture: ''
 population_density: ''
 controlled_by: [[Tidebound of Draumhavn]]
+terrain:
+- volcanic isles
+- sea cliffs
+- underground tunnels
+- ocean
+inhabited_by:
+- [[The Tidebound of Draumhavn|Tidebound Dwarves]]
+- [[The Stormbound of Thundrakar|Stormbound Dwarves]]
+cities:
+- [[Thundrakar]]
+provinces:
+- [[Salt Cradle]]
+- [[Stormgates]]
+- [[The Wakened Trench]]
 ---
 ![[f1e5b90b-25db-47d1-ab4a-f5ab53ee54af.png]]
 ## Overview

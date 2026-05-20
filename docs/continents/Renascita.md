@@ -9,6 +9,7 @@ population_density: ''
 aliases:
 - Renascitur
 - Renascita
+kind: world
 ---
 ---
 

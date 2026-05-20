@@ -6,6 +6,15 @@ realm: [[Renascita]]
 climate: ''
 dominant_culture: ''
 population_density: ''
+terrain:
+- underground caverns
+- abyssal tunnels
+- fungal forests
+- obsidian plains
+inhabited_by:
+- [[Weavers of Agony]]
+provinces:
+- [[The Hollowed Warrens]]
 ---
 ---
 

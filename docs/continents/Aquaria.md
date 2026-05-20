@@ -6,6 +6,15 @@ realm: [[Renascita]]
 climate: ''
 dominant_culture: ''
 population_density: ''
+terrain:
+- ocean depths
+- coral reefs
+- underwater caverns
+- abyssal trenches
+provinces:
+- [[Coral Reef Bay]]
+- [[Crystal Caverns]]
+- [[Leviathan's Trench]]
 ---
 ![[Coral Reef Bay]]
 
