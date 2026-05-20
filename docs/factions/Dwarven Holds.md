@@ -21,6 +21,7 @@ leadership: []
 aliases:
 - Dwarven Holds
 - The Dwarven Holds
+era_founded: [[Age of Forging]]
 ---
 # Dwarven Holds
 

@@ -21,9 +21,12 @@ economy: ''
 seat: ''
 size: ''
 allies: []
-rivals: []
+rivals:
+- [[Firebrand Empire]]
 magic: []
-leadership: []
+leadership:
+- [[Varkhaal Bloodlash]]
+era_founded: [[Age of Stagnation]]
 ---
 # [[Weavers of Agony]]
 

@@ -11,15 +11,22 @@ government: theocracy
 economy: agrarian
 seat: [[Aeloria]]
 size: regional
-allies: []
+allies:
+- [[People of Mokoweri]]
 rivals: []
 magic:
 - [[Primal]]
 - [[Divine]]
-leadership: []
+leadership:
+- [[Elder Kirex]]
+- [[Elder Marn]]
+- [[Elder Sylthassi]]
+- [[Elder Thrasuun]]
+- [[Elder Vellara]]
 aliases:
 - Saurian Enclave
 - The Saurian Enclave
+era_founded: [[Age of the Endless Sun]]
 ---
 # Saurian Enclave
 

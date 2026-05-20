@@ -16,10 +16,12 @@ allies: []
 rivals: []
 magic:
 - [[Rune Magic]]
-leadership: []
+leadership:
+- [[Gromdir Stillhand]]
 aliases:
 - Icebound
 - Icebound of Uftine
+era_founded: [[Age of Forging]]
 ---
 The [[Dwarf|dwarves]] of [[Uftine]] are known collectively as the [[The Icebound of Uftine]]—those who are bound to the glacier not just in body, but in purpose. This identity defines their culture, their duty, and their [[soul]]. Among them, the term Icebreakers refers more specifically to those who carve the frozen stone, forge in the cold, and mine the glacier’s deep veins. They are artisans, engineers, and delvers who shape the silence beneath Uftine.
   

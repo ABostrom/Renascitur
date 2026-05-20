@@ -16,10 +16,12 @@ allies: []
 rivals: []
 magic:
 - [[Rune Magic]]
-leadership: []
+leadership:
+- [[Aundril Voxhammer]]
 aliases:
 - Stormbound
 - Stormbound of Thundrakar
+era_founded: [[Age of Forging]]
 ---
 ---
 

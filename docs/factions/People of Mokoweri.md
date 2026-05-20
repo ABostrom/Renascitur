@@ -11,7 +11,8 @@ government: tribal-council
 economy: agrarian
 seat: ''
 size: regional
-allies: []
+allies:
+- [[Saurian Enclave]]
 rivals: []
 magic:
 - [[Primal]]
@@ -19,6 +20,7 @@ leadership: []
 aliases:
 - Mokoweri People
 - Mokoweri
+era_founded: [[Age of the Endless Sun]]
 ---
 The [[docs/Races/Solaran/Mokoweri|Mokoweri]] people are an ancient civilization with a rich and complex history. According to legend, their ancestors were among the first to inhabit the islands that now make up their homeland. They lived in harmony with the native [[Saurian]], developing a symbiotic relationship that would endure for centuries.
 

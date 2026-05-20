@@ -17,10 +17,12 @@ rivals: []
 magic:
 - [[Rune Magic]]
 - [[Forge Magic]]
-leadership: []
+leadership:
+- [[Volgrin Flameward]]
 aliases:
 - Flamebound
 - Flamebound of Magnus' Rest
+era_founded: [[Age of Forging]]
 ---
 ## Cultural Themes – The [[The Flamebound of Magnus' Rest]] [[Dwarf|Dwarves]]
 

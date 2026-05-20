@@ -11,14 +11,19 @@ government: monarchy
 economy: industrial
 seat: ''
 size: continental
-allies: []
-rivals: []
+allies:
+- [[Dwarven Holds]]
+rivals:
+- [[Weavers of Agony]]
+- [[Souls of the Devourer]]
 magic: []
-leadership: []
+leadership:
+- [[Unimus - First Emperor]]
 aliases:
 - Firebrand
 - Firebrand Empire
 - The Firebrand Empire
+era_founded: [[Age of Night]]
 ---
 The Firebrand Empire is a powerful and highly organised civilization that resembles the ancient Roman Empire. The Empire is ruled by an [[Emperors]] and [[The 12 Great Houses]], each of which holds significant influence over the Empire's affairs. Citizenship is not guaranteed by birthright in the Firebrand Empire; rather, it must be earned through service to the Empire and deeds worthy of recognition. This system of earned [[Citizenship]] emphasises individual achievement and meritocracy, but the great houses use it as a form of control over the common people.
 

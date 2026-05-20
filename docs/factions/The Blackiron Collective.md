@@ -14,10 +14,12 @@ size: regional
 allies: []
 rivals: []
 magic: []
-leadership: []
+leadership:
+- [[Kael Durnith]]
 aliases:
 - Blackiron Collective
 - Blackiron
+era_founded: [[Age of Stagnation]]
 ---
 ---
 

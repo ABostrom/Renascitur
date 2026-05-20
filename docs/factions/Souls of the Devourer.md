@@ -15,9 +15,11 @@ economy: ''
 seat: ''
 size: ''
 allies: []
-rivals: []
+rivals:
+- [[Firebrand Empire]]
 magic: []
 leadership: []
+era_founded: [[Age of Stagnation]]
 ---
 Symbol: שקש๔
 

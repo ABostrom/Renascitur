@@ -9,15 +9,18 @@ alignment: lawful-evil
 society_form: imperial
 government: monarchy
 economy: ''
-seat: ''
+seat: [[Calvereth]]
 size: regional
 allies: []
-rivals: []
+rivals:
+- [[Thraysian Magocracy]]
 magic:
 - [[Glyph Magic]]
-leadership: []
+leadership:
+- [[Vaelira Lyrandar]]
 aliases:
 - Velkhar
+era_founded: [[Age of Stagnation]]
 ---
 **Type**:: Sovereign Protectorate  
 **Capital**:: [[Calvereth]]  

@@ -17,10 +17,14 @@ magic:
 - [[Arcane]]
 - [[Arcanometry]]
 - [[Glyph Magic]]
-leadership: []
+leadership:
+- [[Aelar Amakiir]]
+- [[Zariel Mephista]]
+- [[Farid al-Hakim]]
 aliases:
 - Thraysian Magocracy
 - The Magocracy
+era_founded: [[Age of Stagnation]]
 ---
 ### The Majlis of Arcane Sovereignty
 
