@@ -23,6 +23,7 @@ race: "[[Imperial Human]]"
 culture: "[[Firebrand Empire]]"
 house: "[[House Vadalis]]"
 location: "[[Old Westgate]]"
+continent: "[[Pyrosia]]"
 ---
 ## Title
 - Overseer of [[Old Westgate]]

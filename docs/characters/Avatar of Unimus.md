@@ -16,6 +16,7 @@ era_of_death: ''
 affiliation: "[[Firebrand Empire]]"
 race: "[[Leonin]]"
 location: "[[Lion's Rest]]"
+continent: "[[Pyrosia]]"
 ---
 Here is the 5e stat block for an Efreeti, lightly reskinned to represent a celestial being, the Avatar of [[Unimus]]:
 

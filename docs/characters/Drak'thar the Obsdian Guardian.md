@@ -16,6 +16,7 @@ era_of_death: ''
 race: "[[Solaran]]"
 affiliation: "[[The Solaran Federation of Worlds]]"
 location: "[[Mokoweri]]"
+continent: "[[Mokoweri]]"
 ---
 _Species_: Ancient Obsidian Dragon
 

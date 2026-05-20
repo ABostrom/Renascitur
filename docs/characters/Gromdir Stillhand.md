@@ -20,6 +20,7 @@ era_of_death: ''
 race: "[[Dwarf]]"
 culture: "[[The Icebound of Uftine]]"
 location: "[[Uftine]]"
+continent: "[[Arcturia]]"
 ---
 ## Title: [[The Icebound of Uftine]] Thane of Uftine
 

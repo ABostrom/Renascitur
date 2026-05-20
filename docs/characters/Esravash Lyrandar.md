@@ -22,6 +22,7 @@ race: "[[Imperial Human]]"
 culture: "[[Firebrand Empire]]"
 house: "[[House Lyrandar]]"
 location: "[[Raining Bay]]"
+continent: "[[Pyrosia]]"
 ---
 ## Affiliation
 - **House**: [[House Lyrandar]]

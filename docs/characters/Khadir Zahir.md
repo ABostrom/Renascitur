@@ -24,6 +24,7 @@ era_of_death: ''
 race: "[[Thraysian Human]]"
 culture: "[[Thraysian]]"
 location: "[[Eltabarr]]"
+continent: "[[Qethusiyya]]"
 ---
 # Khadir Zahir
 

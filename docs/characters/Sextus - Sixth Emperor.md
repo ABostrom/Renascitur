@@ -18,6 +18,7 @@ era_of_death: ''
 race: "[[Imperial Human]]"
 culture: "[[Firebrand Empire]]"
 location: "[[Lion's Rest]]"
+continent: "[[Pyrosia]]"
 ---
 - **Appearance**: Sextus is depicted as a wise and contemplative [[docs/Races/Kyojin/Leonin/Leonin|Leonin]] with a mane of dark gold, streaked with hints of white. His eyes are a thoughtful brown, and he is shown wearing the robes of a scholar, with a simple circlet of gold upon his head.
 - **Quote**: "Knowledge is the shield of the empire; with it, we defend against the darkness of ignorance."

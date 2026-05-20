@@ -18,6 +18,7 @@ era_of_death: ''
 race: "[[Saurian]]"
 culture: "[[Saurian]]"
 location: "[[Aeloria]]"
+continent: "[[Mokoweri]]"
 ---
 ### Elder Kirex
 

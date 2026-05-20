@@ -16,6 +16,7 @@ era_of_birth: ''
 era_of_death: ''
 race: "[[Solaran]]"
 location: "[[Mokoweri]]"
+continent: "[[Mokoweri]]"
 ---
 # The Last Sun Speaker
 Ketharion is a towering figure, standing over 9 feet tall, with broad shoulders and a muscular build. His skin is a deep, rich brown, and his eyes are a piercing golden hue that seem to glow in the right light. He has a bald head with a long, thick beard that hangs down to his chest, giving him an almost regal appearance.

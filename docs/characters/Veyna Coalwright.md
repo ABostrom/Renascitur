@@ -16,6 +16,7 @@ era_of_birth: ''
 era_of_death: ''
 race: "[[Forgeborn]]"
 location: "[[Thelassia]]"
+continent: "[[Qethusiyya]]"
 ---
 - **Role**: Voice of the working class in the Council of Sparks.
 - **Personality**: Passionate and determined, Veyna advocates for the miners and laborers who keep the city running.

@@ -24,6 +24,7 @@ race: "[[Imperial Human]]"
 culture: "[[Firebrand Empire]]"
 house: "[[House Cannith]]"
 location: "[[Magnus' Rest]]"
+continent: "[[Pyrosia]]"
 ---
 ## Title
 - Overseer of [[Magnus' Rest]]

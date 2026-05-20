@@ -21,6 +21,7 @@ era_of_death: ''
 race: "[[Dwarf]]"
 culture: "[[The Flamebound of Magnus' Rest]]"
 location: "[[Magnus' Rest]]"
+continent: "[[Pyrosia]]"
 ---
 > *"I was a child when the night came. [[Magnus]] gave me fire. I have never let it go."*
 

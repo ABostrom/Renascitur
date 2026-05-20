@@ -17,6 +17,7 @@ era_of_birth: ''
 era_of_death: ''
 race: "[[Solaran]]"
 location: "[[Aeloria]]"
+continent: "[[Mokoweri]]"
 ---
 Iris Andras, the esteemed [[Solaran]] scientist, is renowned for her pioneering work in bio-engineering [[Saurian|Saurians]] into sentient creatures, breathing intelligence into their ancient forms. Her legacy echoes through the annals of [[Solaran]] history.
 

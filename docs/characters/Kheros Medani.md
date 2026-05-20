@@ -24,6 +24,7 @@ race: "[[Imperial Human]]"
 culture: "[[Firebrand Empire]]"
 house: "[[House Medani]]"
 location: "[[Lion's Rest]]"
+continent: "[[Pyrosia]]"
 ---
 ## Title
 - Overseer of [[Lion's Rest]]

@@ -17,6 +17,7 @@ era_of_death: ''
 race: "[[Mokoweri Human]]"
 culture: "[[Mokoweri]]"
 location: "[[Mokoweri]]"
+continent: "[[Mokoweri]]"
 ---
 "The [[Solaran|Solarans]] were guardians of wisdom and keepers of balance. They valued harmony between the natural world and the power they harnessed. Can you truly embody these ideals?"
 

@@ -23,6 +23,7 @@ race: "[[Imperial Human]]"
 culture: "[[Firebrand Empire]]"
 house: "[[House Cannith]]"
 location: "[[Magnus' Rest]]"
+continent: "[[Pyrosia]]"
 ---
 ## Affiliation
 - **House**: [[House Cannith]]

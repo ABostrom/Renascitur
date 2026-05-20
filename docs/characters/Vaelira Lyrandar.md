@@ -19,4 +19,5 @@ era_of_death: ''
 race: "[[Imperial Human]]"
 house: "[[House Lyrandar]]"
 location: "[[Raining Bay]]"
+continent: "[[Pyrosia]]"
 ---

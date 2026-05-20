@@ -23,6 +23,7 @@ race: "[[Imperial Human]]"
 culture: "[[Firebrand Empire]]"
 house: "[[House Lyrandar]]"
 location: "[[Raining Bay]]"
+continent: "[[Pyrosia]]"
 ---
 ## Title
 - Overseer of [[The Raining Bay]]

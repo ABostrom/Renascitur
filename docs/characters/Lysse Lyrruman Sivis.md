@@ -23,6 +23,7 @@ race: "[[Imperial Human]]"
 culture: "[[Firebrand Empire]]"
 house: "[[House Sivis]]"
 location: "[[Lux Oescus]]"
+continent: "[[Pyrosia]]"
 ---
 ## Affiliation
 - **House**: [[House Sivis]]

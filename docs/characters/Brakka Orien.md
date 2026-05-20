@@ -23,6 +23,7 @@ race: "[[Imperial Human]]"
 culture: "[[Firebrand Empire]]"
 house: "[[House Orien]]"
 location: "[[Port Ardere]]"
+continent: "[[Pyrosia]]"
 ---
 ## Title
 - Overseer of [[Port Ardere]]

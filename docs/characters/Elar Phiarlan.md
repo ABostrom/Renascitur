@@ -22,6 +22,7 @@ race: "[[Imperial Human]]"
 culture: "[[Firebrand Empire]]"
 house: "[[House Phiarlan]]"
 location: "[[Raining Bay]]"
+continent: "[[Pyrosia]]"
 ---
 ## Affiliation
 - **House**: [[House Phiarlan]]

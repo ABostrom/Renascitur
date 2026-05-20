@@ -22,6 +22,7 @@ race: "[[Imperial Human]]"
 culture: "[[Firebrand Empire]]"
 house: "[[House Vadalis]]"
 location: "[[Old Westgate]]"
+continent: "[[Pyrosia]]"
 ---
 ## Affiliation
 - **House**: [[House Vadalis]]

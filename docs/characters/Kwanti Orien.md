@@ -22,6 +22,7 @@ race: "[[Imperial Human]]"
 culture: "[[Firebrand Empire]]"
 house: "[[House Orien]]"
 location: "[[Port Ardere]]"
+continent: "[[Pyrosia]]"
 ---
 ## Affiliation
 - **House**: [[House Orien]]

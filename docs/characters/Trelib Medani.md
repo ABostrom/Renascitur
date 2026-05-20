@@ -22,6 +22,7 @@ race: "[[Imperial Human]]"
 culture: "[[Firebrand Empire]]"
 house: "[[House Medani]]"
 location: "[[Lion's Rest]]"
+continent: "[[Pyrosia]]"
 ---
 ## Affiliation
 - **House**: [[House Medani]]

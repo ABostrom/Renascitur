@@ -17,6 +17,7 @@ era_of_death: ''
 race: "[[Imperial Human]]"
 culture: "[[Firebrand Empire]]"
 location: "[[Lion's Rest]]"
+continent: "[[Pyrosia]]"
 ---
 Breona is a formidable woman with broad shoulders and bulging muscles. She stands tall and proud, with a fierce glint in her eye that warns others not to underestimate her.
 

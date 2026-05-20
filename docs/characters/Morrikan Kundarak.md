@@ -22,6 +22,7 @@ race: "[[Imperial Human]]"
 culture: "[[Firebrand Empire]]"
 house: "[[House Kundarak]]"
 location: "[[Lux Oescus]]"
+continent: "[[Pyrosia]]"
 ---
 ## Affiliation
 - **House**: [[House Kundarak]]

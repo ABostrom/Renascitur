@@ -16,6 +16,7 @@ era_of_birth: ''
 era_of_death: ''
 race: "[[Forgeborn]]"
 location: "[[Thelassia]]"
+continent: "[[Qethusiyya]]"
 ---
 - **Role**: A controversial figure advocating for widespread mechanical augmentation.
 - **Personality**: Charismatic and ambitious, Lyria believes that embracing machine integration is the future of the Metal Elves.
