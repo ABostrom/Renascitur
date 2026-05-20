@@ -1,8 +1,7 @@
 ---
 type: faction
 status: draft
-realm:
-- - Renascita
+realm: [[Renascita]]
 tags: []
 nature: mortal
 importance: notable
@@ -15,8 +14,8 @@ size: regional
 allies: []
 rivals: []
 magic:
-- - - Primal
-- - - Divine
+- [[Primal]]
+- [[Divine]]
 leadership: []
 aliases:
 - Rahalan
@@ -88,6 +87,16 @@ The Rahalan people maintain a series of rituals and traditions that reflect thei
 For the Rahalans, the Gaia vessels are more than architectural marvels; they are a living symbol of the tribe's identity, resilience, and unity. The ships embody the Rahalan's reverence for their ancestors, the natural world, and the mystical forces that govern their existence. The care and nurturing of these vessels represent a covenant between the Rahalans and the land they traverse, a promise of mutual respect and protection.
 
 ---
+## Connections
+
+<!-- AUTO-CONNECTIONS — safe to edit; will not be re-injected -->
+
+- **Race**: [[Rahalan]] (a [[Human]] variant)
+- **Homeland**: desert provinces of [[Qethusiyya]] (especially [[Al-Ramal]])
+- **Vessels**: Gaia-ships — living craft (referenced in lore)
+- **Magic**: [[Primal]], [[Divine]]
+- **Roles**: Dreamweavers, Grove Shapers, Battle Sisters
+- **Realm**: [[Renascita]]
 
 ## Contents
 

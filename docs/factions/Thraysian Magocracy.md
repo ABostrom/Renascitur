@@ -1,8 +1,7 @@
 ---
 type: faction
 status: draft
-realm:
-- - Renascita
+realm: [[Renascita]]
 tags: []
 nature: mortal
 importance: notable
@@ -10,15 +9,14 @@ alignment: neutral
 society_form: magocratic
 government: magocratic-council
 economy: magical
-seat:
-- - Eltabarr
+seat: [[Eltabarr]]
 size: regional
 allies: []
 rivals: []
 magic:
-- - - Arcane
-- - - Arcanometry
-- - - Glyph Magic
+- [[Arcane]]
+- [[Arcanometry]]
+- [[Glyph Magic]]
 leadership: []
 aliases:
 - Thraysian Magocracy

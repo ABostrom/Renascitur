@@ -2,8 +2,7 @@
 type: faction
 status: stub
 tags: []
-realm:
-- - Renascita
+realm: [[Renascita]]
 nature: mortal
 importance: major
 alignment: lawful-neutral
@@ -13,11 +12,11 @@ economy: mining
 seat: ''
 size: continental
 allies:
-- - - Firebrand Empire
+- [[Firebrand Empire]]
 rivals: []
 magic:
-- - - Rune Magic
-- - - Forge Magic
+- [[Rune Magic]]
+- [[Forge Magic]]
 leadership: []
 aliases:
 - Dwarven Holds
@@ -28,6 +27,16 @@ aliases:
 *The four united holds of the Grundthain dwarves — Tidebound, Icebound, Stormbound, and Flamebound — bound by ancestral alliance and the great subterranean railway that links their cities.*
 
 ---
+## Connections
+
+<!-- AUTO-CONNECTIONS — safe to edit; will not be re-injected -->
+
+- **Sub-factions**: [[The Tidebound of Draumhavn]], [[The Icebound of Uftine]], [[The Stormbound of Thundrakar]], [[The Flamebound of Magnus' Rest]]
+- **Race**: [[Dwarf]] (a lineage of the [[Grundthain]])
+- **Allied with**: [[Firebrand Empire]] via the Deepline railway
+- **Patron deity**: [[Muradin]] (in his original [[Grundthain]] form)
+- **Concept**: [[Hexweave]] — the cosmic structure their forges helped bind
+- **Magic disciplines**: [[Rune Magic]], [[Forge Magic]]
 
 ## Contents
 

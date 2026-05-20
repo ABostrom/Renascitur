@@ -3,10 +3,8 @@ type: essay
 status: stub
 tags: []
 topic: pantheon
-realm:
-- - Renascitur
-era:
-- - Age of the Endless Sun
+realm: [[Renascitur]]
+era: [[Age of the Endless Sun]]
 aliases:
 - God Hand
 - Quintumvirate

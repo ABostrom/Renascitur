@@ -42,10 +42,15 @@ House Deneith serves a critical role within the Firebrand Empire, overseeing int
 
 <!-- AUTO-INJECTED-DYNAMIC-CONTENTS — delete this comment and everything below to opt out; safe to edit otherwise -->
 
-### Members
+### Members (by house affiliation)
 
 ```dataview
-LIST FROM ""
+TABLE WITHOUT ID
+  file.link AS "Name",
+  race AS "Race",
+  role AS "Role",
+  living_status AS "Status"
+FROM ""
 WHERE type = "character" AND contains(file.outlinks, this.file.link)
 SORT file.name ASC
 ```

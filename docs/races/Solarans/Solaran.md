@@ -7,11 +7,9 @@ tags:
 - elder
 - celestial
 lineage: Solarans
-origin_plane:
-- - Solirion
+origin_plane: [[Solirion]]
 aat-race-tier: elder
-spoken_language:
-- - Elyssan
+spoken_language: [[Elyssan]]
 type: race
 status: draft
 nature: mortal

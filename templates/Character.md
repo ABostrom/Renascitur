@@ -19,6 +19,7 @@ magic: []
 living_status: ''
 era_of_birth: ''
 era_of_death: ''
+house: ''
 ---
 # {{title}}
 

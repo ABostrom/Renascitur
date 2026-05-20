@@ -27,6 +27,15 @@ The souls of the devourer are a cult dedicated to [[Ishna]] and ensuring that th
 [[Syuul, The Devourer]]
 
 ---
+## Connections
+
+<!-- AUTO-CONNECTIONS — safe to edit; will not be re-injected -->
+
+- **Worship**: [[Ishna]], the [[Aberrations]], the [[Machinery of Death]]
+- **Era of relevance**: [[Age of Stagnation]] onward
+- **Nature**: [[Corruption]]
+- **Adversaries**: [[Luxar Gods]], the [[Hexweave]]
+- **Realm**: [[Renascita]]
 
 ## Contents
 
@@ -37,6 +46,19 @@ The souls of the devourer are a cult dedicated to [[Ishna]] and ensuring that th
 ```dataview
 LIST FROM ""
 WHERE type = "faction" AND contains(file.outlinks, this.file.link)
+SORT file.name ASC
+```
+
+### Noble houses within
+
+```dataview
+TABLE WITHOUT ID
+  file.link AS "House",
+  current_head AS "Head",
+  seat AS "Seat",
+  sigil AS "Sigil"
+FROM ""
+WHERE type = "house" AND contains(file.outlinks, this.file.link)
 SORT file.name ASC
 ```
 

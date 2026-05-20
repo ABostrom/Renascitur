@@ -1,8 +1,7 @@
 ---
 type: faction
 status: stub
-realm:
-- - Renascita
+realm: [[Renascita]]
 tags: []
 nature: mortal
 importance: notable
@@ -35,6 +34,19 @@ aliases:
 ```dataview
 LIST FROM ""
 WHERE type = "faction" AND contains(file.outlinks, this.file.link)
+SORT file.name ASC
+```
+
+### Noble houses within
+
+```dataview
+TABLE WITHOUT ID
+  file.link AS "House",
+  current_head AS "Head",
+  seat AS "Seat",
+  sigil AS "Sigil"
+FROM ""
+WHERE type = "house" AND contains(file.outlinks, this.file.link)
 SORT file.name ASC
 ```
 

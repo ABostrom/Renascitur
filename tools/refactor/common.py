@@ -30,10 +30,47 @@ FRONTMATTER_RE = re.compile(
 )
 
 
+def _wikilink_from_nested(value):
+    """PyYAML parses `field: [[Foo]]` as a nested flow sequence
+    [['Foo']]. Detect that pattern and recover the string form '[[Foo]]'.
+    Applied recursively for lists.
+    """
+    # Single-element list of single-element list of string: [['Foo']] -> '[[Foo]]'
+    if (
+        isinstance(value, list)
+        and len(value) == 1
+        and isinstance(value[0], list)
+        and len(value[0]) == 1
+        and isinstance(value[0][0], str)
+    ):
+        return "[[{}]]".format(value[0][0])
+    # List of such structures (rare but possible)
+    if isinstance(value, list):
+        out = []
+        any_converted = False
+        for item in value:
+            new_item = _wikilink_from_nested(item)
+            if new_item is not item:
+                any_converted = True
+            out.append(new_item)
+        if any_converted:
+            return out
+    return value
+
+
+def _normalize_frontmatter(meta: Dict) -> Dict:
+    """Recursively convert PyYAML-mangled nested-list wikilinks back to strings."""
+    if not isinstance(meta, dict):
+        return meta
+    return {k: _wikilink_from_nested(v) for k, v in meta.items()}
+
+
 def read_frontmatter(path: Path) -> Tuple[Dict, str]:
     """Return (metadata_dict, body_string) for a markdown file.
 
     Files without frontmatter return ({}, full_content).
+    Recovers Obsidian-style unquoted wikilinks (`field: [[Foo]]`) that
+    PyYAML otherwise misparses as nested flow sequences.
     """
     text = path.read_text(encoding="utf-8")
     m = FRONTMATTER_RE.match(text)
@@ -49,6 +86,7 @@ def read_frontmatter(path: Path) -> Tuple[Dict, str]:
     if not isinstance(metadata, dict):
         # e.g. file starts with --- but content is a list at top level; bail out safely
         return {}, text
+    metadata = _normalize_frontmatter(metadata)
     return metadata, body
 
 

@@ -21,6 +21,7 @@ era_of_birth: ''
 era_of_death: ''
 race: [[Imperial Human]]
 culture: [[Firebrand Empire]]
+house: [[House Vadalis]]
 ---
 ## Title
 - Overseer of [[Old Westgate]]

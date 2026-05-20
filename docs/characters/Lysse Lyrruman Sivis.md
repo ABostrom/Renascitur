@@ -19,6 +19,7 @@ era_of_birth: ''
 era_of_death: ''
 race: [[Imperial Human]]
 culture: [[Firebrand Empire]]
+house: [[House Sivis]]
 ---
 ## Affiliation
 - **House**: [[House Sivis]]

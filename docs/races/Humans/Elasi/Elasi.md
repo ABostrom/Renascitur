@@ -6,13 +6,10 @@ tags:
 - elemental
 - mortal-descendant
 lineage: Humans
-origin_plane:
-- - Elemental Plane
+origin_plane: [[Elemental Plane]]
 aat-race-tier: mortal-descendant
-spoken_language:
-- - Elemental Tongue
-written_language:
-- - Elemental Script
+spoken_language: [[Elemental Tongue]]
+written_language: [[Elemental Script]]
 type: race
 status: draft
 nature: mortal

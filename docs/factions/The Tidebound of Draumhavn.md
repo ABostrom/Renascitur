@@ -2,23 +2,20 @@
 type: faction
 status: draft
 tags: []
-realm:
-- - Renascita
-parent_faction:
-- - Dwarven Holds
+realm: [[Renascita]]
+parent_faction: [[Dwarven Holds]]
 nature: mortal
 importance: notable
 alignment: lawful-neutral
 society_form: martial
 government: monarchy
 economy: mercantile
-seat:
-- - Draumhavn
+seat: [[Draumhavn]]
 size: regional
 allies: []
 rivals: []
 magic:
-- - - Rune Magic
+- [[Rune Magic]]
 leadership: []
 aliases:
 - Tidebound

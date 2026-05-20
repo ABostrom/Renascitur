@@ -80,6 +80,16 @@ While many hobgoblin clans denounce the Weavers as heretics, their influence is 
 - **The Return of Varkhaal**: Now a horror of silk and claw, he marches toward a dwarven city to begin the First Weaving—a grand act of worship that will open a gate to [[The World Beneath]].
 
 ---
+## Connections
+
+<!-- AUTO-CONNECTIONS — safe to edit; will not be re-injected -->
+
+- **Patron**: [[Varkhaal Bloodlash]] (the First Fang)
+- **Era of emergence**: [[Age of Stagnation]]
+- **Nature**: [[Corruption]], aberrant ritual practice
+- **Magic**: [[Soul Magic]] (corrupted)
+- **Adversaries**: [[Luxar Gods]], the [[Saurian Enclave]]
+- **Realm**: [[Renascita]]
 
 ## Contents
 
@@ -90,6 +100,19 @@ While many hobgoblin clans denounce the Weavers as heretics, their influence is 
 ```dataview
 LIST FROM ""
 WHERE type = "faction" AND contains(file.outlinks, this.file.link)
+SORT file.name ASC
+```
+
+### Noble houses within
+
+```dataview
+TABLE WITHOUT ID
+  file.link AS "House",
+  current_head AS "Head",
+  seat AS "Seat",
+  sigil AS "Sigil"
+FROM ""
+WHERE type = "house" AND contains(file.outlinks, this.file.link)
 SORT file.name ASC
 ```
 

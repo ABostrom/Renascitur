@@ -20,6 +20,15 @@ leadership: []
 The order of [[Magnus]] was formerly recognised following the death of [[Magnus]] Hammerfell in 100 AS. During his life [[Magnus]] has founded his order of Clerics to spread the teachings of the Old God [[Muradin]]. Knowing that [[Muradin]] had saved his life, he felt it his holy duty to spread his teachings to all [[Dwarf|Dwarves]] of the new world.
 
 ---
+## Connections
+
+<!-- AUTO-CONNECTIONS — safe to edit; will not be re-injected -->
+
+- **Parent faction**: [[The Flamebound of Magnus' Rest]]
+- **Honors**: [[Magnus]] (the Luxar deity), [[Muradin]] (the ancestral patron)
+- **Seat**: [[Magnus' Rest]]
+- **Realm**: [[Renascita]]
+- **Magic**: [[Divine]], [[Forge Magic]]
 
 ## Contents
 
@@ -30,6 +39,19 @@ The order of [[Magnus]] was formerly recognised following the death of [[Magnus]
 ```dataview
 LIST FROM ""
 WHERE type = "faction" AND contains(file.outlinks, this.file.link)
+SORT file.name ASC
+```
+
+### Noble houses within
+
+```dataview
+TABLE WITHOUT ID
+  file.link AS "House",
+  current_head AS "Head",
+  seat AS "Seat",
+  sigil AS "Sigil"
+FROM ""
+WHERE type = "house" AND contains(file.outlinks, this.file.link)
 SORT file.name ASC
 ```
 

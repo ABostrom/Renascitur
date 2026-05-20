@@ -1,8 +1,7 @@
 ---
 type: faction
 status: draft
-realm:
-- - Renascita
+realm: [[Renascita]]
 tags: []
 nature: mortal
 importance: notable
@@ -15,7 +14,7 @@ size: regional
 allies: []
 rivals: []
 magic:
-- - - Glyph Magic
+- [[Glyph Magic]]
 leadership: []
 aliases:
 - Velkhar
@@ -37,6 +36,14 @@ At its heart lies [[Calvereth]], a quiet and disciplined city built in a valley.
 The Dominion is ruled by [[Vaelira Lyrandar|Vaelira]], *The Lady of Velkhar* — a former scion of [[House Lyrandar]] who cast aside her name to become something other: immortal, veiled, and just. She is spoken of with reverence and caution, a figure of myth and law whose presence anchors the nation’s long vigil.
 
 ---
+## Connections
+
+<!-- AUTO-CONNECTIONS — safe to edit; will not be re-injected -->
+
+- **Society form**: imperial monarchy with lawful-evil alignment
+- **Realm**: [[Renascita]]
+- **Adversaries**: [[Firebrand Empire]], [[Dwarven Holds]]
+- **Era**: [[Age of Night]] presence
 
 ## Contents
 

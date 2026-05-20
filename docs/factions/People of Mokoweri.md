@@ -1,8 +1,7 @@
 ---
 type: faction
 status: draft
-realm:
-- - Renascita
+realm: [[Renascita]]
 tags: []
 nature: mortal
 importance: notable
@@ -15,7 +14,7 @@ size: regional
 allies: []
 rivals: []
 magic:
-- - - Primal
+- [[Primal]]
 leadership: []
 aliases:
 - Mokoweri People
@@ -36,6 +35,16 @@ In terms of religion, the [[Mokoweri]] worship a pantheon of nature deities, inc
 ![[Saurian]]
 
 ---
+## Connections
+
+<!-- AUTO-CONNECTIONS — safe to edit; will not be re-injected -->
+
+- **Race**: [[Mokoweri Human]]
+- **Continent**: [[Mokoweri]]
+- **Allied with**: [[Saurian Enclave]] via ancestral covenant
+- **Notable group**: [[Tyrannosaurs of Mokoweri]]
+- **Magic**: [[Primal]]
+- **Society**: tribal, spiritual, agrarian
 
 ## Contents
 

@@ -2,22 +2,20 @@
 type: faction
 status: stub
 tags: []
-realm:
-- - Renascita
+realm: [[Renascita]]
 nature: bioengineered
 importance: major
 alignment: neutral-good
 society_form: theocratic
 government: theocracy
 economy: agrarian
-seat:
-- - Aeloria
+seat: [[Aeloria]]
 size: regional
 allies: []
 rivals: []
 magic:
-- - - Primal
-- - - Divine
+- [[Primal]]
+- [[Divine]]
 leadership: []
 aliases:
 - Saurian Enclave

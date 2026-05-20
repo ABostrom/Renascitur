@@ -16,4 +16,5 @@ living_status: ''
 era_of_birth: ''
 era_of_death: ''
 race: [[Imperial Human]]
+house: [[House Lyrandar]]
 ---
