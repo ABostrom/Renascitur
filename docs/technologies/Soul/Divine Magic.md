@@ -12,4 +12,6 @@ importance: notable
 magic:
 - [[Soul Magic]]
 - [[Divine]]
+aliases:
+- Divine
 ---

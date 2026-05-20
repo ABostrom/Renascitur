@@ -1,16 +1,25 @@
 target,broken_count,example_sources
 Rexaris,6,characters/Tyrannosaurs of Mokoweri.md
+Common,3,Races/Humans/Terran/Terran.md | Races/Kyojin/Leonin/Imperial Leonin.md | Races/Kyojin/Orcs/Imperial Orcs.md
 Pyrethane,3,characters/Volgrin Flameward.md | settlements/Magnus' Rest.md
-Gnome,3,characters/Yoren Silverhand.md | continents/Pyrosia.md | factions/House Silverhand.md
+Gnome,3,characters/Yoren Silverhand.md | continents/Pyrosia.md | houses/House Silverhand.md
 Celestial Flame,3,essays/Aelion.md | essays/Aeternum.md
 Yunara,3,landmarks/Yōkuro no Ki.md
-Common,3,Races/Humans/Terran/Terran.md | Races/Kyojin/Leonin/Imperial Leonin.md | Races/Kyojin/Orcs/Imperial Orcs.md
-the Eternal Flame,3,resources/Crystals/Sun Topaz.md | resources/Minerals/Radiant Obsidian.md
 Flameforging,3,resources/Crystals/Sun Topaz.md | resources/Metals/Everburn Steel.md | resources/Minerals/Radiant Obsidian.md
+Elemental Plane,2,Races/Humans/Elasi/Elasi.md
+Elemental Tongue,2,Races/Humans/Elasi/Elasi.md
 Fracturecast,2,characters/Gromdir Stillhand.md | landmarks/The Pulsecore.md
 Tome of Thousand Nights,2,characters/Volgrin Flameward.md | organisations/Magnesium Devouts.md
+Corruption,2,factions/Souls of the Devourer.md | factions/Weavers of Agony.md
 Sunforged Anvil,2,factions/The Flamebound of Magnus' Rest.md | organisations/Magnesium Devouts.md
 Dragonborn,2,planes/Elementis Ventus.md | planes/Silvertania.md
+Aerlai,1,Languages/Ancient/Elyssan.md
+Forge Wars,1,Races/Engineered/Forgeborn.md
+Salt-Hardened Steel,1,Races/Grundthains/Dwarves/Tidebound.md
+Elemental Script,1,Races/Humans/Elasi/Elasi.md
+Material Plane,1,Races/Humans/Terran/Terran.md
+Terran Dialect,1,Races/Humans/Terran/Terran.md
+Libertum,1,Races/Solarans/Solaran.md
 wikilinks,1,_meta/Conventions.md
 f84287e4-8a75-4647-9970-57749cecdc4e.webp,1,artifacts/Blood Kriss.md
 Umbralyn,1,artifacts/Chosen of the Twilight.md
@@ -45,19 +54,9 @@ Aetherglyph,1,landmarks/Dürrenholt.md
 Dwarf#Uftine Icebreakers Uftine Dwarves,1,landmarks/Dürrenholt.md
 tumblr_2818760f2b2024456ad10eac13f77d5d_740c5d64_1280.jpg,1,landmarks/Embered Caverns.md
 Great Elemental,1,landmarks/Eternal Flame.md
-Aerlai,1,Languages/Ancient/Elyssan.md
 Rite of Emberbinding,1,organisations/Magnesium Devouts.md
 Eron Coalmark,1,organisations/Magnesium Devouts.md
 The Age of Twilight's Lament,1,prophecies/Vecna's Prophecy.md
-Forge Wars,1,Races/Engineered/Forgeborn.md
-Salt-Hardened Steel,1,Races/Grundthains/Dwarves/Tidebound.md
-Wakened Trench,1,Races/Grundthains/Dwarves/Tidebound.md
-Elemental Plane,1,Races/Humans/Elasi/Elasi.md
-Elemental Tongue,1,Races/Humans/Elasi/Elasi.md
-Material Plane,1,Races/Humans/Terran/Terran.md
-Terran Dialect,1,Races/Humans/Terran/Terran.md
-Libertum,1,Races/Solarans/Solaran.md
-Zariel,1,Races/Solarans/Velastri.md
 "High Forgemaster Elran, Circle of Flame",1,resources/Crystals/Sun Topaz.md
 "Forgemaster Loras, Keeper of the Core Flame",1,resources/Metals/Everburn Steel.md
 9b7d3d1b-9f8f-4f19-9593-54b7a1666a19-1.webp,1,settlements/Aeloria.md
@@ -73,8 +72,6 @@ Syuul,1,settlements/Solara.md
 Pasted image 20250419175154.png,1,settlements/Thundrakar.md
 2a6dc07c-2481-498a-96e7-b1cbae589bb1.png,1,settlements/Uftine.md
 Mokoweri#The Riverland's,1,settlements/Waterfall City.md
-Primal,1,technologies/Nature/Primal Magic.md
-Divine,1,technologies/Soul/Divine Magic.md
 Sentinel Orders,1,technologies/Uncategorized/Ab Solara.md
 Planar Connections – Ab Solara,1,technologies/Uncategorized/Ab Solara.md
 "DALL·E 2024-05-27 20.24.12 - A schematic style render of a small Solaran airship named 'The Radiant Dawn,' suitable for a crew of 10 persons max, in a broken and damaged state. Th 1.webp",1,technologies/Uncategorized/The Radiant Dawn.md

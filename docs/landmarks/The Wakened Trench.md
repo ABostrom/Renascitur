@@ -6,6 +6,8 @@ tags: []
 realm: [[Renascita]]
 nature: corrupted
 importance: minor
+aliases:
+- Wakened Trench
 ---
 ## Overview
 

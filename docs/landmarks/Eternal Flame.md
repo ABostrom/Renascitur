@@ -6,6 +6,10 @@ realm: [[Renascita]]
 controlled_by: [[The Flamebound of Magnus' Rest]]
 nature: corrupted
 importance: minor
+continent: [[Pyrosia]]
+inside: [[Magnus' Rest]]
+aliases:
+- the Eternal Flame
 ---
 > *"It is not a fire. It is a promise made by gods, kept by [[Dwarf|dwarves]]."*  
 > — [[Maerra Vulkess]], High Devout of the [[Watch of the Dying Flame]]
