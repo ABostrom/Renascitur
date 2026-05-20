@@ -4,7 +4,7 @@ aliases:
 type: faction
 status: draft
 tags: []
-realm: [[Renascita]]
+realm: "[[Renascita]]"
 kind: cult
 nature: mortal
 importance: notable
@@ -16,10 +16,10 @@ seat: ''
 size: ''
 allies: []
 rivals:
-- [[Firebrand Empire]]
+- "[[Firebrand Empire]]"
 magic: []
 leadership: []
-era_founded: [[Age of Stagnation]]
+era_founded: "[[Age of Stagnation]]"
 ---
 Symbol: שקש๔
 

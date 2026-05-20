@@ -6,20 +6,22 @@ aliases:
 - Trelib
 type: character
 status: draft
-realm: [[Renascita]]
-affiliation: [[Firebrand Empire]]
+realm: "[[Renascita]]"
+affiliation: "[[Firebrand Empire]]"
 nature: mortal
 importance: ''
 alignment: ''
 gender: male
-role: []
+role:
+- warrior
 magic: []
-living_status: ''
+living_status: living
 era_of_birth: ''
 era_of_death: ''
-race: [[Imperial Human]]
-culture: [[Firebrand Empire]]
-house: [[House Medani]]
+race: "[[Imperial Human]]"
+culture: "[[Firebrand Empire]]"
+house: "[[House Medani]]"
+location: "[[Lion's Rest]]"
 ---
 ## Affiliation
 - **House**: [[House Medani]]

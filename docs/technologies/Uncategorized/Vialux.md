@@ -2,7 +2,7 @@
 type: technology
 status: stub
 tags: []
-realm: [[Renascita]]
+realm: "[[Renascita]]"
 nature: ''
 importance: notable
 magic: []

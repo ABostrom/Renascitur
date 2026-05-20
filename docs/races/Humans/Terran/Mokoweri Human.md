@@ -8,15 +8,15 @@ tags:
 - tribal
 lineage: Humans
 origin_plane:
-- [[Renascita]]
+- "[[Renascita]]"
 aat-race-tier: variant
 spoken_language:
-- [[Imperial Common]]
-- [[Thraysian Common]]
-- [[Mokoweran]]
+- "[[Imperial Common]]"
+- "[[Thraysian Common]]"
+- "[[Mokoweran]]"
 type: race
 status: draft
-parent_race: [[Terran]]
+parent_race: "[[Terran]]"
 nature: mortal
 importance: notable
 lifespan: ''

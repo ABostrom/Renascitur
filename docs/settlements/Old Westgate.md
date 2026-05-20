@@ -6,8 +6,8 @@ tags:
 - location
 type: settlement
 status: draft
-continent: [[Pyrosia]]
-realm: [[Renascita]]
+continent: "[[Pyrosia]]"
+realm: "[[Renascita]]"
 importance: major
 population: ''
 climate: volcanic
@@ -15,9 +15,12 @@ terrain: mountains
 defenses: ''
 predominant_economy: ''
 size: ''
-controlled_by: ''
+controlled_by: "[[Firebrand Empire]]"
 populated_by: []
 era_founded: ''
+leadership:
+- "[[Tressa Vadalis]]"
+region: "[[Ember Peaks]]"
 ---
 ## Province
 - [[Ember Peaks]]

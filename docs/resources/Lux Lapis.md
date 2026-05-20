@@ -2,7 +2,7 @@
 type: resource
 status: stub
 tags: []
-realm: [[Renascita]]
+realm: "[[Renascita]]"
 category: Crystals
 importance: notable
 aliases:

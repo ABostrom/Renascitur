@@ -2,19 +2,21 @@
 type: character
 status: draft
 tags: []
-realm: [[Renascita]]
-affiliation: [[Firebrand Empire]]
+realm: "[[Renascita]]"
+affiliation: "[[Firebrand Empire]]"
 nature: mortal
 importance: ''
 alignment: ''
 gender: female
-role: []
+role:
+- craftsman
 magic: []
-living_status: ''
+living_status: living
 era_of_birth: ''
 era_of_death: ''
-race: [[Imperial Human]]
-culture: [[Firebrand Empire]]
+race: "[[Imperial Human]]"
+culture: "[[Firebrand Empire]]"
+location: "[[Lion's Rest]]"
 ---
 Breona is a formidable woman with broad shoulders and bulging muscles. She stands tall and proud, with a fierce glint in her eye that warns others not to underestimate her.
 

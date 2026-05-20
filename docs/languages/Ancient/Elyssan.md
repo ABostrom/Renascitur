@@ -6,14 +6,14 @@ tags:
 - solaran
 - root
 - ancient
-language_family: [[Solaran]]
+language_family: "[[Solaran]]"
 language_tier: root
 spoken_by:
-- [[Solaran]]
-- [[Arcanii]]
-- [[Ferrun]]
-- [[Celestar]]
-- [[Velastri]]
+- "[[Solaran]]"
+- "[[Arcanii]]"
+- "[[Ferrun]]"
+- "[[Celestar]]"
+- "[[Velastri]]"
 type: language
 status: draft
 kind: ancient

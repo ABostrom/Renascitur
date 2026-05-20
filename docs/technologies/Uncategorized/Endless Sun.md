@@ -2,7 +2,7 @@
 type: technology
 status: draft
 tags: []
-realm: [[Renascita]]
+realm: "[[Renascita]]"
 nature: ''
 importance: notable
 magic: []

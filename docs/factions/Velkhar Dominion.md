@@ -1,7 +1,7 @@
 ---
 type: faction
 status: draft
-realm: [[Renascita]]
+realm: "[[Renascita]]"
 tags: []
 nature: mortal
 importance: notable
@@ -9,18 +9,18 @@ alignment: lawful-evil
 society_form: imperial
 government: monarchy
 economy: ''
-seat: [[Calvereth]]
+seat: "[[Calvereth]]"
 size: regional
 allies: []
 rivals:
-- [[Thraysian Magocracy]]
+- "[[Thraysian Magocracy]]"
 magic:
-- [[Glyph Magic]]
+- "[[Glyph Magic]]"
 leadership:
-- [[Vaelira Lyrandar]]
+- "[[Vaelira Lyrandar]]"
 aliases:
 - Velkhar
-era_founded: [[Age of Stagnation]]
+era_founded: "[[Age of Stagnation]]"
 ---
 **Type**:: Sovereign Protectorate  
 **Capital**:: [[Calvereth]]  

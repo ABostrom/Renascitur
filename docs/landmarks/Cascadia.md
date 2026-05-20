@@ -1,10 +1,10 @@
 ---
 type: landmark
 status: stub
-continent: [[Pyrosia]]
+continent: "[[Pyrosia]]"
 tags: []
-realm: [[Renascita]]
-inside: [[Magnus' Rest]]
+realm: "[[Renascita]]"
+inside: "[[Magnus' Rest]]"
 nature: ''
 importance: minor
 ---

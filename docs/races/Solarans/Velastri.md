@@ -7,10 +7,10 @@ tags:
 - solarans
 - infernal
 lineage: Solarans
-origin_plane: [[Infernum]]
+origin_plane: "[[Infernum]]"
 aat-race-tier: distinct
 spoken_language:
-- [[Zytherin]]
+- "[[Zytherin]]"
 type: race
 status: draft
 nature: mortal

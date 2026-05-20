@@ -1,10 +1,10 @@
 ---
 type: region
 status: draft
-continent: [[Pyrosia]]
+continent: "[[Pyrosia]]"
 tags: []
-realm: [[Renascita]]
-region: [[Ashen Plains]]
+realm: "[[Renascita]]"
+region: "[[Ashen Plains]]"
 climate: volcanic
 terrain:
 - volcanic

@@ -2,8 +2,8 @@
 type: tradition
 status: draft
 tags: []
-realm: [[Renascita]]
-culture: [[The Icebound of Uftine]]
+realm: "[[Renascita]]"
+culture: "[[The Icebound of Uftine]]"
 nature: mortal
 importance: minor
 magic: []

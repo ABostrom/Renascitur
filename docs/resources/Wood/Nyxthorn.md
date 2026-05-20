@@ -2,7 +2,7 @@
 type: resource
 status: draft
 tags: []
-realm: [[Renascita]]
+realm: "[[Renascita]]"
 category: Wood
 nature: ''
 importance: minor

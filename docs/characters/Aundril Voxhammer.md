@@ -4,20 +4,22 @@ aliases:
 type: character
 status: draft
 tags: []
-realm: [[Renascita]]
-affiliation: [[The Stormbound of Thundrakar]]
+realm: "[[Renascita]]"
+affiliation: "[[The Stormbound of Thundrakar]]"
 nature: mortal
 importance: ''
 alignment: ''
 gender: female
-role: []
+role:
+- ruler
+- priest
 magic: []
 living_status: deceased
 era_of_birth: ''
 era_of_death: ''
-race: [[Dwarf]]
-culture: [[The Stormbound of Thundrakar]]
-location: [[Thundrakar]]
+race: "[[Dwarf]]"
+culture: "[[The Stormbound of Thundrakar]]"
+location: "[[Thundrakar]]"
 ---
 ## Title  
 **High Conductor of Thundrakar**  

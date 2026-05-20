@@ -1,9 +1,9 @@
 ---
 type: settlement
 status: draft
-continent: [[Qethusiyya]]
+continent: "[[Qethusiyya]]"
 tags: []
-realm: [[Renascita]]
+realm: "[[Renascita]]"
 importance: notable
 population: ''
 climate: arid
@@ -11,8 +11,10 @@ terrain: underground
 defenses: ''
 predominant_economy: mining
 size: ''
-controlled_by: ''
-populated_by: []
+controlled_by: "[[Ferrun]]"
+populated_by:
+- "[[Ferrun]]"
+- "[[Dwarf]]"
 era_founded: ''
 ---
 # Thelassia: The City of the Endless Flame

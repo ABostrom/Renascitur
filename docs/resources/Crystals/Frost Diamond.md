@@ -5,7 +5,7 @@ aliases:
 type: resource
 status: draft
 tags: []
-realm: [[Renascita]]
+realm: "[[Renascita]]"
 category: Crystals
 nature: ''
 importance: minor

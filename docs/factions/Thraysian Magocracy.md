@@ -1,7 +1,7 @@
 ---
 type: faction
 status: draft
-realm: [[Renascita]]
+realm: "[[Renascita]]"
 tags: []
 nature: mortal
 importance: notable
@@ -9,22 +9,22 @@ alignment: neutral
 society_form: magocratic
 government: magocratic-council
 economy: magical
-seat: [[Eltabarr]]
+seat: "[[Eltabarr]]"
 size: regional
 allies: []
 rivals: []
 magic:
-- [[Arcane]]
-- [[Arcanometry]]
-- [[Glyph Magic]]
+- "[[Arcane]]"
+- "[[Arcanometry]]"
+- "[[Glyph Magic]]"
 leadership:
-- [[Aelar Amakiir]]
-- [[Zariel Mephista]]
-- [[Farid al-Hakim]]
+- "[[Aelar Amakiir]]"
+- "[[Zariel Mephista]]"
+- "[[Farid al-Hakim]]"
 aliases:
 - Thraysian Magocracy
 - The Magocracy
-era_founded: [[Age of Stagnation]]
+era_founded: "[[Age of Stagnation]]"
 ---
 ### The Majlis of Arcane Sovereignty
 

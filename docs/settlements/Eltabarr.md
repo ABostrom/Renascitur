@@ -1,9 +1,9 @@
 ---
 type: settlement
 status: draft
-continent: [[Qethusiyya]]
+continent: "[[Qethusiyya]]"
 tags: []
-realm: [[Renascita]]
+realm: "[[Renascita]]"
 importance: major
 population: ''
 climate: arid
@@ -11,9 +11,13 @@ terrain: desert
 defenses: strongly-warded
 predominant_economy: mercantile
 size: ''
-controlled_by: ''
+controlled_by: "[[Thraysian Magocracy]]"
 populated_by: []
 era_founded: ''
+leadership:
+- "[[Aelar Amakiir]]"
+- "[[Zariel Mephista]]"
+- "[[Farid al-Hakim]]"
 ---
 In the heart of Thraysia lies Eltabarr, a city where the sands of time and the gears of progress turn in unison, weaving a tapestry of culture and innovation unrivaled in the known world. Governed by the esteemed Majlis of Arcane Sovereignty, this magocracy stands as a testament to the power of unity and the pursuit of knowledge.
 

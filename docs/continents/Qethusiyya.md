@@ -9,39 +9,39 @@ terrain:
 - scrublands
 - oases
 inhabited_by:
-- [[Ferrun]]
-- [[Arcanii]]
-- [[Thraysian Human]]
-- [[Rahalan]]
-- [[Velastri]]
+- "[[Ferrun]]"
+- "[[Arcanii]]"
+- "[[Thraysian Human]]"
+- "[[Rahalan]]"
+- "[[Velastri]]"
 provinces:
-- [[Al-Ramal]]
-- [[Kaldar]]
-- [[Khalgar]]
-- [[Shazir Coast]]
-- [[Thraysia]]
-- [[Vasir]]
-- [[Zakhmir]]
+- "[[Al-Ramal]]"
+- "[[Kaldar]]"
+- "[[Khalgar]]"
+- "[[Shazir Coast]]"
+- "[[Thraysia]]"
+- "[[Vasir]]"
+- "[[Zakhmir]]"
 cities:
-- [[Calvereth]]
-- [[Eltabarr]]
-- [[Solara]]
-- [[Thelassia]]
-- [[Zahirah]]
+- "[[Calvereth]]"
+- "[[Eltabarr]]"
+- "[[Solara]]"
+- "[[Thelassia]]"
+- "[[Zahirah]]"
 mountains:
-- [[Kaldar Range]]
-- [[Muzari Heights]]
-- [[Ravenspine Cliffs]]
-- [[Sulamir Escarpment]]
+- "[[Kaldar Range]]"
+- "[[Muzari Heights]]"
+- "[[Ravenspine Cliffs]]"
+- "[[Sulamir Escarpment]]"
 rivers:
-- [[Delta Iksandrun]]
-- [[River Muzahir]]
-- [[River Talinur]]
-- [[Razan Tributary]]
-- [[Sul Vahir]]
+- "[[Delta Iksandrun]]"
+- "[[River Muzahir]]"
+- "[[River Talinur]]"
+- "[[Razan Tributary]]"
+- "[[Sul Vahir]]"
 status: draft
 tags: []
-realm: [[Renascita]]
+realm: "[[Renascita]]"
 climate: ''
 dominant_culture: ''
 population_density: ''

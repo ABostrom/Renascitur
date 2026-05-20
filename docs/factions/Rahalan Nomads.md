@@ -1,7 +1,7 @@
 ---
 type: faction
 status: draft
-realm: [[Renascita]]
+realm: "[[Renascita]]"
 tags: []
 nature: mortal
 importance: notable
@@ -14,14 +14,14 @@ size: regional
 allies: []
 rivals: []
 magic:
-- [[Primal]]
-- [[Divine]]
+- "[[Primal]]"
+- "[[Divine]]"
 leadership: []
 aliases:
 - Rahalan
 - Rahalan Nomads
 - The Rahalan Nomads
-era_founded: [[Age of Forging]]
+era_founded: "[[Age of Forging]]"
 ---
 In the heart of the vast deserts surrounding the mystical city of Eltabarr lies the nomadic and enigmatic culture of the Rahalans. Governed by the principles of matriarchy and reverence for their elders, the Rahalans have cultivated a society deeply rooted in spiritual connections and a harmonious relationship with nature.
 

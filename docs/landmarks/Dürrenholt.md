@@ -3,11 +3,12 @@ aliases:
 - Wyrmholt
 type: landmark
 status: draft
-continent: [[Arcturia]]
+continent: "[[Arcturia]]"
 tags: []
-realm: [[Renascita]]
+realm: "[[Renascita]]"
 nature: divine
 importance: minor
+controlled_by: "[[Grundthain]]"
 ---
 aliases:  [[Dürrenholt]] / [[Dürrenholt|Wyrmholt]]
 ## The [[Grundthain]] World Tree – The Tree of Power  

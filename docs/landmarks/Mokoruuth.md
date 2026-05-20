@@ -1,11 +1,12 @@
 ---
 type: landmark
 status: draft
-continent: [[Mokoweri]]
+continent: "[[Mokoweri]]"
 tags: []
-realm: [[Renascita]]
+realm: "[[Renascita]]"
 nature: aberrant
 importance: minor
+controlled_by: "[[Saurian]]"
 ---
 - **Cultural Influence**: Named by the [[Solaran]]'s, whose pursuit of knowledge and enlightenment shaped their civilization.
 - **Meaning**:

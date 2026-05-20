@@ -4,7 +4,7 @@ aliases:
 - Psychic Schism
 type: event
 status: draft
-era: [[Age of Stagnation]]
+era: "[[Age of Stagnation]]"
 tags: []
 year_display: AS (undated)
 year: 0
@@ -12,6 +12,11 @@ importance: ''
 victors: []
 casualties: []
 outcome: ''
+participants:
+- "[[Leonin]]"
+- "[[Firebrand Empire]]"
+- "[[Aberrations]]"
+- "[[Ishna]]"
 ---
 After the psychic schism, great swathes of the population were killed. The world reacted in utter terror at the devastation and destruction of civilization as they knew it. 
 

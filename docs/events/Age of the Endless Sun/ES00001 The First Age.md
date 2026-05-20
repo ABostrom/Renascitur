@@ -6,7 +6,7 @@ timelines:
 - first-age
 type: event
 status: draft
-era: [[Age of the Endless Sun]]
+era: "[[Age of the Endless Sun]]"
 tags: []
 aliases:
 - The First Age
@@ -16,6 +16,11 @@ importance: ''
 victors: []
 casualties: []
 outcome: ''
+participants:
+- "[[Solaran]]"
+- "[[Aeternum]]"
+- "[[Ishna]]"
+- "[[Syuul, The Devourer]]"
 ---
 The First Age spans the rise and fall of [[Solara]] — from the divine shaping of the world by the [[Aeternum]], to the expansion of the [[Solaran|Solarans]] across the stars, and ending with the collapse of the Endless Sun and the imprisonment of [[Syuul, The Devourer|Lord Syuul]]. 
 

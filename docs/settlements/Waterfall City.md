@@ -1,9 +1,9 @@
 ---
 type: settlement
 status: draft
-continent: [[Mokoweri]]
+continent: "[[Mokoweri]]"
 tags: []
-realm: [[Renascita]]
+realm: "[[Renascita]]"
 importance: notable
 population: ''
 climate: tropical
@@ -11,8 +11,9 @@ terrain: forest
 defenses: ''
 predominant_economy: ''
 size: ''
-controlled_by: ''
-populated_by: []
+controlled_by: "[[People of Mokoweri]]"
+populated_by:
+- "[[Mokoweri Human]]"
 era_founded: ''
 ---
 Waterfall City, nestled within the lush and vibrant [[docs/Realms/Renascita/Locations and Cities/Mokoweri/Mokoweri#The Riverland's|riverland's]] of [[Mokoweri]], stands as a testament to the resilience and ingenuity of the [[People of Mokoweri|Mokoweran]] people. It is a place where the natural beauty of the surrounding landscape intertwines with human craftsmanship, creating a harmonious blend of architecture and nature.

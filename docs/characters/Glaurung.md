@@ -2,16 +2,20 @@
 type: character
 status: stub
 tags: []
-realm: [[Renascita]]
+realm: "[[Renascita]]"
 nature: ''
 importance: ''
 alignment: ''
 gender: ''
-role: []
+role:
+- warrior
+- scholar
 magic: []
-living_status: ''
+living_status: living
 era_of_birth: ''
 era_of_death: ''
+affiliation: "[[People of Mokoweri]]"
+location: "[[Port Zyranzaru]]"
 ---
 # Glaurung - The Deceiver 
 Ancient Copper Dragon

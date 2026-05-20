@@ -6,20 +6,23 @@ aliases:
 - Breven
 type: character
 status: draft
-realm: [[Renascita]]
-affiliation: [[Firebrand Empire]]
+realm: "[[Renascita]]"
+affiliation: "[[Firebrand Empire]]"
 nature: mortal
 importance: ''
 alignment: ''
 gender: male
-role: []
+role:
+- warrior
+- ruler
 magic: []
-living_status: ''
+living_status: living
 era_of_birth: ''
 era_of_death: ''
-race: [[Imperial Human]]
-culture: [[Firebrand Empire]]
-house: [[House Deneith]]
+race: "[[Imperial Human]]"
+culture: "[[Firebrand Empire]]"
+house: "[[House Deneith]]"
+location: "[[Lion's Rest]]"
 ---
 ## Affiliation
 - **House**: [[House Deneith]]

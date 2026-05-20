@@ -1,9 +1,9 @@
 ---
 type: waterway
 status: stub
-continent: [[Qethusiyya]]
+continent: "[[Qethusiyya]]"
 tags: []
-realm: [[Renascita]]
+realm: "[[Renascita]]"
 nature: ''
 importance: minor
 ---

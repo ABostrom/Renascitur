@@ -3,8 +3,8 @@ type: essay
 status: stub
 tags: []
 topic: pantheon
-realm: [[Renascitur]]
-era: [[Age of Stagnation]]
+realm: "[[Renascitur]]"
+era: "[[Age of Stagnation]]"
 aliases:
 - Noxar
 - Noxar Pantheon

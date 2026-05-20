@@ -7,7 +7,7 @@ timelines:
 - innovation
 type: event
 status: draft
-era: [[Age of Forging]]
+era: "[[Age of Forging]]"
 tags: []
 aliases:
 - Invention of Arcanometry
@@ -17,5 +17,7 @@ importance: ''
 victors: []
 casualties: []
 outcome: ''
+participants:
+- "[[Vecna]]"
 ---
 [[Vecna]] formalizes the study of magic into a science. Arcanometry provides structured laws for spellcraft, creating magical frameworks without divine reliance. It begins as hope — and ends as hubris.

@@ -7,11 +7,12 @@ aliases:
 - Cannith Tower
 type: landmark
 status: draft
-continent: [[Pyrosia]]
-realm: [[Renascita]]
-inside: [[Magnus' Rest]]
+continent: "[[Pyrosia]]"
+realm: "[[Renascita]]"
+inside: "[[Magnus' Rest]]"
 nature: ''
 importance: minor
+controlled_by: "[[House Cannith]]"
 ---
 ## Associated House
 - [[House Cannith]]

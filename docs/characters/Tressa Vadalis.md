@@ -7,8 +7,8 @@ aliases:
 - Old Westgate Overseer
 type: character
 status: draft
-realm: [[Renascita]]
-affiliation: [[Firebrand Empire]]
+realm: "[[Renascita]]"
+affiliation: "[[Firebrand Empire]]"
 nature: mortal
 importance: ''
 alignment: ''
@@ -16,12 +16,13 @@ gender: ''
 role:
 - warrior
 magic: []
-living_status: ''
+living_status: living
 era_of_birth: ''
 era_of_death: ''
-race: [[Imperial Human]]
-culture: [[Firebrand Empire]]
-house: [[House Vadalis]]
+race: "[[Imperial Human]]"
+culture: "[[Firebrand Empire]]"
+house: "[[House Vadalis]]"
+location: "[[Old Westgate]]"
 ---
 ## Title
 - Overseer of [[Old Westgate]]

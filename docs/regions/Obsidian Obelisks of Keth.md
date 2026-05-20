@@ -1,10 +1,10 @@
 ---
 type: region
 status: draft
-continent: [[Qethusiyya]]
+continent: "[[Qethusiyya]]"
 tags: []
-realm: [[Renascita]]
-region: [[Al-Ramal]]
+realm: "[[Renascita]]"
+region: "[[Al-Ramal]]"
 climate: arid
 terrain:
 - forest

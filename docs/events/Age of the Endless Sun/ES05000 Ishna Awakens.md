@@ -6,7 +6,7 @@ timelines:
 - corruption
 type: event
 status: draft
-era: [[Age of the Endless Sun]]
+era: "[[Age of the Endless Sun]]"
 tags: []
 aliases:
 - Ishna Awakens
@@ -16,5 +16,7 @@ importance: ''
 victors: []
 casualties: []
 outcome: ''
+participants:
+- "[[Ishna]]"
 ---
 In the distant void, the force known as [[Ishna]] stirs — entropy, hunger, and madness take root. [[Entropy|Aberrant]] whispers begin to seep into the dreams of seers and sages.

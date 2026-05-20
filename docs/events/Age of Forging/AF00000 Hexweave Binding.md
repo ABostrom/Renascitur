@@ -1,7 +1,7 @@
 ---
 type: event
 status: stub
-era: [[Age of Forging]]
+era: "[[Age of Forging]]"
 tags: []
 aliases:
 - Hexweave Binding
@@ -11,4 +11,9 @@ importance: legendary
 victors: []
 casualties: []
 outcome: ''
+participants:
+- "[[Vecna]]"
+- "[[Ishna]]"
+- "[[Forgeborn]]"
+- "[[The God Hand]]"
 ---

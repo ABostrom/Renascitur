@@ -2,7 +2,7 @@
 type: faction
 status: stub
 tags: []
-realm: [[Renascita]]
+realm: "[[Renascita]]"
 nature: mortal
 importance: major
 alignment: lawful-neutral
@@ -12,16 +12,16 @@ economy: mining
 seat: ''
 size: continental
 allies:
-- [[Firebrand Empire]]
+- "[[Firebrand Empire]]"
 rivals: []
 magic:
-- [[Rune Magic]]
-- [[Forge Magic]]
+- "[[Rune Magic]]"
+- "[[Forge Magic]]"
 leadership: []
 aliases:
 - Dwarven Holds
 - The Dwarven Holds
-era_founded: [[Age of Forging]]
+era_founded: "[[Age of Forging]]"
 ---
 # Dwarven Holds
 

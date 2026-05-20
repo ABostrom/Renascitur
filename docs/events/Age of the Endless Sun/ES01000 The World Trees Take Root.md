@@ -6,7 +6,7 @@ timelines:
 - cosmology
 type: event
 status: draft
-era: [[Age of the Endless Sun]]
+era: "[[Age of the Endless Sun]]"
 tags: []
 aliases:
 - The World Trees Take Root
@@ -16,5 +16,14 @@ importance: ''
 victors: []
 casualties: []
 outcome: ''
+participants:
+- "[[Aelion]]"
+- "[[Tharamos]]"
+- "[[Sylara]]"
+- "[[Valtor]]"
+- "[[Solaran]]"
+- "[[Grundthain]]"
+- "[[Kyojin]]"
+- "[[Human]]"
 ---
 The great World Trees—such as [[Irasandra]]—emerge in sacred sites across the world. These ancient living conduits bind [[soul]], nature, and magic into one vast, interconnected lattice.

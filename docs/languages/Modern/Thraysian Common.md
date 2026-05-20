@@ -7,10 +7,10 @@ tags:
 - thraysian
 - dialect
 - magic
-language_family: [[Valeshi]]
+language_family: "[[Valeshi]]"
 language_tier: dialect
 spoken_by:
-- [[Thraysian Common]]
+- "[[Thraysian Common]]"
 type: language
 status: draft
 kind: modern

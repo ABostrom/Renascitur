@@ -2,7 +2,7 @@
 type: continent
 status: stub
 tags: []
-realm: [[Renascita]]
+realm: "[[Renascita]]"
 climate: ''
 dominant_culture: ''
 population_density: ''
@@ -12,9 +12,9 @@ terrain:
 - underwater caverns
 - abyssal trenches
 provinces:
-- [[Coral Reef Bay]]
-- [[Crystal Caverns]]
-- [[Leviathan's Trench]]
+- "[[Coral Reef Bay]]"
+- "[[Crystal Caverns]]"
+- "[[Leviathan's Trench]]"
 ---
 ![[Coral Reef Bay]]
 

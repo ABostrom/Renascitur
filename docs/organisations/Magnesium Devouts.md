@@ -2,8 +2,8 @@
 type: organisation
 status: draft
 tags: []
-realm: [[Renascita]]
-parent_faction: [[The Flamebound of Magnus' Rest]]
+realm: "[[Renascita]]"
+parent_faction: "[[The Flamebound of Magnus' Rest]]"
 nature: mortal
 importance: minor
 alignment: ''

@@ -6,7 +6,7 @@ timelines:
 - dwarf
 type: event
 status: draft
-era: [[Age of the Endless Sun]]
+era: "[[Age of the Endless Sun]]"
 tags: []
 aliases:
 - Muradin's Pilgrimage Begins
@@ -16,5 +16,8 @@ importance: ''
 victors: []
 casualties: []
 outcome: ''
+participants:
+- "[[Muradin]]"
+- "[[Grundthain]]"
 ---
 Sensing imbalance in [[Weave|the weave]] of the world, [[Muradin]] leaves his people to seek the elemental truths. His journey would reshape the fate of the [[Grundthain]] and echo across ages.

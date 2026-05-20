@@ -6,7 +6,7 @@ timelines:
 - second-age
 type: event
 status: draft
-era: [[Age of Forging]]
+era: "[[Age of Forging]]"
 tags: []
 aliases:
 - The Second Age
@@ -16,6 +16,17 @@ importance: ''
 victors: []
 casualties: []
 outcome: ''
+participants:
+- "[[Kyojin]]"
+- "[[Leonin]]"
+- "[[Orc]]"
+- "[[Muradin]]"
+- "[[Vecna]]"
+- "[[Ishna]]"
+- "[[Forgeborn]]"
+- "[[The God Hand]]"
+- "[[Typhon, The Archon of Death]]"
+- "[[Grundthain]]"
 ---
 ## Age of Twilight’s Convergence
 

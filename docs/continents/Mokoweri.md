@@ -8,32 +8,32 @@ terrain:
 - cloud forests
 - highland ridges
 inhabited_by:
-- [[Mokuun]]
-- [[Saurian]]
-- [[Mokoweri Human]]
+- "[[Mokuun]]"
+- "[[Saurian]]"
+- "[[Mokoweri Human]]"
 provinces:
-- [[Obsidian Peaks]]
-- [[Ruins of the Ancients]]
-- [[Canopy Height]]
-- [[Verdant Coast]]
-- [[Riverlands]]
+- "[[Obsidian Peaks]]"
+- "[[Ruins of the Ancients]]"
+- "[[Canopy Height]]"
+- "[[Verdant Coast]]"
+- "[[Riverlands]]"
 cities:
-- [[Aeloria]]
-- [[Port Zyranzaru]]
-- [[Waterfall City]]
+- "[[Aeloria]]"
+- "[[Port Zyranzaru]]"
+- "[[Waterfall City]]"
 mountains:
-- [[Obsidian Spine]]
-- [[Jal'korran Ridge]]
+- "[[Obsidian Spine]]"
+- "[[Jal'korran Ridge]]"
 - Temple Heights
 rivers:
-- [[Zyran River]]
-- [[Tir'Zal Tributary]]
-- [[Coatl's Vein]]
-- [[Mira'ko Stream]]
+- "[[Zyran River]]"
+- "[[Tir'Zal Tributary]]"
+- "[[Coatl's Vein]]"
+- "[[Mira'ko Stream]]"
 - River of Ancients
 status: draft
 tags: []
-realm: [[Renascita]]
+realm: "[[Renascita]]"
 climate: ''
 dominant_culture: ''
 population_density: ''

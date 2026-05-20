@@ -9,10 +9,11 @@ tags:
 - worldbeneath
 type: landmark
 status: draft
-continent: [[The World Beneath]]
-realm: [[Renascita]]
+continent: "[[The World Beneath]]"
+realm: "[[Renascita]]"
 nature: divine
 importance: minor
+controlled_by: "[[Weavers of Agony]]"
 ---
 # [[The Hollowed Warrens]]
 

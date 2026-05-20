@@ -6,12 +6,12 @@ tags:
 - language
 - grundthain
 - ancient
-language_family: [[Grundthain]]
+language_family: "[[Grundthain]]"
 language_tier: root
 spoken_by:
-- [[Grundthain]]
-- [[Varkuun]]
-- [[Dwarf|Dwarves]]
+- "[[Grundthain]]"
+- "[[Varkuun]]"
+- "[[Dwarf|Dwarves]]"
 type: language
 status: draft
 kind: ancient

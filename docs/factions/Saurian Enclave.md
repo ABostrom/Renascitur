@@ -2,31 +2,31 @@
 type: faction
 status: stub
 tags: []
-realm: [[Renascita]]
+realm: "[[Renascita]]"
 nature: bioengineered
 importance: major
 alignment: neutral-good
 society_form: theocratic
 government: theocracy
 economy: agrarian
-seat: [[Aeloria]]
+seat: "[[Aeloria]]"
 size: regional
 allies:
-- [[People of Mokoweri]]
+- "[[People of Mokoweri]]"
 rivals: []
 magic:
-- [[Primal]]
-- [[Divine]]
+- "[[Primal]]"
+- "[[Divine]]"
 leadership:
-- [[Elder Kirex]]
-- [[Elder Marn]]
-- [[Elder Sylthassi]]
-- [[Elder Thrasuun]]
-- [[Elder Vellara]]
+- "[[Elder Kirex]]"
+- "[[Elder Marn]]"
+- "[[Elder Sylthassi]]"
+- "[[Elder Thrasuun]]"
+- "[[Elder Vellara]]"
 aliases:
 - Saurian Enclave
 - The Saurian Enclave
-era_founded: [[Age of the Endless Sun]]
+era_founded: "[[Age of the Endless Sun]]"
 ---
 # Saurian Enclave
 

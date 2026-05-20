@@ -2,8 +2,8 @@
 type: organisation
 status: draft
 tags: []
-realm: [[Renascita]]
-parent_faction: [[The Icebound of Uftine]]
+realm: "[[Renascita]]"
+parent_faction: "[[The Icebound of Uftine]]"
 nature: mortal
 importance: minor
 alignment: ''

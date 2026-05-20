@@ -104,18 +104,19 @@ def _unescape_yaml_apos(inner: str) -> str:
     return inner.replace("''", "'")
 
 
-def _unquote_wikilinks(yaml_text: str) -> str:
-    """Post-process PyYAML output to unquote wikilink-only values.
+def _doublequote_wikilinks(yaml_text: str) -> str:
+    """Post-process PyYAML output to double-quote wikilink-only values.
 
-    Obsidian/Dataview requires unquoted wikilinks in frontmatter to be
-    auto-detected as Link objects (and thus appear in file.outlinks).
-    PyYAML defaults to single-quoting any string with brackets.
+    YAML requires wikilinks like [[Foo]] to be quoted; Obsidian/Dataview
+    correctly reads "[[Foo]]" as a Link object.
+    PyYAML defaults to single-quoting any string with brackets; we
+    normalise to double-quotes for consistency.
     """
     def _sub_single(m):
-        return m.group(1) + _unescape_yaml_apos(m.group(2)) + m.group(3)
+        return m.group(1) + '"' + _unescape_yaml_apos(m.group(2)) + '"' + m.group(3)
 
     def _sub_list(m):
-        return m.group(1) + _unescape_yaml_apos(m.group(2)) + m.group(3)
+        return m.group(1) + '"' + _unescape_yaml_apos(m.group(2)) + '"' + m.group(3)
 
     out = _WIKILINK_QUOTED_LINE_RE.sub(_sub_single, yaml_text)
     out = _WIKILINK_QUOTED_LIST_RE.sub(_sub_list, out)
@@ -138,8 +139,8 @@ def write_frontmatter(path: Path, metadata: Dict, body: str) -> None:
             allow_unicode=True,
             width=10**9,  # don't line-wrap long strings
         )
-        # Unquote pure-wikilink values so Obsidian recognises them as Links.
-        front = _unquote_wikilinks(front)
+        # Double-quote pure-wikilink values so Obsidian/Dataview parses them correctly.
+        front = _doublequote_wikilinks(front)
         # Ensure exactly one blank line between body and frontmatter.
         if not body.startswith("\n"):
             body = "\n" + body

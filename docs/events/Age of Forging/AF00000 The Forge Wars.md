@@ -1,7 +1,7 @@
 ---
 type: event
 status: stub
-era: [[Age of Forging]]
+era: "[[Age of Forging]]"
 tags: []
 aliases:
 - The Forge Wars
@@ -11,4 +11,11 @@ importance: legendary
 victors: []
 casualties: []
 outcome: ''
+participants:
+- "[[Vecna]]"
+- "[[Forgeborn]]"
+- "[[Ishna]]"
+- "[[The God Hand]]"
+- "[[Solaran]]"
+- "[[Grundthain]]"
 ---

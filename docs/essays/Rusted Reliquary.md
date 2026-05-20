@@ -2,7 +2,7 @@
 type: essay
 status: draft
 tags: []
-realm: [[Renascita]]
+realm: "[[Renascita]]"
 ---
 The obsidian tablet, standing nearly ten feet tall and polished to a mirror-like finish, is an artifact of immense historical and cultural significance to the [[Ferrun]] of Thelassia. Its surface is inscribed with glowing [[Solaran]] runes and intricate carvings, illuminated faintly by the energy that flows through the relic. The tablet tells a fragmented story of the [[Solaran|Solarans]]’ rise and fall, their descent into the world beneath, and the emergence of the Metal Elves.
 

@@ -8,7 +8,7 @@ timelines:
 - end
 type: event
 status: draft
-era: [[Age of Forging]]
+era: "[[Age of Forging]]"
 tags: []
 aliases:
 - Betrayal of Vecna
@@ -18,5 +18,8 @@ importance: legendary
 victors: []
 casualties: []
 outcome: ''
+participants:
+- "[[Vecna]]"
+- "[[Typhon, The Archon of Death]]"
 ---
 In his moment of triumph, [[Vecna]] is betrayed by **Kas**, now corrupted by the Blade of [[Typhon, The Archon of Death|Typhon]]. [[Vecna]] is slain, and Kas becomes the **first vampire**, ending the Age in shadow.

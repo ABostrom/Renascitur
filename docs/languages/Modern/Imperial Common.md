@@ -6,13 +6,13 @@ tags:
 - language
 - trade
 - common
-language_family: [[Valeshi]]
+language_family: "[[Valeshi]]"
 language_tier: derived
 spoken_by:
-- [[Imperial Human]]
-- [[Goliath]]
-- [[Imperial Orcs]]
-- [[Imperial Leonin]]
+- "[[Imperial Human]]"
+- "[[Goliath]]"
+- "[[Imperial Orcs]]"
+- "[[Imperial Leonin]]"
 type: language
 status: draft
 kind: modern

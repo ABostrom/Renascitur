@@ -6,7 +6,7 @@ timelines:
 - solaran
 type: event
 status: draft
-era: [[Age of the Endless Sun]]
+era: "[[Age of the Endless Sun]]"
 tags: []
 aliases:
 - The Solarans Reach the Stars
@@ -16,5 +16,7 @@ importance: ''
 victors: []
 casualties: []
 outcome: ''
+participants:
+- "[[Solaran]]"
 ---
 The [[Solaran|Solarans]] complete the [[Ab Solara]], allowing them to travel between worlds and map the leylines of the cosmos. Their golden age of celestial expansion begins.

@@ -7,11 +7,12 @@ aliases:
 - Journey's Home
 type: landmark
 status: draft
-continent: [[Pyrosia]]
-realm: [[Renascita]]
-inside: [[Port Ardere]]
+continent: "[[Pyrosia]]"
+realm: "[[Renascita]]"
+inside: "[[Port Ardere]]"
 nature: ''
 importance: minor
+controlled_by: "[[House Orien]]"
 ---
 ## Associated House
 - [[House Orien]]

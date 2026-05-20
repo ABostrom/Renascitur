@@ -6,10 +6,10 @@ tags:
 - language
 - orcish
 - derived
-language_family: [[Natsugen]]
+language_family: "[[Natsugen]]"
 language_tier: derived
 spoken_by:
-- [[Orc]]
+- "[[Orc]]"
 type: language
 status: draft
 kind: modern

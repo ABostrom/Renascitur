@@ -6,10 +6,10 @@ tags:
 - aberrant
 - corrupted
 lineage: Engineered
-origin_plane: [[Renascita]]
+origin_plane: "[[Renascita]]"
 aat-race-tier: aberrant
 spoken_language:
-- [[Denisovan]]
+- "[[Denisovan]]"
 type: race
 status: draft
 nature: aberrant

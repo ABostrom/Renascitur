@@ -2,8 +2,8 @@
 type: character
 status: draft
 tags: []
-realm: [[Renascita]]
-affiliation: [[Saurian Enclave]]
+realm: "[[Renascita]]"
+affiliation: "[[Saurian Enclave]]"
 nature: bioengineered
 importance: ''
 alignment: ''
@@ -12,12 +12,12 @@ role:
 - warrior
 - mentor
 magic: []
-living_status: ''
+living_status: living
 era_of_birth: ''
 era_of_death: ''
-race: [[Saurian]]
-culture: [[Saurian]]
-location: [[Aeloria]]
+race: "[[Saurian]]"
+culture: "[[Saurian]]"
+location: "[[Aeloria]]"
 ---
 ### Elder Kirex
 

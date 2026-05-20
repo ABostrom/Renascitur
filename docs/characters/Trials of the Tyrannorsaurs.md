@@ -2,8 +2,8 @@
 type: character
 status: draft
 tags: []
-realm: [[Renascita]]
-affiliation: [[People of Mokoweri]]
+realm: "[[Renascita]]"
+affiliation: "[[People of Mokoweri]]"
 nature: mortal
 importance: ''
 alignment: ''
@@ -11,11 +11,12 @@ gender: nonbinary
 role:
 - warrior
 magic: []
-living_status: ''
+living_status: living
 era_of_birth: ''
 era_of_death: ''
-race: [[Mokoweri Human]]
-culture: [[Mokoweri]]
+race: "[[Mokoweri Human]]"
+culture: "[[Mokoweri]]"
+location: "[[Mokoweri]]"
 ---
 "The [[Solaran|Solarans]] were guardians of wisdom and keepers of balance. They valued harmony between the natural world and the power they harnessed. Can you truly embody these ideals?"
 

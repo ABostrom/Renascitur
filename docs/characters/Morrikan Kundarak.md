@@ -6,8 +6,8 @@ aliases:
 - Morrikan
 type: character
 status: draft
-realm: [[Renascita]]
-affiliation: [[Firebrand Empire]]
+realm: "[[Renascita]]"
+affiliation: "[[Firebrand Empire]]"
 nature: mortal
 importance: ''
 alignment: ''
@@ -15,12 +15,13 @@ gender: ''
 role:
 - ruler
 magic: []
-living_status: ''
+living_status: living
 era_of_birth: ''
 era_of_death: ''
-race: [[Imperial Human]]
-culture: [[Firebrand Empire]]
-house: [[House Kundarak]]
+race: "[[Imperial Human]]"
+culture: "[[Firebrand Empire]]"
+house: "[[House Kundarak]]"
+location: "[[Lux Oescus]]"
 ---
 ## Affiliation
 - **House**: [[House Kundarak]]

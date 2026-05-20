@@ -7,7 +7,7 @@ timelines:
 - ishna
 type: event
 status: draft
-era: [[Age of Forging]]
+era: "[[Age of Forging]]"
 tags: []
 aliases:
 - Sealing of Ishna
@@ -17,5 +17,9 @@ importance: legendary
 victors: []
 casualties: []
 outcome: ''
+participants:
+- "[[Vecna]]"
+- "[[Ishna]]"
+- "[[Forgeborn]]"
 ---
 [[Vecna]] activates the **Hexweave Pylons**, sacrificing millions of souls across six planes and the mortal world to seal [[Ishna]] into a timeless void. It is the final act of [[the Forge Wars]].

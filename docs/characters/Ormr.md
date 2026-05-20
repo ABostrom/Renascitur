@@ -2,7 +2,7 @@
 type: character
 status: draft
 tags: []
-realm: [[Renascita]]
+realm: "[[Renascita]]"
 nature: mortal
 importance: ''
 alignment: ''
@@ -10,10 +10,12 @@ gender: ''
 role:
 - craftsman
 magic: []
-living_status: ''
+living_status: living
 era_of_birth: ''
 era_of_death: ''
-race: [[The Stormbound of Thundrakar]]
+race: "[[The Stormbound of Thundrakar]]"
+affiliation: "[[The Stormbound of Thundrakar]]"
+location: "[[Thundrakar]]"
 ---
 # Ormr - Thunder of the deep 
 Ancient Bronze Dragon

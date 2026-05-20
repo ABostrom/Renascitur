@@ -7,20 +7,23 @@ aliases:
 - Magnus' Rest Overseer
 type: character
 status: draft
-realm: [[Renascita]]
-affiliation: [[Firebrand Empire]]
+realm: "[[Renascita]]"
+affiliation: "[[Firebrand Empire]]"
 nature: mortal
 importance: ''
 alignment: ''
 gender: ''
-role: []
+role:
+- craftsman
+- ruler
 magic: []
-living_status: ''
+living_status: living
 era_of_birth: ''
 era_of_death: ''
-race: [[Imperial Human]]
-culture: [[Firebrand Empire]]
-house: [[House Cannith]]
+race: "[[Imperial Human]]"
+culture: "[[Firebrand Empire]]"
+house: "[[House Cannith]]"
+location: "[[Magnus' Rest]]"
 ---
 ## Title
 - Overseer of [[Magnus' Rest]]

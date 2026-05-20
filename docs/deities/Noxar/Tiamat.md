@@ -2,8 +2,8 @@
 type: deity
 status: draft
 tags: []
-pantheon: [[Noxar Gods]]
-era_of_emergence: [[Age of Stagnation]]
+pantheon: "[[Noxar Gods]]"
+era_of_emergence: "[[Age of Stagnation]]"
 nature: divine
 importance: major
 alignment: chaotic-neutral

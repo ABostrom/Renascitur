@@ -1,9 +1,9 @@
 ---
 type: settlement
 status: stub
-continent: [[Qethusiyya]]
+continent: "[[Qethusiyya]]"
 tags: []
-realm: [[Renascita]]
+realm: "[[Renascita]]"
 importance: notable
 population: ''
 climate: arid

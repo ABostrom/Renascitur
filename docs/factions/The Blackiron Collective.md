@@ -1,7 +1,7 @@
 ---
 type: faction
 status: stub
-realm: [[Renascita]]
+realm: "[[Renascita]]"
 tags: []
 nature: mortal
 importance: notable
@@ -15,11 +15,11 @@ allies: []
 rivals: []
 magic: []
 leadership:
-- [[Kael Durnith]]
+- "[[Kael Durnith]]"
 aliases:
 - Blackiron Collective
 - Blackiron
-era_founded: [[Age of Stagnation]]
+era_founded: "[[Age of Stagnation]]"
 ---
 ---
 

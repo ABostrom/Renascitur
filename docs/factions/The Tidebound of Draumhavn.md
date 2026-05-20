@@ -2,26 +2,26 @@
 type: faction
 status: draft
 tags: []
-realm: [[Renascita]]
-parent_faction: [[Dwarven Holds]]
+realm: "[[Renascita]]"
+parent_faction: "[[Dwarven Holds]]"
 nature: mortal
 importance: notable
 alignment: lawful-neutral
 society_form: martial
 government: monarchy
 economy: mercantile
-seat: [[Draumhavn]]
+seat: "[[Draumhavn]]"
 size: regional
 allies: []
 rivals: []
 magic:
-- [[Rune Magic]]
+- "[[Rune Magic]]"
 leadership:
-- [[Dagrin Thorne]]
+- "[[Dagrin Thorne]]"
 aliases:
 - Tidebound
 - Tidebound of Draumhavn
-era_founded: [[Age of Forging]]
+era_founded: "[[Age of Forging]]"
 ---
 The [[Dwarf|dwarves]] of [[Draumhavn]] are known as the **[[The Tidebound of Draumhavn]]**. They are not mountain-folk but sea-dwellers, their lives shaped by storm and salt. Rather than religion, they follow a **Creed**—a philosophy of survival, discipline, and bond.
 

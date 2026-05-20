@@ -6,7 +6,7 @@ timelines:
 - arcane-tech
 type: event
 status: draft
-era: [[Age of Forging]]
+era: "[[Age of Forging]]"
 tags: []
 aliases:
 - First Arcanometric Crystals Harvested
@@ -16,5 +16,8 @@ importance: ''
 victors: []
 casualties: []
 outcome: ''
+participants:
+- "[[Vecna]]"
+- "[[Solaran]]"
 ---
 Magically charged nodes in leylines are mined to create arcanometric crystals — physical vessels for storing, transferring, and amplifying magical energy. The world begins to industrialize magic.

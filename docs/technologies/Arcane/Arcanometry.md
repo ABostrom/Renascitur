@@ -7,11 +7,11 @@ tags:
 - arcanometry
 magic:
 - arcane
-- [[Arcane]]
-- [[Arcanometry]]
+- "[[Arcane]]"
+- "[[Arcanometry]]"
 type: technology
 status: draft
-realm: [[Renascita]]
+realm: "[[Renascita]]"
 discipline: Arcane
 nature: ''
 importance: notable

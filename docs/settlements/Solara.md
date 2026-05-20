@@ -1,9 +1,9 @@
 ---
 type: settlement
 status: draft
-continent: [[Qethusiyya]]
+continent: "[[Qethusiyya]]"
 tags: []
-realm: [[Renascita]]
+realm: "[[Renascita]]"
 importance: legendary
 population: ''
 climate: arid
@@ -11,8 +11,9 @@ terrain: ''
 defenses: ''
 predominant_economy: ''
 size: ''
-controlled_by: ''
-populated_by: []
+controlled_by: "[[Solaran]]"
+populated_by:
+- "[[Solaran]]"
 era_founded: ''
 ---
 *The Radiant Crown of the [[Solaran|Solarans]]*

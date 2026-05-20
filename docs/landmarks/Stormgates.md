@@ -1,11 +1,12 @@
 ---
 type: landmark
 status: stub
-continent: [[Draumhavn]]
+continent: "[[Draumhavn]]"
 tags: []
-realm: [[Renascita]]
+realm: "[[Renascita]]"
 nature: ''
 importance: minor
+controlled_by: "[[The Tidebound of Draumhavn]]"
 ---
 # Stormgates
 

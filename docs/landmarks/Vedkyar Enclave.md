@@ -7,11 +7,12 @@ aliases:
 - Vedkyar Enclave
 type: landmark
 status: draft
-continent: [[Pyrosia]]
-realm: [[Renascita]]
-inside: [[Lion's Rest]]
+continent: "[[Pyrosia]]"
+realm: "[[Renascita]]"
+inside: "[[Lion's Rest]]"
 nature: ''
 importance: minor
+controlled_by: "[[House Jorasco]]"
 ---
 ## Associated House
 - [[House Jorasco]]

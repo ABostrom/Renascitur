@@ -7,7 +7,7 @@ timelines:
 - solaran
 type: event
 status: draft
-era: [[Age of the Endless Sun]]
+era: "[[Age of the Endless Sun]]"
 tags: []
 aliases:
 - The Fall of the Endless Sun
@@ -17,5 +17,8 @@ importance: legendary
 victors: []
 casualties: []
 outcome: ''
+participants:
+- "[[Ishna]]"
+- "[[Solaran]]"
 ---
 The Endless Sun is corrupted by [[Ishna]]’s influence. What was meant to heal begins to unravel reality. Aberrant storms sweep across [[Solaran]] space. The age of collapse begins.

@@ -6,8 +6,8 @@ tags:
 - location
 type: settlement
 status: draft
-continent: [[Pyrosia]]
-realm: [[Renascita]]
+continent: "[[Pyrosia]]"
+realm: "[[Renascita]]"
 importance: notable
 population: ''
 climate: volcanic
@@ -15,9 +15,14 @@ terrain: plains
 defenses: fortified
 predominant_economy: military
 size: ''
-controlled_by: ''
-populated_by: []
+controlled_by: "[[Firebrand Empire]]"
+populated_by:
+- "[[Leonin]]"
+- "[[Human]]"
 era_founded: ''
+leadership:
+- "[[Kheros Medani]]"
+region: "[[Ashen Plains]]"
 ---
 ## Province
 - [[Ashen Plains]]

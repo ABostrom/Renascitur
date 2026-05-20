@@ -2,18 +2,20 @@
 type: character
 status: draft
 tags: []
-realm: [[Renascita]]
-affiliation: [[The Blackiron Collective]]
+realm: "[[Renascita]]"
+affiliation: "[[The Blackiron Collective]]"
 nature: forgeborn
 importance: ''
 alignment: ''
 gender: female
-role: []
+role:
+- warrior
 magic: []
-living_status: ''
+living_status: living
 era_of_birth: ''
 era_of_death: ''
-race: [[Forgeborn]]
+race: "[[Forgeborn]]"
+location: "[[Thelassia]]"
 ---
 ![[0744ebd3-db41-44bd-b9f9-592ee36a808b.webp]]
 

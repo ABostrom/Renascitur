@@ -2,7 +2,7 @@
 type: essay
 status: draft
 tags: []
-realm: [[Renascita]]
+realm: "[[Renascita]]"
 ---
 *Ancient Architects of Light, Harmony, and [[Weave|the Weave]]*
 

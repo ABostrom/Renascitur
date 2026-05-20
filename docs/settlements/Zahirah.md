@@ -1,9 +1,9 @@
 ---
 type: settlement
 status: draft
-continent: [[Qethusiyya]]
+continent: "[[Qethusiyya]]"
 tags: []
-realm: [[Renascita]]
+realm: "[[Renascita]]"
 importance: notable
 population: ''
 climate: arid
@@ -14,6 +14,7 @@ size: ''
 controlled_by: ''
 populated_by: []
 era_founded: ''
+region: "[[Vasir]]"
 ---
 Zahirah is the thriving heart of commerce in the [[Vasir]], nestled among fertile deltas and intersecting glyphroads. Known for its sprawling bazaar, floating canal markets, and colorful canvas awnings enchanted with protective runes, it is a melting pot of culture, trade, and low-tier enchantment.
 

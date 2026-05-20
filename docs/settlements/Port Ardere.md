@@ -6,8 +6,8 @@ tags:
 - location
 type: settlement
 status: draft
-continent: [[Pyrosia]]
-realm: [[Renascita]]
+continent: "[[Pyrosia]]"
+realm: "[[Renascita]]"
 importance: notable
 population: ''
 climate: volcanic
@@ -15,9 +15,12 @@ terrain: plains
 defenses: ''
 predominant_economy: ''
 size: ''
-controlled_by: ''
+controlled_by: "[[Firebrand Empire]]"
 populated_by: []
 era_founded: ''
+leadership:
+- "[[Brakka Orien]]"
+region: "[[Ashen Plains]]"
 ---
 ## Province
 - [[Ashen Plains]]

@@ -1,14 +1,14 @@
 ---
 aliases: []
 type: settlement
-continent: [[Arcturia]]
+continent: "[[Arcturia]]"
 leadership:
-- [[Gromdir Stillhand]]
+- "[[Gromdir Stillhand]]"
 status: draft
 tags: []
-realm: [[Renascita]]
-controlled_by: [[The Icebound of Uftine]]
-region: [[Calderian Mountains]]
+realm: "[[Renascita]]"
+controlled_by: "[[The Icebound of Uftine]]"
+region: "[[Calderian Mountains]]"
 size: ''
 populated_by: []
 era_founded: ''

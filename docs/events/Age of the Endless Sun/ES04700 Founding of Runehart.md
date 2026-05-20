@@ -6,7 +6,7 @@ timelines:
 - dwarf
 type: event
 status: draft
-era: [[Age of the Endless Sun]]
+era: "[[Age of the Endless Sun]]"
 tags: []
 aliases:
 - Founding of Runehart
@@ -16,5 +16,8 @@ importance: ''
 victors: []
 casualties: []
 outcome: ''
+participants:
+- "[[Muradin]]"
+- "[[Grundthain]]"
 ---
 [[Muradin]] returns with newfound power and wisdom, founding [[Runehart]] deep within the [[Calderian Peaks]]. Infused with elemental harmony and runic power, Runehart becomes a sanctuary of balance and creation.

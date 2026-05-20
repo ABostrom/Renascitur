@@ -2,8 +2,8 @@
 type: tradition
 status: draft
 tags: []
-realm: [[Renascita]]
-culture: [[The Stormbound of Thundrakar]]
+realm: "[[Renascita]]"
+culture: "[[The Stormbound of Thundrakar]]"
 nature: mortal
 importance: minor
 magic: []

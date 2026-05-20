@@ -1,12 +1,13 @@
 ---
 type: landmark
 status: stub
-continent: [[Arcturia]]
+continent: "[[Arcturia]]"
 tags: []
-realm: [[Renascita]]
-inside: [[Uftine]]
+realm: "[[Renascita]]"
+inside: "[[Uftine]]"
 nature: ''
 importance: minor
+controlled_by: "[[The Icebound of Uftine]]"
 ---
 # Crystalward Gate
 

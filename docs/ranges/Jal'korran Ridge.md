@@ -1,9 +1,9 @@
 ---
 type: range
 status: stub
-continent: [[Mokoweri]]
+continent: "[[Mokoweri]]"
 tags: []
-realm: [[Renascita]]
+realm: "[[Renascita]]"
 nature: ''
 importance: notable
 ---

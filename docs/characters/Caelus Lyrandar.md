@@ -7,20 +7,22 @@ aliases:
 - The Raining Bay Overseer
 type: character
 status: draft
-realm: [[Renascita]]
-affiliation: [[Firebrand Empire]]
+realm: "[[Renascita]]"
+affiliation: "[[Firebrand Empire]]"
 nature: mortal
 importance: ''
 alignment: ''
 gender: ''
-role: []
+role:
+- ruler
 magic: []
-living_status: ''
+living_status: living
 era_of_birth: ''
 era_of_death: ''
-race: [[Imperial Human]]
-culture: [[Firebrand Empire]]
-house: [[House Lyrandar]]
+race: "[[Imperial Human]]"
+culture: "[[Firebrand Empire]]"
+house: "[[House Lyrandar]]"
+location: "[[Raining Bay]]"
 ---
 ## Title
 - Overseer of [[The Raining Bay]]

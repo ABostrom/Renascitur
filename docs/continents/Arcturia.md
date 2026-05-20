@@ -6,27 +6,27 @@ terrain:
 - evergreen forests
 - frozen tundra
 inhabited_by:
-- [[Uftine Human]]
-- [[The Icebound of Uftine|Icebound Dwarves]]
+- "[[Uftine Human]]"
+- "[[The Icebound of Uftine|Icebound Dwarves]]"
 provinces:
-- [[Aurora Forest]]
-- [[Calderian Mountains]]
-- [[Frosthold Glacier]]
-- [[Misty Shores]]
+- "[[Aurora Forest]]"
+- "[[Calderian Mountains]]"
+- "[[Frosthold Glacier]]"
+- "[[Misty Shores]]"
 cities:
-- [[Uftine]]
-- [[Runehart]]
+- "[[Uftine]]"
+- "[[Runehart]]"
 mountains:
-- [[Calderian Peaks]]
-- [[Thornback Ridge]]
-- [[Wyrmspine Mountains]]
+- "[[Calderian Peaks]]"
+- "[[Thornback Ridge]]"
+- "[[Wyrmspine Mountains]]"
 rivers:
-- [[Tharic Runoff]]
-- [[Icevein River]]
-- [[Shadelake Tributary]]
+- "[[Tharic Runoff]]"
+- "[[Icevein River]]"
+- "[[Shadelake Tributary]]"
 status: draft
 tags: []
-realm: [[Renascita]]
+realm: "[[Renascita]]"
 climate: ''
 dominant_culture: ''
 population_density: ''

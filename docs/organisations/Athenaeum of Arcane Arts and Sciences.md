@@ -2,8 +2,8 @@
 type: organisation
 status: draft
 tags: []
-realm: [[Renascita]]
-parent_faction: [[Thraysian Magocracy]]
+realm: "[[Renascita]]"
+parent_faction: "[[Thraysian Magocracy]]"
 nature: mortal
 importance: minor
 alignment: ''

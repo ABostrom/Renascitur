@@ -1,11 +1,12 @@
 ---
 type: landmark
 status: draft
-continent: [[Pyrosia]]
+continent: "[[Pyrosia]]"
 tags: []
-realm: [[Renascita]]
+realm: "[[Renascita]]"
 nature: divine
 importance: minor
+controlled_by: "[[Kyojin]]"
 ---
 ---
 ---

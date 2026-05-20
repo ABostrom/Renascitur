@@ -4,8 +4,8 @@ aliases:
 type: tradition
 status: draft
 tags: []
-realm: [[Renascita]]
-culture: [[The Solaran Federation of Worlds]]
+realm: "[[Renascita]]"
+culture: "[[The Solaran Federation of Worlds]]"
 nature: mortal
 importance: minor
 magic: []

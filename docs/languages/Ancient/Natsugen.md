@@ -6,13 +6,13 @@ tags:
 - language
 - kyojin
 - ancient
-language_family: [[Kyojin]]
+language_family: "[[Kyojin]]"
 language_tier: root
 spoken_by:
-- [[Kyojin]]
-- [[Orc]]
-- [[Leonin]]
-- [[Mokoweri Human|Mokoweri Humans]]
+- "[[Kyojin]]"
+- "[[Orc]]"
+- "[[Leonin]]"
+- "[[Mokoweri Human|Mokoweri Humans]]"
 type: language
 status: draft
 kind: ancient

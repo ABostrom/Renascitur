@@ -7,11 +7,12 @@ aliases:
 - Korunda Gate
 type: landmark
 status: draft
-continent: [[Pyrosia]]
-realm: [[Renascita]]
-inside: [[Lux Oescus]]
+continent: "[[Pyrosia]]"
+realm: "[[Renascita]]"
+inside: "[[Lux Oescus]]"
 nature: ''
 importance: minor
+controlled_by: "[[House Kundarak]]"
 ---
 ## Associated House
 - [[House Kundarak]]

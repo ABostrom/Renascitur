@@ -6,7 +6,7 @@ timelines:
 - solaran
 type: event
 status: draft
-era: [[Age of the Endless Sun]]
+era: "[[Age of the Endless Sun]]"
 tags: []
 aliases:
 - Collapse of Solara
@@ -16,5 +16,8 @@ importance: legendary
 victors: []
 casualties: []
 outcome: ''
+participants:
+- "[[Solaran]]"
+- "[[Ishna]]"
 ---
 As [[Endless Sun]] breaks down, the [[Solaran]] empire fractures and burns. Cities vanish, stars go dark, and remnants of the empire are scattered across the cosmos. The Age of Wonder ends in silence and ruin.

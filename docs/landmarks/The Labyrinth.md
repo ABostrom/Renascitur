@@ -7,11 +7,12 @@ aliases:
 - The Labyrinth
 type: landmark
 status: draft
-continent: [[Pyrosia]]
-realm: [[Renascita]]
-inside: [[Lux Oescus]]
+continent: "[[Pyrosia]]"
+realm: "[[Renascita]]"
+inside: "[[Lux Oescus]]"
 nature: ''
 importance: minor
+controlled_by: "[[House Sivis]]"
 ---
 ## Associated House
 - [[House Sivis]]

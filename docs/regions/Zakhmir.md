@@ -1,9 +1,9 @@
 ---
 type: region
 status: draft
-continent: [[Qethusiyya]]
+continent: "[[Qethusiyya]]"
 tags: []
-realm: [[Renascita]]
+realm: "[[Renascita]]"
 climate: arid
 terrain: []
 dominant_culture: ''

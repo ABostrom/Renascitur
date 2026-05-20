@@ -2,7 +2,7 @@
 type: artifact
 status: draft
 tags: []
-realm: [[Renascita]]
+realm: "[[Renascita]]"
 nature: ''
 importance: notable
 current_bearer: ''

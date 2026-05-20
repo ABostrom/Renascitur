@@ -1,9 +1,9 @@
 ---
 type: settlement
 status: draft
-continent: [[Arcturia]]
+continent: "[[Arcturia]]"
 tags: []
-realm: [[Renascita]]
+realm: "[[Renascita]]"
 importance: legendary
 population: ''
 climate: arctic
@@ -11,9 +11,14 @@ terrain: mountains
 defenses: fortified
 predominant_economy: industrial
 size: ''
-controlled_by: ''
-populated_by: []
+controlled_by: "[[Grundthain]]"
+populated_by:
+- "[[Grundthain]]"
+- "[[Dwarf]]"
 era_founded: ''
+leadership:
+- "[[Muradin]]"
+region: "[[Calderian Peaks]]"
 ---
 ### **Runehart: The Lost Hold of [[Muradin]]**
 

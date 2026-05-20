@@ -2,27 +2,27 @@
 type: faction
 status: draft
 tags: []
-realm: [[Renascita]]
-parent_faction: [[Dwarven Holds]]
+realm: "[[Renascita]]"
+parent_faction: "[[Dwarven Holds]]"
 nature: mortal
 importance: notable
 alignment: lawful-neutral
 society_form: martial
 government: monarchy
 economy: mining
-seat: [[Magnus' Rest]]
+seat: "[[Magnus' Rest]]"
 size: regional
 allies: []
 rivals: []
 magic:
-- [[Rune Magic]]
-- [[Forge Magic]]
+- "[[Rune Magic]]"
+- "[[Forge Magic]]"
 leadership:
-- [[Volgrin Flameward]]
+- "[[Volgrin Flameward]]"
 aliases:
 - Flamebound
 - Flamebound of Magnus' Rest
-era_founded: [[Age of Forging]]
+era_founded: "[[Age of Forging]]"
 ---
 ## Cultural Themes – The [[The Flamebound of Magnus' Rest]] [[Dwarf|Dwarves]]
 

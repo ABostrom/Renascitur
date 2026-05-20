@@ -2,7 +2,7 @@
 type: character
 status: draft
 tags: []
-realm: [[Renascita]]
+realm: "[[Renascita]]"
 nature: mortal
 importance: ''
 alignment: ''
@@ -13,7 +13,9 @@ magic: []
 living_status: imprisoned
 era_of_birth: ''
 era_of_death: ''
-race: [[Solaran]]
+race: "[[Solaran]]"
+affiliation: "[[The Solaran Federation of Worlds]]"
+location: "[[Mokoweri]]"
 ---
 _Species_: Ancient Obsidian Dragon
 

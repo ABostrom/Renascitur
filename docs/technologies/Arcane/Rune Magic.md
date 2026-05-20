@@ -5,13 +5,13 @@ tags:
 - rune
 type: technology
 status: draft
-realm: [[Renascita]]
+realm: "[[Renascita]]"
 discipline: Arcane
 nature: ''
 importance: notable
 magic:
-- [[Arcane]]
-- [[Rune Magic]]
+- "[[Arcane]]"
+- "[[Rune Magic]]"
 aliases:
 - Forge Magic
 ---

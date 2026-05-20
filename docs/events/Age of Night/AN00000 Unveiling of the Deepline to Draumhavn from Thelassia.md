@@ -1,7 +1,7 @@
 ---
 type: event
 status: draft
-era: [[Age of Night]]
+era: "[[Age of Night]]"
 tags: []
 aliases:
 - Unveiling of the Deepline to Draumhavn from Thelassia
@@ -11,6 +11,10 @@ importance: ''
 victors: []
 casualties: []
 outcome: ''
+participants:
+- "[[Ferrun]]"
+- "[[Dwarf]]"
+- "[[Thelassia]]"
 ---
 ### _The Unveiling of the Deep Line_
 

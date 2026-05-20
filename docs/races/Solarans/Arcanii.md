@@ -7,12 +7,12 @@ tags:
 - solarans
 - arcane
 lineage: Solarans
-origin_plane: [[Renascita]]
+origin_plane: "[[Renascita]]"
 aat-race-tier: variant
 spoken_language:
-- [[Thraysian Common]]
-- [[Elyssan]]
-- [[Zytherin]]
+- "[[Thraysian Common]]"
+- "[[Elyssan]]"
+- "[[Zytherin]]"
 type: race
 status: draft
 nature: ''

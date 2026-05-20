@@ -6,10 +6,10 @@ tags:
 - elder
 - primal
 lineage: Kyojin
-origin_plane: [[Veltharyn]]
+origin_plane: "[[Veltharyn]]"
 aat-race-tier: elder
 spoken_language:
-- [[Natsugen]]
+- "[[Natsugen]]"
 type: race
 status: draft
 nature: mortal

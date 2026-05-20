@@ -1,9 +1,9 @@
 ---
 type: landmark
 status: draft
-continent: [[Draumhavn]]
+continent: "[[Draumhavn]]"
 tags: []
-realm: [[Renascita]]
+realm: "[[Renascita]]"
 nature: corrupted
 importance: minor
 aliases:

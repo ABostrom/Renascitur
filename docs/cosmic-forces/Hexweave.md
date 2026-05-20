@@ -2,7 +2,7 @@
 type: cosmic-force
 status: stub
 tags: []
-realm: [[Renascitur]]
+realm: "[[Renascitur]]"
 nature: eldritch
 importance: legendary
 alignment: ''

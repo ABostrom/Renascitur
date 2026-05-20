@@ -7,7 +7,7 @@ timelines:
 - corruption
 type: event
 status: draft
-era: [[Age of Forging]]
+era: "[[Age of Forging]]"
 tags: []
 aliases:
 - Kas Finds the Blade of Typhon
@@ -17,5 +17,8 @@ importance: ''
 victors: []
 casualties: []
 outcome: ''
+participants:
+- "[[Vecna]]"
+- "[[Typhon, The Archon of Death]]"
 ---
 Kas, once [[Vecna]]’s most loyal general, finds the **Blade of [[Typhon, The Archon of Death|Typhon]]** among the ruins. The cursed weapon whispers to him, eroding his loyalty and preparing him for betrayal.

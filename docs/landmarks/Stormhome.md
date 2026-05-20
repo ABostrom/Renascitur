@@ -7,11 +7,12 @@ aliases:
 - Stormhome
 type: landmark
 status: draft
-continent: [[Pyrosia]]
-realm: [[Renascita]]
-inside: [[Raining Bay]]
+continent: "[[Pyrosia]]"
+realm: "[[Renascita]]"
+inside: "[[Raining Bay]]"
 nature: ''
 importance: minor
+controlled_by: "[[House Lyrandar]]"
 ---
 ## Associated House
 - [[House Lyrandar]]

@@ -6,7 +6,7 @@ timelines:
 - elder-races
 type: event
 status: draft
-era: [[Age of the Endless Sun]]
+era: "[[Age of the Endless Sun]]"
 tags: []
 aliases:
 - Golden Age of Harmony
@@ -16,5 +16,11 @@ importance: ''
 victors: []
 casualties: []
 outcome: ''
+participants:
+- "[[Elder Races]]"
+- "[[Solaran]]"
+- "[[Grundthain]]"
+- "[[Kyojin]]"
+- "[[Human]]"
 ---
 The [[Elder Races]] flourish under the guidance of the Primal Forces. Peace, creation, and discovery define this long period of balance between mortal and divine.

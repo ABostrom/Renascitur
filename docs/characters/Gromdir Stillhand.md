@@ -4,8 +4,8 @@ aliases:
 type: character
 status: draft
 tags: []
-realm: [[Renascita]]
-affiliation: [[The Icebound of Uftine]]
+realm: "[[Renascita]]"
+affiliation: "[[The Icebound of Uftine]]"
 nature: mortal
 importance: ''
 alignment: ''
@@ -14,12 +14,12 @@ role:
 - ruler
 - mentor
 magic: []
-living_status: ''
+living_status: living
 era_of_birth: ''
 era_of_death: ''
-race: [[Dwarf]]
-culture: [[The Icebound of Uftine]]
-location: [[Uftine]]
+race: "[[Dwarf]]"
+culture: "[[The Icebound of Uftine]]"
+location: "[[Uftine]]"
 ---
 ## Title: [[The Icebound of Uftine]] Thane of Uftine
 

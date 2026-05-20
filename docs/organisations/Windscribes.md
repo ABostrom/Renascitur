@@ -2,8 +2,8 @@
 type: organisation
 status: draft
 tags: []
-realm: [[Renascita]]
-parent_faction: [[The Stormbound of Thundrakar]]
+realm: "[[Renascita]]"
+parent_faction: "[[The Stormbound of Thundrakar]]"
 nature: mortal
 importance: minor
 alignment: ''

@@ -1,14 +1,14 @@
 ---
 aliases: null
 type: settlement
-continent: ''
+continent: "[[Draumhavn]]"
 leadership:
-- [[Aundril Voxhammer]]
+- "[[Aundril Voxhammer]]"
 status: draft
 kind: island
 tags: []
-realm: [[Renascita]]
-controlled_by: [[The Stormbound of Thundrakar]]
+realm: "[[Renascita]]"
+controlled_by: "[[The Stormbound of Thundrakar]]"
 region: ''
 size: ''
 populated_by: []

@@ -1,9 +1,9 @@
 ---
 type: region
 status: stub
-continent: [[Aquaria]]
+continent: "[[Aquaria]]"
 tags: []
-realm: [[Renascita]]
+realm: "[[Renascita]]"
 climate: aquatic
 terrain: []
 dominant_culture: ''

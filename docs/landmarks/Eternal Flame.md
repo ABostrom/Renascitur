@@ -2,12 +2,12 @@
 type: landmark
 status: draft
 tags: []
-realm: [[Renascita]]
-controlled_by: [[The Flamebound of Magnus' Rest]]
+realm: "[[Renascita]]"
+controlled_by: "[[The Flamebound of Magnus' Rest]]"
 nature: corrupted
 importance: minor
-continent: [[Pyrosia]]
-inside: [[Magnus' Rest]]
+continent: "[[Pyrosia]]"
+inside: "[[Magnus' Rest]]"
 aliases:
 - the Eternal Flame
 ---

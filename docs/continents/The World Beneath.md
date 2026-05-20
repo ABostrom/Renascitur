@@ -2,7 +2,7 @@
 type: continent
 status: stub
 tags: []
-realm: [[Renascita]]
+realm: "[[Renascita]]"
 climate: ''
 dominant_culture: ''
 population_density: ''
@@ -12,9 +12,9 @@ terrain:
 - fungal forests
 - obsidian plains
 inhabited_by:
-- [[Weavers of Agony]]
+- "[[Weavers of Agony]]"
 provinces:
-- [[The Hollowed Warrens]]
+- "[[The Hollowed Warrens]]"
 ---
 ---
 

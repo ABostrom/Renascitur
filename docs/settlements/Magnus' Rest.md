@@ -1,9 +1,9 @@
 ---
 type: settlement
 status: draft
-continent: [[Pyrosia]]
+continent: "[[Pyrosia]]"
 tags: []
-realm: [[Renascita]]
+realm: "[[Renascita]]"
 importance: notable
 population: ''
 climate: volcanic
@@ -11,9 +11,12 @@ terrain: plains
 defenses: walled
 predominant_economy: mining
 size: ''
-controlled_by: ''
-populated_by: []
+controlled_by: "[[Dwarf]]"
+populated_by:
+- "[[Dwarf]]"
+- "[[Human]]"
 era_founded: ''
+region: "[[Ashen Plains]]"
 ---
 > *"We held the gates for a thousand nights, and in that furnace, the future was forged."*  
 > — [[Volgrin Flameward]], First [[Pyrethane]] of [[Magnus' Rest]]

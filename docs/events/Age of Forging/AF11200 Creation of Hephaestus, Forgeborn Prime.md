@@ -7,7 +7,7 @@ timelines:
 - vecna
 type: event
 status: draft
-era: [[Age of Forging]]
+era: "[[Age of Forging]]"
 tags: []
 aliases:
 - Creation of Hephaestus, Forgeborn Prime
@@ -17,5 +17,9 @@ importance: ''
 victors: []
 casualties: []
 outcome: ''
+participants:
+- "[[Vecna]]"
+- "[[Hephaestus]]"
+- "[[Forgeborn]]"
 ---
 [[Vecna]] binds a [[soul]] into Nox Lapis — creating **[[Hephaestus]]**, the first of the [[Forgeborn]]. A soulless construct with unmatched strength and resilience. It is modeled on [[Vecna]]’s lost son.

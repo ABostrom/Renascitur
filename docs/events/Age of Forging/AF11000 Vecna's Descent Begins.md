@@ -7,7 +7,7 @@ timelines:
 - corruption
 type: event
 status: draft
-era: [[Age of Forging]]
+era: "[[Age of Forging]]"
 tags: []
 aliases:
 - Vecna's Descent Begins
@@ -17,5 +17,8 @@ importance: ''
 victors: []
 casualties: []
 outcome: ''
+participants:
+- "[[Vecna]]"
+- "[[Ishna]]"
 ---
 [[Vecna]] discovers [[Ishna]] is corrupting the [[soul]]-cycle. He becomes obsessed with creating incorruptible beings. Abandoning divine and arcane purity, he dives into necromancy and forbidden research.

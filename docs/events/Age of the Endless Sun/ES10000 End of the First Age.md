@@ -7,7 +7,7 @@ timelines:
 - corruption
 type: event
 status: draft
-era: [[Age of the Endless Sun]]
+era: "[[Age of the Endless Sun]]"
 tags: []
 aliases:
 - End of the First Age
@@ -17,5 +17,9 @@ importance: legendary
 victors: []
 casualties: []
 outcome: ''
+participants:
+- "[[Solaran]]"
+- "[[Syuul, The Devourer]]"
+- "[[Ishna]]"
 ---
 With [[Solara]] fallen, [[Syuul, The Devourer|Lord Syuul]] imprisoned, and the last echoes of the divine era fading, [[the First Age]] comes to a close. The stars dim, and a long silence settles across the world.

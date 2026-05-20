@@ -9,7 +9,7 @@ tags:
 - hobgoblin
 type: character
 status: draft
-realm: [[Renascita]]
+realm: "[[Renascita]]"
 nature: ''
 importance: ''
 alignment: ''
@@ -19,9 +19,10 @@ role:
 - warrior
 - prophet
 magic: []
-living_status: ''
+living_status: living
 era_of_birth: ''
 era_of_death: ''
+affiliation: "[[Weavers of Agony]]"
 ---
 ## [[Varkhaal Bloodlash|Varkhaal, the Broken-Jawed]]
 

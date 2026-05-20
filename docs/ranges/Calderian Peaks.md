@@ -1,9 +1,9 @@
 ---
 type: range
 status: stub
-continent: [[Arcturia]]
+continent: "[[Arcturia]]"
 tags: []
-realm: [[Renascita]]
+realm: "[[Renascita]]"
 nature: ''
 importance: notable
 ---

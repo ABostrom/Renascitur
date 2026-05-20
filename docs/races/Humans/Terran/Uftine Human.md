@@ -7,14 +7,14 @@ tags:
 - humans
 - hardy
 lineage: Humans
-origin_plane: [[Renascita]]
+origin_plane: "[[Renascita]]"
 aat-race-tier: variant
 spoken_language:
-- [[Imperial Common]]
-- [[Dwarven]]
+- "[[Imperial Common]]"
+- "[[Dwarven]]"
 type: race
 status: draft
-parent_race: [[Terran]]
+parent_race: "[[Terran]]"
 nature: mortal
 importance: notable
 lifespan: ''

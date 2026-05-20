@@ -7,9 +7,9 @@ tags:
 - grundthain
 - crafts
 lineage: Grundthains
-origin_plane: [[Thargrun]]
+origin_plane: "[[Thargrun]]"
 aat-race-tier: distinct
-spoken_language: [[Dwarven]]
+spoken_language: "[[Dwarven]]"
 type: race
 status: draft
 nature: mortal

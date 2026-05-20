@@ -2,16 +2,20 @@
 type: character
 status: draft
 tags: []
-realm: [[Renascita]]
+realm: "[[Renascita]]"
 nature: ''
 importance: ''
 alignment: ''
 gender: ''
-role: []
+role:
+- priest
 magic: []
-living_status: ''
+living_status: ascended
 era_of_birth: ''
 era_of_death: ''
+affiliation: "[[Firebrand Empire]]"
+race: "[[Leonin]]"
+location: "[[Lion's Rest]]"
 ---
 Here is the 5e stat block for an Efreeti, lightly reskinned to represent a celestial being, the Avatar of [[Unimus]]:
 

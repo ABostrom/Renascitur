@@ -1,9 +1,9 @@
 ---
 type: settlement
 status: draft
-continent: [[Mokoweri]]
+continent: "[[Mokoweri]]"
 tags: []
-realm: [[Renascita]]
+realm: "[[Renascita]]"
 importance: notable
 population: ''
 climate: tropical
@@ -11,8 +11,10 @@ terrain: coast
 defenses: walled
 predominant_economy: mercantile
 size: ''
-controlled_by: ''
-populated_by: []
+controlled_by: "[[People of Mokoweri]]"
+populated_by:
+- "[[Mokoweri Human]]"
+- "[[Saurian]]"
 era_founded: ''
 ---
 Port Zyranzaru is the largest and most important city in [[Mokoweri]]. It is located on the coast, with easy access to the sea and other nearby islands. The city is a bustling hub of activity, with traders, merchants, and sailors from all over the world coming to do business.

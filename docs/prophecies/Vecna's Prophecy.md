@@ -2,7 +2,7 @@
 type: prophecy
 status: draft
 tags: []
-realm: [[Renascita]]
+realm: "[[Renascita]]"
 importance: notable
 alignment: ''
 ---

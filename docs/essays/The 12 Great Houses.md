@@ -2,7 +2,7 @@
 type: essay
 status: draft
 tags: []
-realm: [[Renascita]]
+realm: "[[Renascita]]"
 aliases:
 - The 12 Great Houses
 - 12 Great Houses
