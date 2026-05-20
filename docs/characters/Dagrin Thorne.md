@@ -17,6 +17,7 @@ era_of_death: ''
 race: "[[Dwarf]]"
 culture: "[[The Tidebound of Draumhavn]]"
 location: "[[Draumhavn]]"
+continent: "[[Draumhavn Isle]]"
 ---
 # Dagrin Thorne
 
@@ -24,4 +25,4 @@ location: "[[Draumhavn]]"
 **High Tide Admiral of Draumhavn**
 
 ## Overview
-Dagrin Thorne is the current commander and de facto ruler of Draumhavn...
+Dagrin Thorne is the current commander an

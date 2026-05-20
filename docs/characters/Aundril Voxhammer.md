@@ -1,25 +1,26 @@
 ---
 aliases:
-- High Conductor
+  - High Conductor
 type: character
 status: draft
 tags: []
 realm: "[[Renascita]]"
 affiliation: "[[The Stormbound of Thundrakar]]"
 nature: mortal
-importance: ''
-alignment: ''
+importance: ""
+alignment: ""
 gender: female
 role:
-- ruler
-- priest
+  - ruler
+  - priest
 magic: []
-living_status: deceased
-era_of_birth: ''
-era_of_death: ''
+living_status: living
+era_of_birth: ""
+era_of_death: ""
 race: "[[Dwarf]]"
 culture: "[[The Stormbound of Thundrakar]]"
 location: "[[Thundrakar]]"
+continent: "[[Stormspire Isle]]"
 ---
 ## Title  
 **High Conductor of Thundrakar**  
@@ -50,4 +51,4 @@ Some say she communes with the lightning atop the [[Stormspire]] during moonless
 ## Legacy  
 Though still in her prime, Aundril is already seen by many as the most attuned High Conductor in centuries. Some Windscribes believe she is preparing Thundrakar for a coming reckoning — one only she can hear.
 
-> “When the thunder calls your name, do not answer in fear. Answer in harmony.”
+> “When the thunder calls your name, do not a
