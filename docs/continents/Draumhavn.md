@@ -22,8 +22,7 @@ terrain:
 inhabited_by:
 - "[[The Tidebound of Draumhavn|Tidebound Dwarves]]"
 - "[[The Stormbound of Thundrakar|Stormbound Dwarves]]"
-cities:
-- "[[Thundrakar]]"
+cities: []
 provinces:
 - "[[Salt Cradle]]"
 - "[[Stormgates]]"

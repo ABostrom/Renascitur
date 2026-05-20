@@ -1,7 +1,7 @@
 ---
 aliases: null
 type: settlement
-continent: "[[Draumhavn]]"
+continent: "[[Stormspire Isle]]"
 leadership:
 - "[[Aundril Voxhammer]]"
 status: draft

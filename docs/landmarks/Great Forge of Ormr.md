@@ -1,7 +1,7 @@
 ---
 type: landmark
 status: draft
-continent: "[[Thundrakar]]"
+continent: "[[Stormspire Isle]]"
 tags: []
 realm: "[[Renascita]]"
 nature: divine
