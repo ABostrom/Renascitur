@@ -1,0 +1,524 @@
+relpath,size_bytes,has_frontmatter,current_type,inferred_type,inferred_status,inferred_extras,matched_rule
+_meta/Conventions.md,2223,yes,essay,SKIP,canon,{},^_meta/.*\.md$
+Cosmology/Cosmic Functions/Chaor.md,878,no,,cosmic-force,draft,{},^Cosmology/Cosmic Functions/.*\.md$
+Cosmology/Cosmic Functions/Concorda.md,170,no,,cosmic-force,stub,{},^Cosmology/Cosmic Functions/.*\.md$
+Cosmology/Cosmic Functions/Cosmic Construction.md,348,no,,cosmic-force,draft,{},^Cosmology/Cosmic Functions/.*\.md$
+Cosmology/Cosmic Functions/Entropy.md,1536,yes,,cosmic-force,draft,{},^Cosmology/Cosmic Functions/.*\.md$
+Cosmology/Cosmic Functions/Luxar.md,1054,no,,cosmic-force,draft,{},^Cosmology/Cosmic Functions/.*\.md$
+Cosmology/Cosmic Functions/Noxar.md,966,no,,cosmic-force,draft,{},^Cosmology/Cosmic Functions/.*\.md$
+Cosmology/Cosmic Functions/Ordar.md,947,no,,cosmic-force,draft,{},^Cosmology/Cosmic Functions/.*\.md$
+Cosmology/Cosmic Functions/Specular.md,193,no,,cosmic-force,stub,{},^Cosmology/Cosmic Functions/.*\.md$
+Cosmology/Cosmic Functions/Weave.md,1939,yes,,cosmic-force,draft,{},^Cosmology/Cosmic Functions/.*\.md$
+Cosmology/Creation/Aeternum/Aelion.md,2254,no,,essay,draft,{},^Cosmology/Creation/.*\.md$
+Cosmology/Creation/Aeternum/Aeternum.md,4767,yes,,essay,draft,{},^Cosmology/Creation/.*\.md$
+Cosmology/Creation/Aeternum/Aetherglyphs.md,2676,no,,essay,draft,{},^Cosmology/Creation/.*\.md$
+Cosmology/Creation/Aeternum/Elder Races.md,5782,no,,essay,draft,{},^Cosmology/Creation/.*\.md$
+Cosmology/Creation/Aeternum/Sylara.md,1777,no,,essay,draft,{},^Cosmology/Creation/.*\.md$
+Cosmology/Creation/Aeternum/Tharamos.md,2199,yes,,essay,draft,{},^Cosmology/Creation/.*\.md$
+Cosmology/Creation/Aeternum/Valtor.md,1361,yes,,essay,draft,{},^Cosmology/Creation/.*\.md$
+Cosmology/Creation/Corruption/Aberrations.md,0,no,,cosmic-force,stub,{},^Cosmology/Creation/Corruption/.*\.md$
+Cosmology/Creation/Corruption/Ishna.md,151,yes,,cosmic-force,stub,{},^Cosmology/Creation/Corruption/.*\.md$
+Cosmology/Creation/Corruption/Quintumvirate.md,371,yes,,cosmic-force,draft,{},^Cosmology/Creation/Corruption/.*\.md$
+"Cosmology/Creation/Corruption/The God Hand/Arachnie, The Matriarch of Pain.md",34,no,,cosmic-force,stub,{},^Cosmology/Creation/Corruption/.*\.md$
+"Cosmology/Creation/Corruption/The God Hand/Cronus, The Endless.md",22,no,,cosmic-force,stub,{},^Cosmology/Creation/Corruption/.*\.md$
+"Cosmology/Creation/Corruption/The God Hand/Hyperion, The Fallen.md",27,no,,cosmic-force,stub,{},^Cosmology/Creation/Corruption/.*\.md$
+"Cosmology/Creation/Corruption/The God Hand/Syuul, The Devourer.md",8387,yes,,cosmic-force,draft,{},^Cosmology/Creation/Corruption/.*\.md$
+"Cosmology/Creation/Corruption/The God Hand/Tau, Sin Manifest.md",57,no,,cosmic-force,stub,{},^Cosmology/Creation/Corruption/.*\.md$
+"Cosmology/Creation/Corruption/The God Hand/Typhon, The Archon of Death.md",58,yes,,cosmic-force,stub,{},^Cosmology/Creation/Corruption/.*\.md$
+Cosmology/Creation/Creation Story.md,5563,no,,essay,draft,{},^Cosmology/Creation/.*\.md$
+Cosmology/Creation/Luminis.md,1068,no,,essay,draft,{},^Cosmology/Creation/.*\.md$
+Cosmology/Creation/Machinery of Death.md,3081,yes,,essay,draft,{},^Cosmology/Creation/.*\.md$
+Cosmology/Creation/Souls/Divine Soul.md,364,no,,essay,draft,{},^Cosmology/Creation/.*\.md$
+Cosmology/Creation/Souls/Soul.md,19,no,,essay,stub,{},^Cosmology/Creation/.*\.md$
+Cosmology/Elementals/Leviathan.md,0,no,,deity,stub,{},^Cosmology/Elementals/.*\.md$
+Cosmology/Elementals/Phenos.md,0,no,,deity,stub,{},^Cosmology/Elementals/.*\.md$
+Cosmology/Elementals/Tempus.md,0,no,,deity,stub,{},^Cosmology/Elementals/.*\.md$
+Cosmology/Elementals/Zaratan.md,1,no,,deity,stub,{},^Cosmology/Elementals/.*\.md$
+Cosmology/Gods/Second Age/Muradin.md,5490,no,,deity,draft,{},^Cosmology/Gods/.*\.md$
+Cosmology/Gods/Second Age/The Last War.md,5700,no,,deity,draft,{},^Cosmology/Gods/.*\.md$
+Cosmology/Gods/Third Age/Luxar Gods/Aubrek.md,436,no,,deity,draft,{},^Cosmology/Gods/.*\.md$
+Cosmology/Gods/Third Age/Luxar Gods/Bahamut.md,425,no,,deity,draft,{},^Cosmology/Gods/.*\.md$
+Cosmology/Gods/Third Age/Luxar Gods/Dorian.md,1646,no,,deity,draft,{},^Cosmology/Gods/.*\.md$
+Cosmology/Gods/Third Age/Luxar Gods/Fernando.md,430,no,,deity,draft,{},^Cosmology/Gods/.*\.md$
+Cosmology/Gods/Third Age/Luxar Gods/Irasandra.md,53,no,,deity,stub,{},^Cosmology/Gods/.*\.md$
+Cosmology/Gods/Third Age/Luxar Gods/Magnus.md,462,no,,deity,draft,{},^Cosmology/Gods/.*\.md$
+Cosmology/Gods/Third Age/Luxar Gods/Sune.md,462,no,,deity,draft,{},^Cosmology/Gods/.*\.md$
+Cosmology/Gods/Third Age/Luxar Gods/Unimus.md,520,no,,deity,draft,{},^Cosmology/Gods/.*\.md$
+Cosmology/Gods/Third Age/Noxar Gods/Bael.md,288,no,,deity,draft,{},^Cosmology/Gods/.*\.md$
+Cosmology/Gods/Third Age/Noxar Gods/Isolde.md,290,no,,deity,draft,{},^Cosmology/Gods/.*\.md$
+Cosmology/Gods/Third Age/Noxar Gods/Lillith.md,236,no,,deity,draft,{},^Cosmology/Gods/.*\.md$
+Cosmology/Gods/Third Age/Noxar Gods/Moloch.md,261,no,,deity,draft,{},^Cosmology/Gods/.*\.md$
+Cosmology/Gods/Third Age/Noxar Gods/Morbus.md,248,no,,deity,draft,{},^Cosmology/Gods/.*\.md$
+Cosmology/Gods/Third Age/Noxar Gods/Saul.md,326,no,,deity,draft,{},^Cosmology/Gods/.*\.md$
+Cosmology/Gods/Third Age/Noxar Gods/Tiamat.md,243,no,,deity,draft,{},^Cosmology/Gods/.*\.md$
+Cosmology/Gods/Third Age/Noxar Gods/Vecna.md,1810,no,,deity,draft,{},^Cosmology/Gods/.*\.md$
+Cosmology/Gods/Third Age/Pantheon Of Luxar.md,119,no,,deity,stub,{},^Cosmology/Gods/.*\.md$
+Cosmology/Gods/Third Age/Pantheon Of Noxar.md,111,no,,deity,stub,{},^Cosmology/Gods/.*\.md$
+History/First Age/Collapse of Solara.md,307,yes,,event,draft,"{""era"": ""[[Age of the Endless Sun]]""}",^History/[^/]+/[^/]+\.md$
+History/First Age/Creation of Lord Syuul.md,313,yes,,event,draft,"{""era"": ""[[Age of the Endless Sun]]""}",^History/[^/]+/[^/]+\.md$
+History/First Age/Creation of the World.md,299,yes,,event,draft,"{""era"": ""[[Age of the Endless Sun]]""}",^History/[^/]+/[^/]+\.md$
+History/First Age/End of the First Age.md,321,yes,,event,draft,"{""era"": ""[[Age of the Endless Sun]]""}",^History/[^/]+/[^/]+\.md$
+History/First Age/Founding of Runehart.md,309,yes,,event,draft,"{""era"": ""[[Age of the Endless Sun]]""}",^History/[^/]+/[^/]+\.md$
+History/First Age/Golden Age of Harmony.md,259,yes,,event,draft,"{""era"": ""[[Age of the Endless Sun]]""}",^History/[^/]+/[^/]+\.md$
+History/First Age/Imprisonment of Lord Syuul.md,347,yes,,event,draft,"{""era"": ""[[Age of the Endless Sun]]""}",^History/[^/]+/[^/]+\.md$
+History/First Age/Ishna Awakens.md,276,yes,,event,draft,"{""era"": ""[[Age of the Endless Sun]]""}",^History/[^/]+/[^/]+\.md$
+History/First Age/Ishna Corrupts Mortals.md,284,yes,,event,draft,"{""era"": ""[[Age of the Endless Sun]]""}",^History/[^/]+/[^/]+\.md$
+History/First Age/Muradin's Communion with the Elements.md,276,yes,,event,draft,"{""era"": ""[[Age of the Endless Sun]]""}",^History/[^/]+/[^/]+\.md$
+History/First Age/Muradin’s Pilgrimage Begins.md,290,yes,,event,draft,"{""era"": ""[[Age of the Endless Sun]]""}",^History/[^/]+/[^/]+\.md$
+History/First Age/Solaran Research of the World Trees.md,298,yes,,event,draft,"{""era"": ""[[Age of the Endless Sun]]""}",^History/[^/]+/[^/]+\.md$
+History/First Age/The Elder Races Are Blessed.md,343,yes,,event,draft,"{""era"": ""[[Age of the Endless Sun]]""}",^History/[^/]+/[^/]+\.md$
+History/First Age/The Endless Sun Is Constructed.md,333,yes,,event,draft,"{""era"": ""[[Age of the Endless Sun]]""}",^History/[^/]+/[^/]+\.md$
+History/First Age/The Fall of the Endless Sun.md,296,yes,,event,draft,"{""era"": ""[[Age of the Endless Sun]]""}",^History/[^/]+/[^/]+\.md$
+History/First Age/The First Age.md,867,yes,,event,draft,"{""era"": ""[[Age of the Endless Sun]]""}",^History/[^/]+/[^/]+\.md$
+History/First Age/The Solarans Reach the Stars.md,274,yes,,event,draft,"{""era"": ""[[Age of the Endless Sun]]""}",^History/[^/]+/[^/]+\.md$
+History/First Age/The World Trees Take Root.md,291,yes,,event,draft,"{""era"": ""[[Age of the Endless Sun]]""}",^History/[^/]+/[^/]+\.md$
+History/Fourth Age/Night War.md,92,no,,event,stub,"{""era"": ""[[Age of Night]]""}",^History/[^/]+/[^/]+\.md$
+History/Fourth Age/Unveiling of the Deepline to Draumhavn from Thelassia.md,13605,no,,event,draft,"{""era"": ""[[Age of Night]]""}",^History/[^/]+/[^/]+\.md$
+History/Second Age/Betrayal of Vecna.md,318,yes,,event,draft,"{""era"": ""[[Age of Forging]]""}",^History/[^/]+/[^/]+\.md$
+History/Second Age/Collapse of Runehart.md,328,yes,,event,draft,"{""era"": ""[[Age of Forging]]""}",^History/[^/]+/[^/]+\.md$
+"History/Second Age/Creation of Hephaestus, Forgeborn Prime.md",314,yes,,event,draft,"{""era"": ""[[Age of Forging]]""}",^History/[^/]+/[^/]+\.md$
+History/Second Age/First Arcanometric Crystals Harvested.md,298,yes,,event,draft,"{""era"": ""[[Age of Forging]]""}",^History/[^/]+/[^/]+\.md$
+History/Second Age/Founding of the Ashfang Clans.md,320,yes,,event,draft,"{""era"": ""[[Age of Forging]]""}",^History/[^/]+/[^/]+\.md$
+History/Second Age/Founding of the Pride of Sunreach.md,355,yes,,event,draft,"{""era"": ""[[Age of Forging]]""}",^History/[^/]+/[^/]+\.md$
+History/Second Age/Hexweave Binding.md,0,no,,event,stub,"{""era"": ""[[Age of Forging]]""}",^History/[^/]+/[^/]+\.md$
+History/Second Age/Invention of Arcanometry.md,309,yes,,event,draft,"{""era"": ""[[Age of Forging]]""}",^History/[^/]+/[^/]+\.md$
+History/Second Age/Kas Finds the Blade of Typhon.md,314,yes,,event,draft,"{""era"": ""[[Age of Forging]]""}",^History/[^/]+/[^/]+\.md$
+History/Second Age/Muradin Seals Typhon.md,332,yes,,event,draft,"{""era"": ""[[Age of Forging]]""}",^History/[^/]+/[^/]+\.md$
+History/Second Age/Sealing of Ishna.md,298,yes,,event,draft,"{""era"": ""[[Age of Forging]]""}",^History/[^/]+/[^/]+\.md$
+History/Second Age/The Forge Wars Begin.md,312,yes,,event,draft,"{""era"": ""[[Age of Forging]]""}",^History/[^/]+/[^/]+\.md$
+History/Second Age/The Forge Wars.md,0,no,,event,stub,"{""era"": ""[[Age of Forging]]""}",^History/[^/]+/[^/]+\.md$
+History/Second Age/The Forgeborn Legions March.md,282,yes,,event,draft,"{""era"": ""[[Age of Forging]]""}",^History/[^/]+/[^/]+\.md$
+History/Second Age/The Kyojin Schism.md,455,yes,,event,draft,"{""era"": ""[[Age of Forging]]""}",^History/[^/]+/[^/]+\.md$
+History/Second Age/The Kyojin War.md,404,yes,,event,draft,"{""era"": ""[[Age of Forging]]""}",^History/[^/]+/[^/]+\.md$
+History/Second Age/The Second Age.md,2254,yes,,event,draft,"{""era"": ""[[Age of Forging]]""}",^History/[^/]+/[^/]+\.md$
+History/Second Age/Typhon Becomes the Archon of Death.md,346,yes,,event,draft,"{""era"": ""[[Age of Forging]]""}",^History/[^/]+/[^/]+\.md$
+History/Second Age/Vecna’s Descent Begins.md,310,yes,,event,draft,"{""era"": ""[[Age of Forging]]""}",^History/[^/]+/[^/]+\.md$
+History/Third Age/Breaking of the Hexweave Seal.md,0,no,,event,stub,"{""era"": ""[[Age of Stagnation]]""}",^History/[^/]+/[^/]+\.md$
+History/Third Age/Psychic Schism.md,1142,yes,,event,draft,"{""era"": ""[[Age of Stagnation]]""}",^History/[^/]+/[^/]+\.md$
+History/Timeline.md,70,no,,index,stub,{},^History/Timeline\.md$
+index.md,24,no,,essay,stub,{},^index\.md$
+Languages/Ancient/Denisovan.md,573,yes,,language,draft,{},^Languages/.*\.md$
+Languages/Ancient/Elyssan.md,1510,yes,,language,draft,{},^Languages/.*\.md$
+Languages/Ancient/Karathic.md,933,yes,,language,draft,{},^Languages/.*\.md$
+Languages/Ancient/Natsugen.md,780,yes,,language,draft,{},^Languages/.*\.md$
+Languages/Ancient/Valeshi.md,551,yes,,language,draft,{},^Languages/.*\.md$
+Languages/Languages.md,116,no,,language,stub,{},^Languages/.*\.md$
+Languages/Modern/Dwarven.md,531,yes,,language,draft,{},^Languages/.*\.md$
+Languages/Modern/Imperial Common.md,607,yes,,language,draft,{},^Languages/.*\.md$
+Languages/Modern/Leonin.md,751,yes,,language,draft,{},^Languages/.*\.md$
+Languages/Modern/Mokoweran.md,717,yes,,language,draft,{},^Languages/.*\.md$
+Languages/Modern/Orcish.md,669,yes,,language,draft,{},^Languages/.*\.md$
+Languages/Modern/Serethi.md,1318,yes,,language,draft,{},^Languages/.*\.md$
+Languages/Modern/Thraysian Common.md,677,yes,,language,draft,{},^Languages/.*\.md$
+Languages/Modern/Titanic.md,719,yes,,language,draft,{},^Languages/.*\.md$
+Languages/Modern/Zytherin.md,1430,yes,,language,draft,{},^Languages/.*\.md$
+Races/Engineered/Forgeborn.md,1472,yes,,race,draft,{},^Races/[^/]+/[^/]+\.md$
+Races/Engineered/Saurian.md,4861,yes,,race,draft,{},^Races/[^/]+/[^/]+\.md$
+Races/Engineered/Slaad.md,3757,yes,,race,draft,{},^Races/[^/]+/[^/]+\.md$
+Races/Grundthains/Dwarves/Dwarf.md,1304,yes,,race,draft,{},^Races/[^/]+/[^/]+/[^/]+\.md$
+Races/Grundthains/Dwarves/Variants/Flamebound.md,1411,yes,,race,draft,{},^Races/[^/]+/[^/]+/Variants/[^/]+\.md$
+Races/Grundthains/Dwarves/Variants/Icebound.md,3118,yes,,race,draft,{},^Races/[^/]+/[^/]+/Variants/[^/]+\.md$
+Races/Grundthains/Dwarves/Variants/Stormbound.md,2844,yes,,race,draft,{},^Races/[^/]+/[^/]+/Variants/[^/]+\.md$
+Races/Grundthains/Dwarves/Variants/Tidebound.md,2922,yes,,race,draft,{},^Races/[^/]+/[^/]+/Variants/[^/]+\.md$
+Races/Grundthains/Goliath.md,1191,yes,,race,draft,{},^Races/[^/]+/[^/]+\.md$
+Races/Grundthains/Grundthain.md,1335,yes,,race,draft,{},^Races/[^/]+/[^/]+\.md$
+Races/Grundthains/Varkuun.md,1104,yes,,race,draft,{},^Races/[^/]+/[^/]+\.md$
+Races/Humans/Elasi/Elasi.md,1329,yes,,race,draft,{},^Races/[^/]+/[^/]+/[^/]+\.md$
+Races/Humans/Elasi/Variants/Aquasi.md,0,no,,race,stub,{},^Races/[^/]+/[^/]+/Variants/[^/]+\.md$
+Races/Humans/Elasi/Variants/Ignasi.md,0,no,,race,stub,{},^Races/[^/]+/[^/]+/Variants/[^/]+\.md$
+Races/Humans/Elasi/Variants/Terrasi.md,0,no,,race,stub,{},^Races/[^/]+/[^/]+/Variants/[^/]+\.md$
+Races/Humans/Elasi/Variants/Ventasi.md,0,no,,race,stub,{},^Races/[^/]+/[^/]+/Variants/[^/]+\.md$
+Races/Humans/Terran/Terran.md,1157,yes,,race,draft,{},^Races/[^/]+/[^/]+/[^/]+\.md$
+Races/Humans/Terran/Variants/Imperial Human.md,1151,yes,,race,draft,{},^Races/[^/]+/[^/]+/Variants/[^/]+\.md$
+Races/Humans/Terran/Variants/Mokoweri Human.md,1252,yes,,race,draft,{},^Races/[^/]+/[^/]+/Variants/[^/]+\.md$
+Races/Humans/Terran/Variants/Rahalan.md,1119,yes,,race,draft,{},^Races/[^/]+/[^/]+/Variants/[^/]+\.md$
+Races/Humans/Terran/Variants/Thraysian Human.md,1038,yes,,race,draft,{},^Races/[^/]+/[^/]+/Variants/[^/]+\.md$
+Races/Humans/Terran/Variants/Uftine Human.md,1104,yes,,race,draft,{},^Races/[^/]+/[^/]+/Variants/[^/]+\.md$
+Races/Kyojin/Kyojin.md,1410,yes,,race,draft,{},^Races/[^/]+/[^/]+\.md$
+Races/Kyojin/Leonin/Leonin.md,1094,yes,,race,draft,{},^Races/[^/]+/[^/]+/[^/]+\.md$
+Races/Kyojin/Leonin/Variants/Imperial Leonin.md,1205,yes,,race,draft,{},^Races/[^/]+/[^/]+/Variants/[^/]+\.md$
+Races/Kyojin/Orcs/Orc.md,1135,yes,,race,draft,{},^Races/[^/]+/[^/]+/[^/]+\.md$
+Races/Kyojin/Orcs/Variants/Imperial Orcs.md,1117,yes,,race,draft,{},^Races/[^/]+/[^/]+/Variants/[^/]+\.md$
+Races/Solarans/Celestar.md,1018,yes,,race,draft,{},^Races/[^/]+/[^/]+\.md$
+Races/Solarans/Ilithid.md,60,yes,,race,stub,{},^Races/[^/]+/[^/]+\.md$
+Races/Solarans/Solaran.md,1886,yes,,race,draft,{},^Races/[^/]+/[^/]+\.md$
+Races/Solarans/Variants/Arcanii.md,1423,yes,,race,draft,{},^Races/[^/]+/[^/]+/[^/]+\.md$
+Races/Solarans/Variants/Ferrun.md,1365,yes,,race,draft,{},^Races/[^/]+/[^/]+/[^/]+\.md$
+Races/Solarans/Variants/Mokuun.md,1221,yes,,race,draft,{},^Races/[^/]+/[^/]+/[^/]+\.md$
+Races/Solarans/Velastri.md,1100,yes,,race,draft,{},^Races/[^/]+/[^/]+\.md$
+Realms/Elementis/Aqua/Elementis Aqua.md,145,no,,landmark,stub,{},^Realms/Elementis/.*\.md$
+Realms/Elementis/Aqua/Geography/Cities/Silvertania.md,205,no,,landmark,draft,{},^Realms/Elementis/.*\.md$
+Realms/Elementis/Elementis.md,939,no,,landmark,draft,{},^Realms/Elementis/.*\.md$
+Realms/Elementis/Ignis/Elementis Ignis.md,260,no,,landmark,draft,{},^Realms/Elementis/.*\.md$
+Realms/Elementis/Ignis/Geography/Cities/The City of Gold.md,189,no,,landmark,stub,{},^Realms/Elementis/.*\.md$
+Realms/Elementis/Terra/Elementis Terra.md,141,no,,landmark,stub,{},^Realms/Elementis/.*\.md$
+Realms/Elementis/Terra/Geography/Cities/Copperton.md,290,no,,landmark,draft,{},^Realms/Elementis/.*\.md$
+Realms/Elementis/Ventus/Elementis Ventus.md,217,no,,landmark,draft,{},^Realms/Elementis/.*\.md$
+Realms/Elementis/Ventus/Geography/Cities/Bronzegate.md,228,no,,landmark,draft,{},^Realms/Elementis/.*\.md$
+Realms/Imperium/Imperium.md,286,no,,landmark,draft,{},^Realms/(Solirion|Nihilum|Thargrun|Veltharyn|Woudum|Sigmora|Infernum|Imperium)/.*\.md$
+Realms/Infernum/Infernum.md,280,no,,landmark,draft,{},^Realms/(Solirion|Nihilum|Thargrun|Veltharyn|Woudum|Sigmora|Infernum|Imperium)/.*\.md$
+Realms/Nihilum/Nihilum.md,36,no,,landmark,stub,{},^Realms/(Solirion|Nihilum|Thargrun|Veltharyn|Woudum|Sigmora|Infernum|Imperium)/.*\.md$
+Realms/Planes.md,262,no,,essay,draft,{},^Realms/Planes\.md$
+Realms/Renascita/Constellations.md,2061,no,,essay,draft,{},^Realms/Renascita/Constellations\.md$
+Realms/Renascita/Factions/Cults/Souls of the Devourer.md,554,yes,,faction,draft,{},^Realms/Renascita/Factions/Cults/.*\.md$
+Realms/Renascita/Factions/Cults/Weavers of Agony.md,3980,yes,,faction,draft,{},^Realms/Renascita/Factions/Cults/.*\.md$
+Realms/Renascita/Factions/Orders/Prima Machine.md,633,no,,organisation,draft,{},^Realms/Renascita/Factions/Orders/.*\.md$
+Realms/Renascita/Factions/Orders/The Promethium Order.md,253,no,,organisation,draft,{},^Realms/Renascita/Factions/Orders/.*\.md$
+Realms/Renascita/Factions/Orders/Ulmist Inquisition.md,777,no,,organisation,draft,{},^Realms/Renascita/Factions/Orders/.*\.md$
+Realms/Renascita/Factions/Organisations/Animus.md,396,no,,organisation,draft,{},^Realms/Renascita/Factions/Organisations/.*\.md$
+Realms/Renascita/Factions/Organisations/Mages of High Sorcery.md,395,no,,organisation,draft,{},^Realms/Renascita/Factions/Organisations/.*\.md$
+Realms/Renascita/Factions/Organisations/VPVD.md,303,no,,organisation,draft,{},^Realms/Renascita/Factions/Organisations/.*\.md$
+Realms/Renascita/Factions/Religions/Devouts of Muradin/The Order of Magnus.md,352,no,,faction,draft,{},^Realms/Renascita/Factions/Religions/.*\.md$
+Realms/Renascita/Geography/Aquaria/Aquaria.md,68,no,,continent,stub,{},^Realms/Renascita/Geography/([^/]+)/\1\.md$
+Realms/Renascita/Geography/Aquaria/Provinces/Coral Reef Bay.md,0,no,,region,stub,"{""continent"": ""[[Aquaria]]""}",^Realms/Renascita/Geography/[^/]+/Provinces/.*\.md$
+Realms/Renascita/Geography/Aquaria/Provinces/Crystal Caverns.md,0,no,,region,stub,"{""continent"": ""[[Aquaria]]""}",^Realms/Renascita/Geography/[^/]+/Provinces/.*\.md$
+Realms/Renascita/Geography/Aquaria/Provinces/Leviathan's Trench.md,0,no,,region,stub,"{""continent"": ""[[Aquaria]]""}",^Realms/Renascita/Geography/[^/]+/Provinces/.*\.md$
+Realms/Renascita/Geography/Arcturia/Arcturia.md,1033,yes,continent,continent,draft,{},^Realms/Renascita/Geography/([^/]+)/\1\.md$
+Realms/Renascita/Geography/Arcturia/Cities/Runehart.md,5840,no,,settlement,draft,"{""continent"": ""[[Arcturia]]""}",^Realms/Renascita/Geography/[^/]+/Cities/[^/]+\.md$
+Realms/Renascita/Geography/Arcturia/Cities/Uftine/Locations/Crystalward Gate.md,179,no,,landmark,stub,"{""continent"": ""[[Arcturia]]""}",^Realms/Renascita/Geography/[^/]+/Cities/[^/]+/Locations/[^/]+\.md$
+Realms/Renascita/Geography/Arcturia/Cities/Uftine/Locations/Frostforge.md,188,no,,landmark,stub,"{""continent"": ""[[Arcturia]]""}",^Realms/Renascita/Geography/[^/]+/Cities/[^/]+/Locations/[^/]+\.md$
+Realms/Renascita/Geography/Arcturia/Cities/Uftine/Locations/Glacier Library.md,193,no,,landmark,stub,"{""continent"": ""[[Arcturia]]""}",^Realms/Renascita/Geography/[^/]+/Cities/[^/]+/Locations/[^/]+\.md$
+Realms/Renascita/Geography/Arcturia/Cities/Uftine/Locations/The Pulsecore.md,2748,yes,,landmark,draft,"{""continent"": ""[[Arcturia]]""}",^Realms/Renascita/Geography/[^/]+/Cities/[^/]+/Locations/[^/]+\.md$
+Realms/Renascita/Geography/Arcturia/Cities/Uftine/Uftine.md,2053,yes,city,settlement,draft,"{""continent"": ""[[Arcturia]]""}",^Realms/Renascita/Geography/[^/]+/Cities/([^/]+)/\1\.md$
+Realms/Renascita/Geography/Arcturia/Locations/Dürrenholt.md,2000,yes,,landmark,draft,"{""continent"": ""[[Arcturia]]""}",^Realms/Renascita/Geography/[^/]+/Locations/.*\.md$
+Realms/Renascita/Geography/Arcturia/Mountains/Calderian Peaks.md,0,no,,range,stub,"{""continent"": ""[[Arcturia]]""}",^Realms/Renascita/Geography/[^/]+/Mountains/.*\.md$
+Realms/Renascita/Geography/Arcturia/Mountains/Thornback Ridge.md,0,no,,range,stub,"{""continent"": ""[[Arcturia]]""}",^Realms/Renascita/Geography/[^/]+/Mountains/.*\.md$
+Realms/Renascita/Geography/Arcturia/Mountains/Wyrmspine Mountains.md,0,no,,range,stub,"{""continent"": ""[[Arcturia]]""}",^Realms/Renascita/Geography/[^/]+/Mountains/.*\.md$
+Realms/Renascita/Geography/Arcturia/Provinces/Aurora Forest.md,0,no,,region,stub,"{""continent"": ""[[Arcturia]]""}",^Realms/Renascita/Geography/[^/]+/Provinces/.*\.md$
+Realms/Renascita/Geography/Arcturia/Provinces/Calderian Mountains.md,0,no,,region,stub,"{""continent"": ""[[Arcturia]]""}",^Realms/Renascita/Geography/[^/]+/Provinces/.*\.md$
+Realms/Renascita/Geography/Arcturia/Provinces/Frosthold Glacier.md,0,no,,region,stub,"{""continent"": ""[[Arcturia]]""}",^Realms/Renascita/Geography/[^/]+/Provinces/.*\.md$
+Realms/Renascita/Geography/Arcturia/Provinces/Misty Shores.md,0,no,,region,stub,"{""continent"": ""[[Arcturia]]""}",^Realms/Renascita/Geography/[^/]+/Provinces/.*\.md$
+Realms/Renascita/Geography/Arcturia/Rivers/Icevein River.md,0,no,,waterway,stub,"{""continent"": ""[[Arcturia]]""}",^Realms/Renascita/Geography/[^/]+/Rivers/.*\.md$
+Realms/Renascita/Geography/Arcturia/Rivers/Shadelake Tributary.md,0,no,,waterway,stub,"{""continent"": ""[[Arcturia]]""}",^Realms/Renascita/Geography/[^/]+/Rivers/.*\.md$
+Realms/Renascita/Geography/Arcturia/Rivers/Tharic Runoff.md,0,no,,waterway,stub,"{""continent"": ""[[Arcturia]]""}",^Realms/Renascita/Geography/[^/]+/Rivers/.*\.md$
+Realms/Renascita/Geography/Islands/Draumhavn/Draumhavn.md,1487,yes,,continent,draft,"{""kind"": ""island""}",^Realms/Renascita/Geography/Islands/([^/]+)/\1\.md$
+Realms/Renascita/Geography/Islands/Draumhavn/Locations/Salt Cradle.md,117,no,,landmark,stub,"{""continent"": ""[[Draumhavn]]""}",^Realms/Renascita/Geography/Islands/([^/]+)/Locations/[^/]+\.md$
+Realms/Renascita/Geography/Islands/Draumhavn/Locations/Stormgates.md,117,no,,landmark,stub,"{""continent"": ""[[Draumhavn]]""}",^Realms/Renascita/Geography/Islands/([^/]+)/Locations/[^/]+\.md$
+Realms/Renascita/Geography/Islands/Draumhavn/Locations/The Wakened Trench.md,2332,no,,landmark,draft,"{""continent"": ""[[Draumhavn]]""}",^Realms/Renascita/Geography/Islands/([^/]+)/Locations/[^/]+\.md$
+Realms/Renascita/Geography/Islands/Thundrakar/Locations/Great Forge of Ormr.md,1992,no,,landmark,draft,"{""continent"": ""[[Thundrakar]]""}",^Realms/Renascita/Geography/Islands/([^/]+)/Locations/[^/]+\.md$
+Realms/Renascita/Geography/Islands/Thundrakar/Locations/Stormspire.md,2172,no,,landmark,draft,"{""continent"": ""[[Thundrakar]]""}",^Realms/Renascita/Geography/Islands/([^/]+)/Locations/[^/]+\.md$
+Realms/Renascita/Geography/Islands/Thundrakar/Thundrakar.md,3113,yes,city,continent,draft,"{""kind"": ""island""}",^Realms/Renascita/Geography/Islands/([^/]+)/\1\.md$
+Realms/Renascita/Geography/Mokoweri/Cities/Aeloria.md,10176,no,,settlement,draft,"{""continent"": ""[[Mokoweri]]""}",^Realms/Renascita/Geography/[^/]+/Cities/[^/]+\.md$
+Realms/Renascita/Geography/Mokoweri/Cities/Port Zyranzaru.md,806,no,,settlement,draft,"{""continent"": ""[[Mokoweri]]""}",^Realms/Renascita/Geography/[^/]+/Cities/[^/]+\.md$
+Realms/Renascita/Geography/Mokoweri/Cities/Waterfall City.md,3503,no,,settlement,draft,"{""continent"": ""[[Mokoweri]]""}",^Realms/Renascita/Geography/[^/]+/Cities/[^/]+\.md$
+Realms/Renascita/Geography/Mokoweri/Locations/Embered Caverns.md,12974,no,,landmark,draft,"{""continent"": ""[[Mokoweri]]""}",^Realms/Renascita/Geography/[^/]+/Locations/.*\.md$
+Realms/Renascita/Geography/Mokoweri/Locations/Eversoul Grove.md,16612,no,,landmark,draft,"{""continent"": ""[[Mokoweri]]""}",^Realms/Renascita/Geography/[^/]+/Locations/.*\.md$
+Realms/Renascita/Geography/Mokoweri/Locations/Mokoruuth.md,6182,no,,landmark,draft,"{""continent"": ""[[Mokoweri]]""}",^Realms/Renascita/Geography/[^/]+/Locations/.*\.md$
+Realms/Renascita/Geography/Mokoweri/Locations/Solaran Research Complex.md,25315,no,,landmark,draft,"{""continent"": ""[[Mokoweri]]""}",^Realms/Renascita/Geography/[^/]+/Locations/.*\.md$
+Realms/Renascita/Geography/Mokoweri/Mokoweri.md,1415,yes,continent,continent,draft,{},^Realms/Renascita/Geography/([^/]+)/\1\.md$
+Realms/Renascita/Geography/Mokoweri/Mountains/Jal'korran Ridge.md,0,no,,range,stub,"{""continent"": ""[[Mokoweri]]""}",^Realms/Renascita/Geography/[^/]+/Mountains/.*\.md$
+Realms/Renascita/Geography/Mokoweri/Mountains/Obsidian Spine.md,0,no,,range,stub,"{""continent"": ""[[Mokoweri]]""}",^Realms/Renascita/Geography/[^/]+/Mountains/.*\.md$
+Realms/Renascita/Geography/Mokoweri/Mountains/Temple Heights.md,0,no,,range,stub,"{""continent"": ""[[Mokoweri]]""}",^Realms/Renascita/Geography/[^/]+/Mountains/.*\.md$
+Realms/Renascita/Geography/Mokoweri/Provinces/Canopy Height.md,233,no,,region,draft,"{""continent"": ""[[Mokoweri]]""}",^Realms/Renascita/Geography/[^/]+/Provinces/.*\.md$
+Realms/Renascita/Geography/Mokoweri/Provinces/Obsidian Peaks.md,366,no,,region,draft,"{""continent"": ""[[Mokoweri]]""}",^Realms/Renascita/Geography/[^/]+/Provinces/.*\.md$
+Realms/Renascita/Geography/Mokoweri/Provinces/Riverlands.md,266,no,,region,draft,"{""continent"": ""[[Mokoweri]]""}",^Realms/Renascita/Geography/[^/]+/Provinces/.*\.md$
+Realms/Renascita/Geography/Mokoweri/Provinces/Ruins of the Ancients.md,276,no,,region,draft,"{""continent"": ""[[Mokoweri]]""}",^Realms/Renascita/Geography/[^/]+/Provinces/.*\.md$
+Realms/Renascita/Geography/Mokoweri/Provinces/Verdant Coast.md,222,no,,region,draft,"{""continent"": ""[[Mokoweri]]""}",^Realms/Renascita/Geography/[^/]+/Provinces/.*\.md$
+Realms/Renascita/Geography/Mokoweri/Rivers/Coatl's Vein.md,0,no,,waterway,stub,"{""continent"": ""[[Mokoweri]]""}",^Realms/Renascita/Geography/[^/]+/Rivers/.*\.md$
+Realms/Renascita/Geography/Mokoweri/Rivers/Mira'ko Stream.md,0,no,,waterway,stub,"{""continent"": ""[[Mokoweri]]""}",^Realms/Renascita/Geography/[^/]+/Rivers/.*\.md$
+Realms/Renascita/Geography/Mokoweri/Rivers/River of Ancients.md,0,no,,waterway,stub,"{""continent"": ""[[Mokoweri]]""}",^Realms/Renascita/Geography/[^/]+/Rivers/.*\.md$
+Realms/Renascita/Geography/Mokoweri/Rivers/Tir'Zal Tributary.md,0,no,,waterway,stub,"{""continent"": ""[[Mokoweri]]""}",^Realms/Renascita/Geography/[^/]+/Rivers/.*\.md$
+Realms/Renascita/Geography/Mokoweri/Rivers/Zyran River.md,0,no,,waterway,stub,"{""continent"": ""[[Mokoweri]]""}",^Realms/Renascita/Geography/[^/]+/Rivers/.*\.md$
+Realms/Renascita/Geography/Pyrosia/Cities/Lion’s Rest/Lion’s Rest.md,605,yes,,settlement,draft,"{""continent"": ""[[Pyrosia]]""}",^Realms/Renascita/Geography/[^/]+/Cities/([^/]+)/\1\.md$
+Realms/Renascita/Geography/Pyrosia/Cities/Lion’s Rest/Locations/Gatherhold.md,361,yes,,landmark,draft,"{""continent"": ""[[Pyrosia]]""}",^Realms/Renascita/Geography/[^/]+/Cities/[^/]+/Locations/[^/]+\.md$
+Realms/Renascita/Geography/Pyrosia/Cities/Lion’s Rest/Locations/The Den.md,349,yes,,landmark,draft,"{""continent"": ""[[Pyrosia]]""}",^Realms/Renascita/Geography/[^/]+/Cities/[^/]+/Locations/[^/]+\.md$
+Realms/Renascita/Geography/Pyrosia/Cities/Lion’s Rest/Locations/Tower of Inquisition.md,369,yes,,landmark,draft,"{""continent"": ""[[Pyrosia]]""}",^Realms/Renascita/Geography/[^/]+/Cities/[^/]+/Locations/[^/]+\.md$
+Realms/Renascita/Geography/Pyrosia/Cities/Lion’s Rest/Locations/Vedkyar Enclave.md,362,yes,,landmark,draft,"{""continent"": ""[[Pyrosia]]""}",^Realms/Renascita/Geography/[^/]+/Cities/[^/]+/Locations/[^/]+\.md$
+Realms/Renascita/Geography/Pyrosia/Cities/Lion’s Rest/Locations/Vigilants Watch.md,362,yes,,landmark,draft,"{""continent"": ""[[Pyrosia]]""}",^Realms/Renascita/Geography/[^/]+/Cities/[^/]+/Locations/[^/]+\.md$
+Realms/Renascita/Geography/Pyrosia/Cities/Lux Oescus/Locations/Korunda Gate.md,353,yes,,landmark,draft,"{""continent"": ""[[Pyrosia]]""}",^Realms/Renascita/Geography/[^/]+/Cities/[^/]+/Locations/[^/]+\.md$
+Realms/Renascita/Geography/Pyrosia/Cities/Lux Oescus/Locations/The Labyrinth.md,346,yes,,landmark,draft,"{""continent"": ""[[Pyrosia]]""}",^Realms/Renascita/Geography/[^/]+/Cities/[^/]+/Locations/[^/]+\.md$
+Realms/Renascita/Geography/Pyrosia/Cities/Lux Oescus/Lux Oescus.md,540,yes,,settlement,draft,"{""continent"": ""[[Pyrosia]]""}",^Realms/Renascita/Geography/[^/]+/Cities/([^/]+)/\1\.md$
+Realms/Renascita/Geography/Pyrosia/Cities/Magnus’ Rest/Cascadia.md,0,no,,landmark,stub,"{""continent"": ""[[Pyrosia]]""}",^Realms/Renascita/Geography/[^/]+/Cities/[^/]+/[^/]+\.md$
+Realms/Renascita/Geography/Pyrosia/Cities/Magnus’ Rest/Locations/Cannith Tower.md,360,yes,,landmark,draft,"{""continent"": ""[[Pyrosia]]""}",^Realms/Renascita/Geography/[^/]+/Cities/[^/]+/Locations/[^/]+\.md$
+Realms/Renascita/Geography/Pyrosia/Cities/Magnus’ Rest/Magnus’ Rest.md,6313,no,,settlement,draft,"{""continent"": ""[[Pyrosia]]""}",^Realms/Renascita/Geography/[^/]+/Cities/([^/]+)/\1\.md$
+Realms/Renascita/Geography/Pyrosia/Cities/Old Westgate/Locations/Foalswood.md,348,yes,,landmark,draft,"{""continent"": ""[[Pyrosia]]""}",^Realms/Renascita/Geography/[^/]+/Cities/[^/]+/Locations/[^/]+\.md$
+Realms/Renascita/Geography/Pyrosia/Cities/Old Westgate/Old Westgate.md,461,yes,,settlement,draft,"{""continent"": ""[[Pyrosia]]""}",^Realms/Renascita/Geography/[^/]+/Cities/([^/]+)/\1\.md$
+Realms/Renascita/Geography/Pyrosia/Cities/Port Ardere/Locations/Journey’s Home.md,354,yes,,landmark,draft,"{""continent"": ""[[Pyrosia]]""}",^Realms/Renascita/Geography/[^/]+/Cities/[^/]+/Locations/[^/]+\.md$
+Realms/Renascita/Geography/Pyrosia/Cities/Port Ardere/Port Ardere.md,476,yes,,settlement,draft,"{""continent"": ""[[Pyrosia]]""}",^Realms/Renascita/Geography/[^/]+/Cities/([^/]+)/\1\.md$
+Realms/Renascita/Geography/Pyrosia/Cities/Raining Bay/Locations/Stormhome.md,349,yes,,landmark,draft,"{""continent"": ""[[Pyrosia]]""}",^Realms/Renascita/Geography/[^/]+/Cities/[^/]+/Locations/[^/]+\.md$
+Realms/Renascita/Geography/Pyrosia/Cities/Raining Bay/Locations/The Serpentine Citadel.md,375,yes,,landmark,draft,"{""continent"": ""[[Pyrosia]]""}",^Realms/Renascita/Geography/[^/]+/Cities/[^/]+/Locations/[^/]+\.md$
+Realms/Renascita/Geography/Pyrosia/Cities/Raining Bay/Raining Bay.md,532,yes,,settlement,draft,"{""continent"": ""[[Pyrosia]]""}",^Realms/Renascita/Geography/[^/]+/Cities/([^/]+)/\1\.md$
+Realms/Renascita/Geography/Pyrosia/Locations/Yōkuro no Ki.md,1970,no,,landmark,draft,"{""continent"": ""[[Pyrosia]]""}",^Realms/Renascita/Geography/[^/]+/Locations/.*\.md$
+Realms/Renascita/Geography/Pyrosia/Mountains/Ashen Range.md,0,no,,range,stub,"{""continent"": ""[[Pyrosia]]""}",^Realms/Renascita/Geography/[^/]+/Mountains/.*\.md$
+Realms/Renascita/Geography/Pyrosia/Mountains/Dawnspire Mountains.md,0,no,,range,stub,"{""continent"": ""[[Pyrosia]]""}",^Realms/Renascita/Geography/[^/]+/Mountains/.*\.md$
+Realms/Renascita/Geography/Pyrosia/Mountains/Mount Earthspur.md,0,no,,range,stub,"{""continent"": ""[[Pyrosia]]""}",^Realms/Renascita/Geography/[^/]+/Mountains/.*\.md$
+Realms/Renascita/Geography/Pyrosia/Mountains/Veilsmoke Ridge.md,0,no,,range,stub,"{""continent"": ""[[Pyrosia]]""}",^Realms/Renascita/Geography/[^/]+/Mountains/.*\.md$
+Realms/Renascita/Geography/Pyrosia/Provinces/Ashen Plains/Ashen Plains.md,437,yes,,region,draft,"{""continent"": ""[[Pyrosia]]""}",^Realms/Renascita/Geography/[^/]+/Provinces/.*\.md$
+Realms/Renascita/Geography/Pyrosia/Provinces/Ashen Plains/Candle Keep.md,486,no,,region,draft,"{""continent"": ""[[Pyrosia]]""}",^Realms/Renascita/Geography/[^/]+/Provinces/.*\.md$
+Realms/Renascita/Geography/Pyrosia/Provinces/Ashen Plains/Obsidian Fotress.md,1884,no,,region,draft,"{""continent"": ""[[Pyrosia]]""}",^Realms/Renascita/Geography/[^/]+/Provinces/.*\.md$
+Realms/Renascita/Geography/Pyrosia/Provinces/Ashen Plains/The Bright Tavern.md,591,no,,region,draft,"{""continent"": ""[[Pyrosia]]""}",^Realms/Renascita/Geography/[^/]+/Provinces/.*\.md$
+Realms/Renascita/Geography/Pyrosia/Provinces/Ashen Plains/The Forge of Souls.md,195,no,,region,stub,"{""continent"": ""[[Pyrosia]]""}",^Realms/Renascita/Geography/[^/]+/Provinces/.*\.md$
+Realms/Renascita/Geography/Pyrosia/Provinces/Ashen Plains/The Ruins of Baldur's Gate.md,0,no,,region,stub,"{""continent"": ""[[Pyrosia]]""}",^Realms/Renascita/Geography/[^/]+/Provinces/.*\.md$
+Realms/Renascita/Geography/Pyrosia/Provinces/Ashen Plains/The Ruins of Elturel.md,542,no,,region,draft,"{""continent"": ""[[Pyrosia]]""}",^Realms/Renascita/Geography/[^/]+/Provinces/.*\.md$
+Realms/Renascita/Geography/Pyrosia/Provinces/Ashgatar/Ashgatar.md,435,yes,,region,draft,"{""continent"": ""[[Pyrosia]]""}",^Realms/Renascita/Geography/[^/]+/Provinces/.*\.md$
+Realms/Renascita/Geography/Pyrosia/Provinces/Burnt Reach/Burnt Reach.md,441,yes,,region,draft,"{""continent"": ""[[Pyrosia]]""}",^Realms/Renascita/Geography/[^/]+/Provinces/.*\.md$
+Realms/Renascita/Geography/Pyrosia/Provinces/Ember Peaks/Ember Peaks.md,391,yes,,region,draft,"{""continent"": ""[[Pyrosia]]""}",^Realms/Renascita/Geography/[^/]+/Provinces/.*\.md$
+Realms/Renascita/Geography/Pyrosia/Provinces/Flame Coast/Flame Coast.md,390,yes,,region,draft,"{""continent"": ""[[Pyrosia]]""}",^Realms/Renascita/Geography/[^/]+/Provinces/.*\.md$
+Realms/Renascita/Geography/Pyrosia/Provinces/Frontier's Edge/Frontier's Edge.md,436,yes,,region,draft,"{""continent"": ""[[Pyrosia]]""}",^Realms/Renascita/Geography/[^/]+/Provinces/.*\.md$
+Realms/Renascita/Geography/Pyrosia/Pyrosia.md,1927,yes,continent,continent,draft,{},^Realms/Renascita/Geography/([^/]+)/\1\.md$
+Realms/Renascita/Geography/Pyrosia/Rivers/Glowtongue Stream.md,0,no,,waterway,stub,"{""continent"": ""[[Pyrosia]]""}",^Realms/Renascita/Geography/[^/]+/Rivers/.*\.md$
+Realms/Renascita/Geography/Pyrosia/Rivers/Moltren Delta.md,0,no,,waterway,stub,"{""continent"": ""[[Pyrosia]]""}",^Realms/Renascita/Geography/[^/]+/Rivers/.*\.md$
+Realms/Renascita/Geography/Pyrosia/Rivers/Redwash River.md,0,no,,waterway,stub,"{""continent"": ""[[Pyrosia]]""}",^Realms/Renascita/Geography/[^/]+/Rivers/.*\.md$
+Realms/Renascita/Geography/Qethusiyya/Cities/Calvereth/Calvereth.md,0,no,,settlement,stub,"{""continent"": ""[[Qethusiyya]]""}",^Realms/Renascita/Geography/[^/]+/Cities/([^/]+)/\1\.md$
+Realms/Renascita/Geography/Qethusiyya/Cities/Eltabarr/Eltabarr.md,10482,no,,settlement,draft,"{""continent"": ""[[Qethusiyya]]""}",^Realms/Renascita/Geography/[^/]+/Cities/([^/]+)/\1\.md$
+Realms/Renascita/Geography/Qethusiyya/Cities/Solara/Solara.md,4626,no,,settlement,draft,"{""continent"": ""[[Qethusiyya]]""}",^Realms/Renascita/Geography/[^/]+/Cities/([^/]+)/\1\.md$
+Realms/Renascita/Geography/Qethusiyya/Cities/Thelassia/Thelassia.md,9795,no,,settlement,draft,"{""continent"": ""[[Qethusiyya]]""}",^Realms/Renascita/Geography/[^/]+/Cities/([^/]+)/\1\.md$
+Realms/Renascita/Geography/Qethusiyya/Cities/Zahirah/Zahirah.md,617,no,,settlement,draft,"{""continent"": ""[[Qethusiyya]]""}",^Realms/Renascita/Geography/[^/]+/Cities/([^/]+)/\1\.md$
+Realms/Renascita/Geography/Qethusiyya/Mountains/Kaldar Range.md,218,no,,range,draft,"{""continent"": ""[[Qethusiyya]]""}",^Realms/Renascita/Geography/[^/]+/Mountains/.*\.md$
+Realms/Renascita/Geography/Qethusiyya/Mountains/Muzari Heights.md,0,no,,range,stub,"{""continent"": ""[[Qethusiyya]]""}",^Realms/Renascita/Geography/[^/]+/Mountains/.*\.md$
+Realms/Renascita/Geography/Qethusiyya/Mountains/Ravenspine Cliffs.md,0,no,,range,stub,"{""continent"": ""[[Qethusiyya]]""}",^Realms/Renascita/Geography/[^/]+/Mountains/.*\.md$
+Realms/Renascita/Geography/Qethusiyya/Mountains/Sulamir Escarpment.md,0,no,,range,stub,"{""continent"": ""[[Qethusiyya]]""}",^Realms/Renascita/Geography/[^/]+/Mountains/.*\.md$
+Realms/Renascita/Geography/Qethusiyya/Provinces/Al-Ramal/Al-Ramal.md,203,yes,,region,draft,"{""continent"": ""[[Qethusiyya]]""}",^Realms/Renascita/Geography/[^/]+/Provinces/.*\.md$
+Realms/Renascita/Geography/Qethusiyya/Provinces/Al-Ramal/Eversoul Grove.md,2233,no,,region,draft,"{""continent"": ""[[Qethusiyya]]""}",^Realms/Renascita/Geography/[^/]+/Provinces/.*\.md$
+Realms/Renascita/Geography/Qethusiyya/Provinces/Al-Ramal/Obsidian Obelisks of Keth.md,3933,no,,region,draft,"{""continent"": ""[[Qethusiyya]]""}",^Realms/Renascita/Geography/[^/]+/Provinces/.*\.md$
+Realms/Renascita/Geography/Qethusiyya/Provinces/Kaldar/Kaldar.md,0,no,,region,stub,"{""continent"": ""[[Qethusiyya]]""}",^Realms/Renascita/Geography/[^/]+/Provinces/.*\.md$
+Realms/Renascita/Geography/Qethusiyya/Provinces/Khalgar/Khalgar.md,224,no,,region,draft,"{""continent"": ""[[Qethusiyya]]""}",^Realms/Renascita/Geography/[^/]+/Provinces/.*\.md$
+Realms/Renascita/Geography/Qethusiyya/Provinces/Shazir Coast/Shazir Coast.md,196,no,,region,stub,"{""continent"": ""[[Qethusiyya]]""}",^Realms/Renascita/Geography/[^/]+/Provinces/.*\.md$
+Realms/Renascita/Geography/Qethusiyya/Provinces/Thraysia/Thraysia.md,241,no,,region,draft,"{""continent"": ""[[Qethusiyya]]""}",^Realms/Renascita/Geography/[^/]+/Provinces/.*\.md$
+Realms/Renascita/Geography/Qethusiyya/Provinces/Vasir/Vasir.md,247,no,,region,draft,"{""continent"": ""[[Qethusiyya]]""}",^Realms/Renascita/Geography/[^/]+/Provinces/.*\.md$
+Realms/Renascita/Geography/Qethusiyya/Provinces/Zakhmir/Zakhmir.md,284,no,,region,draft,"{""continent"": ""[[Qethusiyya]]""}",^Realms/Renascita/Geography/[^/]+/Provinces/.*\.md$
+Realms/Renascita/Geography/Qethusiyya/Qethusiyya.md,1492,yes,continent,continent,draft,{},^Realms/Renascita/Geography/([^/]+)/\1\.md$
+Realms/Renascita/Geography/Qethusiyya/Rivers/Delta Iksandrun.md,0,no,,waterway,stub,"{""continent"": ""[[Qethusiyya]]""}",^Realms/Renascita/Geography/[^/]+/Rivers/.*\.md$
+Realms/Renascita/Geography/Qethusiyya/Rivers/Razan Tributary.md,0,no,,waterway,stub,"{""continent"": ""[[Qethusiyya]]""}",^Realms/Renascita/Geography/[^/]+/Rivers/.*\.md$
+Realms/Renascita/Geography/Qethusiyya/Rivers/River Muzahir.md,0,no,,waterway,stub,"{""continent"": ""[[Qethusiyya]]""}",^Realms/Renascita/Geography/[^/]+/Rivers/.*\.md$
+Realms/Renascita/Geography/Qethusiyya/Rivers/River Talinur.md,0,no,,waterway,stub,"{""continent"": ""[[Qethusiyya]]""}",^Realms/Renascita/Geography/[^/]+/Rivers/.*\.md$
+Realms/Renascita/Geography/Qethusiyya/Rivers/Sul Vahir.md,0,no,,waterway,stub,"{""continent"": ""[[Qethusiyya]]""}",^Realms/Renascita/Geography/[^/]+/Rivers/.*\.md$
+Realms/Renascita/Geography/The World Beneath/Locations/The Hollowed Warrens.md,1706,yes,,landmark,draft,"{""continent"": ""[[The World Beneath]]""}",^Realms/Renascita/Geography/The World Beneath/Locations/.*\.md$
+Realms/Renascita/Geography/The World Beneath/The World Beneath.md,0,no,,continent,stub,{},^Realms/Renascita/Geography/([^/]+)/\1\.md$
+Realms/Renascita/Legendarium/Artifacts/Ab Solara/Aeloria Ab Solara.md,138,no,,artifact,stub,{},^Realms/Renascita/Legendarium/Artifacts/.*\.md$
+Realms/Renascita/Legendarium/Artifacts/Ab Solara/Arcane Observatory Ab Solara.md,134,no,,artifact,stub,{},^Realms/Renascita/Legendarium/Artifacts/.*\.md$
+Realms/Renascita/Legendarium/Artifacts/Ab Solara/Cascadia Ab Solara.md,125,no,,artifact,stub,{},^Realms/Renascita/Legendarium/Artifacts/.*\.md$
+Realms/Renascita/Legendarium/Artifacts/Ab Solara/Elementis Aqua Ab Solara.md,45,no,,artifact,stub,{},^Realms/Renascita/Legendarium/Artifacts/.*\.md$
+Realms/Renascita/Legendarium/Artifacts/Ab Solara/Elementis Ignis Ab Solara.md,44,no,,artifact,stub,{},^Realms/Renascita/Legendarium/Artifacts/.*\.md$
+Realms/Renascita/Legendarium/Artifacts/Ab Solara/Elementis Terra Ab Solara.md,45,no,,artifact,stub,{},^Realms/Renascita/Legendarium/Artifacts/.*\.md$
+Realms/Renascita/Legendarium/Artifacts/Ab Solara/Elementis Ventus Ab Solara.md,43,no,,artifact,stub,{},^Realms/Renascita/Legendarium/Artifacts/.*\.md$
+Realms/Renascita/Legendarium/Artifacts/Ab Solara/Eltabarr Ab Solara.md,129,no,,artifact,stub,{},^Realms/Renascita/Legendarium/Artifacts/.*\.md$
+Realms/Renascita/Legendarium/Artifacts/Ab Solara/Lion's Rest Ab Solara.md,39,no,,artifact,stub,{},^Realms/Renascita/Legendarium/Artifacts/.*\.md$
+Realms/Renascita/Legendarium/Artifacts/Ab Solara/Lunara Ab Solara.md,137,no,,artifact,stub,{},^Realms/Renascita/Legendarium/Artifacts/.*\.md$
+Realms/Renascita/Legendarium/Artifacts/Ab Solara/Mechanum Ab Solara.md,70,no,,artifact,stub,{},^Realms/Renascita/Legendarium/Artifacts/.*\.md$
+Realms/Renascita/Legendarium/Artifacts/Ab Solara/Mokoweri Ab Solara.md,105,no,,artifact,stub,{},^Realms/Renascita/Legendarium/Artifacts/.*\.md$
+Realms/Renascita/Legendarium/Artifacts/Ab Solara/Onderweld Ab Solara.md,67,no,,artifact,stub,{},^Realms/Renascita/Legendarium/Artifacts/.*\.md$
+Realms/Renascita/Legendarium/Artifacts/Ab Solara/Solara Ab Solara.md,99,no,,artifact,stub,{},^Realms/Renascita/Legendarium/Artifacts/.*\.md$
+Realms/Renascita/Legendarium/Artifacts/Ab Solara/Thelassia Ab Solara.md,117,no,,artifact,stub,{},^Realms/Renascita/Legendarium/Artifacts/.*\.md$
+Realms/Renascita/Legendarium/Artifacts/Blood Kriss.md,3104,no,,artifact,draft,{},^Realms/Renascita/Legendarium/Artifacts/.*\.md$
+Realms/Renascita/Legendarium/Artifacts/Book of Vile Darkness.md,0,no,,artifact,stub,{},^Realms/Renascita/Legendarium/Artifacts/.*\.md$
+Realms/Renascita/Legendarium/Artifacts/Hexweave Pylons/Imperium Deorum Pylon.md,37,no,,artifact,stub,{},^Realms/Renascita/Legendarium/Artifacts/.*\.md$
+Realms/Renascita/Legendarium/Artifacts/Hexweave Pylons/Infernum Pylon.md,39,no,,artifact,stub,{},^Realms/Renascita/Legendarium/Artifacts/.*\.md$
+Realms/Renascita/Legendarium/Artifacts/Hexweave Pylons/Libertum Pylon.md,38,no,,artifact,stub,{},^Realms/Renascita/Legendarium/Artifacts/.*\.md$
+Realms/Renascita/Legendarium/Artifacts/Hexweave Pylons/Mechanum Pylon.md,40,no,,artifact,stub,{},^Realms/Renascita/Legendarium/Artifacts/.*\.md$
+Realms/Renascita/Legendarium/Artifacts/Hexweave Pylons/Nihilum Pylon.md,38,no,,artifact,stub,{},^Realms/Renascita/Legendarium/Artifacts/.*\.md$
+Realms/Renascita/Legendarium/Artifacts/Hexweave Pylons/Renascitur Pylon.md,419,no,,artifact,draft,{},^Realms/Renascita/Legendarium/Artifacts/.*\.md$
+Realms/Renascita/Legendarium/Artifacts/Hexweave Pylons/Woudum Pylon.md,36,no,,artifact,stub,{},^Realms/Renascita/Legendarium/Artifacts/.*\.md$
+Realms/Renascita/Legendarium/Artifacts/Sword of Kas.md,37,yes,,artifact,stub,{},^Realms/Renascita/Legendarium/Artifacts/.*\.md$
+Realms/Renascita/Legendarium/Artifacts/The Codex of Iron/The Codex of Iron.md,4132,yes,,artifact,draft,{},^Realms/Renascita/Legendarium/Artifacts/.*\.md$
+Realms/Renascita/Legendarium/Artifacts/The Codex of Iron/The Song of Godfire and the Eternal Anvil.md,5202,no,,artifact,draft,{},^Realms/Renascita/Legendarium/Artifacts/.*\.md$
+Realms/Renascita/Legendarium/Artifacts/The Codex of Iron/The Song of the Hammer That Waits.md,870,no,,artifact,draft,{},^Realms/Renascita/Legendarium/Artifacts/.*\.md$
+Realms/Renascita/Legendarium/Artifacts/The Codex of Iron/The Song of the Sealed Wounds.md,7365,no,,artifact,draft,{},^Realms/Renascita/Legendarium/Artifacts/.*\.md$
+Realms/Renascita/Legendarium/Artifacts/The Codex of Iron/The Song of the World's Forging.md,4850,no,,artifact,draft,{},^Realms/Renascita/Legendarium/Artifacts/.*\.md$
+Realms/Renascita/Legendarium/Artifacts/Time piece of travel.md,0,no,,artifact,stub,{},^Realms/Renascita/Legendarium/Artifacts/.*\.md$
+Realms/Renascita/Legendarium/Characters/Drak'thar the Obsdian Guardian.md,10911,no,,character,draft,{},^Realms/Renascita/Legendarium/Characters/.*\.md$
+Realms/Renascita/Legendarium/Characters/Eddreict.md,145,no,,character,stub,{},^Realms/Renascita/Legendarium/Characters/.*\.md$
+Realms/Renascita/Legendarium/Characters/Ferrousania.md,115,no,,character,stub,{},^Realms/Renascita/Legendarium/Characters/.*\.md$
+Realms/Renascita/Legendarium/Characters/Glaurung.md,110,no,,character,stub,{},^Realms/Renascita/Legendarium/Characters/.*\.md$
+Realms/Renascita/Legendarium/Characters/Hephaestus.md,0,no,,character,stub,{},^Realms/Renascita/Legendarium/Characters/.*\.md$
+Realms/Renascita/Legendarium/Characters/Kasabian.md,64,yes,,character,stub,{},^Realms/Renascita/Legendarium/Characters/.*\.md$
+Realms/Renascita/Legendarium/Characters/Larendrammagar.md,157,no,,character,stub,{},^Realms/Renascita/Legendarium/Characters/.*\.md$
+Realms/Renascita/Legendarium/Characters/Ormr.md,213,no,,character,draft,{},^Realms/Renascita/Legendarium/Characters/.*\.md$
+Realms/Renascita/Legendarium/Characters/Titus.md,1831,no,,character,draft,{},^Realms/Renascita/Legendarium/Characters/.*\.md$
+Realms/Renascita/Legendarium/Characters/Varkhaal Bloodlash.md,1377,yes,,character,draft,{},^Realms/Renascita/Legendarium/Characters/.*\.md$
+Realms/Renascita/Legendarium/Chosen of the Twilight.md,293,no,,artifact,draft,{},^Realms/Renascita/Legendarium/[^/]+\.md$
+Realms/Renascita/Legendarium/Forgeborn Prime.md,0,no,,artifact,stub,{},^Realms/Renascita/Legendarium/[^/]+\.md$
+Realms/Renascita/Legendarium/Magic/Arcane/Arcane.md,0,no,,technology,stub,{},^Realms/Renascita/Legendarium/Magic/.*\.md$
+Realms/Renascita/Legendarium/Magic/Arcane/Arcanometry.md,335,yes,,technology,draft,{},^Realms/Renascita/Legendarium/Magic/.*\.md$
+Realms/Renascita/Legendarium/Magic/Arcane/Glyph Magic.md,268,yes,,technology,draft,{},^Realms/Renascita/Legendarium/Magic/.*\.md$
+Realms/Renascita/Legendarium/Magic/Arcane/Rune Magic.md,273,yes,,technology,draft,{},^Realms/Renascita/Legendarium/Magic/.*\.md$
+Realms/Renascita/Legendarium/Magic/Nature/Nature.md,0,no,,technology,stub,{},^Realms/Renascita/Legendarium/Magic/.*\.md$
+Realms/Renascita/Legendarium/Magic/Nature/Primal Magic.md,192,yes,,technology,stub,{},^Realms/Renascita/Legendarium/Magic/.*\.md$
+Realms/Renascita/Legendarium/Magic/Nature/Psionic.md,0,no,,technology,stub,{},^Realms/Renascita/Legendarium/Magic/.*\.md$
+Realms/Renascita/Legendarium/Magic/Soul/Astral Weaving.md,331,yes,,technology,draft,{},^Realms/Renascita/Legendarium/Magic/.*\.md$
+Realms/Renascita/Legendarium/Magic/Soul/Divine Magic.md,44,yes,,technology,stub,{},^Realms/Renascita/Legendarium/Magic/.*\.md$
+Realms/Renascita/Legendarium/Monsters/Avatar of Unimus.md,3274,no,,character,draft,{},^Realms/Renascita/Legendarium/Monsters/.*\.md$
+Realms/Renascita/Legendarium/Natural Resources/Crystals/Frost Diamond.md,1081,yes,,resource,draft,{},^Realms/Renascita/Legendarium/Natural Resources/.*\.md$
+Realms/Renascita/Legendarium/Natural Resources/Crystals/Lux Lapis.md,612,no,,resource,draft,{},^Realms/Renascita/Legendarium/Natural Resources/.*\.md$
+Realms/Renascita/Legendarium/Natural Resources/Crystals/Nox Lapis.md,325,no,,resource,draft,{},^Realms/Renascita/Legendarium/Natural Resources/.*\.md$
+Realms/Renascita/Legendarium/Natural Resources/Crystals/Solaran Obsidian.md,2781,yes,,resource,draft,{},^Realms/Renascita/Legendarium/Natural Resources/.*\.md$
+Realms/Renascita/Legendarium/Natural Resources/Crystals/Storm Quartz.md,2636,yes,,resource,draft,{},^Realms/Renascita/Legendarium/Natural Resources/.*\.md$
+Realms/Renascita/Legendarium/Natural Resources/Crystals/Sun Topaz.md,2330,no,,resource,draft,{},^Realms/Renascita/Legendarium/Natural Resources/.*\.md$
+Realms/Renascita/Legendarium/Natural Resources/Metals/Everburn Steel.md,2043,no,,resource,draft,{},^Realms/Renascita/Legendarium/Natural Resources/.*\.md$
+Realms/Renascita/Legendarium/Natural Resources/Metals/Icevein Steel.md,1208,no,,resource,draft,{},^Realms/Renascita/Legendarium/Natural Resources/.*\.md$
+Realms/Renascita/Legendarium/Natural Resources/Metals/Salt Hardened Steel.md,1420,no,,resource,draft,{},^Realms/Renascita/Legendarium/Natural Resources/.*\.md$
+Realms/Renascita/Legendarium/Natural Resources/Metals/Skyforged Steel.md,1338,no,,resource,draft,{},^Realms/Renascita/Legendarium/Natural Resources/.*\.md$
+Realms/Renascita/Legendarium/Natural Resources/Minerals/Deepsea Coral.md,1340,yes,,resource,draft,{},^Realms/Renascita/Legendarium/Natural Resources/.*\.md$
+Realms/Renascita/Legendarium/Natural Resources/Minerals/Radiant Obsidian.md,1303,no,,resource,draft,{},^Realms/Renascita/Legendarium/Natural Resources/.*\.md$
+Realms/Renascita/Legendarium/Natural Resources/Ores/Abyssal Iron.md,1147,no,,resource,draft,{},^Realms/Renascita/Legendarium/Natural Resources/.*\.md$
+Realms/Renascita/Legendarium/Natural Resources/Ores/Aetherium.md,915,no,,resource,draft,{},^Realms/Renascita/Legendarium/Natural Resources/.*\.md$
+Realms/Renascita/Legendarium/Natural Resources/Ores/Skyshatter Ore.md,1281,no,,resource,draft,{},^Realms/Renascita/Legendarium/Natural Resources/.*\.md$
+Realms/Renascita/Legendarium/Natural Resources/Ores/Stillstone Ore.md,1190,no,,resource,draft,{},^Realms/Renascita/Legendarium/Natural Resources/.*\.md$
+Realms/Renascita/Legendarium/Natural Resources/Wood/Nyxthorn.md,1306,no,,resource,draft,{},^Realms/Renascita/Legendarium/Natural Resources/.*\.md$
+Realms/Renascita/Legendarium/Prophecies/Vecna's Prophecy.md,785,no,,prophecy,draft,{},^Realms/Renascita/Legendarium/Prophecies/.*\.md$
+Realms/Renascita/Legendarium/Technology/Hexweave Pylons.md,449,no,,technology,draft,{},^Realms/Renascita/Legendarium/Technology/.*\.md$
+Realms/Renascita/Legendarium/Technology/Science.md,0,no,,technology,stub,{},^Realms/Renascita/Legendarium/Technology/.*\.md$
+Realms/Renascita/Legendarium/Technology/Soul Engine.md,1719,no,,technology,draft,{},^Realms/Renascita/Legendarium/Technology/.*\.md$
+Realms/Renascita/Legendarium/Technology/Soulocron.md,368,no,,technology,draft,{},^Realms/Renascita/Legendarium/Technology/.*\.md$
+Realms/Renascita/Legendarium/Technology/Vialux.md,0,no,,technology,stub,{},^Realms/Renascita/Legendarium/Technology/.*\.md$
+Realms/Renascita/Renascita.md,0,no,,continent,stub,{},^Realms/Renascita/Renascita\.md$
+Realms/Renascita/Societies/Dwarven Holds/Deep Road.md,0,no,,essay,stub,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/Dwarven Holds/Dwarven Clans.md,1104,no,,essay,draft,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/Dwarven Holds/The Flamebound of Magnus' Rest/Characters/Brenna Turran.md,0,no,,character,stub,{},^Realms/Renascita/Societies/.*/Characters/.*\.md$
+Realms/Renascita/Societies/Dwarven Holds/The Flamebound of Magnus' Rest/Characters/Korran Deepnail.md,0,no,,character,stub,{},^Realms/Renascita/Societies/.*/Characters/.*\.md$
+Realms/Renascita/Societies/Dwarven Holds/The Flamebound of Magnus' Rest/Characters/Maerra Vulkess.md,0,no,,character,stub,{},^Realms/Renascita/Societies/.*/Characters/.*\.md$
+Realms/Renascita/Societies/Dwarven Holds/The Flamebound of Magnus' Rest/Characters/Volgrin Flameward.md,3647,yes,,character,draft,{},^Realms/Renascita/Societies/.*/Characters/.*\.md$
+Realms/Renascita/Societies/Dwarven Holds/The Flamebound of Magnus' Rest/Flamebound of Magnus' Rest.md,1994,no,,essay,draft,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/Dwarven Holds/The Flamebound of Magnus' Rest/Locations/Ashward Gates.md,0,no,,landmark,stub,{},^Realms/Renascita/Societies/.*/Locations/.*\.md$
+Realms/Renascita/Societies/Dwarven Holds/The Flamebound of Magnus' Rest/Locations/Ember Veins.md,0,no,,landmark,stub,{},^Realms/Renascita/Societies/.*/Locations/.*\.md$
+Realms/Renascita/Societies/Dwarven Holds/The Flamebound of Magnus' Rest/Locations/Eternal Flame.md,3885,no,,landmark,draft,{},^Realms/Renascita/Societies/.*/Locations/.*\.md$
+Realms/Renascita/Societies/Dwarven Holds/The Flamebound of Magnus' Rest/Locations/Inner Crucible.md,0,no,,landmark,stub,{},^Realms/Renascita/Societies/.*/Locations/.*\.md$
+Realms/Renascita/Societies/Dwarven Holds/The Flamebound of Magnus' Rest/Locations/The Ember Crown.md,0,no,,landmark,stub,{},^Realms/Renascita/Societies/.*/Locations/.*\.md$
+Realms/Renascita/Societies/Dwarven Holds/The Flamebound of Magnus' Rest/Orders/Forge Clerics.md,0,no,,organisation,stub,{},^Realms/Renascita/Societies/.*/Orders/.*\.md$
+Realms/Renascita/Societies/Dwarven Holds/The Flamebound of Magnus' Rest/Orders/Magnesium Devouts.md,3226,no,,organisation,draft,{},^Realms/Renascita/Societies/.*/Orders/.*\.md$
+Realms/Renascita/Societies/Dwarven Holds/The Flamebound of Magnus' Rest/Orders/Scorchguard.md,0,no,,organisation,stub,{},^Realms/Renascita/Societies/.*/Orders/.*\.md$
+Realms/Renascita/Societies/Dwarven Holds/The Flamebound of Magnus' Rest/Orders/Watch of the Dying Flame.md,0,no,,organisation,stub,{},^Realms/Renascita/Societies/.*/Orders/.*\.md$
+Realms/Renascita/Societies/Dwarven Holds/The Flamebound of Magnus' Rest/Traditions/Everburn Forges.md,0,no,,tradition,stub,{},^Realms/Renascita/Societies/.*/Traditions/.*\.md$
+Realms/Renascita/Societies/Dwarven Holds/The Flamebound of Magnus' Rest/Traditions/Radiant Forging.md,3121,no,,tradition,draft,{},^Realms/Renascita/Societies/.*/Traditions/.*\.md$
+Realms/Renascita/Societies/Dwarven Holds/The Icebound of Uftine/Characters/Bramli Ironvein.md,618,no,,character,draft,{},^Realms/Renascita/Societies/.*/Characters/.*\.md$
+Realms/Renascita/Societies/Dwarven Holds/The Icebound of Uftine/Characters/Gromdir Stillhand.md,1676,yes,,character,draft,{},^Realms/Renascita/Societies/.*/Characters/.*\.md$
+Realms/Renascita/Societies/Dwarven Holds/The Icebound of Uftine/Icebound of Uftine.md,2818,no,,essay,draft,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/Dwarven Holds/The Icebound of Uftine/Orders/Icebound Sentinels.md,239,no,,organisation,draft,{},^Realms/Renascita/Societies/.*/Orders/.*\.md$
+Realms/Renascita/Societies/Dwarven Holds/The Icebound of Uftine/Traditions/Iceforging.md,2646,no,,tradition,draft,{},^Realms/Renascita/Societies/.*/Traditions/.*\.md$
+Realms/Renascita/Societies/Dwarven Holds/The Stormbound of Thundrakar/Characters/Aundril Voxhammer.md,2101,yes,,character,draft,{},^Realms/Renascita/Societies/.*/Characters/.*\.md$
+Realms/Renascita/Societies/Dwarven Holds/The Stormbound of Thundrakar/Orders/Windscribes.md,2137,no,,organisation,draft,{},^Realms/Renascita/Societies/.*/Orders/.*\.md$
+Realms/Renascita/Societies/Dwarven Holds/The Stormbound of Thundrakar/Stormbound of Thundrakar.md,0,no,,essay,stub,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/Dwarven Holds/The Stormbound of Thundrakar/Traditions/Stormforging.md,2312,no,,tradition,draft,{},^Realms/Renascita/Societies/.*/Traditions/.*\.md$
+Realms/Renascita/Societies/Dwarven Holds/The Tidebound of Draumhavn/Characters/Dagrin Thorne.md,147,no,,character,stub,{},^Realms/Renascita/Societies/.*/Characters/.*\.md$
+Realms/Renascita/Societies/Dwarven Holds/The Tidebound of Draumhavn/Clans/Clan Blackwake.md,163,no,,organisation,stub,{},^Realms/Renascita/Societies/.*/Clans/.*\.md$
+Realms/Renascita/Societies/Dwarven Holds/The Tidebound of Draumhavn/Clans/Clan Brinevein.md,118,no,,organisation,stub,{},^Realms/Renascita/Societies/.*/Clans/.*\.md$
+Realms/Renascita/Societies/Dwarven Holds/The Tidebound of Draumhavn/Clans/Clan Deepforge.md,160,no,,organisation,stub,{},^Realms/Renascita/Societies/.*/Clans/.*\.md$
+Realms/Renascita/Societies/Dwarven Holds/The Tidebound of Draumhavn/Orders/Abysswatch.md,137,no,,organisation,stub,{},^Realms/Renascita/Societies/.*/Orders/.*\.md$
+Realms/Renascita/Societies/Dwarven Holds/The Tidebound of Draumhavn/Ships/Blackwake Ships.md,123,no,,essay,stub,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/Dwarven Holds/The Tidebound of Draumhavn/Ships/Brinevein Ships.md,120,no,,essay,stub,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/Dwarven Holds/The Tidebound of Draumhavn/Ships/Deepforge Ships.md,132,no,,essay,stub,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/Dwarven Holds/The Tidebound of Draumhavn/Tidebound of Draumhavn.md,1836,no,,essay,draft,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/Dwarven Holds/The Tidebound of Draumhavn/Traditions/The Salt-Blessed.md,134,yes,,tradition,stub,{},^Realms/Renascita/Societies/.*/Traditions/.*\.md$
+Realms/Renascita/Societies/Dwarven Holds/The Tidebound of Draumhavn/Traditions/Tideforging.md,112,no,,tradition,stub,{},^Realms/Renascita/Societies/.*/Traditions/.*\.md$
+Realms/Renascita/Societies/Dwarven Holds/Uftine Express.md,1399,no,,essay,draft,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/Firebrand Empire/Characters/Brakka Orien.md,464,yes,,character,draft,{},^Realms/Renascita/Societies/.*/Characters/.*\.md$
+Realms/Renascita/Societies/Firebrand Empire/Characters/Breona.md,956,no,,character,draft,{},^Realms/Renascita/Societies/.*/Characters/.*\.md$
+Realms/Renascita/Societies/Firebrand Empire/Characters/Breven Deneith.md,394,yes,,character,draft,{},^Realms/Renascita/Societies/.*/Characters/.*\.md$
+Realms/Renascita/Societies/Firebrand Empire/Characters/Broxiz Tharashk.md,403,yes,,character,draft,{},^Realms/Renascita/Societies/.*/Characters/.*\.md$
+Realms/Renascita/Societies/Firebrand Empire/Characters/Caelus Lyrandar.md,499,yes,,character,draft,{},^Realms/Renascita/Societies/.*/Characters/.*\.md$
+Realms/Renascita/Societies/Firebrand Empire/Characters/Cyrus Odorous.md,0,no,,character,stub,{},^Realms/Renascita/Societies/.*/Characters/.*\.md$
+Realms/Renascita/Societies/Firebrand Empire/Characters/Dalin Vadalis.md,383,yes,,character,draft,{},^Realms/Renascita/Societies/.*/Characters/.*\.md$
+Realms/Renascita/Societies/Firebrand Empire/Characters/Elar Phiarlan.md,394,yes,,character,draft,{},^Realms/Renascita/Societies/.*/Characters/.*\.md$
+Realms/Renascita/Societies/Firebrand Empire/Characters/Esravash Lyrandar.md,363,yes,,character,draft,{},^Realms/Renascita/Societies/.*/Characters/.*\.md$
+Realms/Renascita/Societies/Firebrand Empire/Characters/Gherra Tharashk.md,497,yes,,character,draft,{},^Realms/Renascita/Societies/.*/Characters/.*\.md$
+Realms/Renascita/Societies/Firebrand Empire/Characters/Hallen Cannith.md,482,yes,,character,draft,{},^Realms/Renascita/Societies/.*/Characters/.*\.md$
+Realms/Renascita/Societies/Firebrand Empire/Characters/Kheros Medani.md,510,yes,,character,draft,{},^Realms/Renascita/Societies/.*/Characters/.*\.md$
+Realms/Renascita/Societies/Firebrand Empire/Characters/Kwanti Orien.md,338,yes,,character,draft,{},^Realms/Renascita/Societies/.*/Characters/.*\.md$
+Realms/Renascita/Societies/Firebrand Empire/Characters/Lysse Lyrruman Sivis.md,393,yes,,character,draft,{},^Realms/Renascita/Societies/.*/Characters/.*\.md$
+Realms/Renascita/Societies/Firebrand Empire/Characters/Morrikan Kundarak.md,374,yes,,character,draft,{},^Realms/Renascita/Societies/.*/Characters/.*\.md$
+Realms/Renascita/Societies/Firebrand Empire/Characters/Rymelle Sivis.md,468,yes,,character,draft,{},^Realms/Renascita/Societies/.*/Characters/.*\.md$
+Realms/Renascita/Societies/Firebrand Empire/Characters/Trelib Medani.md,478,yes,,character,draft,{},^Realms/Renascita/Societies/.*/Characters/.*\.md$
+Realms/Renascita/Societies/Firebrand Empire/Characters/Tressa Vadalis.md,476,yes,,character,draft,{},^Realms/Renascita/Societies/.*/Characters/.*\.md$
+Realms/Renascita/Societies/Firebrand Empire/Characters/Ulara Jorasco.md,410,yes,,character,draft,{},^Realms/Renascita/Societies/.*/Characters/.*\.md$
+Realms/Renascita/Societies/Firebrand Empire/Characters/Yoren Silverhand.md,374,yes,,character,draft,{},^Realms/Renascita/Societies/.*/Characters/.*\.md$
+Realms/Renascita/Societies/Firebrand Empire/Characters/Zorlan Cannith.md,405,yes,,character,draft,{},^Realms/Renascita/Societies/.*/Characters/.*\.md$
+Realms/Renascita/Societies/Firebrand Empire/Citizenship.md,0,no,,essay,stub,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/Firebrand Empire/Emperors/Duo - Second Emperor.md,929,no,,essay,draft,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/Firebrand Empire/Emperors/Octavian - Eighth Emperor.md,1056,no,,essay,draft,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/Firebrand Empire/Emperors/Quintavius - Fifth Emperor.md,963,no,,essay,draft,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/Firebrand Empire/Emperors/Septimus - Seventh Emperor.md,1011,no,,essay,draft,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/Firebrand Empire/Emperors/Sextus - Sixth Emperor.md,905,no,,essay,draft,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/Firebrand Empire/Emperors/Tertia - Third Empress.md,861,no,,essay,draft,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/Firebrand Empire/Emperors/Tetrus - Fourth Emperor.md,906,no,,essay,draft,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/Firebrand Empire/Emperors/Unimus - First Emperor.md,1037,no,,essay,draft,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/Firebrand Empire/Emperors.md,234,no,,essay,draft,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/Firebrand Empire/Firebrand Empire.md,1804,no,,faction,draft,"{""realm"": ""[[Renascita]]""}",^Realms/Renascita/Societies/([^/]+)/\1\.md$
+Realms/Renascita/Societies/Firebrand Empire/Great Houses/House Cannith.md,779,yes,,essay,draft,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/Firebrand Empire/Great Houses/House Deneith.md,787,yes,,essay,draft,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/Firebrand Empire/Great Houses/House Jorasco.md,774,yes,,essay,draft,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/Firebrand Empire/Great Houses/House Kundarak.md,751,yes,,essay,draft,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/Firebrand Empire/Great Houses/House Lyrandar.md,723,yes,,essay,draft,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/Firebrand Empire/Great Houses/House Medani.md,854,yes,,essay,draft,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/Firebrand Empire/Great Houses/House Orien.md,781,yes,,essay,draft,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/Firebrand Empire/Great Houses/House Phiarlan.md,829,yes,,essay,draft,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/Firebrand Empire/Great Houses/House Silverhand.md,722,yes,,essay,draft,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/Firebrand Empire/Great Houses/House Sivis.md,778,yes,,essay,draft,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/Firebrand Empire/Great Houses/House Tharashk.md,805,yes,,essay,draft,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/Firebrand Empire/Great Houses/House Vadalis.md,707,yes,,essay,draft,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/Firebrand Empire/Guilds/Lux Faber.md,193,no,,essay,stub,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/Firebrand Empire/Orders/Night Warriors.md,244,no,,organisation,draft,{},^Realms/Renascita/Societies/.*/Orders/.*\.md$
+Realms/Renascita/Societies/Firebrand Empire/Stained.md,0,no,,essay,stub,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/Firebrand Empire/The 12 Great Houses.md,5354,no,,essay,draft,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/Firebrand Empire/Tomb of Emperors.md,5683,no,,essay,draft,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/People of Mokoweri/People of Mokoweri.md,1622,no,,faction,draft,"{""realm"": ""[[Renascita]]""}",^Realms/Renascita/Societies/([^/]+)/\1\.md$
+Realms/Renascita/Societies/People of Mokoweri/Tyrannosaurs of Mokoweri/Trials of the Tyrannorsaurs.md,3906,no,,essay,draft,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/People of Mokoweri/Tyrannosaurs of Mokoweri/Tyrannosaurs of Mokoweri.md,2711,no,,essay,draft,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/Rahalan Nomads/Rahalan Nomads.md,6195,no,,faction,draft,"{""realm"": ""[[Renascita]]""}",^Realms/Renascita/Societies/([^/]+)/\1\.md$
+Realms/Renascita/Societies/Saurian Enclave/Contents of the Archive of the Ancients.md,8083,no,,essay,draft,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/Saurian Enclave/Elders/Elder Kirex.md,1426,no,,essay,draft,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/Saurian Enclave/Elders/Elder Marn.md,1533,no,,essay,draft,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/Saurian Enclave/Elders/Elder Sylthassi.md,1481,no,,essay,draft,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/Saurian Enclave/Elders/Elder Thrasuun.md,1694,no,,essay,draft,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/Saurian Enclave/Elders/Elder Vellara.md,2091,no,,essay,draft,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/Saurian Enclave/Rite of Ascension.md,3628,no,,essay,draft,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/Saurian Enclave/The Prophecy of the Golden Dawn.md,5080,no,,essay,draft,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/The Blackiron Collective/Characters/Drezna Ironmaul.md,2314,no,,character,draft,{},^Realms/Renascita/Societies/.*/Characters/.*\.md$
+Realms/Renascita/Societies/The Blackiron Collective/Characters/Kael Durnith.md,516,no,,character,draft,{},^Realms/Renascita/Societies/.*/Characters/.*\.md$
+Realms/Renascita/Societies/The Blackiron Collective/Characters/Lyria Solvayne.md,436,no,,character,draft,{},^Realms/Renascita/Societies/.*/Characters/.*\.md$
+Realms/Renascita/Societies/The Blackiron Collective/Characters/Torvik Emberthane.md,417,no,,character,draft,{},^Realms/Renascita/Societies/.*/Characters/.*\.md$
+Realms/Renascita/Societies/The Blackiron Collective/Characters/Vaelis Strondheim.md,689,no,,character,draft,{},^Realms/Renascita/Societies/.*/Characters/.*\.md$
+Realms/Renascita/Societies/The Blackiron Collective/Characters/Veyna Coalwright.md,397,no,,character,draft,{},^Realms/Renascita/Societies/.*/Characters/.*\.md$
+Realms/Renascita/Societies/The Blackiron Collective/Coalforge Engine.md,0,no,,essay,stub,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/The Blackiron Collective/Ironclad Arena.md,1387,no,,essay,draft,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/The Blackiron Collective/Rusted Reliquary.md,2867,no,,essay,draft,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/The Blackiron Collective/The Blackiron Collective.md,0,no,,faction,stub,"{""realm"": ""[[Renascita]]""}",^Realms/Renascita/Societies/([^/]+)/\1\.md$
+Realms/Renascita/Societies/The Blackiron Collective/Vault of Souls.md,1147,no,,essay,draft,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/The Solaran Federation of Worlds/Characters/Iris Andras.md,5503,no,,character,draft,{},^Realms/Renascita/Societies/.*/Characters/.*\.md$
+Realms/Renascita/Societies/The Solaran Federation of Worlds/Characters/Ketharion.md,1698,no,,character,draft,{},^Realms/Renascita/Societies/.*/Characters/.*\.md$
+Realms/Renascita/Societies/The Solaran Federation of Worlds/Characters/SOL-4R.md,729,no,,character,draft,{},^Realms/Renascita/Societies/.*/Characters/.*\.md$
+Realms/Renascita/Societies/The Solaran Federation of Worlds/Orders/Sun Speaker.md,0,no,,organisation,stub,{},^Realms/Renascita/Societies/.*/Orders/.*\.md$
+Realms/Renascita/Societies/The Solaran Federation of Worlds/Solarans.md,6508,no,,essay,draft,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/The Solaran Federation of Worlds/Technology/Ab Solara.md,4413,no,,essay,draft,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/The Solaran Federation of Worlds/Technology/Arcane Observatory.md,1021,no,,essay,draft,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/The Solaran Federation of Worlds/Technology/Endless Sun.md,1033,no,,essay,draft,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/The Solaran Federation of Worlds/Technology/LifeThread Matrix.md,3599,no,,essay,draft,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/The Solaran Federation of Worlds/Technology/Solaran Technology.md,0,no,,essay,stub,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/The Solaran Federation of Worlds/Technology/The Radiant Dawn.md,3122,no,,essay,draft,{},^Realms/Renascita/Societies/.*\.md$
+Realms/Renascita/Societies/The Solaran Federation of Worlds/Traditions/Solartificers.md,853,yes,,tradition,draft,{},^Realms/Renascita/Societies/.*/Traditions/.*\.md$
+Realms/Renascita/Societies/Thraysian Magocracy/Characters/Aelar Amakiir.md,68,no,,character,stub,{},^Realms/Renascita/Societies/.*/Characters/.*\.md$
+Realms/Renascita/Societies/Thraysian Magocracy/Characters/Arthur Denison.md,46,no,,character,stub,{},^Realms/Renascita/Societies/.*/Characters/.*\.md$
+Realms/Renascita/Societies/Thraysian Magocracy/Characters/Farid al-Hakim.md,22,no,,character,stub,{},^Realms/Renascita/Societies/.*/Characters/.*\.md$
+Realms/Renascita/Societies/Thraysian Magocracy/Characters/Khadir Zahir.md,212,yes,,character,draft,{},^Realms/Renascita/Societies/.*/Characters/.*\.md$
+Realms/Renascita/Societies/Thraysian Magocracy/Characters/Malik al-Bashaad.md,217,yes,,character,draft,{},^Realms/Renascita/Societies/.*/Characters/.*\.md$
+Realms/Renascita/Societies/Thraysian Magocracy/Characters/Razan Sharal.md,202,yes,,character,draft,{},^Realms/Renascita/Societies/.*/Characters/.*\.md$
+Realms/Renascita/Societies/Thraysian Magocracy/Characters/Sariv al-Ruhana.md,208,yes,,character,draft,{},^Realms/Renascita/Societies/.*/Characters/.*\.md$
+Realms/Renascita/Societies/Thraysian Magocracy/Characters/Sultan Rafiq al-Salhar.md,223,yes,,character,draft,{},^Realms/Renascita/Societies/.*/Characters/.*\.md$
+Realms/Renascita/Societies/Thraysian Magocracy/Characters/Tamirah Qadat.md,188,yes,,character,stub,{},^Realms/Renascita/Societies/.*/Characters/.*\.md$
+Realms/Renascita/Societies/Thraysian Magocracy/Characters/Zariel Mephista.md,36,no,,character,stub,{},^Realms/Renascita/Societies/.*/Characters/.*\.md$
+Realms/Renascita/Societies/Thraysian Magocracy/Orders/Athenaeum of Arcane Arts and Sciences/Athenaeum of Arcane Arts and Sciences.md,6747,no,,organisation,draft,{},^Realms/Renascita/Societies/.*/Orders/.*\.md$
+Realms/Renascita/Societies/Thraysian Magocracy/Orders/Athenaeum of Arcane Arts and Sciences/Eclipsed Civilisations Initiative.md,3773,yes,,organisation,draft,{},^Realms/Renascita/Societies/.*/Orders/.*\.md$
+Realms/Renascita/Societies/Thraysian Magocracy/Orders/Athenaeum of Arcane Arts and Sciences/Soulbound Instruments Registry.md,241,yes,,organisation,draft,{},^Realms/Renascita/Societies/.*/Orders/.*\.md$
+Realms/Renascita/Societies/Thraysian Magocracy/Orders/Athenaeum of Arcane Arts and Sciences/The Forgotten Pathways Network.md,3662,no,,organisation,draft,{},^Realms/Renascita/Societies/.*/Orders/.*\.md$
+Realms/Renascita/Societies/Thraysian Magocracy/Orders/Khadiyats/Khadiyat-e Azdaham.md,226,yes,,organisation,draft,{},^Realms/Renascita/Societies/.*/Orders/.*\.md$
+Realms/Renascita/Societies/Thraysian Magocracy/Orders/Khadiyats/Khadiyat-e Nehrun.md,219,yes,,organisation,draft,{},^Realms/Renascita/Societies/.*/Orders/.*\.md$
+Realms/Renascita/Societies/Thraysian Magocracy/Orders/Khadiyats/Khadiyat-e Saramun.md,230,yes,,organisation,draft,{},^Realms/Renascita/Societies/.*/Orders/.*\.md$
+Realms/Renascita/Societies/Thraysian Magocracy/Orders/Khadiyats/Khadiyat-e Talvareh.md,227,yes,,organisation,draft,{},^Realms/Renascita/Societies/.*/Orders/.*\.md$
+Realms/Renascita/Societies/Thraysian Magocracy/Orders/Khadiyats/Khadiyat-e Zinnarat.md,221,yes,,organisation,draft,{},^Realms/Renascita/Societies/.*/Orders/.*\.md$
+Realms/Renascita/Societies/Thraysian Magocracy/Orders/Majlis of Arcane Sovereignty/Magisterial Glyph Codes.md,196,yes,,organisation,stub,{},^Realms/Renascita/Societies/.*/Orders/.*\.md$
+Realms/Renascita/Societies/Thraysian Magocracy/Orders/Majlis of Arcane Sovereignty/Majlis of Arcane Sovereignty.md,228,yes,,organisation,draft,{},^Realms/Renascita/Societies/.*/Orders/.*\.md$
+Realms/Renascita/Societies/Thraysian Magocracy/Orders/Majlis of Arcane Sovereignty/Rites of Ascension.md,187,yes,,organisation,stub,{},^Realms/Renascita/Societies/.*/Orders/.*\.md$
+Realms/Renascita/Societies/Thraysian Magocracy/Orders/The Inscripted Order.md,0,no,,organisation,stub,{},^Realms/Renascita/Societies/.*/Orders/.*\.md$
+Realms/Renascita/Societies/Thraysian Magocracy/Orders/The Redactors.md,1,no,,organisation,stub,{},^Realms/Renascita/Societies/.*/Orders/.*\.md$
+Realms/Renascita/Societies/Thraysian Magocracy/Thraysian Magocracy.md,612,no,,faction,draft,"{""realm"": ""[[Renascita]]""}",^Realms/Renascita/Societies/([^/]+)/\1\.md$
+Realms/Renascita/Societies/Thraysian Magocracy/Traditions/Glyphcasting.md,0,no,,tradition,stub,{},^Realms/Renascita/Societies/.*/Traditions/.*\.md$
+Realms/Renascita/Societies/Thraysian Magocracy/Traditions/Magical Regulation.md,0,no,,tradition,stub,{},^Realms/Renascita/Societies/.*/Traditions/.*\.md$
+Realms/Renascita/Societies/Thraysian Magocracy/Traditions/The Four Acts.md,0,no,,tradition,stub,{},^Realms/Renascita/Societies/.*/Traditions/.*\.md$
+Realms/Renascita/Societies/Velkhar Dominion/Characters/Vaelira Lyrandar.md,29,yes,,character,stub,{},^Realms/Renascita/Societies/.*/Characters/.*\.md$
+Realms/Renascita/Societies/Velkhar Dominion/Velkhar Dominion.md,1176,no,,faction,draft,"{""realm"": ""[[Renascita]]""}",^Realms/Renascita/Societies/([^/]+)/\1\.md$
+Realms/Sigmora/Sigmora.md,270,no,,landmark,draft,{},^Realms/(Solirion|Nihilum|Thargrun|Veltharyn|Woudum|Sigmora|Infernum|Imperium)/.*\.md$
+Realms/Solirion/Solirion.md,39,no,,landmark,stub,{},^Realms/(Solirion|Nihilum|Thargrun|Veltharyn|Woudum|Sigmora|Infernum|Imperium)/.*\.md$
+Realms/Thargrun/Thargrun.md,39,no,,landmark,stub,{},^Realms/(Solirion|Nihilum|Thargrun|Veltharyn|Woudum|Sigmora|Infernum|Imperium)/.*\.md$
+Realms/Veltharyn/Veltharyn.md,39,no,,landmark,stub,{},^Realms/(Solirion|Nihilum|Thargrun|Veltharyn|Woudum|Sigmora|Infernum|Imperium)/.*\.md$
+Realms/Woudum/Woudum.md,36,no,,landmark,stub,{},^Realms/(Solirion|Nihilum|Thargrun|Veltharyn|Woudum|Sigmora|Infernum|Imperium)/.*\.md$
+Story/Blackiron Collective/Trial by Steel.md,1349,no,,essay,draft,{},^Story/.*\.md$
+Story/Mokoweri/Arrival in Aelora.md,14480,no,,essay,draft,{},^Story/.*\.md$

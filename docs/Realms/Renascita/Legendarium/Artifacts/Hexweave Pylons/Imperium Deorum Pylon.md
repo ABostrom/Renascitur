@@ -1,2 +1,0 @@
-Location: [[Imperium]]
-Status: Online

@@ -1,0 +1,29 @@
+---
+aat-event-start-date: 1000
+aat-render-enabled: true
+timelines:
+- first-age
+- cosmology
+type: event
+status: draft
+era: "[[Age of the Endless Sun]]"
+tags: []
+aliases:
+- The World Trees Take Root
+year_display: ES 1000
+year: 1000
+importance: ''
+victors: []
+casualties: []
+outcome: ''
+participants:
+- "[[Aelion]]"
+- "[[Tharamos]]"
+- "[[Sylara]]"
+- "[[Valtor]]"
+- "[[Solaran]]"
+- "[[Grundthain]]"
+- "[[Kyojin]]"
+- "[[Human]]"
+---
+The great World Trees—such as [[Irasandra]]—emerge in sacred sites across the world. These ancient living conduits bind [[soul]], nature, and magic into one vast, interconnected lattice.

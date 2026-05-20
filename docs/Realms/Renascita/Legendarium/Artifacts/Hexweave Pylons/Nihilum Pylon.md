@@ -1,2 +1,0 @@
-Location: [[Nihilum]]
-Status: Offline

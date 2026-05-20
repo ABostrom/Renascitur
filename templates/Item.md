@@ -1,14 +1,16 @@
 ---
 type: item
-tags: [item]
-rarity: 
-origin: 
+status: draft
+tags: []
+rarity: common
+origin: ''
+created: <% tp.date.now("YYYY-MM-DD") %>
+updated: <% tp.date.now("YYYY-MM-DD") %>
+nature: ''
+importance: ''
 ---
-
 # {{title}}
 
-## 🧾 Description
-_What is it and what does it do?_
+## Description
 
-## 🔗 Connection
-- **Origin Location or Faction**: [[ ]]
+## Use

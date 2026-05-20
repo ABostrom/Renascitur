@@ -1,1 +1,0 @@
-The plane of [[Concorda]] and [[Luxar]]

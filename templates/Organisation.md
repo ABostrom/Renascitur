@@ -1,13 +1,22 @@
 ---
 type: organisation
-tags: [organisation]
-parent_faction: 
+status: draft
+tags: []
+parent_faction: ''
+realm: ''
+era_founded: ''
+created: <% tp.date.now("YYYY-MM-DD") %>
+updated: <% tp.date.now("YYYY-MM-DD") %>
+nature: ''
+importance: ''
+alignment: ''
 ---
-
 # {{title}}
 
-## 🧵 Description
-_What is this order/guild/cult about?_
+## Purpose
 
-## 🔗 Connection
-- **Part of Faction**: [[ ]]
+## Structure
+
+## Membership
+
+## History

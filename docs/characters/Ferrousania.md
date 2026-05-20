@@ -1,0 +1,21 @@
+---
+type: character
+status: stub
+tags: []
+realm: "[[Renascita]]"
+nature: ''
+importance: ''
+alignment: ''
+gender: ''
+role:
+- warrior
+magic: []
+living_status: living
+era_of_birth: ''
+era_of_death: ''
+---
+# Ferrousania - The Sorrowful
+Ancient Iron Dragon
+
+Location: [[Ironfang Deep]]
+Possession: [[Time piece of travel]]

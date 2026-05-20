@@ -1,0 +1,34 @@
+---
+tags:
+- leader
+- House Vadalis
+aliases:
+- Dalin
+type: character
+status: draft
+realm: "[[Renascita]]"
+affiliation: "[[Firebrand Empire]]"
+nature: mortal
+importance: ''
+alignment: ''
+gender: ''
+role:
+- craftsman
+magic: []
+living_status: living
+era_of_birth: ''
+era_of_death: ''
+race: "[[Imperial Human]]"
+culture: "[[Firebrand Empire]]"
+house: "[[House Vadalis]]"
+location: "[[Old Westgate]]"
+continent: "[[Pyrosia]]"
+---
+## Affiliation
+- **House**: [[House Vadalis]]
+
+## Race
+- [[Human]]
+
+## Description
+Dalin is a patient and intuitive beastmaster, renowned for her deep connection with creatures of all kinds. She views the balance between civilization and nature as sacred and often acts as a bridge between the Empire's frontier and its heart.

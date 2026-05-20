@@ -1,2 +1,0 @@
-Location [[Woudum]]
-Status: Offline

@@ -1,0 +1,102 @@
+---
+type: faction
+status: draft
+realm: "[[Renascita]]"
+tags: []
+nature: mortal
+importance: notable
+alignment: lawful-neutral
+society_form: imperial
+government: monarchy
+economy: industrial
+seat: ''
+size: continental
+allies:
+- "[[Dwarven Holds]]"
+rivals:
+- "[[Weavers of Agony]]"
+- "[[Souls of the Devourer]]"
+magic: []
+leadership:
+- "[[Unimus - First Emperor]]"
+aliases:
+- Firebrand
+- Firebrand Empire
+- The Firebrand Empire
+era_founded: "[[Age of Night]]"
+---
+The Firebrand Empire is a powerful and highly organised civilization that resembles the ancient Roman Empire. The Empire is ruled by an [[Emperors]] and [[The 12 Great Houses]], each of which holds significant influence over the Empire's affairs. Citizenship is not guaranteed by birthright in the Firebrand Empire; rather, it must be earned through service to the Empire and deeds worthy of recognition. This system of earned [[Citizenship]] emphasises individual achievement and meritocracy, but the great houses use it as a form of control over the common people.
+
+The Firebrand Empire is known for its strict policies against the use of magic, which is viewed as dangerous and corrupting. To protect itself from the dangers of the world, the Empire has built large walls made of a magical material called [[Lux Lapis]], which forms powerful barriers to keep out threats. The [[Lux Lapis]] also protects the Empire from the [[Aberrations|night terrors]] that inhabit their region.
+
+The Firebrand Empire values order, discipline, and hierarchy, with power and influence concentrated in the hands of the ruling elite. The common people have limited say in the affairs of the Empire, and dissent or rebellion is likely to be met with harsh punishment. [[The 12 Great Houses]] use citizenship as a form of control, rewarding their own supporters and punishing those who oppose them. Some cities within the empire are separated in two, where the citizenry live in comfort and the other half where the “[[Stained]]” live. 
+
+Despite its aversion to magic, the Firebrand Empire is technologically advanced, with a sophisticated infrastructure and military. The Empire's defensive capabilities are impressive, with the [[Lux Lapis]] walls and barriers providing strong protection against external threats.
+
+---
+
+## Contents
+
+<!-- AUTO-INJECTED-DYNAMIC-CONTENTS — delete this comment and everything below to opt out; safe to edit otherwise -->
+
+### Sub-factions
+
+```dataview
+LIST FROM ""
+WHERE type = "faction" AND contains(file.outlinks, this.file.link)
+SORT file.name ASC
+```
+
+### Noble houses within
+
+```dataview
+TABLE WITHOUT ID
+  file.link AS "House",
+  current_head AS "Head",
+  seat AS "Seat",
+  sigil AS "Sigil"
+FROM ""
+WHERE type = "house" AND contains(file.outlinks, this.file.link)
+SORT file.name ASC
+```
+
+### Members
+
+```dataview
+TABLE WITHOUT ID
+  file.link AS "Name",
+  race AS "Race",
+  location AS "Location"
+FROM ""
+WHERE type = "character" AND contains(file.outlinks, this.file.link)
+SORT file.name ASC
+```
+
+### Organisations within
+
+```dataview
+LIST FROM ""
+WHERE type = "organisation" AND contains(file.outlinks, this.file.link)
+SORT file.name ASC
+```
+
+### Events involving this faction
+
+```dataview
+TABLE WITHOUT ID
+  file.link AS "Event",
+  era AS "Era",
+  year_display AS "When"
+FROM ""
+WHERE type = "event" AND contains(participants, this.file.link)
+SORT year ASC
+```
+
+### Other notes referencing this faction
+
+```dataview
+LIST WHERE contains(file.inlinks, this.file.link)
+  AND !contains(string(file.path), "_meta/")
+SORT file.name ASC
+```
+

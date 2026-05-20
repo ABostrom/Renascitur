@@ -1,0 +1,38 @@
+---
+tags:
+- city-overseer
+- House Vadalis
+aliases:
+- Vadalis
+- Old Westgate Overseer
+type: character
+status: draft
+realm: "[[Renascita]]"
+affiliation: "[[Firebrand Empire]]"
+nature: mortal
+importance: ''
+alignment: ''
+gender: ''
+role:
+- warrior
+magic: []
+living_status: living
+era_of_birth: ''
+era_of_death: ''
+race: "[[Imperial Human]]"
+culture: "[[Firebrand Empire]]"
+house: "[[House Vadalis]]"
+location: "[[Old Westgate]]"
+continent: "[[Pyrosia]]"
+---
+## Title
+- Overseer of [[Old Westgate]]
+
+## House Affiliation
+- [[House Vadalis]]
+
+## Race
+- [[Human]]
+
+## Description
+Marshal Tressa Vadalis is the appointed Overseer of [[Old Westgate]], a prominent human noble and younger sister of [[Dalin Vadalis]]. They govern the city in service to the regional Imperator and maintain the delicate balance between imperial mandate and local power.

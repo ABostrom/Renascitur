@@ -1,3 +1,0 @@
-Location [[Sigmora]]
-Status: Online
-

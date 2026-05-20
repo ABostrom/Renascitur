@@ -1,0 +1,24 @@
+---
+tags:
+- location
+- headquarters
+- House Tharashk
+aliases:
+- The Den
+type: landmark
+status: draft
+continent: "[[Pyrosia]]"
+realm: "[[Renascita]]"
+inside: "[[Lion's Rest]]"
+nature: ''
+importance: minor
+controlled_by: "[[House Tharashk]]"
+---
+## Associated House
+- [[House Tharashk]]
+
+## City
+- [[Lion's Rest]]
+
+## Description
+The Den serves as the central stronghold or operational base of House Tharashk. Situated in the city of [[Lion's Rest]], it reflects the culture and function of the house it represents.

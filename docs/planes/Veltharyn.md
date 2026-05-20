@@ -1,0 +1,8 @@
+---
+type: landmark
+status: stub
+tags: []
+nature: ''
+importance: minor
+---
+The plane of [[Concorda]] and [[Noxar Gods]]

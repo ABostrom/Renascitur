@@ -118,7 +118,7 @@ def generate_world(start_year : int) -> World:
     Esravash.is_immortal = True
 
     founders = defaultdict(lambda: None)
-    founders["Lyrandar"] = Esravash
+    founders["Lyrandar"] = Esravash # type: ignore
     
     # House -> race mapping
     house_races = {

@@ -1,1 +1,0 @@
-Hidden beneath the Tomb of the Emperors

@@ -1,0 +1,26 @@
+---
+type: character
+status: draft
+tags: []
+realm: "[[Renascita]]"
+affiliation: "[[Firebrand Empire]]"
+nature: mortal
+importance: ''
+alignment: ''
+gender: male
+role:
+- ruler
+- warrior
+magic: []
+living_status: deceased
+era_of_birth: ''
+era_of_death: ''
+race: "[[Leonin]]"
+culture: "[[Firebrand Empire]]"
+location: "[[Lion's Rest]]"
+continent: "[[Pyrosia]]"
+---
+- **Appearance**: Duo is portrayed as a powerful [[docs/Races/Kyojin/Leonin/Leonin|Leonin]] warrior with a mane of deep crimson, symbolizing his fierce spirit and passion for expanding the empire. His eyes are a fiery orange, and his armor is decorated with motifs of flames and swords, representing his conquests.
+- **Quote**: "An empire is not built on peace alone; it must be forged in the fires of battle."
+- **Life Achievement**: Duo expanded the Empire of [[Pyrosia]], leading successful campaigns that nearly doubled its size. He is also credited with founding the first imperial legions and establishing the empire's military might.
+- **Spouse**: **Empress Valeria** - A [[docs/Races/Kyojin/Leonin/Leonin|Leonin]] warrior queen who fought alongside Duo in many of his campaigns. Known for her unmatched skills in combat and her strategic mind, Valeria was as respected on the battlefield as she was in the imperial court.

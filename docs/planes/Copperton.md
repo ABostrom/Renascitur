@@ -1,0 +1,8 @@
+---
+type: landmark
+status: draft
+tags: []
+nature: ''
+importance: minor
+---
+Copperton is the smallest of the four cities, as most on this plane prefer a simple agricultural life. Living of the land, with small homesteads and farms, interspersing the mountainous terrain. The city is busy during the harvest when the dragonborn and [[Terrasi]] throw a giant festival.
