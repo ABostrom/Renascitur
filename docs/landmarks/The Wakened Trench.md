@@ -1,7 +1,7 @@
 ---
 type: landmark
 status: draft
-continent: "[[Draumhavn]]"
+continent: "[[Draumhavn Isle]]"
 tags: []
 realm: "[[Renascita]]"
 nature: corrupted
@@ -36,4 +36,4 @@ The [[Draumhavn]] maintain an unbroken watch over the Wakened Trench. Generation
 
 The trench is not just a prison—it is a wound. The [[The Salt-Blessed|Tidebound]] believe it bleeds into the sea, poisoning the current with [[Leviathan]]’s rage. They do not seek to purify or cleanse it. They seek only to **endure**—to stand as a bulwark between the deep and the world above.
 
-> “We do not tame the tide. We bear its burden.” — [[The Tidebound of Draumhavn]] Creed
+> “We do not tame the tide. We bear its burden.” — [[The Tidebound of Draumhavn]] C

@@ -1,7 +1,7 @@
 ---
 type: landmark
 status: stub
-continent: "[[Draumhavn]]"
+continent: "[[Draumhavn Isle]]"
 tags: []
 realm: "[[Renascita]]"
 nature: ''
@@ -11,4 +11,4 @@ controlled_by: "[[The Tidebound of Draumhavn]]"
 # Stormgates
 
 ## Overview
-The **Stormgates** are the outer seawalls of [[Draumhavn]], built from reinforced basalt...
+The **Stormgates** are the outer seawalls of [[Draumhavn]], built from reinforced basa

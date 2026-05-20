@@ -1,7 +1,7 @@
 ---
 type: landmark
 status: stub
-continent: "[[Draumhavn]]"
+continent: "[[Draumhavn Isle]]"
 tags: []
 realm: "[[Renascita]]"
 nature: ''
@@ -11,4 +11,4 @@ controlled_by: "[[The Tidebound of Draumhavn]]"
 # Salt Cradle
 
 ## Overview
-The **Salt Cradle** is the massive, semi-submerged harbor at the heart of [[Draumhavn]]...
+The **Salt Cradle** is the massive, semi-submerged harbor at the heart of [[Draumhavn
