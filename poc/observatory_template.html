@@ -1,0 +1,746 @@
+<title>Observatory PoC</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a working console. A sticky header with a run switch and tabs, then the inspector body. */
+:root {
+  --bg: #eef0f1; --surface: #f9fafa; --sunk: #e4e8ea; --ink: #172129; --muted: #5b6770; --line: #d3d9dd;
+  --lux: #0b6f78; --lux-soft: #d5ecee; --ember: #a8501c; --ember-soft: #f3e1d5;
+  --true: #2f7a3e; --lie: #a3262a; --false: #8a5a00; --half: #5a4fa0;
+  --c0: #2f7a3e; --c1: #a3262a; --c2: #8a5a00; --c3: #5a4fa0; --c4: #b0477e; --c5: #c26a3a;
+  --display: "Marcellus", Georgia, serif;
+  --body: "IBM Plex Sans", system-ui, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f1519; --surface: #172026; --sunk: #121a1f; --ink: #e3e8eb; --muted: #94a2ab; --line: #2a363e;
+  --lux: #5fc9d2; --lux-soft: #173a3f; --ember: #e59460; --ember-soft: #3d2618;
+  --true: #7cc98b; --lie: #ef7f7f; --false: #e2b54a; --half: #a99cf0;
+  --c0: #7cc98b; --c1: #ef7f7f; --c2: #e2b54a; --c3: #a99cf0; --c4: #e58bbd; --c5: #f0a070; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #0f1519; --surface: #172026; --sunk: #121a1f; --ink: #e3e8eb; --muted: #94a2ab; --line: #2a363e;
+  --lux: #5fc9d2; --lux-soft: #173a3f; --ember: #e59460; --ember-soft: #3d2618;
+  --true: #7cc98b; --lie: #ef7f7f; --false: #e2b54a; --half: #a99cf0;
+  --c0: #7cc98b; --c1: #ef7f7f; --c2: #e2b54a; --c3: #a99cf0; --c4: #e58bbd; --c5: #f0a070; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 14px/1.5 var(--body); margin: 0;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 0 48px; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+h1, h2 { font-family: var(--display); font-weight: 400; margin: 0; text-wrap: balance; }
+h1 { font-size: 22px; } h2 { font-size: 22px; }
+h3 { margin: 0; font-size: 11.5px; font-family: var(--mono); font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+p { margin: 0; max-width: 72ch; }
+.mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.muted { color: var(--muted); }
+button { font: inherit; color: inherit; }
+a.ln, button.ln { color: var(--lux); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--lux) 35%, transparent); text-underline-offset: 2px; text-align: left; }
+a.ln:hover, button.ln:hover { text-decoration-color: var(--lux); }
+:focus-visible { outline: 2px solid var(--lux); outline-offset: 2px; }
+
+header.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line);
+  max-width: 1280px; margin: 0 auto; padding-block: 10px; display: grid; gap: 8px; }
+.toprow { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; }
+.toprow .brand { margin-right: auto; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: var(--surface); }
+.seg button { border: 0; background: none; padding: 5px 12px; cursor: pointer; font-size: 13px; color: var(--muted); }
+.seg button[aria-pressed="true"] { background: var(--lux); color: var(--surface); }
+.seg.ember button[aria-pressed="true"] { background: var(--ember); }
+nav.tabs { display: flex; gap: 2px; flex-wrap: wrap; }
+nav.tabs button { border: 0; background: none; padding: 6px 10px; cursor: pointer; border-radius: 5px; color: var(--muted); font-size: 13.5px; }
+nav.tabs button[aria-selected="true"] { background: var(--surface); color: var(--ink); box-shadow: inset 0 -2px 0 var(--lux); }
+main { max-width: 1280px; margin: 0 auto; padding-top: 20px; display: grid; gap: 20px; }
+
+.grid { display: grid; gap: 16px; }
+.g2 { grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); }
+.g3 { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 14px 16px; display: grid; gap: 10px; align-content: start; min-width: 0; }
+.stat { display: grid; gap: 2px; }
+.stat .v { font-family: var(--mono); font-size: 22px; font-variant-numeric: tabular-nums; }
+.stat .k { color: var(--muted); font-size: 12.5px; }
+.statrow { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.statrow > div { background: var(--surface); padding: 12px 14px; }
+.ok { color: var(--true); } .bad { color: var(--lie); }
+.pill { display: inline-block; font-family: var(--mono); font-size: 11px; padding: 1px 7px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg); white-space: nowrap; }
+.pill.true { color: var(--true); border-color: currentColor; } .pill.lie { color: var(--lie); border-color: currentColor; }
+.pill.false { color: var(--false); border-color: currentColor; } .pill.half { color: var(--half); border-color: currentColor; }
+.pill.lux { color: var(--lux); border-color: currentColor; } .pill.ember { color: var(--ember); border-color: currentColor; }
+.chips { display: flex; gap: 6px; flex-wrap: wrap; }
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th, td { text-align: left; vertical-align: top; padding: 6px 8px; border-bottom: 1px solid var(--line); }
+th { font: 500 11px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.tw { overflow-x: auto; }
+.callout { border-left: 3px solid var(--lux); padding: 8px 12px; background: var(--lux-soft); border-radius: 0 6px 6px 0; }
+.callout.ember { border-left-color: var(--ember); background: var(--ember-soft); }
+
+/* history */
+.hist { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+@media (max-width: 900px) { .hist, .person { grid-template-columns: 1fr !important; } }
+.filters { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; font-size: 13px; }
+select, input[type="search"], input[type="number"] { font: inherit; background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: 5px; padding: 4px 8px; }
+.evlist { max-height: 70vh; overflow: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); }
+.ev { display: grid; grid-template-columns: 74px 1fr; gap: 10px; padding: 7px 12px; border-bottom: 1px solid var(--line); cursor: pointer; }
+.ev:hover, .ev.sel { background: var(--lux-soft); }
+.ev .t { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+.ev .s { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 6px; vertical-align: 1px; background: var(--line); }
+.ev .s.s2 { background: var(--muted); } .ev .s.s3 { background: var(--lux); } .ev .s.s4 { background: var(--ember); }
+.chain { display: grid; gap: 6px; }
+.chain .node { border: 1px solid var(--line); border-radius: 5px; padding: 6px 10px; background: var(--bg); font-size: 13px; }
+.chain .node.focus { border-color: var(--lux); background: var(--lux-soft); }
+.chain .arrow { color: var(--muted); font-family: var(--mono); font-size: 11px; padding-left: 10px; }
+
+/* person */
+.person { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 16px; align-items: start; }
+.plist { max-height: 76vh; overflow: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); }
+.plist button { display: block; width: 100%; text-align: left; border: 0; border-bottom: 1px solid var(--line); background: none; padding: 6px 10px; cursor: pointer; }
+.plist button:hover, .plist button.sel { background: var(--lux-soft); }
+.plist .sub { font-size: 11.5px; color: var(--muted); font-family: var(--mono); }
+.phead { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: baseline; }
+.asof { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; font-size: 13px; }
+.asof input[type="range"] { flex: 1; min-width: 180px; accent-color: var(--lux); }
+.bar { height: 8px; border-radius: 4px; background: var(--sunk); overflow: hidden; }
+.bar > i { display: block; height: 100%; background: var(--lux); }
+.drives { display: grid; grid-template-columns: 80px 1fr 36px; gap: 6px 10px; align-items: center; font-size: 13px; }
+.gen td.a { font-family: var(--mono); font-weight: 600; }
+svg text { fill: var(--ink); font-family: var(--body); }
+svg .mut { fill: var(--muted); }
+.legendrow { display: flex; gap: 12px; flex-wrap: wrap; font-size: 12px; color: var(--muted); }
+.legendrow span::before { content: ""; display: inline-block; width: 10px; height: 3px; margin-right: 5px; vertical-align: 3px; background: var(--k); }
+.empty { color: var(--muted); font-style: italic; }
+</style>
+
+<header class="top">
+  <div class="toprow">
+    <div class="brand"><h1>Observatory</h1><span class="muted mono" style="font-size:12px">PoC · Pyrosia · 2300–2420 · seed <span id="seed"></span></span></div>
+    <div class="seg" role="group" aria-label="Run">
+      <button id="run-baseline" aria-pressed="true">Baseline</button>
+      <button id="run-ripple" aria-pressed="false">Ripple R1</button>
+    </div>
+  </div>
+  <nav class="tabs" role="tablist" aria-label="Inspectors">
+    <button role="tab" data-tab="stories" aria-selected="true">Stories</button>
+    <button role="tab" data-tab="overview" aria-selected="false">Overview</button>
+    <button role="tab" data-tab="history" aria-selected="false">World history</button>
+    <button role="tab" data-tab="knowledge" aria-selected="false">World knowledge</button>
+    <button role="tab" data-tab="people" aria-selected="false">Individuals</button>
+    <button role="tab" data-tab="objects" aria-selected="false">Objects</button>
+    <button role="tab" data-tab="diff" aria-selected="false">Run diff</button>
+  </nav>
+</header>
+<main id="main"></main>
+
+<script id="poc-data" type="application/json">/*DATA*/</script>
+<script>
+const DATA = JSON.parse(document.getElementById("poc-data").textContent);
+const M = DATA.meta;
+document.getElementById("seed").textContent = M.seed;
+const S = { run: "baseline", tab: "stories", person: null, event: null, asof: null, hq: "", hf: "all", hp: "all", hs: 2, place: "lions_rest",
+  from: null, to: null, sk: "all", amb: null, thread: null };
+const R = () => DATA.runs[S.run];
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const PN = id => M.places[id]?.name ?? id;
+const HN = id => M.houses[id]?.name ?? "Commoner";
+const CLAIM_COLORS = { C0: "var(--c0)", C1: "var(--c1)", C2: "var(--c2)", C3: "var(--c3)", C4: "var(--c4)", C5: "var(--c5)" };
+const TRUTH_LABEL = { true: "true", lie: "lie", false: "false", half: "half-true" };
+
+// indices per run
+const IDX = {};
+for (const [rn, r] of Object.entries(DATA.runs)) {
+  const byId = {}, byPerson = {}, kids = {};
+  r.events.forEach(e => { byId[e.id] = e; Object.values(e.participants).forEach(p => (byPerson[p] ??= []).push(e)); });
+  r.events.forEach(e => e.causes.forEach(c => (kids[c] ??= []).push(e)));
+  IDX[rn] = { byId, byPerson, kids };
+}
+const I = () => IDX[S.run];
+
+function personLink(id) {
+  const p = R().people[id];
+  if (!p) return `<span class="muted">${esc(id)}</span>`;
+  return `<button class="ln" data-person="${id}">${esc(p.name)}</button>`;
+}
+function eventText(e) {
+  return esc(e.text);
+}
+function causeChip(c) {
+  const e = I().byId[c];
+  if (e) return `<button class="ln" data-event="${e.id}">${e.year} · ${esc(e.text)}</button>`;
+  const [kind, ...rest] = c.split(":");
+  const label = { pin: "canon pin", ripple: "ripple", belief: "belief", want: "want", drive: "drive", intent: "intent", structural: "structural", claim: "claim", lod: "level of detail" }[kind] ?? kind;
+  let detail = rest.join(":");
+  if (kind === "belief") { const [pid, cl] = rest; detail = `${R().people[pid]?.name ?? pid} believes "${M.claims[cl]?.text}"`; }
+  if (kind === "want") { const [pid, ...w] = rest; detail = `${R().people[pid]?.name ?? pid}: ${w.join(":")}`; }
+  if (kind === "drive") { const [d, pid] = rest; detail = `${d} (${R().people[pid]?.name ?? pid})`; }
+  if (kind === "claim") detail = `"${M.claims[rest[0]]?.text}"`;
+  if (kind === "pin") detail = `${rest[0]}: ${R().pins[rest[0]]?.text ?? ""}`;
+  if (kind === "ripple") detail = `${rest[0]}: ${(R().ripples.find(r => r.id === rest[0]) || {}).text ?? ""}`;
+  if (!e && /^E[0-9a-f]+$/.test(c)) return `<span class="muted">minor event (not exported)</span>`;
+  return `<span class="pill ${kind === "ripple" ? "ember" : kind === "pin" ? "lux" : ""}">${esc(label)}</span> ${esc(detail)}`;
+}
+
+// ---------- charts (inline SVG)
+function lineChart({ series, xs, height = 180, ymax = 1, yfmt = v => v, legend = true }) {
+  const W = 640, H = height, L = 40, B = 22, T = 8, Rr = 10;
+  const x0 = xs[0], x1 = xs[xs.length - 1];
+  const X = x => L + (x - x0) / (x1 - x0 || 1) * (W - L - Rr), Y = y => T + (1 - y / ymax) * (H - T - B);
+  let g = "";
+  for (let i = 0; i <= 4; i++) { const v = ymax * i / 4; g += `<line x1="${L}" x2="${W - Rr}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--line)"/><text class="mut" x="${L - 6}" y="${Y(v) + 4}" font-size="10" text-anchor="end">${yfmt(v)}</text>`; }
+  const step = Math.ceil((x1 - x0) / 6 / 10) * 10 || 10;
+  for (let x = Math.ceil(x0 / step) * step; x <= x1; x += step) g += `<text class="mut" x="${X(x)}" y="${H - 6}" font-size="10" text-anchor="middle">${x}</text>`;
+  series.forEach(s => {
+    const pts = s.ys.map((y, i) => `${X(xs[i]).toFixed(1)},${Y(y).toFixed(1)}`).join(" ");
+    g += `<polyline points="${pts}" fill="none" stroke="${s.color}" stroke-width="${s.w ?? 1.8}" ${s.dash ? 'stroke-dasharray="4 3"' : ""}/>`;
+    const lx = xs[xs.length - 1], ly = s.ys[s.ys.length - 1];
+    g += `<circle cx="${X(lx)}" cy="${Y(ly)}" r="2.5" fill="${s.color}"/>`;
+  });
+  const lg = legend ? `<div class="legendrow">${series.map(s => `<span style="--k:${s.color}">${esc(s.label)}</span>`).join("")}</div>` : "";
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" style="max-width:100%;display:block" role="img">${g}</svg>${lg}`;
+}
+function hbar(rows, max) {
+  return `<div class="grid" style="gap:6px">${rows.map(r => `<div style="display:grid;grid-template-columns:minmax(120px,1.2fr) 3fr 52px;gap:8px;align-items:center;font-size:13px">
+    <span>${r.label}</span><div class="bar"><i style="width:${(100 * r.v / (max || 1)).toFixed(1)}%;background:${r.color ?? "var(--lux)"}"></i></div><span class="mono" style="text-align:right">${r.text ?? r.v}</span></div>`).join("")}</div>`;
+}
+
+// ---------- belief helpers
+function dominant(p) {
+  let best = null;
+  for (const [c, b] of Object.entries(p.beliefs)) if (!best || b.conf > best[1].conf || (b.conf === best[1].conf && c < best[0])) best = [c, b];
+  return best;
+}
+function stateAsOf(p, year) {
+  const st = { spouse: null, wants: [], need: null, wound: null, drives: { food: 0.8, safety: 0.7, belonging: 0.5, status: p.house ? 0.6 : 0.3 }, beliefs: {}, role: null, grievance: null, place: null, dormant: false };
+  for (const [y, f, v] of p.history) {
+    if (y > year) break;
+    if (f === "belief") st.beliefs[v[0]] = { conf: v[1], heard_from: v[2], t: y };
+    else st[f] = v;
+  }
+  return st;
+}
+
+// ---------- views
+// ---------- stories
+const KIND = {
+  vengeance: { label: "Vengeance", color: "var(--c1)" }, seize: { label: "Seize the seat", color: "var(--c3)" },
+  standing: { label: "Court ambition", color: "var(--lux)" }, bury: { label: "Bury the truth", color: "var(--c4)" },
+  clear: { label: "Clear a name", color: "var(--c0)" }, legend: { label: "Legend", color: "var(--ember)" }, spouse: { label: "Find a spouse", color: "var(--muted)" },
+};
+const STATUS = {
+  fulfilled: { label: "fulfilled", cls: "true", glyph: "●" }, thwarted: { label: "thwarted", cls: "lie", glyph: "✕" },
+  died_unfulfilled: { label: "died unfulfilled", cls: "false", glyph: "†" }, abandoned: { label: "abandoned", cls: "", glyph: "○" },
+  active: { label: "still burning", cls: "lux", glyph: "▸" },
+};
+const WHATIF = () => S.run === "baseline" ? Object.fromEntries((DATA.whatifs || []).map(w => [w.person, w])) : {};
+const statusPill = st => `<span class="pill ${STATUS[st].cls}">${STATUS[st].label}</span>`;
+const kindPill = k => `<span class="pill" style="color:${KIND[k].color};border-color:currentColor">${KIND[k].label}</span>`;
+const threadOf = aid => R().threads.find(t => t.members.includes(aid));
+
+function viewStories() {
+  const r = R();
+  const from = S.from ?? M.start, to = S.to ?? M.end;
+  const all = Object.values(r.ambitions).filter(a => a.kind !== "spouse");
+  const inP = all.filter(a => a.formed <= to && (a.resolved ?? M.end) >= from && (S.sk === "all" || a.kind === S.sk));
+  const cnt = {};
+  inP.forEach(a => cnt[a.status] = (cnt[a.status] ?? 0) + 1);
+  const threads = r.threads.filter(t => t.start <= to && t.end >= from);
+  const latches = r.latches.filter(l => l.year >= from && l.year <= to);
+  const wi = WHATIF();
+  const born = Object.values(r.people).filter(p => p.born >= from && p.born <= to).length;
+  const died = Object.values(r.people).filter(p => p.died && p.died >= from && p.died <= to).length;
+  return `
+  <div class="card">
+    <div class="filters">
+      <h2 style="margin-right:auto">Stories of ${from}–${to}</h2>
+      <label>From <input type="number" id="sf" min="${M.start}" max="${M.end}" value="${from}" style="width:5.5em"></label>
+      <label>To <input type="number" id="st" min="${M.start}" max="${M.end}" value="${to}" style="width:5.5em"></label>
+      <span class="chips">${[["2300–2420", M.start, M.end], ["Founding (2300–30)", 2300, 2330], ["The Affair (2328–60)", 2328, 2360], ["Late age (2380–2420)", 2380, 2420]].map(([l, a, b]) => `<button class="pill" data-period="${a},${b}" style="cursor:pointer">${l}</button>`).join("")}</span>
+      <label>Kind <select id="sk"><option value="all">All ambitions</option>${Object.entries(KIND).filter(([k]) => k !== "spouse").map(([k, v]) => `<option value="${k}" ${S.sk === k ? "selected" : ""}>${v.label}</option>`).join("")}</select></label>
+    </div>
+    <div class="statrow">
+      <div class="stat"><span class="v">${inP.length}</span><span class="k">ambitions alive in this period</span></div>
+      ${["fulfilled", "thwarted", "died_unfulfilled", "abandoned", "active"].map(s => `<div class="stat"><span class="v">${cnt[s] ?? 0}</span><span class="k">${STATUS[s].glyph} ${STATUS[s].label}</span></div>`).join("")}
+      <div class="stat"><span class="v">${born} / ${died}</span><span class="k">notables born / died</span></div>
+    </div>
+    <h3>The story river: every ambition, from the moment it forms to how it ends</h3>
+    ${river(inP, from, to)}
+    <div class="legendrow">${Object.entries(KIND).filter(([k]) => k !== "spouse").map(([k, v]) => `<span style="--k:${v.color}">${v.label}</span>`).join("")}
+      <span style="--k:transparent">● fulfilled · ✕ thwarted · † died unfulfilled · ○ abandoned · ▸ still burning · ▼ turning-point event</span></div>
+  </div>
+  <div class="hist">
+    <div class="grid">
+      <div class="card"><h3>Story threads flowing through this period</h3>
+        ${threads.length ? threads.slice(0, 14).map(t => threadCard(t)).join("") : '<p class="empty">No threads in this period.</p>'}</div>
+      <div class="card"><h3>Latch points: died with the ambition unfulfilled</h3>
+        <p class="muted" style="font-size:12.5px">Ranked by how much story a nudge might unlock: youth, talent, how far their scheme had got, and how narrowly they died. ${S.run === "baseline" ? "The top few were re-run with a ripple. Their outcomes are shown." : "What-if re-runs exist for the baseline run."}</p>
+        ${latches.length ? latches.slice(0, 12).map(l => latchCard(l, wi[l.person])).join("") : '<p class="empty">No one died unfulfilled in this period.</p>'}</div>
+    </div>
+    <div class="card" style="position:sticky;top:110px">${S.amb && r.ambitions[S.amb] ? ambDetail(r.ambitions[S.amb]) : S.thread ? threadDetail(r.threads.find(t => t.id === S.thread)) : '<h3>Detail</h3><p class="muted">Select a bar in the river, a thread or a latch point.</p>'}</div>
+  </div>`;
+}
+
+function river(ambs, from, to) {
+  const lanes = [...Object.keys(M.houses), "commoners"];
+  const W = 1100, L = 120, Rr = 14, RH = 9, GAP = 10, TOP = 24;
+  const X = y => L + (y - from) / ((to - from) || 1) * (W - L - Rr);
+  let y = TOP, g = "";
+  const byLane = Object.fromEntries(lanes.map(l => [l, []]));
+  ambs.forEach(a => byLane[R().people[a.owner]?.house ?? "commoners"]?.push(a));
+  lanes.forEach(lane => {
+    const items = byLane[lane].slice().sort((a, b) => a.formed - b.formed || (a.id < b.id ? -1 : 1));
+    const rows = [];
+    items.forEach(a => {
+      const s = Math.max(a.formed, from), e = Math.min(a.resolved ?? to, to);
+      let i = rows.findIndex(end => end < s - 0.5);
+      if (i < 0) { rows.push(e); i = rows.length - 1; } else rows[i] = e;
+      a._row = i;
+    });
+    const h = Math.max(1, rows.length) * (RH + 3);
+    g += `<rect x="0" y="${y - 4}" width="${W}" height="${h + 8}" fill="${lanes.indexOf(lane) % 2 ? "var(--surface)" : "var(--sunk)"}" opacity=".6"/>`;
+    g += `<text x="8" y="${y + 10}" font-size="11.5">${esc(lane === "commoners" ? "Commoners" : M.houses[lane].name)}</text><text class="mut" x="8" y="${y + 23}" font-size="10">${items.length} ambitions</text>`;
+    items.forEach(a => {
+      const s = Math.max(a.formed, from), e = Math.min(a.resolved ?? to, to);
+      const x1 = X(s), x2 = Math.max(X(e), x1 + 3), yy = y + a._row * (RH + 3);
+      const sel = S.amb === a.id;
+      g += `<g data-amb="${a.id}" style="cursor:pointer"><title>${esc(R().people[a.owner]?.name)}: ${esc(a.text)} (${a.formed}–${a.resolved ?? "…"}, ${STATUS[a.status].label})</title>
+        <rect x="${x1}" y="${yy}" width="${x2 - x1}" height="${RH}" rx="2" fill="${KIND[a.kind].color}" opacity="${sel ? 1 : 0.72}" ${sel ? 'stroke="var(--ink)" stroke-width="1.5"' : ""}/>
+        ${a.resolved && a.resolved <= to ? `<text x="${x2 + 2}" y="${yy + RH - 1}" font-size="10" fill="${a.status === "fulfilled" ? "var(--true)" : a.status === "thwarted" ? "var(--lie)" : "var(--ink)"}">${STATUS[a.status].glyph}</text>` : ""}</g>`;
+    });
+    y += h + GAP;
+  });
+  const step = (to - from) > 60 ? 10 : 5;
+  for (let t = Math.ceil(from / step) * step; t <= to; t += step) g += `<line x1="${X(t)}" x2="${X(t)}" y1="${TOP - 6}" y2="${y}" stroke="var(--line)" stroke-dasharray="2 4"/><text class="mut" x="${X(t)}" y="12" font-size="10" text-anchor="middle">${t}</text>`;
+  R().events.filter(e => e.salience >= 4 && e.year >= from && e.year <= to).forEach(e => {
+    g += `<g data-event="${e.id}" style="cursor:pointer"><title>${e.year}: ${esc(e.text)}</title><path d="M${X(e.year) - 4},${TOP - 9} l8,0 l-4,6 z" fill="var(--ember)"/></g>`;
+  });
+  return `<div class="tw"><svg viewBox="0 0 ${W} ${y}" width="${W}" height="${y}" style="max-width:none;display:block">${g}</svg></div>`;
+}
+
+function threadCard(t) {
+  const r = R();
+  const beats = t.beats.map(b => I().byId[b]).filter(e => e && e.salience >= 3).slice(0, 4);
+  return `<div style="border-top:1px solid var(--line);padding-top:10px;display:grid;gap:4px">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:baseline"><button class="ln" data-thread="${t.id}" style="font-family:var(--display);font-size:17px">${esc(t.title)}</button>
+      <span class="mono muted" style="font-size:12px">${t.start}–${t.end}${t.open ? " · still unfolding" : ""}</span></div>
+    <div class="chips">${Object.entries(t.status).map(([s, n]) => `<span class="pill ${STATUS[s].cls}">${n} ${STATUS[s].label}</span>`).join("")}<span class="pill">${t.n_people} people</span></div>
+    <div class="muted" style="font-size:12.5px">${t.people.slice(0, 6).map(personLink).join(", ")}${t.n_people > 6 ? ` and ${t.n_people - 6} more` : ""}</div>
+    ${beats.length ? `<ul style="margin:0;padding-left:16px;font-size:12.5px">${beats.map(e => `<li><span class="mono muted">${e.year}</span> ${esc(e.text)}</li>`).join("")}</ul>` : ""}
+  </div>`;
+}
+
+function threadDetail(t) {
+  if (!t) return "";
+  const r = R();
+  const members = t.members.map(id => r.ambitions[id]);
+  const beats = t.beats.map(b => I().byId[b]).filter(Boolean);
+  return `<h2>${esc(t.title)}</h2>
+    <p class="muted">${t.start}–${t.end} · ${t.n_people} people · ${members.length} ambitions · ${t.open ? "still unfolding in 2420" : "resolved"}</p>
+    <h3>Beat by beat</h3>
+    <div class="chain" style="max-height:340px;overflow:auto">${beats.map(e => `<div class="node"><span class="mono muted">${e.year}</span> · <button class="ln" data-event="${e.id}">${esc(e.text)}</button></div>`).join("")}</div>
+    <h3>The wants that drive it</h3>
+    <div class="grid" style="gap:6px;max-height:300px;overflow:auto">${members.slice(0, 40).map(a => `<div style="font-size:13px">${personLink(a.owner)} <button class="ln" data-amb="${a.id}">${esc(a.text)}</button> ${statusPill(a.status)}</div>`).join("")}</div>`;
+}
+
+function latchCard(l, w) {
+  const p = R().people[l.person];
+  return `<div style="border-top:1px solid var(--line);padding-top:10px;display:grid;gap:4px;font-size:13px">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:baseline">${personLink(l.person)} ${kindPill(l.kind)} <span class="mono muted" style="font-size:12px">score ${l.score}</span></div>
+    <div><button class="ln" data-amb="${l.ambition}">"${esc(l.text)}"</button></div>
+    <div class="muted">Died ${l.year} of ${esc(l.cause)}, aged ${l.age}${l.progress != null ? ` · scheme ${Math.round(l.progress * 100)}% complete` : ""}${l.margin != null ? ` · death roll margin ${l.margin}` : ""}</div>
+    <div class="muted">Suggested ripple: ${esc(l.suggestion)} (${esc(l.how)})</div>
+    ${w ? `<div class="callout ${w.verdict.startsWith("rises") ? "" : "ember"}"><b>Re-run with that ripple:</b> ${esc(p.name.split(" ")[0])} ${esc(w.verdict)}.
+      ${w.died ? `Dies ${w.died} (${esc(w.cause)}).` : "Alive in 2420."} Role: ${esc(w.role)}. ${w.divergent_events.toLocaleString()} events differ from the baseline.
+      ${w.beats.length ? `<ul style="margin:6px 0 0;padding-left:16px">${w.beats.slice(0, 6).map(b => `<li><span class="mono">${b.year}</span> ${esc(b.text)}</li>`).join("")}</ul>` : ""}</div>` : ""}
+  </div>`;
+}
+
+function ambDetail(a) {
+  const r = R(), p = r.people[a.owner], sc = a.scheme ? r.schemes[a.scheme] : null;
+  const t = threadOf(a.id), lp = r.latches.find(l => l.ambition === a.id), w = WHATIF()[a.owner];
+  const spark = sc && sc.progress_log.length > 1 ? (() => {
+    const L = sc.progress_log, x0 = L[0][0], x1 = L[L.length - 1][0] || x0 + 1, W = 260, H = 46;
+    const pts = L.map(([y, v]) => `${(6 + (y - x0) / ((x1 - x0) || 1) * (W - 12)).toFixed(1)},${(H - 6 - v * (H - 12)).toFixed(1)}`).join(" ");
+    return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" style="max-width:100%"><line x1="6" x2="${W - 6}" y1="6" y2="6" stroke="var(--line)" stroke-dasharray="3 3"/><polyline points="${pts}" fill="none" stroke="${KIND[a.kind].color}" stroke-width="2"/><text class="mut" x="${W - 6}" y="16" font-size="9" text-anchor="end">done</text></svg>`;
+  })() : "";
+  return `<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:baseline">${kindPill(a.kind)} ${statusPill(a.status)}</div>
+    <h2>"${esc(a.text)}"</h2>
+    <p>${personLink(a.owner)}, ${esc(p.role)} · formed ${a.formed} at age ${a.age_formed}${a.resolved ? ` · ended ${a.resolved}` : " · still burning in 2420"}</p>
+    <div><h3>Born of</h3><div style="font-size:13px;margin-top:4px">${a.cause ? causeChip(a.cause) : '<span class="muted">nothing recorded</span>'}</div></div>
+    ${a.target && r.people[a.target] ? `<div><h3>Aimed at</h3><div style="margin-top:4px">${personLink(a.target)}</div></div>` : ""}
+    ${sc ? `<div><h3>The scheme</h3><p style="font-size:13px">${esc(sc.kind)}${sc.secret ? " (in secret)" : ""}, from ${sc.started}${sc.accomplices.length ? ", with " + sc.accomplices.map(personLink).join(", ") : ", alone"}. Ended: ${esc(sc.status)}${sc.ended ? " in " + sc.ended : ""}.</p>${spark}</div>` : ""}
+    <div><h3>What happened</h3><div class="chain" style="margin-top:4px">${a.beats.length ? a.beats.map(b => `<div class="node">${causeChip(b)}</div>`).join("") : '<span class="muted">No recorded actions yet.</span>'}</div></div>
+    ${t ? `<p style="font-size:13px">Part of the thread <button class="ln" data-thread="${t.id}">${esc(t.title)}</button></p>` : ""}
+    ${lp ? latchCard(lp, w) : ""}`;
+}
+
+function ambitionLedger(p) {
+  const r = R();
+  const ambs = (p.amb_ids ?? Object.values(r.ambitions).filter(a => a.owner === p.id)).filter(a => a.kind !== "spouse" || true);
+  if (!ambs.length) return "";
+  const w = WHATIF()[p.id], lp = r.latches.find(l => l.person === p.id);
+  return `<div class="card"><h3>Ambitions and schemes across a lifetime</h3>
+    <div class="tw"><table><thead><tr><th>Ambition</th><th>Kind</th><th>Years</th><th>Scheme</th><th>Outcome</th></tr></thead><tbody>
+    ${ambs.map(a => { const sc = a.scheme ? r.schemes[a.scheme] : null; return `<tr><td><button class="ln" data-amb="${a.id}">${esc(a.text)}</button></td><td>${kindPill(a.kind)}</td>
+      <td class="mono">${a.formed}–${a.resolved ?? ""}</td><td>${sc ? `${esc(sc.kind)} · ${Math.round(sc.progress * 100)}% · ${esc(sc.status)}` : ""}</td><td>${statusPill(a.status)}</td></tr>`; }).join("")}
+    </tbody></table></div>
+    ${lp ? latchCard(lp, w) : ""}</div>`;
+}
+
+function viewOverview() {
+  const c = M.checks, r = R();
+  const people = Object.values(r.people);
+  const believers = people.filter(p => Object.keys(p.beliefs).length);
+  const domCount = {};
+  believers.forEach(p => { const d = dominant(p); if (d) domCount[d[0]] = (domCount[d[0]] ?? 0) + 1; });
+  const domRows = Object.keys(M.claims).map(k => ({ label: `<span class="pill ${M.claims[k].truth}">${k}</span> ${esc(M.claims[k].text)}`, v: domCount[k] ?? 0, color: CLAIM_COLORS[k] }));
+  const maxDom = Math.max(...domRows.map(d => d.v));
+  const pins = Object.values(r.pins);
+  return `
+  <div class="callout ${S.run === "ripple" ? "ember" : ""}">${S.run === "baseline"
+    ? "<b>Baseline.</b> The caravan leader dies in the ward failure. With no credible survivor, the Lux Faber guild's statement travels the Vialux and becomes what most of Pyrosia believes."
+    : "<b>Ripple R1.</b> One authored intervention: the caravan leader is pulled from the wreck, disguised in-world as a Leonin outrider's rescue. A surviving witness changes what the world believes, and what people do about it."}</div>
+  <div class="statrow">
+    <div class="stat"><span class="v ${c.determinism ? "ok" : "bad"}">${c.determinism ? "pass" : "fail"}</span><span class="k">Determinism: two runs, identical state hash <span class="mono">${c.hash}</span></span></div>
+    <div class="stat"><span class="v ${c.checkpoint_replay ? "ok" : "bad"}">${c.checkpoint_replay ? "pass" : "fail"}</span><span class="k">Checkpoint at 2360, resumed run matches the continuous run</span></div>
+    <div class="stat"><span class="v ${c.divergence.unexplained === 0 ? "ok" : "bad"}">${c.divergence.unexplained} / ${c.divergence.divergent_events.toLocaleString()}</span><span class="k">Divergences between runs with no causal path from the ripple</span></div>
+    <div class="stat"><span class="v">${people.length.toLocaleString()}</span><span class="k">People recorded in this run (${people.filter(p => !p.died && !p.dormant).length} alive in 2420)</span></div>
+    <div class="stat"><span class="v">${r.event_count.toLocaleString()}</span><span class="k">Events (${r.events.length.toLocaleString()} notable ones exported)</span></div>
+  </div>
+  <div class="grid g2">
+    <div class="card"><h3>Who won the story: each person's dominant account of the ward failure</h3>${hbar(domRows, maxDom)}
+      <p class="muted" style="font-size:12.5px">The truth is C0. C1 is the guild's deliberate lie. C3, C4 and C5 are drifted retellings.</p></div>
+    <div class="card"><h3>Canon pins and strain</h3>
+      <div class="tw"><table><thead><tr><th>Pin</th><th>Canon</th><th>Status</th><th>Strain</th></tr></thead><tbody>
+      ${pins.map(p => `<tr><td class="mono">${p.id}</td><td>${esc(p.text)}</td><td><span class="pill ${p.status === "fulfilled" || p.status === "held" ? "true" : "false"}">${p.status}${p.fulfilled_year ? " " + p.fulfilled_year : ""}</span></td>
+        <td class="mono">${p.guards ? p.guards + " guard" : ""}${p.steered ? " " + p.steered + " steer" : ""}${p.forced ? " forced" : ""}${!p.guards && !p.steered && !p.forced ? "none" : ""}</td></tr>`).join("")}
+      </tbody></table></div>
+      ${r.strain.map(s => `<p style="font-size:13px"><span class="pill lux">${s.pin} ${s.action}</span> ${s.year}: ${esc(s.detail)}${s.event ? ` · ${causeChip(s.event)}` : ""}</p>`).join("")}
+    </div>
+  </div>
+  <div class="card"><h3>What this proof of concept exercises</h3>
+    <div class="grid g3" style="font-size:13px">
+      <p><b>Keyed randomness and causal ids.</b> Every draw is keyed by who, what and when. Ids come from parents and events, never from a counter, so the two runs can be compared person by person.</p>
+      <p><b>Genome.</b> Eight loci, recombination and mutation. Each allele remembers the founder it came from, so luxsight can resurface generations later and name its source.</p>
+      <p><b>Level of detail.</b> Commoners are promoted out of each place's aggregate when they marry into a house or witness an event. Minor cadet lines fade back into it as dormant records.</p>
+      <p><b>Epistemics.</b> Witnesses see part of the truth. The guild master lies, with intent recorded. Retellings drift. Trust, confirmation bias and route speed decide who believes what.</p>
+      <p><b>Minds.</b> Drives become wants, and wounds become needs. A grievance plus a blamed party becomes vengeance, and duels record the belief that caused them.</p>
+      <p><b>Pins and ripples.</b> A pinned forging, a guarded survival with its strain, and one ripple disguised as an in-world rescue.</p>
+    </div></div>`;
+}
+
+function viewHistory() {
+  const r = R();
+  const types = [...new Set(r.events.map(e => e.type))].sort();
+  let evs = r.events.filter(e => e.salience >= S.hs && (S.hf === "all" || e.type === S.hf) && (S.hp === "all" || e.place === S.hp) && (!S.hq || e.text.toLowerCase().includes(S.hq.toLowerCase())));
+  evs = evs.slice().sort((a, b) => a.year - b.year || a.month - b.month || (a.id < b.id ? -1 : 1));
+  const shown = evs.slice(0, 600);
+  const sel = S.event && I().byId[S.event];
+  // population chart
+  const years = r.agg.lions_rest.series.map(s => s.year);
+  const palette = ["var(--lux)", "var(--ember)", "var(--c0)", "var(--c3)", "var(--c4)", "var(--c2)", "var(--muted)"];
+  const popSeries = Object.keys(M.places).map((pl, i) => ({ label: PN(pl), color: palette[i % palette.length], ys: r.agg[pl].series.map(s => s.pop) }));
+  const ymax = Math.ceil(Math.max(...popSeries.flatMap(s => s.ys)) / 1000) * 1000;
+  return `
+  <div class="card"><h3>Population by settlement (aggregate masses)</h3>${lineChart({ series: popSeries, xs: years, ymax, yfmt: v => (v / 1000).toFixed(0) + "k" })}</div>
+  <div class="filters">
+    <label>Search <input type="search" id="hq" value="${esc(S.hq)}" placeholder="name, place, deed"></label>
+    <label>Type <select id="hf"><option value="all">All</option>${types.map(t => `<option ${S.hf === t ? "selected" : ""}>${t}</option>`).join("")}</select></label>
+    <label>Place <select id="hp"><option value="all">All</option>${Object.keys(M.places).map(p => `<option value="${p}" ${S.hp === p ? "selected" : ""}>${esc(PN(p))}</option>`).join("")}</select></label>
+    <label>Min salience <select id="hs">${[0, 1, 2, 3, 4].map(v => `<option ${S.hs === v ? "selected" : ""}>${v}</option>`).join("")}</select></label>
+    <span class="muted mono">${evs.length.toLocaleString()} events${evs.length > 600 ? " (first 600 shown)" : ""}</span>
+  </div>
+  <div class="hist">
+    <div class="evlist">${shown.map(e => `<div class="ev ${S.event === e.id ? "sel" : ""}" data-event="${e.id}" tabindex="0"><span class="t">${e.year}·${String(e.month).padStart(2, "0")}</span><span><span class="s s${e.salience}"></span>${eventText(e)} <span class="muted" style="font-size:12px">· ${esc(PN(e.place))}</span></span></div>`).join("") || `<p class="empty" style="padding:12px">No events match these filters.</p>`}</div>
+    <div class="card">${sel ? causeView(sel) : `<h3>Cause chain</h3><p class="muted">Select an event to see why it happened and what it led to.</p>`}</div>
+  </div>`;
+}
+
+function causeView(e) {
+  const up = [];
+  let frontier = [e.id], seen = new Set([e.id]);
+  for (let d = 0; d < 6 && frontier.length; d++) {
+    const next = [];
+    frontier.forEach(id => (I().byId[id]?.causes ?? []).forEach(c => { if (!seen.has(c)) { seen.add(c); up.push({ c, d }); if (I().byId[c]) next.push(c); } }));
+    frontier = next;
+  }
+  const down = (I().kids[e.id] ?? []).slice(0, 30);
+  return `<h3>Why did this happen?</h3>
+    <div class="chain">${up.length ? up.slice().reverse().map(x => `<div class="node">${causeChip(x.c)}</div><div class="arrow">↓</div>`).join("") : `<div class="muted">No recorded causes (a seeded or spontaneous event).</div><div class="arrow">↓</div>`}
+      <div class="node focus"><b>${e.year}</b> · ${eventText(e)}<div class="chips" style="margin-top:4px">${Object.entries(e.participants).map(([role, id]) => `<span class="pill">${esc(role)}</span> ${R().people[id] ? personLink(id) : esc(id)}`).join(" ")}</div>
+        <div class="muted mono" style="font-size:11px;margin-top:4px">${e.id} · source: ${e.source} · salience ${e.salience}</div></div>
+    </div>
+    <h3>What did it lead to?</h3>
+    <div class="chain">${down.length ? down.map(k => `<div class="node">${causeChip(k.id)}</div>`).join("") : `<div class="muted">Nothing recorded downstream.</div>`}</div>`;
+}
+
+function viewKnowledge() {
+  const r = R();
+  const C = M.claims;
+  const people = Object.values(r.people);
+  const holds = {}, dom = {};
+  people.forEach(p => { Object.keys(p.beliefs).forEach(k => holds[k] = (holds[k] ?? 0) + 1); const d = dominant(p); if (d) dom[d[0]] = (dom[d[0]] ?? 0) + 1; });
+  const roots = Object.keys(C).filter(k => !C[k].parent);
+  const tree = k => `<li><span class="pill ${C[k].truth}">${k} · ${TRUTH_LABEL[C[k].truth]}</span> ${esc(C[k].text)} <span class="muted mono" style="font-size:12px">held by ${holds[k] ?? 0}, dominant for ${dom[k] ?? 0}</span>
+    ${Object.keys(C).filter(c => C[c].parent === k).length ? `<ul>${Object.keys(C).filter(c => C[c].parent === k).map(tree).join("")}</ul>` : ""}</li>`;
+  const truthEvents = r.events.filter(e => ["contract_lost", "sabotage", "ward_failure", "rescue", "guild_statement"].includes(e.type));
+  const pl = S.place;
+  const ser = r.agg[pl].series.filter(s => s.year >= 2328);
+  const bseries = Object.keys(C).map(k => ({ label: `${k} ${TRUTH_LABEL[C[k].truth]}`, color: CLAIM_COLORS[k], ys: ser.map(s => s.beliefs[k] ?? 0) }));
+  const drifts = r.events.filter(e => e.type === "rumour_drift").slice(0, 12);
+  const spread = Object.keys(M.places).map(p => {
+    const last = r.agg[p].series[r.agg[p].series.length - 1].beliefs;
+    const top = Object.entries(last).sort((a, b) => b[1] - a[1])[0];
+    return { p, top };
+  });
+  return `
+  <div class="grid g2">
+    <div class="card"><h3>The truth (world graph)</h3>
+      <div class="chain">${truthEvents.map((e, i) => `${i ? '<div class="arrow">↓</div>' : ""}<div class="node"><b>${e.year}</b> · <button class="ln" data-event="${e.id}">${esc(e.text)}</button></div>`).join("")}</div>
+      <p class="muted" style="font-size:12.5px">Only the sabotage's direct participants know this. Everyone else has to infer it from what they saw or heard.</p></div>
+    <div class="card"><h3>Claim lineage: what people say happened</h3><ul style="margin:0;padding-left:18px;display:grid;gap:6px">${roots.map(tree).join("")}</ul>
+      <p class="muted" style="font-size:12.5px">Each child claim is a retelling that drifted from its parent. "Dominant" means the account a person holds most firmly.</p></div>
+  </div>
+  <div class="grid g2">
+    <div class="card"><h3>Belief among the masses over time</h3>
+      <div class="filters"><label>Settlement <select id="kp">${Object.keys(M.places).map(p => `<option value="${p}" ${pl === p ? "selected" : ""}>${esc(PN(p))}</option>`).join("")}</select></label></div>
+      ${lineChart({ series: bseries, xs: ser.map(s => s.year), ymax: 1, yfmt: v => Math.round(v * 100) + "%" })}
+      <p class="muted" style="font-size:12.5px">Each settlement's aggregate leans toward what its notables believe, plus news arriving by road. The Vialux carries the guild's line within a year; wild roads carry rumour more slowly.</p></div>
+    <div class="card"><h3>What each settlement mostly believes in 2420</h3>
+      <div class="tw"><table><thead><tr><th>Settlement</th><th>Leading account</th><th>Share</th></tr></thead><tbody>
+      ${spread.map(({ p, top }) => `<tr><td>${esc(PN(p))}</td><td>${top ? `<span class="pill ${C[top[0]].truth}">${top[0]}</span> ${esc(C[top[0]].text)}` : '<span class="muted">nothing heard</span>'}</td><td class="mono">${top ? Math.round(top[1] * 100) + "%" : ""}</td></tr>`).join("")}
+      </tbody></table></div></div>
+  </div>
+  <div class="card"><h3>Retellings that mutated the story</h3>
+    ${drifts.length ? `<div class="tw"><table><thead><tr><th>Year</th><th>Teller</th><th>Hearer</th><th>What was said</th></tr></thead><tbody>${drifts.map(e => `<tr><td class="mono">${e.year}</td><td>${personLink(e.participants.teller)}</td><td>${personLink(e.participants.hearer)}</td><td>${esc(e.text.split(": ").slice(1).join(": "))}</td></tr>`).join("")}</tbody></table></div>` : '<p class="empty">No drift recorded.</p>'}
+  </div>`;
+}
+
+function personsSorted() {
+  const r = R();
+  const q = (S.pq ?? "").toLowerCase();
+  return Object.values(r.people).filter(p => !q || p.name.toLowerCase().includes(q) || (p.house ?? "").includes(q) || p.role.toLowerCase().includes(q))
+    .sort((a, b) => (b.wants.some(w => w.startsWith("avenge")) - a.wants.some(w => w.startsWith("avenge"))) || (a.born - b.born) || (a.id < b.id ? -1 : 1));
+}
+function viewPeople() {
+  const r = R();
+  if (!S.person || !r.people[S.person]) {
+    const ev = r.events.find(e => e.type === "ward_failure");
+    S.person = ev?.participants.leader ?? Object.keys(r.people)[0];
+  }
+  const list = personsSorted().slice(0, 400);
+  return `<div class="person">
+    <div class="grid" style="gap:8px"><input type="search" id="pq" placeholder="Search name, house, role" value="${esc(S.pq ?? "")}">
+      <div class="plist">${list.map(p => `<button class="${p.id === S.person ? "sel" : ""}" data-person="${p.id}">${esc(p.name)}<div class="sub">${p.born}–${p.died ?? (p.dormant ? "faded" : "")} · ${esc(p.role)}${p.phenotype.luxsight ? " · luxsight" : ""}</div></button>`).join("")}</div></div>
+    <div class="grid">${personView(r.people[S.person])}</div></div>`;
+}
+
+function personView(p) {
+  const r = R();
+  const end = p.died ?? M.end;
+  const asof = Math.min(Math.max(S.asof ?? end, p.born), end);
+  const st = stateAsOf(p, asof);
+  const evs = (I().byPerson[p.id] ?? []).slice().sort((a, b) => a.year - b.year || a.month - b.month);
+  const d = st.drives;
+  const domB = Object.entries(st.beliefs).sort((a, b) => b[1].conf - a[1].conf);
+  const spouseNow = st.spouse ?? (p.spouse && r.people[p.spouse] && (r.people[p.spouse].rel[p.id]?.since ?? 9999) <= asof ? p.spouse : null);
+  return `
+  <div class="card">
+    <div class="phead"><h2>${esc(p.name)}</h2><span class="pill">${esc(HN(p.house))}</span><span class="pill">${esc(p.role)}</span>
+      ${p.phenotype.luxsight ? '<span class="pill lux">luxsight</span>' : ""}${p.promoted_from ? `<span class="pill">promoted from the masses of ${esc(PN(p.promoted_from))}</span>` : ""}${p.dormant ? '<span class="pill">faded into the masses</span>' : ""}
+      ${Object.values(r.pins).some(x => x.who === p.id) ? '<span class="pill lux">canon pin</span>' : ""}</div>
+    <p class="muted">Born ${p.born}${p.died ? ` · died ${p.died} (${esc(p.death_cause)}), aged ${p.died - p.born}` : ""} · ${esc(PN(p.place))} · generation ${p.gen} · <span class="mono">${p.id}</span></p>
+    <div class="asof"><label for="asof">Inspect as of</label><input type="range" id="asof" min="${p.born}" max="${end}" value="${asof}"><span class="mono">${asof}</span><span class="muted">(age ${asof - p.born})</span></div>
+  </div>
+  <div class="grid g2">
+    <div class="card"><h3>Inner life as of ${asof}</h3>
+      <div class="drives">${["food", "safety", "belonging", "status"].map(k => `<span>${k}</span><div class="bar"><i style="width:${Math.round((d[k] ?? 0) * 100)}%"></i></div><span class="mono">${(d[k] ?? 0).toFixed(2)}</span>`).join("")}</div>
+      <dl style="margin:0;display:grid;gap:6px;font-size:13.5px">
+        <div><dt class="muted">Wants (conscious)</dt><dd style="margin:0">${(st.wants ?? []).length ? st.wants.map(esc).join("; ") : '<span class="empty">nothing pressing</span>'}</dd></div>
+        <div><dt class="muted">Wound</dt><dd style="margin:0">${st.wound ? esc(st.wound) : '<span class="empty">none</span>'}${st.grievance ? ` · grievance: ${causeChip(st.grievance)}` : ""}</dd></div>
+        <div><dt class="muted">Need (what they're blind to)</dt><dd style="margin:0">${st.need ? esc(st.need) : '<span class="empty">none yet</span>'}</dd></div>
+        <div><dt class="muted">Spouse</dt><dd style="margin:0">${spouseNow ? personLink(spouseNow) : '<span class="empty">unmarried</span>'}</dd></div>
+      </dl>
+      ${motivationTrace(p, st)}
+    </div>
+    <div class="card"><h3>Beliefs and where they came from</h3>
+      ${domB.length ? domB.map(([c, b]) => `<div style="font-size:13.5px"><span class="pill ${M.claims[c].truth}">${c} · ${TRUTH_LABEL[M.claims[c].truth]}</span> ${esc(M.claims[c].text)} <span class="mono muted">conf ${b.conf}</span>
+        <div class="muted" style="font-size:12.5px;margin-top:2px">${provenance(p, c, asof)}</div></div>`).join("") : '<p class="empty">Has heard nothing about the ward failure by this date.</p>'}
+    </div>
+  </div>
+  ${ambitionLedger(p)}
+  <div class="grid g2">
+    <div class="card"><h3>Genome: genotype, phenotype and allele origins</h3>${genomeTable(p)}</div>
+    <div class="card"><h3>Family tree</h3>${familyTree(p)}</div>
+  </div>
+  <div class="grid g2">
+    <div class="card"><h3>Relationship web as of ${asof}</h3>${egoNet(p, asof)}</div>
+    <div class="card"><h3>Life events</h3><div class="chain" style="max-height:460px;overflow:auto">${evs.length ? evs.map(e => `<div class="node" style="${e.year > asof ? "opacity:.45" : ""}"><span class="mono muted">${e.year}</span> · <button class="ln" data-event="${e.id}">${esc(e.text)}</button></div>`).join("") : '<p class="empty">No notable events.</p>'}</div></div>
+  </div>`;
+}
+
+function provenance(p, claim, asof) {
+  const parts = [];
+  let cur = p, c = claim, guard = 0;
+  while (cur && guard++ < 8) {
+    const b = cur.beliefs[c] ?? Object.values(cur.beliefs)[0];
+    if (!b) break;
+    if (!b.heard_from) { parts.push(b.via_event ? `${esc(cur.name)} saw it firsthand: ${causeChip(b.via_event)}` : `${esc(cur.name)} formed it themselves`); break; }
+    const src = R().people[b.heard_from];
+    parts.push(`heard from ${personLink(b.heard_from)} in ${b.t}`);
+    cur = src;
+    if (cur && !cur.beliefs[c]) { const parent = M.claims[c].parent; if (parent && cur.beliefs[parent]) { parts.push(`<span class="pill">drifted from ${parent}</span>`); c = parent; } }
+  }
+  return parts.join(" ← ");
+}
+
+function motivationTrace(p, st) {
+  const want = (st.wants ?? []).find(w => w.startsWith("avenge"));
+  if (!want) return "";
+  const d = Object.entries(st.beliefs).sort((a, b) => b[1].conf - a[1].conf)[0];
+  return `<div class="callout ember" style="font-size:13px"><b>Why they want this:</b> "${esc(want)}" ← grievance ${st.grievance ? causeChip(st.grievance) : ""} ← believes ${d ? `<span class="pill ${M.claims[d[0]].truth}">${d[0]}</span> "${esc(M.claims[d[0]].text)}"` : ""} ← ${d ? provenance(p, d[0]) : ""}</div>`;
+}
+
+function genomeTable(p) {
+  const r = R();
+  const fmtOrigin = id => id === p.id ? '<span class="pill">new mutation</span>' : (r.people[id] ? personLink(id) : `<span class="muted mono">${id}</span>`);
+  const ph = p.phenotype;
+  const show = (name, v) => typeof v === "boolean" ? (v ? "yes" : "no") : ["low", "average", "high"][v];
+  return `<div class="tw"><table class="gen"><thead><tr><th>Locus</th><th>Alleles</th><th>Expressed</th><th>Inherited from (founding carrier)</th></tr></thead><tbody>
+    ${M.loci.map(([locus, dom, rec], i) => {
+      const g = p.genome[i];
+      return `<tr><td>${locus.replace("_", " ")}</td><td class="a">${g[0][0]}/${g[1][0]}</td><td>${show(locus, ph[locus])}</td><td>${fmtOrigin(g[0][1])} · ${fmtOrigin(g[1][1])}</td></tr>`;
+    }).join("")}</tbody></table></div>
+    <p class="muted" style="font-size:12px">Each allele carries its founding carrier through every generation. Luxsight appears only when both copies are the recessive <span class="mono">x</span>.</p>`;
+}
+
+function familyTree(p) {
+  const r = R(), P = id => r.people[id];
+  const box = (id, x, y, hi) => {
+    const q = P(id);
+    if (!q) return `<g><rect x="${x}" y="${y}" width="128" height="36" rx="4" fill="var(--sunk)" stroke="var(--line)"/><text class="mut" x="${x + 8}" y="${y + 22}" font-size="11">unknown</text></g>`;
+    return `<g data-person="${id}" style="cursor:pointer"><rect x="${x}" y="${y}" width="128" height="36" rx="4" fill="${hi ? "var(--lux-soft)" : "var(--surface)"}" stroke="${hi ? "var(--lux)" : q.phenotype.luxsight ? "var(--lux)" : "var(--line)"}" ${q.phenotype.luxsight && !hi ? 'stroke-dasharray="3 2"' : ""}/>
+      <text x="${x + 8}" y="${y + 15}" font-size="11.5">${esc(q.name.length > 19 ? q.name.slice(0, 18) + "…" : q.name)}</text><text class="mut" x="${x + 8}" y="${y + 29}" font-size="10">${q.born}–${q.died ?? ""}</text></g>`;
+  };
+  const W = 600, CW = 140;
+  let g = "", y = 6;
+  const gp = [P(p.father)?.father, P(p.father)?.mother, P(p.mother)?.father, P(p.mother)?.mother];
+  gp.forEach((id, i) => { g += box(id, 10 + i * CW + (i > 1 ? 20 : 0), y, false); });
+  y += 56;
+  g += box(p.father, 10 + 0.5 * CW, y, false) + box(p.mother, 10 + 2.5 * CW + 20, y, false);
+  y += 56;
+  const sibs = [...new Set([...(P(p.mother)?.children ?? []), ...(P(p.father)?.children ?? [])])].filter(id => id !== p.id).slice(0, 2);
+  g += box(p.id, 10 + 1.5 * CW + 10, y, true);
+  if (p.spouse) g += box(p.spouse, 10 + 2.5 * CW + 20, y, false);
+  sibs.forEach((s, i) => { g += box(s, 10 + (i ? 3.5 : 0.5) * CW + (i ? 30 : -60), y + (i ? 0 : 0), false); });
+  y += 56;
+  const kids = p.children.slice(0, 4);
+  kids.forEach((k, i) => { g += box(k, 10 + i * CW + (i > 1 ? 20 : 0), y, false); });
+  const H = y + (kids.length ? 46 : 0);
+  const more = p.children.length > 4 ? `<p class="muted" style="font-size:12px">${p.children.length - 4} more children: ${p.children.slice(4).map(personLink).join(", ")}</p>` : "";
+  return `<div class="tw"><svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" style="max-width:none">${g}</svg></div>
+    <p class="muted" style="font-size:12px">Grandparents, parents, then siblings, ${esc(p.name.split(" ")[0])} and spouse, then children. A dashed teal border marks luxsight. Select anyone to open their page.</p>${more}`;
+}
+
+function egoNet(p, asof) {
+  const r = R();
+  const rels = Object.entries(p.rel).filter(([id, x]) => x.since <= asof && r.people[id]).slice(0, 28);
+  const W = 520, H = 360, cx = W / 2, cy = H / 2;
+  const colors = { spouse: "var(--ember)", parent: "var(--lux)", child: "var(--lux)", sibling: "var(--c3)", friend: "var(--c0)", rival: "var(--c1)" };
+  let g = "";
+  rels.forEach(([id, x], i) => {
+    const a = (i / rels.length) * Math.PI * 2 - Math.PI / 2, rr = x.kind === "friend" || x.kind === "rival" ? 150 : 105;
+    const nx = cx + Math.cos(a) * rr * 1.25, ny = cy + Math.sin(a) * rr * 0.95;
+    const q = r.people[id], dead = q.died && q.died <= asof;
+    g += `<line x1="${cx}" y1="${cy}" x2="${nx}" y2="${ny}" stroke="${colors[x.kind] ?? "var(--muted)"}" stroke-width="${1 + 2 * x.strength}" ${dead ? 'stroke-dasharray="3 3" opacity=".5"' : ""}/>`;
+    g += `<g data-person="${id}" style="cursor:pointer"><circle cx="${nx}" cy="${ny}" r="5" fill="${colors[x.kind] ?? "var(--muted)"}"/><text x="${nx + (Math.cos(a) >= 0 ? 8 : -8)}" y="${ny + 4}" font-size="10.5" text-anchor="${Math.cos(a) >= 0 ? "start" : "end"}" ${dead ? 'class="mut"' : ""}>${esc(q.name.split(" ")[0])} · ${x.kind}</text></g>`;
+  });
+  g += `<circle cx="${cx}" cy="${cy}" r="9" fill="var(--lux)"/><text x="${cx}" y="${cy - 14}" font-size="12" text-anchor="middle">${esc(p.name)}</text>`;
+  return `<div class="tw"><svg viewBox="0 0 ${W} ${H}" width="100%" style="max-width:${W}px;display:block">${g}</svg></div>
+    <div class="legendrow">${Object.entries(colors).map(([k, c]) => `<span style="--k:${c}">${k}</span>`).join("")}<span style="--k:var(--muted)">dashed: dead by this date</span></div>`;
+}
+
+function viewObjects() {
+  const r = R(), o = r.objects.emberfang;
+  if (!o) return `<p class="empty">The Emberfang was never forged in this run.</p>`;
+  const bio = o.bio.map(id => I().byId[id]).filter(Boolean);
+  const other = DATA.runs[S.run === "baseline" ? "ripple" : "baseline"].objects.emberfang;
+  return `<div class="card"><div class="phead"><h2>The Emberfang</h2><span class="pill lux">pinned forging (P1)</span><span class="pill">deeds: ${o.deeds}</span>
+      <span class="pill">${o.owner ? "held by " + esc(r.people[o.owner]?.name) : "lost"}</span></div>
+    <p class="muted">Forged by ${personLink(o.maker)}. Its biography is every event it took part in. The two runs give it different lives: ${other ? `in the ${S.run === "baseline" ? "ripple" : "baseline"} run it gathers ${other.deeds} deeds` : ""}.</p>
+    <div class="chain">${bio.map((e, i) => `${i ? '<div class="arrow">↓</div>' : ""}<div class="node"><span class="mono muted">${e.year}</span> · <button class="ln" data-event="${e.id}">${esc(e.text)}</button></div>`).join("")}</div></div>`;
+}
+
+function viewDiff() {
+  const c = M.checks, d = M.diff;
+  const waves = c.divergence.waves;
+  const palette = ["var(--lux)", "var(--ember)", "var(--c0)", "var(--c3)", "var(--c4)", "var(--c2)", "var(--muted)"];
+  const series = Object.keys(M.places).map((pl, i) => ({ label: PN(pl), color: palette[i], ys: waves.map(w => w[pl]) }));
+  const groups = Object.entries(d.by_group).sort((a, b) => (b[1].changed + b[1].same) - (a[1].changed + a[1].same));
+  const B = DATA.runs.baseline, Rp = DATA.runs.ripple;
+  const cnt = (r, t) => r.events.filter(e => e.type === t).length;
+  return `<div class="callout">Two runs from the same seed. The only difference is ripple R1 in 2330. Causal ids let us compare them entity by entity, and taint tracking follows the ripple through every shared event and every piece of gossip.</div>
+  <div class="statrow">
+    <div class="stat"><span class="v ok">${c.divergence.unexplained}</span><span class="k">Divergences with no causal path from the ripple (rendezvous matching)</span></div>
+    <div class="stat"><span class="v">${c.divergence.divergent_events.toLocaleString()}</span><span class="k">Divergent events, rendezvous matching</span></div>
+    <div class="stat"><span class="v">${c.divergence.tainted.toLocaleString()}</span><span class="k">People the ripple's influence reached</span></div>
+  </div>
+  <div class="grid g2">
+    <div class="card"><h3>The causal wave: share of each settlement's events that differ</h3>${lineChart({ series, xs: waves.map(w => w.year), ymax: 1, yfmt: v => Math.round(v * 100) + "%" })}
+      <p class="muted" style="font-size:12.5px">The ripple starts at Ashgatar Keep and reaches Lion's Rest and Frontier Hold within a decade, through marriages and duels. Burnt Hollow has no notables and no road traffic in this PoC, so it never changes. With only six intermarried houses, almost everything is causally entangled within a century. That is real causation, not noise.</p></div>
+    <div class="card"><h3>Same story, different history</h3><div class="tw"><table><thead><tr><th></th><th>Baseline</th><th>Ripple R1</th></tr></thead><tbody>
+      ${[["Duels", "duel"], ["Deaths (notable)", "death"], ["Marriages", "marriage"], ["Rumour mutations", "rumour_drift"], ["Luxsight births", "trait_resurfaces"]].map(([l, t]) => `<tr><td>${l}</td><td class="mono">${cnt(B, t)}</td><td class="mono">${cnt(Rp, t)}</td></tr>`).join("")}
+      <tr><td>People recorded</td><td class="mono">${Object.keys(B.people).length}</td><td class="mono">${Object.keys(Rp.people).length}</td></tr>
+      <tr><td>Emberfang deeds</td><td class="mono">${B.objects.emberfang?.deeds ?? "-"}</td><td class="mono">${Rp.objects.emberfang?.deeds ?? "-"}</td></tr>
+      </tbody></table></div></div>
+  </div>
+  <div class="card"><h3>People present in both runs: unchanged vs changed, by house</h3>
+    ${hbar(groups.map(([g, v]) => ({ label: esc(M.houses[g]?.name ?? g), v: v.changed, text: `${v.changed}/${v.changed + v.same}`, color: "var(--ember)" })), Math.max(...groups.map(([, v]) => v.changed + v.same)))}
+  </div>`;
+}
+
+// ---------- render + events
+function render() {
+  document.querySelectorAll("nav.tabs button").forEach(b => b.setAttribute("aria-selected", b.dataset.tab === S.tab));
+  document.getElementById("run-baseline").setAttribute("aria-pressed", S.run === "baseline");
+  document.getElementById("run-ripple").setAttribute("aria-pressed", S.run === "ripple");
+  const v = { stories: viewStories, overview: viewOverview, history: viewHistory, knowledge: viewKnowledge, people: viewPeople, objects: viewObjects, diff: viewDiff }[S.tab];
+  document.getElementById("main").innerHTML = v();
+  bind();
+}
+function go(tab) { S.tab = tab; try { history.replaceState(null, "", "#" + tab); } catch (e) {} render(); window.scrollTo(0, 0); }
+function bind() {
+  const m = document.getElementById("main");
+  m.querySelectorAll("[data-person]").forEach(el => el.addEventListener("click", ev => { ev.stopPropagation(); S.person = el.dataset.person; S.asof = null; go("people"); }));
+  m.querySelectorAll("[data-event]").forEach(el => {
+    const f = ev => { ev.stopPropagation(); S.event = el.dataset.event; const e = I().byId[S.event]; if (e && S.hs > e.salience) S.hs = e.salience; S.tab === "history" ? render() : go("history"); };
+    el.addEventListener("click", f);
+    el.addEventListener("keydown", ev => { if (ev.key === "Enter") f(ev); });
+  });
+  m.querySelectorAll("[data-amb]").forEach(el => el.addEventListener("click", ev => {
+    ev.stopPropagation(); S.amb = el.dataset.amb; S.thread = null;
+    S.tab === "stories" ? render() : go("stories");
+  }));
+  m.querySelectorAll("[data-thread]").forEach(el => el.addEventListener("click", ev => {
+    ev.stopPropagation(); S.thread = el.dataset.thread; S.amb = null; render();
+  }));
+  m.querySelectorAll("[data-period]").forEach(el => el.addEventListener("click", () => {
+    const [a, b] = el.dataset.period.split(",").map(Number); S.from = a; S.to = b; render();
+  }));
+  const clampYear = v => Math.min(M.end, Math.max(M.start, Math.round(+v || M.start)));
+  const on = (id, evn, fn) => { const el = document.getElementById(id); if (el) el.addEventListener(evn, fn); };
+  on("hq", "input", e => { S.hq = e.target.value; clearTimeout(S._t); S._t = setTimeout(() => { render(); const el = document.getElementById("hq"); el.focus(); el.setSelectionRange(el.value.length, el.value.length); }, 250); });
+  on("hf", "change", e => { S.hf = e.target.value; render(); });
+  on("hp", "change", e => { S.hp = e.target.value; render(); });
+  on("hs", "change", e => { S.hs = +e.target.value; render(); });
+  on("kp", "change", e => { S.place = e.target.value; render(); });
+  on("sf", "change", e => { S.from = Math.min(clampYear(e.target.value), S.to ?? M.end); render(); });
+  on("st", "change", e => { S.to = Math.max(clampYear(e.target.value), S.from ?? M.start); render(); });
+  on("sk", "change", e => { S.sk = e.target.value; render(); });
+  on("pq", "input", e => { S.pq = e.target.value; clearTimeout(S._t); S._t = setTimeout(() => { render(); const el = document.getElementById("pq"); el.focus(); el.setSelectionRange(el.value.length, el.value.length); }, 250); });
+  on("asof", "input", e => { S.asof = +e.target.value; render(); document.getElementById("asof")?.focus(); });
+}
+document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => go(b.dataset.tab)));
+document.getElementById("run-baseline").addEventListener("click", () => { S.run = "baseline"; render(); });
+document.getElementById("run-ripple").addEventListener("click", () => { S.run = "ripple"; render(); });
+const h = (location.hash || "").slice(1);
+if (["stories", "overview", "history", "knowledge", "people", "objects", "diff"].includes(h)) S.tab = h;
+render();
+</script>

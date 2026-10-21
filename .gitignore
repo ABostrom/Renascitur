@@ -1,2 +1,6 @@
 .obsidian/
 /.obsidian
+
+# history engine PoC outputs (regenerable)
+poc/out/
+__pycache__/
