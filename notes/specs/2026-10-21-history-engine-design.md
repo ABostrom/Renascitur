@@ -54,6 +54,7 @@ Guiding beliefs:
 | Stories | Structured as **saga › arc › beat**. A saga is an entangled affair. An arc is one character's ambition from formation to outcome. A beat is an event. |
 | Motivation | Simulated drives produce behaviour. Ambitions are first-class records (formed → pursued → fulfilled / thwarted / abandoned / died unfulfilled). An emergent want / need / wound layer supports writing arcs. |
 | Mythic beings | Gods and immortals are agents, their canon deeds are pinned, and faith is a force (from M5). |
+| First Age | High fantasy blended with science fiction: Solarans, the Endless Sun, World Trees, the stars. It is the largest body of lore to generate, so it gets its **own milestone (M5)** and ruleset (S14), right after the story layer. |
 | Realms | Renascita only for now. Pyrosia is the first mapped region. |
 | Run budget | Overnight for a full multi-age run; minutes for a replay from a checkpoint. A full Fourth Age run (about 250 years) should take minutes at M1 scale. |
 | Observatory | The **driver and the viewer**: a **SvelteKit** web app. **Viewing needs no server**: the page reads run folders (Parquet + a JSON manifest) directly, querying them in the browser with DuckDB-WASM, and a run can be published as a static page. **Acting needs the local engine**: `renasci serve` (FastAPI, local only) starts runs and replays and promotes to the vault. Without it, the page is read-only. |
@@ -164,7 +165,7 @@ recipe (engine version, seed, vault commit, ripples, reshuffles)
   - urgent follow-ups fire days later
   - populations update seasonally
   - structural systems update yearly
-- **Temporal LOD:** quiet eras step coarsely, and **focus windows** run at full resolution. The interface (switching between coarse and fine, and promoting individuals out of aggregates that skipped time) is **designed in S1**, even though tuning for deep time comes in M6.
+- **Temporal LOD:** quiet eras step coarsely, and **focus windows** run at full resolution. The interface (switching between coarse and fine, and promoting individuals out of aggregates that skipped time) is **designed in S1**, even though tuning for deep time comes with the First Age (M5).
 
 ### 5.4 Storage
 
@@ -272,7 +273,17 @@ Each entry gives the scope, then *depends on* → *done when*.
 - **S8 Polities & conflict:** factions, offices, the Emperor's succession, diplomacy, war, borders.
 - **S9 Work, crafts & objects:** jobs, materials, crafting, trade, object biographies.
 - **S10 Ecology & catastrophe:** climate, harvests, disease, famine, aberrations and night terrors, Lux Lapis and wards.
-- **S11 Mythic beings & faith:** gods and immortals as agents, worship, faith as a force, divine attribution of ripples.
+- **S11 Mythic beings & faith (M5):** gods and immortals as agents, worship, faith as a force, divine attribution of ripples.
+- **S14 First Age ruleset (M5):**
+  - Scope:
+    - Solaran civilisation: research, inventions, colonies and schisms, as a technology system
+    - the World Trees and the Elder Races
+    - elemental and cosmic events
+    - the stars as an abstract off-world realm
+    - First Age canon pins
+    - myth formation: events become myths and claim seeds for later ages
+  - Depends on S3, S6, S7, S11 and the temporal-LOD interface from S1.
+  - Done when a full First Age run holds its canon within budget and produces promotable lore.
 - **S12 Story layer:** context packs, POV chronicles (the victor's account vs the truth), canon checks of prose, the MCP server. **Story finding (sagas, arcs, latch points) is not here.** It belongs to S7 plus S13, and lands in M1.
 - **S13 Observatory:**
   - The SvelteKit driver and viewer. It reads run folders with DuckDB-WASM and acts through `renasci serve`. It grows every milestone.
@@ -367,12 +378,27 @@ S8–S11 each depend on S3, S4 and S7 (and S6 where beliefs are involved). Each 
   - Canon-check recall is at least 90% on a set of seeded contradictions.
   - A POV chronicle and a campaign brief (a defined template: the saga, factions, NPCs with wants, hooks) are generated from one run.
 
-**M5: Breadth** (S8, S9, S10, S11, each its own spec, in an order chosen at M4)
-- Each has its own exit criteria and Observatory views. Examples: polities and war with border maps; crafts and objects (the sword story emerges unscripted); ecology and catastrophe with disease and famine heatmaps; mythic beings with a faith map and deity-attributed ripples.
+**M5: The First Age** (S14, S11, temporal LOD at scale, minimal S8 polities)
+- **Why here:** the First Age is high fantasy blended with science fiction. It is also the largest source of lore to generate. It comes once the engine, stories, epistemics and the prose layer exist to do it justice.
+- **Engine:**
+  - the First Age ruleset: Solaran civilisation, technology and research, the World Trees, the Elder Races, Muradin's communion with the elements, the Endless Sun, the Solarans reaching the stars
+  - gods and primordial beings as agents (Ishna, Lord Syuul)
+  - **the stars as an abstract off-world realm** (a place graph, not a map)
+  - temporal LOD and focus windows tuned for a 10,000-year age
+  - First Age events turn into myths and claim seeds that later ages inherit
+- **Observatory v5:** technology and research timelines, a civilisation-scale map by millennium, focus-window controls, and a myth lineage view (event → myth → Fourth Age belief).
+- **Demo:** a full First Age run, years 1–10000. Every First Age canon pin holds (the Endless Sun is built and falls, Solara collapses, Syuul is imprisoned). Generated Solaran colonies, inventions and schisms become sagas. One of them is still told, distorted, as a Fourth Age myth.
+- **Exit:**
+  - First Age canon holds or is classified.
+  - The run stays within the overnight budget.
+  - Generated lore can be promoted through the normal curation flow.
 
-**M6a: Deep time, mechanics:** temporal LOD tuning, focus windows, a Third Age ruleset and run (filling the sparse age), and the Third → Fourth Age handoff (ruins, artifacts, myths carry over).
+**M6: Breadth** (S8 in full, S9, S10, each its own spec, in an order chosen at M5)
+- Each has its own exit criteria and Observatory views. Examples: polities and war with border maps; crafts and objects (the sword story emerges unscripted); ecology and catastrophe with disease and famine heatmaps.
 
-**M6b: Deep time, scale:** rulesets for the First and Second Ages, a full multi-age run overnight, and scale-up (Rust or PyO3 where profiled).
+**M7a: Deep time, mechanics:** a Third Age ruleset and run (filling the sparse age), plus the handoffs between ages: ruins, artifacts and myths carry over from First to Second to Third to Fourth.
+
+**M7b: Deep time, scale:** the Second Age ruleset (Arcanometry, the Forge Wars, multi-realm), a full multi-age run overnight, and scale-up (Rust or PyO3 where profiled).
 
 ### 8.3 Dependencies
 
@@ -380,7 +406,8 @@ S8–S11 each depend on S3, S4 and S7 (and S6 where beliefs are involved). Each 
 S1 ─┬─ S2 ─┐
     ├─ S3 ◄┴─ S7 ──────────┐
     ├─ S4(min) ─ S4(full) ─┼─ S6 ─ S7(belief actions)
-    │              └─ S5   ├─ S8 · S9 · S10 · S11 ── M6a/b
+    │              └─ S5   ├─ S11 ─ S14 (First Age, M5)
+    │                      ├─ S8 · S9 · S10 (M6) ── M7a/b
     ├─ S13 (v0 → v6)       │
     └──────────────────────┴─ S12
 ```
@@ -394,7 +421,8 @@ S1 ─┬─ S2 ─┐
 | Pinned lineages over-constrain M1 | Lineages are proposed with you before M1. The feasibility pass flags conflicts early. |
 | The planner is slow or opaque | A bounded search depth; plans recorded as data; every step traces to its ambition. |
 | Stories lumped or noisy | Saga › arc structure, sub-arc splitting, salience tuning in the Observatory. |
-| Scope sprawl | Strict exits; breadth waits for M5; one spec per sub-project. |
+| Scope sprawl | Strict exits; the First Age waits for M5 and breadth for M6; one spec per sub-project. |
+| The First Age overwhelms the engine | The stars are an abstract realm; temporal LOD keeps 10,000 years affordable; S14 has its own spec. |
 | Vault churn | Curated promotion; `generated_hash` overwrite protection; a stale-proposal list. |
 | Lore gaps | Placeholder calendar; age-relative dates; drafted timelines for you to correct. |
 
