@@ -49,6 +49,8 @@ class System:
             names = getattr(self, label)
             if not isinstance(names, frozenset) or not all(isinstance(n, str) and n for n in names):
                 raise ValueError(f"{self.name}: {label} must be a frozenset of names")
+            if "*" in names:
+                raise ValueError(f"{self.name}: a bare '*' would declare everything; name a prefix like 'pop:*'")
         if type(self.coarse_ok) is not bool:
             raise ValueError(f"{self.name}: coarse_ok must be True or False")
         if self.coarse_fallback is not None and not callable(self.coarse_fallback):

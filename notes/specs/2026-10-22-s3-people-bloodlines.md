@@ -295,6 +295,17 @@ S3 supplies the sampler and calls S1's `ctx.promote`, which is extended to take 
   
   The dead are never demoted.
 
+**As built (#72):** "quiet" is approximated without a `last_event` field. Only an adult commoner with no
+house, office or spouse and no living child under 16 can be demoted, and only if not protected.
+`ctx.protected` asks the same question as `guarded`, recorded as a read, but without making the
+protector a cause of anything. A settlement's `notable_target` of 0 means "demote everyone quiet".
+
+**Ledger reads (#72 review, kept on purpose):** notables' births, deaths and moves update the
+`flow:` ledgers by read-modify-write, so the read is recorded. Without it, a cumulative cell that
+differs could have an untainted last writer and show up as *unexplained*. The extra taint is
+mostly redundant: anything that changes a settlement's mass draws already changes what its scope
+reads.
+
 ### 8.4 Conservation (the ruleset's `conservation(store)`)
 
 These are checked from the store alone, using the `flow:` ledgers:

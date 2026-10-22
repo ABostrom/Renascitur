@@ -11,6 +11,7 @@ whenever an entity of that kind is created.
 
 from __future__ import annotations
 
+import functools
 import json
 import math
 from contextlib import contextmanager
@@ -21,6 +22,14 @@ from renasci.core.choice import match, scored
 from renasci.core.events import Cause, Event, Source
 from renasci.core.ids import entity_id, event_id
 from renasci.core.scheduler import Activation
+
+
+@functools.lru_cache(maxsize=1 << 16)
+def declared(name: str, names: frozenset) -> bool:
+    """Is `name` in a read or write set? A declaration ending in `*` covers a prefix: `"allele:*"`
+    covers every allele column, whose names come from the world's genome catalogue. (Memoized:
+    systems ask the same questions every activation.)"""
+    return name in names or any(d.endswith("*") and name.startswith(d[:-1]) for d in names)
 
 
 def reads_digest(reads: list) -> str:
@@ -61,17 +70,18 @@ class Ctx:
         self._event: str | None = None  # the event that writes are attributed to
         self._occurrences: dict[tuple[str, str], int] = {}  # per (actor, purpose), this activation only
         self.hinges: list[dict] = []  # buffered; the engine keeps them only if the activation completes
+        self._series: list[dict] = []  # buffered likewise
         self._pin_causes: list = []  # pins that guarded someone here; the next event is caused by them
         self._guard_rows: list[dict] = []
 
     # ------------------------------------------------------------ declarations
 
     def _may_read(self, name: str) -> None:
-        if self._engine.strict and name not in self.system.reads:
+        if self._engine.strict and not declared(name, self.system.reads):
             raise UndeclaredAccess(f"{self.system.name} read {name!r} without declaring it")
 
     def _may_write(self, name: str) -> str:
-        if name not in self.system.writes:
+        if not declared(name, self.system.writes):
             raise UndeclaredAccess(f"{self.system.name} wrote {name!r} without declaring it")
         if self._event is None:
             raise ValueError(f"{self.system.name} wrote {name!r} before emitting an event to explain it")
@@ -164,6 +174,17 @@ class Ctx:
                 self._note((entity, "status"), store.status(entity))
         return store.ids(kind, status)
 
+    def read_columns(self, entity: str, names) -> dict[str, int | float]:
+        """Several columns of one entity (an aggregate's whole state) as plain numbers. Recorded as
+        one read, `(entity, "columns:<digest of the names>")`, whose value is the digest of them all."""
+        names = list(names)
+        for name in names:
+            self._may_read(name)
+        store = self._engine.store
+        values = {name: store.read_column(name, [entity])[0].item() for name in names}
+        self._note((entity, f"columns:{digest(names)}"), [values[n] for n in names])
+        return values
+
     def read_column(self, name: str, ids):
         self._may_read(name)
         ids = list(ids)
@@ -189,6 +210,12 @@ class Ctx:
     def write_column(self, name: str, ids, values) -> None:
         event = self._may_write(name)
         self._engine.store.write_column(name, ids, values, self.today, event, activation=self.activation.id)
+
+    def series(self, entity: str, values: dict) -> None:
+        """Log numbers about `entity` today (an aggregate's counts) to the `timeseries` table. Not
+        state and not an event: a record for charts. Kept only if the activation completes."""
+        self._series.append(json.loads(canonical({"date": self.today, "system": self.system.name, "entity": entity,
+                                                  "values": values, "activation": self.activation.id})))
 
     def write_columns(self, entity: str, values: dict) -> None:
         """Several columns of one entity in one change (an aggregate's step): one bulk delta."""
@@ -269,7 +296,7 @@ class Ctx:
 
     def _check_writes(self, *names: str) -> None:
         for name in names:
-            if name not in self.system.writes:
+            if not declared(name, self.system.writes):
                 raise UndeclaredAccess(f"{self.system.name} wrote {name!r} without declaring it")
 
     def _take(self, aggregate: str, column: str | None, columns: dict | None) -> dict[str, int]:
@@ -324,6 +351,19 @@ class Ctx:
 
     # ------------------------------------------------------------ pins
 
+    def _protector(self, entity: str):
+        pin = self._engine.director.guard_pin(entity, self.today)
+        ripple = None if pin is not None else self._engine.protection(entity, self.today)
+        return pin, ripple
+
+    def protected(self, entity: str) -> bool:
+        """Is `entity` protected (by a pin or a ripple) today? Recorded as the same read as `guarded`,
+        but nothing is guarded: no cause for the next event, no guard logged. For decisions that just
+        leave a protected person alone (don't demote them), rather than saving them from death."""
+        pin, ripple = self._protector(entity)
+        self._note((entity, "guard"), f"pin:{pin.id}" if pin else f"ripple:{ripple.id}" if ripple else None)
+        return pin is not None or ripple is not None
+
     def guarded(self, entity: str) -> bool:
         """Ask before a fatal outcome: True means canon needs `entity` alive, so write a near miss.
 
@@ -331,9 +371,8 @@ class Ctx:
         ripple (or none), so a run with a protect ripple and a run without one differ in that value.
         The next event emitted here is caused by the protector.
         """
-        pin = self._engine.director.guard_pin(entity, self.today)
+        pin, ripple = self._protector(entity)
         if pin is None:
-            ripple = self._engine.protection(entity, self.today)
             self._note((entity, "guard"), f"ripple:{ripple.id}" if ripple else None)
             if ripple is None:
                 return False

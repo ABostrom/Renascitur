@@ -8,7 +8,7 @@ from renasci.core.calendar import Date
 from renasci.core.canon import digest
 from renasci.toy import new_engine
 
-HISTORY = "bdf959168249558a389e0c1a6b244ec2"  # event rows gained "scope" (#54)
+HISTORY = "b2320b866242ab03aa6fcee1568e2e15"  # event rows gained "scope" (#54); pending history gained an (empty) "timeseries" table (#71)
 STATE = "2b6e139d658aaa95e2d60c12f2c09015"  # pin director state gained "bindings" (#152), "held" (#66)
 
 

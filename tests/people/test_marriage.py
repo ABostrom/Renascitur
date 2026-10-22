@@ -82,21 +82,35 @@ def test_markets_are_regional_and_a_ripple_stays_in_its_region(world):
     scopes = {ev["id"]: ev["scope"] for ev in world.pending()["events"] + variant.pending()["events"]}
     d = report["divergent"]
     touched = {scopes[i] for i in d["only_baseline"] + d["only_variant"] + d["changed"]} - {None}
-    assert touched and all(REGION_OF.get(s, s) == region for s in touched)
+    def region_of(scope):  # a settlement, a region, or a house (by its seat)
+        if world.store.exists(scope) and world.store.kind(scope) == "house":
+            return REGION_OF[world.store.get(scope, "seat")]
+        return REGION_OF.get(scope, scope)
+    assert touched and all(region_of(s) == region for s in touched)
 
 
 def test_a_population_holds_up_over_250_years():
-    e = new_engine(people_per_settlement=20)  # smaller closed markets run out of unrelated partners
-    start = len(e.store.ids("person"))
+    """The whole population (masses and notables) neither dies out nor explodes, no region collapses,
+    the notables stay near their target, and the age structure stays plausible."""
+    from renasci.kin import SETTLEMENTS
+    from renasci.people.population import BAND_COLUMNS
+
+    e = new_engine(people_per_settlement=20)
+    def total(s):
+        return sum(int(e.store.read_column(c, [s])[0]) for c in BAND_COLUMNS) + len(e.store.get(s, "residents"))
+    start = {s: total(s) for s in SETTLEMENTS}
     e.run(until=Date(1, 250, 359))
+    end = {s: total(s) for s in SETTLEMENTS}
+    assert 0.7 * sum(start.values()) <= sum(end.values()) <= 1.8 * sum(start.values())  # capacity is 2x
+    for region in ("t:Hollow", "t:Ridge", "t:Mere"):
+        mine = [s for s in SETTLEMENTS if REGION_OF[s] == region]
+        assert sum(end[s] for s in mine) >= 0.4 * sum(start[s] for s in mine)  # no region collapses
     alive = [p for p in e.store.ids("person") if e.store.status(p) == "active"]
+    assert 0.5 * 20 * len(SETTLEMENTS) <= len(alive) <= 2 * 20 * len(SETTLEMENTS)
     ages = [age_years(e.calendar, e.store.get(p, "born"), Date(1, 250, 359)) for p in alive]
-    assert 0.7 * start <= len(alive) <= 1.8 * start  # neither dies out nor explodes (capacity is 2x the start)
-    by_region = {}
-    for p in alive:
-        r = REGION_OF[e.store.get(p, "place")]
-        by_region[r] = by_region.get(r, 0) + 1
-    assert all(by_region.get(r, 0) >= 0.4 * start / 3 for r in ("t:Hollow", "t:Ridge", "t:Mere"))  # no region collapses
+    for row in e.pending()["timeseries"][-len(SETTLEMENTS):]:  # the masses, by 5-year band
+        for b, n in enumerate(row["values"]["pop"]["f"] + row["values"]["pop"]["m"]):
+            ages += [(b % 20) * 5 + 2] * n
     children = sum(a < 15 for a in ages) / len(ages)
     old = sum(a >= 60 for a in ages) / len(ages)
     assert 0.15 <= children <= 0.55 and old <= 0.25 and max(ages) < 110

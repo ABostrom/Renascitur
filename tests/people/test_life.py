@@ -83,10 +83,10 @@ def test_the_dead_leave_their_settlement_and_spouse(base):
     store = base.store
     residents = {p for s in store.ids("settlement") for p in store.get(s, "residents")}
     for p in store.ids("person"):
-        if store.status(p) == "dead":
-            assert p not in residents
-        else:
+        if store.status(p) == "active":
             assert p in residents and p in store.get(store.get(p, "place"), "residents")
+        else:  # dead, or dormant (faded back into the masses)
+            assert p not in residents
     for p in residents:
         spouse = store.get(p, "spouse")
         assert spouse is None or (store.status(spouse) == "active" and store.get(spouse, "spouse") == p)
@@ -120,7 +120,7 @@ def test_mortality_follows_the_life_table():
     for r in flat:
         r["mortality"] = {"f": [0.1] * 20, "m": [0.1] * 20}
         r["fertility"] = [0.0] * 20
-    e = run(until=Date(1, 5, 359), people_per_settlement=200, races=flat)
+    e = run(until=Date(1, 5, 359), people_per_settlement=200, races=flat, masses=0)  # notables only
     alive = sum(1 for p in e.store.ids("person") if e.store.status(p) == "active")
     started = 200 * len(e.store.ids("settlement"))
     assert alive / started == pytest.approx(0.9 ** 5, abs=0.03)
