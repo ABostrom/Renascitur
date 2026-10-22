@@ -5,6 +5,7 @@
     renasci diff <baseline-run> <variant-run>      (exit 3 if anything is unexplained)
     renasci inspect <run-folder> (--event <id> | --entity <id>)
     renasci bench [--years 300] [--people 100] [--history bench/history.csv]
+    renasci observe [runs] [--port 8765]           (the Observatory, read-only, on localhost)
 
 `run` writes a run folder with a checkpoint every N years. `replay` forks a run at the latest
 checkpoint before the first changed ripple (or `--from`), restores, and continues with the new
@@ -66,7 +67,8 @@ def cmd_run(args) -> int:
     recipe = load_recipe(args.recipe)
     world = get_world(recipe.world)
     engine = world.new_engine(recipe.seed, ripples=recipe.ripples, **recipe.params)
-    folder = RunFolder.create(Path(args.out) / recipe.name, {"recipe": recipe.raw, "complete": False})
+    folder = RunFolder.create(Path(args.out) / recipe.name, {"recipe": recipe.raw, "complete": False,
+                                                             "calendar": world.calendar.to_json()})
     _finish(engine, folder, recipe)
     print(f"run {recipe.name}: {folder.manifest['segments']} segments, state {folder.manifest['meta']['state_hash']}")
     return 0
@@ -102,7 +104,7 @@ def cmd_replay(args) -> int:
     cp = load_checkpoint(base.path / "checkpoints" / f"{at.age}-{at.year}-{at.day}.json.gz")
     engine = world.restore(cp, new.seed, ripples=new.ripples, **new.params)
     folder = RunFolder.fork(base.path, Path(args.out) / new.name, keep=mark["segment"] + 1,
-                            meta={"recipe": new.raw, "complete": False,
+                            meta={"recipe": new.raw, "complete": False, "calendar": world.calendar.to_json(),
                                   "replayed_from": {"run": base.path.name, "at": mark["before"]}})
     _finish(engine, folder, new, after=at)
     print(f"replayed {new.name} from {base.path.name} at {world.calendar.format(at)}")
@@ -223,6 +225,13 @@ def cmd_bench(args) -> int:
     return 0
 
 
+def cmd_observe(args) -> int:
+    from renasci.observe import serve
+
+    serve(args.app, args.runs, port=args.port, open_browser=not args.no_browser)
+    return 0
+
+
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(prog="renasci", description="The Renascitur History Engine")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -242,6 +251,11 @@ def main(argv=None) -> int:
     target = p.add_mutually_exclusive_group(required=True)
     target.add_argument("--event")
     target.add_argument("--entity")
+    p = sub.add_parser("observe", help="serve the Observatory and a runs folder, read-only, on localhost")
+    p.add_argument("runs", nargs="?", default="runs")
+    p.add_argument("--port", type=int, default=8765)
+    p.add_argument("--app", default=str(Path(__file__).resolve().parents[2] / "observatory" / "build"))
+    p.add_argument("--no-browser", action="store_true")
     p = sub.add_parser("bench", help="time the toy world (simulation plus writing the run folder, "
                                       "not world setup) and append to the benchmark history")
     p.add_argument("--years", type=int, default=300)
@@ -250,7 +264,8 @@ def main(argv=None) -> int:
     p.add_argument("--out", default="runs/_bench")
     args = parser.parse_args(argv)
     try:
-        commands = {"run": cmd_run, "replay": cmd_replay, "diff": cmd_diff, "inspect": cmd_inspect, "bench": cmd_bench}
+        commands = {"run": cmd_run, "replay": cmd_replay, "diff": cmd_diff, "inspect": cmd_inspect, "bench": cmd_bench,
+                    "observe": cmd_observe}
         return commands[args.command](args)
     except (ValueError, FileExistsError, FileNotFoundError) as err:
         print(f"renasci: {err}", file=sys.stderr)

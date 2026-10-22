@@ -1,0 +1,5 @@
+# Run folders and fixtures are exact bytes: never convert line endings.
+observatory/fixtures/** -text
+*.jsonl -text
+*.gz binary
+observatory/build/** -text
