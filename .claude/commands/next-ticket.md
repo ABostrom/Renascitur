@@ -9,6 +9,21 @@ the backlog generator is `notes/specs/backlog.py`. Integration branch: `feat/his
 Aaron and you post from the same GitHub account. Start every comment you write with `🤖`.
 A comment without `🤖` is from Aaron and is an instruction.
 
+## 0. The review queue
+
+Aaron reviews everything from **one pinned issue titled `Review queue`**. Find it with
+`gh issue list --search "Review queue in:title" --state open`. Its body is the current list of what
+waits on Aaron, rewritten in full each run. For each item it gives:
+
+- the ticket
+- a one-line ask
+- the concerns, ranked
+- a **recommended answer**
+
+A reply on the queue issue, such as `22: approve`, `16: all recommended` or `all recommended`,
+counts as answering those tickets. Copy the answer onto each ticket as `🤖 Aaron answered on the
+review queue: …` and act on it as in step 1.
+
 ## 1. Answers first
 
 Look at open issues labelled `needs-aaron`:
@@ -33,15 +48,18 @@ Claim it: `gh issue edit <n> --add-label in-progress` and post a `🤖 Picking t
 - **lore** (only when Aaron asks): Aaron owns the canon. Keep it brief, and keep engine design free of setting specifics. Draft into `notes/` (or a vault note with `canon: proposed`), read
   the relevant vault notes first, never mark anything `canon: true`. Commit to `feat/history-engine`.
   Comment with a summary, the file path and numbered questions. Label `needs-aaron`. Do not close.
-- **spec** (review or write a spec): write or update it under `notes/specs/`, self-review it, commit,
-  comment with a summary and the open decisions. Label `needs-aaron`. Close only after they approve.
+- **spec** (review or write a spec): write or update it under `notes/specs/`, self-review it, then
+  **dispatch an independent reviewer subagent** (a skeptical senior engineer, top 8 concerns, verdict).
+  Fix what you agree with, commit, and comment with a summary, the open decisions and the reviewer's
+  remaining concerns. Label `needs-aaron`. Close only after they approve.
 - **plan**: needs an approved spec. Use the `superpowers:writing-plans` skill and write to
-  `notes/specs/plans/`. When it's committed, refresh that sub-project's `build` tickets so they match the
+  `notes/specs/plans/`. Have a reviewer subagent check the plan against the spec before committing. When it's committed, refresh that sub-project's `build` tickets so they match the
   plan: edit their bodies and create missing tickets via `backlog.py` conventions. Mark the first
   buildable ones `ready`. Comment and close.
 - **build**: use `superpowers:test-driven-development`. Branch `ticket/<n>-<slug>` off
   `feat/history-engine`. Python 3.12 via `uv`. Run the full test suite and use
-  `superpowers:verification-before-completion`. Merge into `feat/history-engine` with `--no-ff`, push,
+  `superpowers:verification-before-completion`. Before merging, run a code-review subagent on the
+  branch diff. Fix the real findings, and list any you deliberately left in the closing comment. Merge into `feat/history-engine` with `--no-ff`, push,
   delete the branch, then comment with what changed and the test output summary and close the issue.
   If you're stuck, revert to the comment-and-`needs-aaron` path. Never leave red tests on
   `feat/history-engine`.
@@ -53,7 +71,9 @@ everything it depends on (per its body, its epic and the spec's dependency order
 
 ## 5. Report
 
-Remove `in-progress`. In the terminal, give three lines: the ticket, what you did, and what's waiting on Aaron.
+Remove `in-progress`. **Rewrite the review queue body** from every open `needs-aaron` ticket. Drop
+answered items; put the items that block engine work first, and keep lore items in a short "parked"
+section at the bottom. In the terminal, give three lines: the ticket, what you did, and what's waiting on Aaron.
 
 ## 6. Pacing (when run under /loop)
 

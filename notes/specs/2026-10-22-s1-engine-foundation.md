@@ -1,8 +1,8 @@
 ---
 title: S1 Engine foundation: sub-project spec
-status: draft (awaiting Aaron's review on #22 and their answers on #16)
+status: draft r2 (independent review folded in; awaiting Aaron on #22 and #16)
 parent: notes/specs/2026-10-21-history-engine-design.md
-tickets: "#22 (this spec), epic #2, build tickets #36–#52, #114"
+tickets: "#22 (this spec), epic #2, build tickets #36–#52 (#114 is M3)"
 ---
 
 # S1 Engine foundation
@@ -33,11 +33,17 @@ and the master spec should be updated to match.
    repeated runs, across processes, and across different `PYTHONHASHSEED` values.
 2. **Replay equivalence.** For at least 8 checkpoint positions, replaying from the checkpoint gives
    the same event hash and the same final state hash as the continuous run.
-3. **No unexplained divergence.** A ripple run of the toy world differs from its baseline only in
-   entities and events reachable from the ripple through recorded causes, participation, state deltas
-   or declared read-sets. The test asserts that the unexplained count is zero.
+3. **No unexplained divergence, and the test has teeth.** A ripple run of the toy world differs from
+   its baseline only in events *and final entity state* reachable from the ripple. Reachability goes
+   through recorded causes, participation, state deltas and **actual reads** (§3.15). The test
+   asserts three things:
+   - the unexplained count is zero
+   - the valley the ripple never touches is byte-identical between the two runs
+   - a **negative control** fails: a deliberately injected coupling bug (a global counter, or a
+     list-order pick) must produce unexplained > 0
 4. **Toy pins.** Toy pins are honoured, classified out of scope, or logged as violated, and canon
-   strain is recorded. Re-running a recipe with a pin promoted from the same run gives zero strain.
+   strain is recorded. Re-running a recipe with a pin promoted from the same run gives an identical
+   event hash and zero strain. That requires satisfied pins to be pure observers (§3.9).
 5. **Benchmark baseline.** `renasci bench` records years/second, events/second and run-folder MB
    in `bench/history.csv`.
 
@@ -46,7 +52,11 @@ and the master spec should be updated to match.
 - Renascita content, the vault bridge (S2) and genomes (S3)
 - the Observatory (S13 v0 reads S1's run folder)
 - `renasci serve` (S13 / M0 or M1 ⟨#16⟩)
-- tuning the temporal level of detail (M5)
+- tuning the temporal level of detail (M5), and **coarse-step execution**: S1 ships the LOD interface
+  only (§3.8)
+- **the rest of the ripple kinds, reshuffle, director steering and fork prefix sharing.** These are
+  in M3 per master §8.2, and #114 carries them. S1 keeps their slots in the key and data formats
+  so that adding them later is not a format change.
 
 ## 2. Layout
 
@@ -113,11 +123,16 @@ The CLI uses `argparse`, so there's no extra dependency. `renasci/__init__.py` s
 - `key = blake2b(seed, system, entity_id, purpose, canonical_tick, occurrence, salt)` gives 128 bits,
   which become the Philox `key`. The draw index is the Philox counter.
 - **occurrence:** the n-th stream opened for the same `(system, entity, purpose, canonical_tick)`.
-  It's counted locally in an `OrdinalTable`, reset each tick and checkpointed. It is never a global count.
+  It's counted locally in an `OrdinalTable` scoped to exactly that tuple. It is never a global
+  count. A table is discarded when its tick ends, and checkpointed while its tick is open.
+- **Every stream has an owner key.** `entity=None` is forbidden. Batch and aggregate draws key by the
+  place or aggregate id they act on (`ctx.rng(purpose, entity=place_id)`). Otherwise one extra
+  stream opened early in a tick would shift every later draw in that tick.
 - `ctx.rng(purpose, entity=None) -> Stream`. A stream has `random()`, `integers()`, `normal()`,
   `choice_weights()` and array forms for aggregates.
-- **Reshuffle:** a recipe entry `reshuffle(from_date, salt)` sets `salt` for every key whose canonical
-  tick is ≥ `from_date`.
+- **Reshuffle** (the format slot only in S1; behaviour in #114): a recipe entry
+  `reshuffle(from_date, salt)` sets `salt` for every key whose canonical tick is ≥ `from_date`. In S1,
+  `salt` is always empty.
 - **Cost:** Philox setup is around a microsecond. If the benchmark flags it, cache `Generator`
   objects per key within a tick.
 - Tests:
@@ -131,17 +146,24 @@ The CLI uses `argparse`, so there's no extra dependency. `renasci/__init__.py` s
 - **EntityId:** `"e" + blake2b(creator_event_id, role, ordinal)[:16 hex]`. Entities cast from the
   vault get `"v:" + vault_id`. Toy cast entities get `"t:" + name`.
 - **EventId:** `"x" + blake2b(event_key)[:16]`. The `event_key` is
-  `(system, actor_id, purpose, date, occurrence)`, so the same cause in the same place gives the
-  same id in another run. This is what makes runs comparable by id.
+  `(system, actor_id, purpose, date, occurrence)`. Here, occurrence is the n-th event emitted for
+  that `(system, actor_id, purpose, date)`, counted per activation scope. So the same cause in the
+  same place gives the same id in another run, and that is what makes runs comparable by id.
 - **Store:**
   - `records[kind][id]` holds dataclass records for notables.
   - `ComponentTable` holds columnar data for bulk state: NumPy columns plus a sorted id index.
   - Status is `active`, `dormant` or `dead`. Nothing is ever deleted.
 - **Iteration is always in id order.** `store.ids(kind, status=…)` returns a sorted list, and the
   store never exposes sets or dict-ordered iteration.
-- **Writes go through the context:** `ctx.set(entity, field, value)`. Each write appends a
-  `StateDelta(date, entity, field, old, new, event_id)`. This is the "as of" record, and divergence
-  analysis uses it. A write with no current event is an error.
+- **Writes go through the context.** A write with no current event is an error. There are two forms:
+  - **Record writes:** `ctx.set(entity, field, value)` appends a
+    `StateDelta(date, entity, field, old, new, event_id)`. This is the "as of" record.
+  - **Bulk writes:** `ctx.write_column(component, ids_or_mask, values)` appends **one**
+    `BulkDelta(date, activation, component, id_range_or_mask_hash, values_hash)` per call. No per-element
+    Python work and no values are stored. The aggregate *values* go to `timeseries` (master §5.4).
+- **Bulk writes are taint sources.** An activation that reads a component row written by a tainted
+  bulk delta is tainted. This keeps divergence analysis able to see aggregates without logging them
+  element by element.
 
 ### 3.4 Typed events and causes (#41)
 
@@ -181,8 +203,11 @@ The CLI uses `argparse`, so there's no extra dependency. `renasci/__init__.py` s
   - `event_types`
   - `run(ctx, due: list[EntityId] | None)`
 - **`Ctx`** enforces the read and write sets when `strict=True`, which is the setting in tests. An
-  undeclared read raises an error. That makes read-sets true facts that divergence analysis can rely
-  on.
+  undeclared read raises an error.
+- **Actual reads are recorded.** Every activation records the `(entity, field)` pairs it actually
+  read, as a compact per-activation set written to the `reads` table. Bulk reads record
+  `(component, id range)`. Divergence analysis propagates from these, not from declared read-sets.
+  Declared sets bound what may be read; recorded reads say what was read.
 - **`Ruleset`** is a name, a version, an ordered list of systems, parameters and a `ResolutionPolicy`.
   The engine switches ruleset at configured dates, which are always checkpoints (age boundaries).
 - Systems never call each other. They communicate only through state, events and scheduled
@@ -200,14 +225,15 @@ The CLI uses `argparse`, so there's no extra dependency. `renasci/__init__.py` s
 
 ### 3.8 Temporal LOD interface (#46)
 
-S1 delivers the interface and a simple implementation. Tuning comes in M5.
+S1 delivers the **interface only**: the policy type, focus windows, and promote/demote. Every run in
+S1 is `fine`. Coarse-step execution and its tuning come in M5. The rule is fixed now so the
+formats don't change later: **a coarse step draws under its first canonical tick, plus a step
+ordinal**.
 
 - **`ResolutionPolicy(date) -> Resolution`**, either `fine` or `coarse(step=Span)`. **Focus windows**
   are date ranges forced to `fine`.
-- **In coarse mode,** systems with `coarse_ok=True` run once per step with `ctx.span` set, and must
-  integrate over it. Other systems are skipped and must declare `coarse_fallback` (a summary
-  update). RNG keys stay on canonical ticks, so switching resolution only changes draws for the
-  systems whose cadence actually changed.
+- **Coarse mode (declared now, executed from M5):** systems declare `coarse_ok` or
+  `coarse_fallback`, and the engine rejects a policy that asks for coarse in S1.
 - **Population LOD:**
   - `ctx.promote(aggregate, reason)` samples an individual, keyed by
     `(place, reason event, ordinal)`.
@@ -229,10 +255,18 @@ S1 delivers the interface and a simple implementation. Tuning comes in M5.
 - **Director:**
   - **guard:** fatal outcomes for pinned entities with unmet pins are converted by a
     ruleset-supplied `near_miss` hook.
-  - **steer:** a `steer(pin, odds)` hook applies only when the estimated odds fall below a threshold.
+  - **steer:** a **no-op hook** in S1. It comes in M3 (#114), and only with a ruleset-supplied
+    *pure* odds function, never a look-ahead.
   - **force:** at the deadline, the ruleset's `force(pin)` constructs the event with a plausible cause.
   - **violated:** if forcing fails.
   - Every action is logged in the `strain` table.
+- **Pure observation.** A pin that is being met naturally causes no draws, no state writes and no
+  events. The director only *checks* until it has to guard or force. This is what makes the
+  promotion no-op hold.
+- **Casting a promoted entity** does not pre-create it. The pin binds to the entity's **natural
+  creating event key** (from the run it was promoted from), and the director checks that the key
+  occurs inside the window. The entity gets its usual causal id, so RNG keys and scheduler order are
+  unchanged. Only entities with no natural origin (true canon, e.g. a vault id) are cast up front.
 
 ### 3.10 Ripples and reshuffle (#49, #114)
 
@@ -243,8 +277,8 @@ S1 delivers the interface and a simple implementation. Tuning comes in M5.
   ripple event as its cause.
 - Protect and doom hook into the same guard path as pins. Favour and luck adjust the odds in
   `chance()` for the target, recorded as a cause.
-- **#49 delivers** protect, doom, inject and structural on the toy. **#114 delivers** favour, luck,
-  plant and reshuffle.
+- **#49 delivers** protect, doom and inject on the toy. **#114 (M3) delivers** structural, favour,
+  luck, plant and reshuffle.
 - **Replay start:** a ripple dated before the chosen checkpoint is rejected, and the CLI picks the
   latest checkpoint at or before the earliest ripple.
 
@@ -264,8 +298,9 @@ runs/<name>/
 
 - **Segments** are cut at each checkpoint. That makes truncating on replay a file operation:
   delete the segments after the checkpoint's high-water mark.
-- **Forks:** the manifest's `parent: {run, upto_segment}` points at shared prefix segments, which are
-  not copied.
+- **Forks:** in S1, a replay copies the prefix segments into its own folder. The manifest still records
+  `parent: {run, upto_segment}`, so prefix sharing by reference (M3) is not a format change.
+- An extra table, **`reads/`**, holds the recorded actual reads per activation (§3.6).
 - Payloads are canonical JSON strings in S1. Typed columns per event type can come later behind the
   same reader.
 - The reader API (`RunFolder.events(where…)`) is used by tests, diff and the CLI. The Observatory
@@ -281,8 +316,15 @@ runs/<name>/
   - the director state, fired ripples, the cause index and the run-folder high-water mark
 - Pickle is acceptable because checkpoints are local, our own, and never shared. Loading rejects a
   version mismatch with a clear message: "engine changed; replay from scenario".
-- **`state_hash`** is the canonical hash of all of that except caches. Replay equivalence compares
-  the event hash and the final `state_hash`.
+- **Position:** a checkpoint dated D is taken **before any activation dated D**. At that point every
+  ordinal table for the previous tick is closed, and only the open tick's tables (if D is mid-tick)
+  are saved.
+- **`state_hash`** comes from a **canonical state serialiser**, not from the pickle. It walks the
+  records (sorted by kind, then id), the NumPy columns (raw bytes plus dtype and shape), the scheduler
+  heap (as a sorted list), the ordinal tables, the cause index (sorted edges) and the director state.
+  Replay equivalence compares the event hash and the final `state_hash`.
+- **Isolation:** the replay-equivalence test loads each checkpoint in a **fresh subprocess**, so no
+  in-process state can leak between the two runs.
 - **Cadence:** every N years (recipe; default 10), plus every ruleset switch.
 
 ### 3.13 Recipes and CLI (#44)
@@ -325,7 +367,9 @@ CLI commands:
 
 - **Canonical serialisation:**
   - sorted keys
-  - floats quantised (`round(x, 9)`, with `-0.0` normalised)
+  - floats hashed by their **exact float64 bits** (`-0.0` normalised, NaN forbidden). There's no
+    quantisation: the same machine and pinned versions are assumed, and rounding would hide real
+    divergence and make hashes flip near boundaries
   - dates as tuples, sets forbidden
   - the event hash is `blake2b` over canonical events in emission order
 - **Tests:**
@@ -341,12 +385,16 @@ CLI commands:
 This ports the PoC's taint tracking.
 
 - **Seeds:** the ripple events and the entities they touch.
-- **Propagation:** walk the B run in emission order. An event is tainted if any of these hold:
+- **Propagation runs in both runs A and B,** in emission order. Events that exist only in A (such as the
+  death the ripple prevented) need A-side taint. An event or activation is tainted if any of these hold:
   - a cause is tainted
   - a participant is tainted *as of its date*
-  - its system's read-set includes a field written by a tainted delta to an entity it reads
+  - one of its **recorded actual reads** (§3.6) hit an `(entity, field)` or a component row whose
+    latest write before the read was tainted
 
-  The entities a tainted event writes become tainted from that date on.
+  The entities and rows a tainted activation writes become tainted from that date on.
+- **State comparison:** the final per-entity canonical state is compared as well. An entity whose state
+  differs but is untainted is *unexplained*, even if all its events match.
 - **Comparison:** events present in only one run, or with the same id but a different canonical
   form, are *divergent*. Divergent and untainted means *unexplained*.
 - **Report:**
@@ -394,8 +442,8 @@ This world is deliberately not Renascita ⟨#16⟩.
 | store, events | schema validation, the dead-participant rule, delta logging, cause index both ways |
 | determinism | repeat runs; subprocesses with different `PYTHONHASHSEED`; the static set-iteration check |
 | replay | 8+ checkpoint positions, comparing the event hash and the final state hash |
-| locality | toy ripple → zero unexplained divergence; read-set enforcement in strict mode |
-| pins | feasibility classification; guard, steer, force and violated paths; promotion no-op with zero strain |
+| locality | toy ripple → zero unexplained (events and state); the untouched valley is byte-identical; the negative control (an injected coupling bug) is caught; read-set enforcement in strict mode |
+| pins | feasibility classification; guard, force and violated paths; a satisfied pin makes no draws, writes or events; promotion no-op (identical hash, zero strain) |
 | run folder | write → read round-trip; truncation on replay; fork prefix sharing |
 | golden | the toy baseline hash |
 
@@ -416,16 +464,32 @@ This world is deliberately not Renascita ⟨#16⟩.
 | #50 | determinism hazards | #45 |
 | #46 | LOD interface | #45 |
 | #48 | pins skeleton | #45 |
-| #49 | ripple applier (core kinds) | #48 |
+| #49 | ripple applier: protect, doom, inject | #48 |
 | #51 | toy ruleset + divergence | #43, #47, #49, #46 |
 | #44 | recipes + CLI | #43, #51 |
 | #52 | bench | #44 |
-| #114 | remaining ripple kinds + reshuffle | #49, #51 |
+| #114 (M3) | structural, favour, luck, plant, reshuffle, steer, fork prefix sharing | #49, #51 |
 
 **Housekeeping:** #134–#139 carry the S1 label but belong to M5 or M7. They are deep-time tuning,
 later rulesets and Rust. They stay under the S1 epic but are not part of the S1 exit.
 
-## 6. Open decisions
+## 6. Changes from the independent review (r2)
+
+All eight concerns were accepted:
+
+1. Locality now propagates from **recorded actual reads**, taints both runs, compares final state, and
+   has a negative control.
+2. S1 is cut to the M0 exit. Coarse execution, steer, fork sharing and four ripple kinds move to M3
+   or M5.
+3. Satisfied pins are pure observers, and promoted entities bind to their natural creating key.
+4. Hashes use exact float bits, with no quantisation.
+5. The checkpoint position, the canonical state serialiser, the occurrence scopes and subprocess
+   replay are specified, and owner-less streams are forbidden.
+6. A bulk-delta API is added for columnar and aggregate writes.
+7. The coarse-step RNG keying rule is fixed now, and execution is deferred.
+8. Steer is a no-op hook in S1.
+
+## 7. Open decisions
 
 1. ⟨#16⟩ The base grain is a season, with daily or monthly sub-steps.
 2. ⟨#16⟩ Run folders live in `runs/` (gitignored), and recipes in `recipes/` (committed).
