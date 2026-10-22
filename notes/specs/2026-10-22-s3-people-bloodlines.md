@@ -195,6 +195,10 @@ S1 §3.9's rule applies: **an entity with a natural origin is never pre-created*
 - **Entering the market** (#67): each eligible man enters with `market_rate` per year (default 0.35).
   He weighs each eligible woman by `exp(-age gap / 8)`, ×2 for the same settlement and ×0.1 for another
   race. Kin are left out entirely, not just down-weighted.
+- **One-way drain:** wives move to husbands, so a shrinking village can lose its young women and empty
+  out (seen on some kin seeds; whole regions hold). Movement between places (S4 #77) rebalances it.
+- **`flow:in` / `flow:out`** are written once aggregates and their ledgers exist (#71/#72); until then a
+  move updates only `residents` and `place`.
 - **Market size matters:** a closed market of a few dozen people runs out of unrelated partners within
   generations (seen on the kin world at 10 per settlement). Worlds need regions of a few hundred, or
   commoner spouses (below).

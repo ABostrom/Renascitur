@@ -45,7 +45,7 @@ def ancestors(ctx, person: str, depth: int) -> set[str]:
 class Marriage(System):
     name, cadence = "people.marriage", "yearly"
     reads = frozenset({"ids:settlement", "region", "residents", "sex", "race", "born", "spouse", "mother",
-                       "father", "place"})
+                       "father", "place", "status"})
     writes = frozenset({"spouse", "residents", "place"})
     event_types = (MARRIAGE,)
 
@@ -55,6 +55,8 @@ class Marriage(System):
         residence = ctx.params.get("residence", "husband")
         market = float(ctx.params.get("market_rate", 0.35))
         regions: dict[str, list[str]] = {}
+        # Every settlement's region is read unscoped: regions are fixed. A system that ever moves a
+        # settlement between regions would (rightly) make every market's inputs differ.
         for s in ctx.ids("settlement"):
             regions.setdefault(ctx.get(s, "region"), []).append(s)
         for region in sorted(regions):
@@ -65,7 +67,7 @@ class Marriage(System):
         men, women = [], []
         for s in settlements:
             for p in ctx.get(s, "residents"):
-                if ctx.get(p, "spouse") is not None:
+                if ctx.status(p) != "active" or ctx.get(p, "spouse") is not None:
                     continue
                 lo, hi = races[ctx.get(p, "race")].marriage
                 if lo <= age_years(ctx.calendar, ctx.get(p, "born"), ctx.today) <= hi:

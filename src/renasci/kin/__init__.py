@@ -32,14 +32,15 @@ RACES: list[dict] = WORLD["races"]
 CATALOGUE: dict = WORLD["catalogue"]
 
 
-def ruleset(races=None, catalogue=None) -> Ruleset:
-    return Ruleset("kin", 1, (Births(), Life(), Marriage()), params=world_params(races or RACES, catalogue or CATALOGUE))
+def ruleset(races=None, catalogue=None, residence="husband") -> Ruleset:
+    return Ruleset("kin", 1, (Births(), Life(), Marriage()),
+                   params=world_params(races or RACES, catalogue or CATALOGUE, residence=residence))
 
 
 def new_engine(seed: int = 1234, ripples=(), pins=(), people_per_settlement: int = 20, races=None,
-               catalogue=None) -> Engine:
+               catalogue=None, residence: str = "husband") -> Engine:
     """A fresh kin world at 1K 1, before anything runs."""
-    e = Engine(CAL, seed=seed, rulesets=[(START, ruleset(races, catalogue))])
+    e = Engine(CAL, seed=seed, rulesets=[(START, ruleset(races, catalogue, residence))])
     cat = Catalogue.from_json(catalogue or CATALOGUE)
     table = {r["id"]: r for r in (races or RACES)}
     streams = keyed(seed)

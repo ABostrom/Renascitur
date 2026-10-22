@@ -57,8 +57,8 @@ def world_params(races: list, catalogue: dict, house_from: str = "father", kin_d
         raise ValueError("kin_degree must be a non-negative int")
     if residence not in ("husband", "wife"):
         raise ValueError(f"residence is husband or wife, got {residence!r}")
-    if not 0 <= market_rate <= 1:
-        raise ValueError("market_rate must be a probability")
+    if type(market_rate) not in (int, float) or not 0 <= market_rate <= 1:
+        raise ValueError(f"market_rate must be a probability, got {market_rate!r}")
     params = {"races": races, "catalogue": catalogue, "house_from": house_from, "kin_degree": kin_degree,
               "residence": residence, "market_rate": market_rate}
     _parse(canonical({k: params[k] for k in WORLD_PARAMS}))
@@ -81,6 +81,8 @@ def _crowding(people: int, capacity) -> float:
     capacity, nothing when full. No capacity: no limit (1x)."""
     if capacity is None:
         return 1.0
+    if capacity <= 0:
+        return 0.0  # nowhere to raise a child
     return max(0.0, min(1.5, 2.0 * (1.0 - people / capacity)))
 
 
