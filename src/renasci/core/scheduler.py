@@ -1,28 +1,37 @@
 """The scheduler: a queue of activations in one total order.
 
 Order is `(date, priority, entity, purpose, system, hash)`, where the hash covers the payload and
-causes. Insertion order never matters, and two identical activations are a bug. Nothing may be
-scheduled before the last date popped.
+causes. Insertion order never matters, and two identical activations are a bug. A push must sort
+strictly after the last activation popped, so nothing can jump in ahead of what already ran: the
+order never depends on when something was scheduled.
 """
 
 from __future__ import annotations
 
 import heapq
+import json
 from dataclasses import dataclass, field
 
 from renasci.core.calendar import AgeBoundaryError, Calendar, Date
 from renasci.core.canon import canonical, digest
 from renasci.core.events import Cause
 
-CADENCES = {"daily": "day", "monthly": "month", "seasonal": "season", "yearly": "year"}
+CADENCES = {"daily": "day", "monthly": "month", "seasonal": "season", "yearly": "year", "on_demand": None}
+FORMAT = 1
 
 
 def next_due(calendar: Calendar, date: Date, cadence: str) -> Date | None:
-    """The next date a system with `cadence` runs after `date`, or None past the end of the age."""
+    """The next date a system with `cadence` runs after `date`.
+
+    None for `on_demand` systems, and past the end of the age.
+    """
     if cadence not in CADENCES:
         raise ValueError(f"cadence must be one of {sorted(CADENCES)}, got {cadence!r}")
+    unit = CADENCES[cadence]
+    if unit is None:
+        return None
     try:
-        return calendar.start_of_next(date, CADENCES[cadence])
+        return calendar.start_of_next(date, unit)
     except AgeBoundaryError:
         return None
 
@@ -51,9 +60,18 @@ class Activation:
             raise TypeError(f"priority must be an int, got {self.priority!r}")
         for label in ("entity", "purpose", "system"):
             _name(label, getattr(self, label))
-        canonical(self.payload)  # validates
+        for c in self.causes:
+            if not isinstance(c, Cause):
+                raise TypeError(f"causes must be Cause objects, got {c!r}")
+        if len(set(self.causes)) != len(self.causes):
+            raise ValueError(f"an activation lists a cause twice: {self.causes}")
+        # Frozen copies: later changes to the caller's objects can't move this activation.
+        object.__setattr__(self, "payload", json.loads(canonical(self.payload)))
         object.__setattr__(self, "causes", tuple(sorted(self.causes)))
         object.__setattr__(self, "_hash", digest([self.payload, self.causes], size=8))
+
+    def __hash__(self) -> int:
+        return hash(self.id)
 
     @property
     def id(self) -> str:
@@ -78,16 +96,21 @@ class Scheduler:
     def __init__(self):
         self._heap: list[tuple[tuple, Activation]] = []
         self._keys: dict[tuple, None] = {}
-        self.now: Date | None = None  # date of the last activation popped
+        self._last: Activation | None = None  # the last activation popped
+
+    @property
+    def now(self) -> Date | None:
+        return self._last.date if self._last else None
 
     def __len__(self) -> int:
         return len(self._heap)
 
     def push(self, activation: Activation) -> None:
-        if self.now is not None and activation.date < self.now:
-            raise ValueError(f"cannot schedule {activation.system}/{activation.purpose} at "
-                             f"{activation.date}, before now ({self.now})")
         key = activation.key()
+        if self._last is not None and key <= self._last.key():
+            raise ValueError(f"cannot schedule {activation.system}/{activation.purpose} at "
+                             f"{activation.date}: it sorts before or at the last activation run "
+                             f"({self._last.system}/{self._last.purpose} at {self._last.date})")
         if key in self._keys:
             raise ValueError(f"identical activation scheduled twice: {activation}")
         self._keys[key] = None
@@ -99,7 +122,7 @@ class Scheduler:
     def pop(self) -> Activation:
         key, activation = heapq.heappop(self._heap)
         del self._keys[key]
-        self.now = activation.date
+        self._last = activation
         return activation
 
     def pop_due(self, until: Date) -> list[Activation]:
@@ -110,13 +133,17 @@ class Scheduler:
         return out
 
     def to_json(self) -> dict:
-        return {"now": self.now.to_json() if self.now else None,
+        return {"format": FORMAT,
+                "last": self._last.to_json() if self._last else None,
                 "queue": [a.to_json() for _, a in sorted(self._heap, key=lambda item: item[0])]}
 
     @classmethod
     def from_json(cls, data: dict) -> Scheduler:
+        if data.get("format") != FORMAT:
+            raise ValueError(f"scheduler checkpoint format {data.get('format')!r} is not {FORMAT}; "
+                             "engine changed, replay from scenario")
         s = cls()
+        s._last = Activation.from_json(data["last"]) if data["last"] else None
         for row in data["queue"]:
-            s.push(Activation.from_json(row))
-        s.now = Date.from_json(data["now"]) if data["now"] else None
+            s.push(Activation.from_json(row))  # the guard rejects stale rows
         return s

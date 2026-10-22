@@ -157,3 +157,68 @@ def test_next_due_is_none_at_the_end_of_the_age():
     assert next_due(CAL, Date(1, 300, 200), "yearly") is None
     with pytest.raises(AgeBoundaryError):
         CAL.start_of_next(Date(1, 300, 200), "year")
+
+
+# ---------------------------------------------------------------- review fixes
+
+
+def test_a_popped_activation_cannot_be_pushed_again():
+    s = Scheduler()
+    a = act(day=5)
+    s.push(a)
+    s.pop()
+    with pytest.raises(ValueError):
+        s.push(a)
+
+
+def test_same_day_push_must_sort_after_what_already_ran():
+    s = Scheduler()
+    s.push(act(day=5, priority=5))
+    s.pop()
+    with pytest.raises(ValueError):
+        s.push(act(day=5, priority=1, entity="e2"))  # would have run first: order would depend on timing
+    s.push(act(day=5, priority=6, entity="e2"))  # strictly later in the order: fine
+    s.push(act(day=6, priority=0))
+
+
+def test_payload_is_frozen_at_construction():
+    p = {"n": 1, "t": (1, 2)}
+    a = act(payload=p)
+    before = a.id
+    p["n"] = 2
+    assert a.id == before and a.payload == {"n": 1, "t": [1, 2]}
+    assert Activation.from_json(a.to_json()) == a
+
+
+def test_causes_must_be_unique_causes():
+    with pytest.raises(ValueError):
+        act(causes=(Cause("event", "x1"), Cause("event", "x1")))
+    with pytest.raises(TypeError):
+        act(causes=(("event", "x1"),))
+
+
+def test_on_demand_has_no_next_due_date():
+    assert next_due(CAL, Date(1, 1, 5), "on_demand") is None
+
+
+def test_checkpoint_json_is_versioned_and_validated():
+    s = Scheduler()
+    s.push(act(day=5))
+    s.push(act(day=7, entity="e2"))
+    s.pop()
+    j = s.to_json()
+    assert j["format"] == 1
+    bad_version = dict(j, format=99)
+    with pytest.raises(ValueError):
+        Scheduler.from_json(bad_version)
+    stale = dict(j, queue=j["queue"] + [act(day=2, entity="e3").to_json()])
+    with pytest.raises(ValueError):
+        Scheduler.from_json(stale)
+    again = Scheduler.from_json(j)
+    with pytest.raises(ValueError):
+        again.push(act(day=5))  # the last-popped guard survives the round trip
+
+
+def test_activations_are_hashable_by_id():
+    a = act(payload={"n": 1})
+    assert {a: 1}[act(payload={"n": 1})] == 1
