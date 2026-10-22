@@ -462,15 +462,17 @@ class Ctx:
         return outcome
 
     def schedule(self, after: Span, purpose: str, *, entity: str | None = None, payload: dict | None = None,
-                 priority: int | None = None) -> Activation:
+                 priority: int | None = None, causes=()) -> Activation:
         """Schedule a follow-up for this system.
 
         It is caused by this activation, and by the last event emitted here (or, if none, by this
-        activation's own causes), so taint flows to it even when no event was emitted.
+        activation's own causes), so taint flows to it even when no event was emitted. `causes` adds
+        more (a scheme's steps carry the scheme and its ambition): every event the follow-up emits
+        inherits them.
         """
         base = (Cause("event", self._event),) if self._event else self.activation.causes
         parent = self.activation.id if self._scope is None else f"{self.activation.id}#{self._scope}"
-        causes = tuple(base) + (Cause("activation", parent),)
+        causes = tuple(base) + (Cause("activation", parent),) + tuple(causes)
         activation = Activation(
             self.calendar.add(self.today, after),
             self.system.priority if priority is None else priority,

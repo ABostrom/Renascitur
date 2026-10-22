@@ -27,6 +27,7 @@ from __future__ import annotations
 
 from renasci.core.events import EventType
 from renasci.core.lod import EVENT_TYPES as LOD_TYPES
+from renasci.people.ambitions import RESOLVED as AMBITION_RESOLVED
 from renasci.people.ties import TIE_ENDED
 from renasci.core.systems import System
 from renasci.people.races import BANDS, BAND_YEARS, age_years, band, quarterly
@@ -234,9 +235,12 @@ def demote_person(ctx, person: str, settlement: str, *, reason: str) -> None:
             col = allele_column(locus, variant_of(c))
             give[col] = give.get(col, 0) + 1
     ctx.demote(person, reason=reason, aggregate=settlement, columns=give)
+    from renasci.people.ambitions import resolve
     from renasci.people.ties import end_ties
 
     end_ties(ctx, person, "demoted")
+    for amb in list(ctx.get(person, "ambitions") or []):  # a faded wish is a forgotten one
+        resolve(ctx, amb, "abandoned")
     ctx.set(settlement, "residents", [p for p in ctx.get(settlement, "residents") if p != person])
     _bump(ctx, settlement, demoted=1)
 
@@ -246,9 +250,11 @@ class Lod(System):
 
     name, cadence = "people.lod", "yearly"
     reads = COLUMN_READS | {"ids:settlement", "residents", "notable_target", "house", "offices", "spouse", "children",
-                            "born", "status", "sex", "genome", "race", "ties", "a", "b", "kind"}
-    writes = frozenset({"pop:*", "allele:*", "flow:*", "residents", "status", "ties", "ended"})
-    event_types = LOD_TYPES + (TIE_ENDED,)
+                            "born", "status", "sex", "genome", "race", "ties", "a", "b", "kind", "ambitions", "scheme",
+                            "owner", "class", "state", "cooldowns", "favour"}
+    writes = frozenset({"pop:*", "allele:*", "flow:*", "residents", "status", "ties", "ended",
+                        "ambitions", "cooldowns", "state", "resolved", "scheme"})
+    event_types = LOD_TYPES + (TIE_ENDED, AMBITION_RESOLVED)
 
     def run(self, ctx):
         from renasci.people.life import world
@@ -274,6 +280,8 @@ class Lod(System):
         """An adult commoner with no spouse and no young child: nobody's story needs them named."""
         if ctx.get(p, "house") is not None or ctx.get(p, "offices") or ctx.get(p, "spouse") is not None:
             return False
+        if any(ctx.get(a, "scheme") for a in ctx.get(p, "ambitions") or []):
+            return False  # someone scheming is never demoted (master spec §5.10); a mere wish isn't enough
         if age_years(ctx.calendar, ctx.get(p, "born"), ctx.today) < races[ctx.get(p, "race")].marriage[0]:
             return False
         return not any(ctx.status(c) == "active" and age_years(ctx.calendar, ctx.get(c, "born"), ctx.today) < 16

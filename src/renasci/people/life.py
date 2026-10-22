@@ -29,9 +29,10 @@ from renasci.people.races import Race, age_years, band, days_since, quarterly
 
 BIRTH = EventType("people.birth", 1, roles={"mother": (1, 1), "father": (0, 1), "child": (1, 2)},
                   payload={"twin": "bool", "mutations": "int"})
-DEATH = EventType("people.death", 1, roles={"deceased": (1, 1)}, payload={"age": "int", "cause": "str"})
+DEATH = EventType("people.death", 1, roles={"deceased": (1, 1), "killer": (0, 1)}, payload={"age": "int", "cause": "str"})
 NEAR_MISS = EventType("people.near_miss", 1, roles={"survivor": (1, 1)}, payload={"would_have": "str"})
 EVENT_TYPES = (BIRTH, DEATH, NEAR_MISS)
+from renasci.people.ambitions import RESOLVED as _RESOLVED  # noqa: E402  (die resolves ambitions)
 
 WORLD_PARAMS = ("races", "catalogue", "house_from")  # (families.py also reads kin_degree, residence, market_rate)
 
@@ -53,6 +54,7 @@ def world(ctx) -> tuple[dict[str, Race], Catalogue, str]:
 
 def world_params(races: list, catalogue: dict, house_from: str = "father", kin_degree: int = 2,
                  residence: str = "husband", market_rate: float = 0.35, aggregates: bool = False,
+                 traits: dict | None = None, ambitions: list | None = None,
                  married_share: float = 0.7, demote_rate: float = 0.2, commoner_after: int = 6,
                  commoner_rate: float = 0.3) -> dict:
     """Ruleset params for the people systems, checked now rather than at the first activation."""
@@ -73,22 +75,32 @@ def world_params(races: list, catalogue: dict, house_from: str = "father", kin_d
               "residence": residence, "market_rate": market_rate, "aggregates": aggregates,
               "married_share": married_share, "demote_rate": demote_rate, "commoner_after": commoner_after,
               "commoner_rate": commoner_rate}
+    if traits is not None:  # {role: trait name}: wits, temper, charm (S7 §12)
+        if not isinstance(traits, dict) or not all(isinstance(k, str) and isinstance(v, str) for k, v in traits.items()):
+            raise ValueError("traits maps roles to trait names")
+        params["traits"] = traits
+    if ambitions is not None:
+        params["ambitions"] = list(ambitions)
     _parse(canonical({k: params[k] for k in WORLD_PARAMS}))
     return params
 
 
-def die(ctx, person: str, settlement: str, cause: str) -> None:
+def die(ctx, person: str, settlement: str, cause: str, *, killer: str | None = None) -> None:
     """A death and what it undoes: the record, the settlement's roster, the spouse's marriage."""
-    ctx.emit("people.death", {"deceased": (person,)}, purpose="death", actor=person, place=settlement,
-             payload={"age": age_years(ctx.calendar, ctx.get(person, "born"), ctx.today), "cause": cause})
+    death = ctx.emit("people.death", {"deceased": (person,), "killer": (killer,) if killer else ()}, purpose="death",
+                     actor=person, place=settlement,
+                     payload={"age": age_years(ctx.calendar, ctx.get(person, "born"), ctx.today), "cause": cause})
     ctx.set_status(person, "dead")
     ctx.set(settlement, "residents", [p for p in ctx.get(settlement, "residents") if p != person])
     spouse = ctx.get(person, "spouse")
     if spouse:
         ctx.set(spouse, "spouse", None)
     houses.vacate(ctx, person)
+    population.bump(ctx, settlement, died=1)  # explained by the death itself
     ties.end_ties(ctx, person, "death")
-    population.bump(ctx, settlement, died=1)
+    from renasci.people import ambitions
+
+    ambitions.on_death(ctx, person, death.id)
 
 
 def crowding(people: int, capacity) -> float:
@@ -103,18 +115,23 @@ def crowding(people: int, capacity) -> float:
 
 _crowding = crowding  # (the name tests used first)
 
+# What `die` touches. Every system (or forcer) that calls `die` declares these, and handles the
+# succession follow-ups `die` schedules through `houses.handle_succession`.
+_AMBITION_READS = frozenset({"ambitions", "cooldowns", "owner", "class", "state", "scheme", "spouse", "favour"})
+_AMBITION_WRITES = frozenset({"ambitions", "cooldowns", "state", "resolved", "scheme"})
+DIE_EVENTS = (DEATH, _RESOLVED) + houses.EVENT_TYPES + (ties.TIE_ENDED,)
+DIE_READS = frozenset({"born", "residents", "spouse", "status", "flow:*"}) | houses.READS | ties.READS | _AMBITION_READS
+DIE_WRITES = frozenset({"status", "residents", "spouse", "flow:*"}) | houses.WRITES | ties.WRITES | _AMBITION_WRITES
+
 
 class Life(System):
     name, cadence = "people.life", "seasonal"
-    reads = frozenset({"ids:settlement", "residents", "born", "sex", "race", "spouse", "status", "flow:*"}) \
-        | houses.READS | ties.READS
-    writes = frozenset({"status", "residents", "spouse", "flow:*"}) | houses.WRITES | ties.WRITES
-    event_types = (DEATH, NEAR_MISS) + houses.EVENT_TYPES + (ties.TIE_ENDED,)
+    reads = frozenset({"ids:settlement", "residents", "born", "sex", "race"}) | DIE_READS
+    writes = DIE_WRITES
+    event_types = (NEAR_MISS,) + DIE_EVENTS
 
     def handle(self, ctx, activation):
-        if activation.purpose != "succession":
-            raise ValueError(f"people.life has no follow-up {activation.purpose!r}")
-        houses.succeed(ctx, activation.payload["office"], activation.payload["predecessor"])
+        houses.handle_succession(ctx, activation)
 
     def run(self, ctx):
         races, _, _ = world(ctx)
