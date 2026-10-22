@@ -77,6 +77,8 @@ class RunFolder:
         if manifest.get("format") != FORMAT:
             raise ValueError(f"run folder format {manifest.get('format')!r} is not {FORMAT}")
         rf = cls(path, manifest)
+        for t in TABLES:  # a folder written before a table existed (e.g. timeseries, #71) gets it, empty
+            (path / t).mkdir(exist_ok=True)
         rf._recover()
         return rf
 

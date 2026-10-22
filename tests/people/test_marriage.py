@@ -82,7 +82,11 @@ def test_markets_are_regional_and_a_ripple_stays_in_its_region(world):
     scopes = {ev["id"]: ev["scope"] for ev in world.pending()["events"] + variant.pending()["events"]}
     d = report["divergent"]
     touched = {scopes[i] for i in d["only_baseline"] + d["only_variant"] + d["changed"]} - {None}
-    assert touched and all(REGION_OF.get(s, s) == region for s in touched)
+    def region_of(scope):  # a settlement, a region, or a house (by its seat)
+        if world.store.exists(scope) and world.store.kind(scope) == "house":
+            return REGION_OF[world.store.get(scope, "seat")]
+        return REGION_OF.get(scope, scope)
+    assert touched and all(region_of(s) == region for s in touched)
 
 
 def test_a_population_holds_up_over_250_years():

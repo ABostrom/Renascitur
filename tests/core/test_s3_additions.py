@@ -313,3 +313,57 @@ def test_two_pins_cannot_bind_the_same_subject():
     with pytest.raises(ValueError, match="v:Kid"):
         Director([Pin("a", "event", window=(Date(1, 2, 0), Date(1, 3, 0)), payload=bind),
                   Pin("b", "event", window=(Date(1, 4, 0), Date(1, 5, 0)), payload=bind)])
+
+
+# ---------------------------------------------------------------- #71/#72 review: protected, read_columns, declarations
+
+
+def test_protected_asks_without_taking_the_protector_as_a_cause():
+    from renasci.core.ripples import Ripple
+
+    seen = {}
+
+    class Asker(System):
+        name, cadence = "mini.asker", "yearly"
+        reads = frozenset()
+        event_types = (TICK,)
+
+        def run(self, ctx):
+            with ctx.scope("t:town"):
+                seen["protected"] = ctx.protected("t:town")
+                seen["event"] = ctx.emit("mini.tick", {}, purpose="tick", actor="t:town")
+
+    e = column_engine(Asker())
+    e.apply_ripples([Ripple("r1", "protect", Date(1, 1, 0), "t:town", {"until": [1, 3, 0]})])
+    e.run(until=Date(1, 1, 359))
+    assert seen["protected"] is True
+    assert ("ripple", "r1") not in [(c.kind, c.ref) for c in seen["event"].causes]
+    assert not [r for r in e.ripple_log if r.get("action") == "guard"]
+    assert any(["t:town", "guard"] == r[:2] for row in e.reads for r in row.get("reads", []))  # still a recorded read
+
+
+def test_read_columns_reads_many_and_records_them():
+    got = {}
+
+    class Reader(System):
+        name, cadence = "mini.reader", "yearly"
+        reads = frozenset({"pop:*"})
+        event_types = (TICK,)
+
+        def run(self, ctx):
+            with ctx.scope("t:town"):
+                got.update(ctx.read_columns("t:town", ["pop:a", "pop:b"]))
+
+    e = column_engine(Reader())
+    e.run(until=Date(1, 1, 359))
+    assert got == {"pop:a": 5, "pop:b": 7}
+    assert any(r[0] == "t:town" and r[1].startswith("columns:") for row in e.reads for r in row.get("reads", []))
+
+
+def test_a_bare_star_declaration_is_refused():
+    class Greedy(System):
+        name, cadence = "mini.star", "yearly"
+        reads = frozenset({"*"})
+
+    with pytest.raises(ValueError, match=r"\*"):
+        Greedy().check()

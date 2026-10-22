@@ -132,3 +132,31 @@ def test_promotion_then_demotion_restores_the_masses_exactly():
     before, after = RoundTrip.result
     assert before == after and CAL
     assert Engine
+
+
+# ---------------------------------------------------------------- review fixes
+
+
+def test_only_adults_fade_back(world):
+    from renasci.people.races import Race, age_years
+    from renasci.kin import RACES
+
+    race = {r["id"]: Race.from_json(r) for r in RACES}
+    for ev in world.events:
+        if ev.type == "lod.demote":
+            p = ev.roles["individual"][0]
+            assert age_years(world.calendar, world.store.get(p, "born"), ev.date) >= race[world.store.get(p, "race")].marriage[0]
+
+
+def test_old_run_folders_without_a_timeseries_table_still_open_and_fork(tmp_path):
+    import shutil
+
+    from renasci.io.runfolder import RunFolder
+
+    rf = RunFolder.create(tmp_path / "old", {"complete": True})
+    rf.write("events", [{"id": "x"}])
+    rf.close_segment()
+    shutil.rmtree(tmp_path / "old" / "timeseries")  # as written before #71
+    again = RunFolder.open(tmp_path / "old")
+    again.write("timeseries", [{"date": [1, 1, 0]}])
+    RunFolder.fork(tmp_path / "old", tmp_path / "child", keep=1, meta={})

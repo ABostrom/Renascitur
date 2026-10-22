@@ -48,7 +48,7 @@ def allele_column(locus: str, variant: str) -> str:
 
 
 def masses(ctx, settlement: str) -> int:
-    return sum(int(v) for v in (ctx.read_column(c, [settlement])[0] for c in BAND_COLUMNS))
+    return sum(int(v) for v in ctx.read_columns(settlement, BAND_COLUMNS).values())
 
 
 def bump(ctx, settlement: str, **flows: int) -> None:
@@ -58,8 +58,9 @@ def bump(ctx, settlement: str, **flows: int) -> None:
 
 
 def _bump(ctx, settlement: str, **flows: int) -> None:
-    ctx.write_columns(settlement, {f"flow:{k}": int(ctx.read_column(f"flow:{k}", [settlement])[0]) + n
-                                   for k, n in sorted(flows.items())})
+    names = [f"flow:{k}" for k in sorted(flows)]
+    now = ctx.read_columns(settlement, names)
+    ctx.write_columns(settlement, {f"flow:{k}": int(now[f"flow:{k}"]) + n for k, n in sorted(flows.items())})
 
 
 # ---------------------------------------------------------------- casting (deterministic, no draws)
@@ -126,7 +127,9 @@ class Population(System):
         for s in ctx.ids("settlement"):
             with ctx.scope(s):
                 race = races[ctx.get(s, "race")]
-                n = {c: int(ctx.read_column(c, [s])[0]) for c in BAND_COLUMNS}
+                allele_cols = [allele_column(lo.id, v) for lo in catalogue.loci for v in lo.variants]
+                state = ctx.read_columns(s, [*BAND_COLUMNS, *allele_cols, "flow:born", "flow:died"])
+                n = {c: int(state[c]) for c in BAND_COLUMNS}
                 rng = ctx.rng("population", s)
                 died = 0
                 for sex in SEXES:
@@ -150,7 +153,7 @@ class Population(System):
                 changes = dict(n)
                 for lo in catalogue.loci:
                     cols = [allele_column(lo.id, v) for v in lo.variants]
-                    copies = [int(ctx.read_column(c, [s])[0]) for c in cols]
+                    copies = [int(state[c]) for c in cols]
                     copies = [c - r for c, r in zip(copies, rng.hypergeometric(copies, 2 * died))]
                     if births:
                         left = sum(copies)
@@ -159,7 +162,7 @@ class Population(System):
                 ctx.emit("people.population", {"settlement": (s,)}, purpose="population", actor=s, place=s,
                          payload={"born": births, "died": died})
                 for f, delta in (("born", births), ("died", died)):
-                    changes[f"flow:{f}"] = int(ctx.read_column(f"flow:{f}", [s])[0]) + delta
+                    changes[f"flow:{f}"] = int(state[f"flow:{f}"]) + delta
                 ctx.write_columns(s, changes)
                 if yearly:
                     ctx.series(s, {"pop": {sex: [n[band_column(sex, b)] for b in range(BANDS)] for sex in SEXES},
@@ -179,12 +182,18 @@ def promote_person(ctx, settlement: str, reason: str, *, sex: str, ages: tuple[i
     race_id = ctx.get(settlement, "race")
     race = races[race_id]
     lo_b, hi_b = band(ages[0]), band(ages[1])
-    counts = {b: int(ctx.read_column(band_column(sex, b), [settlement])[0]) for b in range(lo_b, hi_b + 1)}
-    if not any(counts.values()):
+    have = ctx.read_columns(settlement, [band_column(sex, b) for b in range(lo_b, hi_b + 1)])
+    counts = {b: int(have[band_column(sex, b)]) for b in range(lo_b, hi_b + 1)}
+
+    def covered(b: int) -> int:  # how many of the band's five years the age range covers
+        return min(b * BAND_YEARS + BAND_YEARS - 1, ages[1]) - max(b * BAND_YEARS, ages[0]) + 1
+
+    weights = {b: counts[b] * covered(b) / BAND_YEARS for b in counts}
+    if not any(weights.values()):
         return None
     rng = ctx.rng(f"promote:{reason}", settlement)
-    bands = sorted(counts)
-    b = bands[rng.choice_index([counts[x] for x in bands])]
+    bands = sorted(weights)
+    b = bands[rng.choice_index([weights[x] for x in bands])]
     low, high = max(b * BAND_YEARS, ages[0]), min(b * BAND_YEARS + BAND_YEARS - 1, ages[1])
     age = low + int(rng.integers(0, high - low + 1))
     day = int(rng.integers(0, ctx.calendar.days_per_year))
@@ -193,7 +202,8 @@ def promote_person(ctx, settlement: str, reason: str, *, sex: str, ages: tuple[i
     genome = {}
     for lo in catalogue.loci:
         cols = [allele_column(lo.id, v) for v in lo.variants]
-        drawn = rng.hypergeometric([int(ctx.read_column(c, [settlement])[0]) for c in cols], 2)
+        pool = ctx.read_columns(settlement, cols)
+        drawn = rng.hypergeometric([int(pool[c]) for c in cols], 2)
         pair = [v for v, k in zip(lo.variants, drawn) for _ in range(k)]
         if rng.random() < 0.5:
             pair.reverse()
@@ -232,28 +242,35 @@ class Lod(System):
 
     name, cadence = "people.lod", "yearly"
     reads = COLUMN_READS | {"ids:settlement", "residents", "notable_target", "house", "offices", "spouse", "children",
-                            "born", "status", "sex", "genome"}
+                            "born", "status", "sex", "genome", "race"}
     writes = frozenset({"pop:*", "allele:*", "flow:*", "residents", "status"})
     event_types = LOD_TYPES
 
     def run(self, ctx):
+        from renasci.people.life import world
+
+        races, _, _ = world(ctx)
         rate = float(ctx.params.get("demote_rate", 0.2))
         for s in ctx.ids("settlement"):
             with ctx.scope(s):
                 residents = ctx.get(s, "residents")
-                excess = len(residents) - int(ctx.get(s, "notable_target") or len(residents))
+                target = ctx.get(s, "notable_target")
+                excess = len(residents) - (len(residents) if target is None else int(target))
                 for p in residents:
                     if excess <= 0:
                         break
-                    if not self._quiet(ctx, p) or ctx.guarded(p):
+                    if not self._quiet(ctx, p, races) or ctx.protected(p):
                         continue
                     if ctx.chance(rate, "demote", owner=p):
                         demote_person(ctx, p, s, reason="quiet")
                         excess -= 1
 
     @staticmethod
-    def _quiet(ctx, p: str) -> bool:
+    def _quiet(ctx, p: str, races) -> bool:
+        """An adult commoner with no spouse and no young child: nobody's story needs them named."""
         if ctx.get(p, "house") is not None or ctx.get(p, "offices") or ctx.get(p, "spouse") is not None:
+            return False
+        if age_years(ctx.calendar, ctx.get(p, "born"), ctx.today) < races[ctx.get(p, "race")].marriage[0]:
             return False
         return not any(ctx.status(c) == "active" and age_years(ctx.calendar, ctx.get(c, "born"), ctx.today) < 16
                        for c in ctx.get(p, "children") or [])
