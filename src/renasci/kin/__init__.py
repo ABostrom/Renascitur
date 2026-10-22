@@ -19,6 +19,7 @@ from renasci.core.engine import Engine
 from renasci.core.systems import Ruleset
 from renasci.people.genome import Catalogue, founder, keyed
 from renasci.people.families import Marriage
+from renasci.people.houses import Houses
 from renasci.people.life import Births, Life, world_params
 from renasci.people.races import Race, age_years
 
@@ -33,7 +34,7 @@ CATALOGUE: dict = WORLD["catalogue"]
 
 
 def ruleset(races=None, catalogue=None, residence="husband") -> Ruleset:
-    return Ruleset("kin", 1, (Births(), Life(), Marriage()),
+    return Ruleset("kin", 1, (Births(), Life(), Marriage(), Houses()),
                    params=world_params(races or RACES, catalogue or CATALOGUE, residence=residence))
 
 
@@ -65,10 +66,30 @@ def new_engine(seed: int = 1234, ripples=(), pins=(), people_per_settlement: int
                 "name": race.names[sex][i % len(race.names[sex])], "sex": sex,
                 "born": born[i], "race": race_id, "place": s, "house": None,
                 "mother": None, "father": None, "children": [], "spouse": spouse, "genome": genome,
-                "traits": {}, "drives": {}, "ties": [], "last_birth": None})
+                "traits": {}, "drives": {}, "ties": [], "last_birth": None, "offices": []})
+    _cast_houses(e)
     e.apply_pins(pins)
     e.apply_ripples(ripples)
     return e
+
+
+def _cast_houses(e: Engine) -> None:
+    """One house per region, headed by the first married man of age in its first settlement."""
+    store = e.store
+    for rank, (region, settlements) in enumerate(REGIONS.items()):
+        seat = settlements[0]
+        head = next((p for p in store.get(seat, "residents") if store.get(p, "sex") == "m"
+                     and store.get(p, "spouse") and 25 <= age_years(CAL, store.get(p, "born"), START) <= 55), None)
+        if head is None:
+            continue
+        house, office = f"t:House-{region[2:]}", f"t:House-{region[2:]}-head"
+        e.cast("house", house, {"name": region[2:], "seat": seat, "rank": 3 - rank, "founded": START.to_json(),
+                                "headship": office, "extinct": None})
+        e.cast("office", office, {"name": f"Head of {region[2:]}", "holder": head, "heir": None,
+                                  "rule": "male_preference_primogeniture", "house": house})
+        for p in (head, store.get(head, "spouse")):
+            store.set(p, "house", house, START, e.events[-1].id)
+        store.set(head, "offices", [office], START, e.events[-1].id)
 
 
 def run(seed: int = 1234, years: int = 40, **kw) -> Engine:
