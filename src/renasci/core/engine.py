@@ -10,14 +10,18 @@ anything else on that day. At a switch:
 
 from __future__ import annotations
 
+import json
+
 from renasci import __version__
 from renasci.core.calendar import Calendar, Date
-from renasci.core.canon import digest
+from renasci.core.canon import canonical, digest
 from renasci.core.determinism import check_environment, versions
 from renasci.core.context import Ctx, UndeclaredAccess
 from renasci.core.events import Cause, CauseIndex, Event, EventType, Registry, Source
 from renasci.core.ids import event_id
 from renasci.core.pins import Director, Pin, feasibility
+from renasci.core.ripples import EVENT_TYPES as RIPPLE_TYPES
+from renasci.core.ripples import NEEDS_DISGUISE, SUPPORTED as RIPPLE_KINDS, Ripple
 from renasci.core.rng import KeyedRng, OrdinalTable, Reshuffle
 from renasci.core.scheduler import Activation, Scheduler, next_due
 from renasci.core.store import Store
@@ -27,6 +31,7 @@ __all__ = ["Engine", "UndeclaredAccess"]
 
 SWITCH_PRIORITY = -(10**9)
 DEADLINE_PRIORITY = 10**9  # pin deadlines run after everything else that day
+RIPPLE_PRIORITY = SWITCH_PRIORITY + 1  # ripples apply right after a ruleset switch, before systems
 CAST = EventType("engine.cast", 1, roles={"subject": (1, 1)}, payload={"kind": "str"})
 CAST_COLUMN = EventType("engine.cast_column", 1, roles={}, payload={"column": "str"})
 CHECKPOINT_FORMAT = 2  # 2: recipe includes major.minor versions
@@ -63,10 +68,14 @@ class Engine:
         self.ruleset: Ruleset | None = None
         self.ruleset_index: int | None = None
         self.director = Director()
+        self.ripples: tuple[Ripple, ...] = ()
+        self.ripple_log: list[dict] = []  # pending history
         self._date: Date | None = None
 
         self._register(CAST)
         self._register(CAST_COLUMN)
+        for t in RIPPLE_TYPES.values():
+            self._register(t)
         for _, rs in rulesets:
             for t in rs.event_types():
                 self._register(t)
@@ -162,12 +171,14 @@ class Engine:
             "hinges": list(self.hinges),
             "dropped": [{"activation": a} for a in self.dropped],
             "strain": list(self.director.strain),
+            "ripples": list(self.ripple_log),
         }
 
     def clear_pending(self) -> None:
         """Forget history already written. State (store, cause index, queue) stays."""
         self.events, self.reads, self.hinges, self.dropped = [], [], [], []
         self.director.strain = []
+        self.ripple_log = []
         self.store.drain()
 
     # ------------------------------------------------------------ running
@@ -184,7 +195,9 @@ class Engine:
         while (nxt := self.scheduler.peek()) is not None and due(nxt.date):
             activation = self.scheduler.pop()
             self._advance(activation.date)
-            if activation.system == "engine" and activation.purpose == "pin_deadline":
+            if activation.system == "engine" and activation.purpose == "ripple":
+                self._apply_ripple(activation)
+            elif activation.system == "engine" and activation.purpose == "pin_deadline":
                 self.director.deadline(self, activation.payload["pin"], self._forcer_ctx)
             elif activation.system == "engine":
                 self._switch(activation)
@@ -195,6 +208,63 @@ class Engine:
         if date != self._date:
             self._date = date
             self.ordinals.close_before(self.calendar.canonical_tick(date))
+
+    # ------------------------------------------------------------ ripples
+
+    def _ruleset_at(self, date: Date) -> Ruleset:
+        return [rs for d, rs in self.rulesets if d <= date][-1]
+
+    def apply_ripples(self, ripples, schedule: bool = True) -> None:
+        """Load ripples: validate them and schedule each on its date."""
+        ripples = tuple(sorted(ripples, key=lambda r: (r.date, r.id)))
+        if len({r.id for r in ripples}) != len(ripples):
+            raise ValueError("ripple ids must be unique")
+        for r in ripples:
+            if r.kind not in RIPPLE_KINDS:
+                raise ValueError(f"ripple {r.id}: {r.kind!r} is not supported yet (S1: {RIPPLE_KINDS})")
+            self.calendar.check(r.date)
+            if r.date < self.start:
+                raise ValueError(f"ripple {r.id} is dated before the run starts")
+            if r.kind == "protect" and (r.until is None or r.until < r.date):
+                raise ValueError(f"protect ripple {r.id} needs params.until on or after its date")
+            if r.kind in NEEDS_DISGUISE and self._ruleset_at(r.date).disguise(r.kind) is None:
+                raise ValueError(f"ripple {r.id}: the ruleset active on {r.date} has no {r.kind!r} disguise")
+        self.ripples = ripples
+        if schedule:
+            for r in ripples:
+                self.scheduler.push(Activation(r.date, RIPPLE_PRIORITY, "engine", "ripple", "engine",
+                                               {"ripple": r.id}, ()))
+
+    def protection(self, entity: str, date: Date) -> Ripple | None:
+        for r in self.ripples:
+            if r.kind == "protect" and r.target == entity and r.date <= date <= r.until:
+                return r
+        return None
+
+    def log_ripple(self, ripple: Ripple, action: str, applied: bool, activation: str, **extra) -> dict:
+        row = json.loads(canonical({"ripple": ripple.id, "kind": ripple.kind, "action": action,
+                                     "applied": applied, "date": self._date or ripple.date,
+                                     "activation": activation, "event": None, **extra}))
+        self.ripple_log.append(row)
+        return row
+
+    def _apply_ripple(self, activation: Activation) -> None:
+        r = next(x for x in self.ripples if x.id == activation.payload["ripple"])
+        roles = {"target": (r.target,)} if self.store.exists(r.target) else {}
+        secret = self.record(Event(event_id("engine", r.target, f"ripple:{r.id}", r.date, 0, activation.id),
+                                   r.date, f"ripple.{r.kind}", roles, None, (), {"params": r.params},
+                                   Source("ripple", r.id), activation=activation.id))
+        if r.kind == "protect":
+            self.log_ripple(r, "apply", True, activation.id, event=secret.id)
+            return
+        disguise = self.ruleset.disguise(r.kind)
+        applied = False
+        if disguise is not None:
+            ctx = Ctx(self, disguise, Activation(r.date, RIPPLE_PRIORITY, "engine", f"ripple:{r.id}", disguise.name,
+                                                 {}, (Cause("ripple", r.id), Cause("event", secret.id))))
+            applied = bool(disguise.apply(ctx, r))
+            self.finish(ctx)
+        self.log_ripple(r, "apply", applied, activation.id, event=secret.id)
 
     def _forcer_ctx(self, forcer, pin: Pin) -> Ctx:
         date = pin.window[1]
@@ -261,7 +331,8 @@ class Engine:
                          "months": cal.months, "seasons": cal.seasons},
             "rulesets": [{"start": d.to_json(), "name": rs.name, "version": rs.version, "params": rs.params,
                           "systems": [system(s) for s in rs.systems],
-                          "forcers": [system(f) | {"handles": f.handles} for f in rs.forcers]}
+                          "forcers": [system(f) | {"handles": f.handles} for f in rs.forcers],
+                          "disguises": [system(d) | {"handles": d.handles} for d in rs.disguises]}
                          for d, rs in self.rulesets],
             "pins": [p.to_json() for p in self.director.pins],
         }
@@ -297,14 +368,19 @@ class Engine:
         self.ordinals.close_before(self.calendar.canonical_tick(at))
         recipe = self.recipe()
         header = {"format": CHECKPOINT_FORMAT, "date": at.to_json(), "segments": int(segments),
+                  "ripples": [r.to_json() for r in self.ripples],
                   "recipe_hash": digest(recipe, size=16), "recipe": recipe}
         return {"header": header, "state": self._state()}
 
     @classmethod
     def restore(cls, checkpoint: dict, calendar: Calendar, rulesets: list[tuple[Date, Ruleset]],
                 seed: int, strict: bool = True, reshuffles: tuple[Reshuffle, ...] = (),
-                hinge_margin: float = 0.05, pins=()) -> Engine:
-        """Rebuild an engine from a checkpoint and the recipe (including its pins) that produced it."""
+                hinge_margin: float = 0.05, pins=(), ripples=()) -> Engine:
+        """Rebuild an engine from a checkpoint and the recipe (including its pins) that produced it.
+
+        Ripples dated before the checkpoint must be exactly the original run's. Ripples on or after
+        it are free: that is how a what-if replays from a checkpoint with a new intervention.
+        """
         header = checkpoint["header"]
         if header.get("format") != CHECKPOINT_FORMAT:
             raise ValueError(f"checkpoint format {header.get('format')!r} is not {CHECKPOINT_FORMAT}; "
@@ -324,6 +400,19 @@ class Engine:
         engine.causes = CauseIndex.from_json(state["causes"])
         engine.ruleset_index = state["ruleset_index"]
         engine.director.load_json(state["director"])
+        at = Date.from_json(header["date"])
+        given = tuple(sorted(ripples, key=lambda r: (r.date, r.id)))
+        before_now = [r.to_json() for r in given if r.date < at]
+        before_then = [r for r in header["ripples"] if Date.from_json(r["date"]) < at]
+        if before_now != before_then:
+            raise ValueError(f"ripples dated before {at} must match the checkpointed run; "
+                             "replay from an earlier checkpoint to change them")
+        engine.apply_ripples(given, schedule=False)
+        engine.scheduler.remove_where(lambda a: a.system == "engine" and a.purpose == "ripple")
+        for r in given:
+            if r.date >= at:
+                engine.scheduler.push(Activation(r.date, RIPPLE_PRIORITY, "engine", "ripple", "engine",
+                                                 {"ripple": r.id}, ()))
         engine.ruleset = rulesets[engine.ruleset_index][1] if engine.ruleset_index is not None else None
         engine._date = engine.scheduler.now or Date.from_json(header["date"])  # restored engines are running
         return engine
