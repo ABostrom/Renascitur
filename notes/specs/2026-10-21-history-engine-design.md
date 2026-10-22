@@ -34,15 +34,15 @@ Guiding beliefs:
 | Area | Decision |
 |---|---|
 | Product | An offline history generator and authoring tool. It is not a game. |
-| Time span | One causal timeline across four ages. The First Age is years 1–10000 and the Second is 10001–12000. The Third is undated and sparse (to be filled). **The Fourth Age runs about 250 years: 4A 1 is the Psychic Schism, and about 4A 250 is the campaign present.** The sim stops at the present. |
+| Time span | One causal timeline across four ages. The First Age is years 1–10000 and the Second is 10001–12000. The Third is undated and sparse (to be filled). **The Fourth Age runs 256 years so far: 4A 1 is the Psychic Schism, and 4A 256 is the campaign present.** The sim stops at the present. |
 | Dating | **Age-relative years** ("4A 37"). Absolute years are derived once the Third Age's length is decided, and everything shifts automatically. |
 | Re-running | A continuous history with **checkpoints**. Age boundaries are always checkpoints. A ripple replays from the nearest earlier checkpoint, and runs can fork like branches. |
 | Rules per age | A shared engine plus a pluggable **ruleset** per age. The Fourth Age ruleset covers the aftermath of the Schism, aberrations and night terrors, Lux Lapis, the Vialux, the Firebrand Empire and its Great Houses. |
 | Durability | **Canon is durable; seeds are disposable.** Liked output is kept by canonising it, because seeds stop reproducing history once the engine changes. |
 | Canon home | **The vault is the canon ledger**, and it is curated. Promotion drafts a typed note with `canon: proposed`. You edit it in Obsidian and set `canon: true`. User edits win. |
 | Identity | Every canon note carries a stable **`id:`** in its frontmatter. Each run begins with **casting**: canon entities are placed into the world (they exist, with the right parents, house and traits) before anything grows around them. The bindings are logged, and diffs and the Observatory match entities by vault id first, then by causal id. |
-| Canon characters | Most named characters are **modern** (alive around 4A 250). They use **pinned lineage**: the character and their ancestry are cast up front, and the sim grows the bloodline to reach them. |
-| Emperors | **Eight named Emperors** (Unimus, Duo, Tertia, Tetrus, Quintavius, Sextus, Septimus, Octavian) form a **fixed, ordered succession pin** across the Fourth Age. |
+| Canon characters | Most named characters are **modern** (alive at 4A 256). They use **pinned lineage**: the character and their ancestry are cast up front, and the sim grows the bloodline to reach them. |
+| Emperors | **Eight named Emperors** (Unimus, Duo, Tertia, Tetrus, Quintavius, Sextus, Septimus, Octavian) are **one bloodline**: each Emperor descends from the one before, so they are a **lineage pin**, not an elected succession. Octavian is alive and reigning at 4A 256. |
 | Pin scope | Promoting pins the event and its participants' existence. You choose which upstream **events** to keep as causes (beliefs and drives are not pinnable); the rest regenerate. |
 | Pin precision | Exact date, window, ordering ("after X, before Y"), or open-ended goal ("X travels from A to B in the Fourth Age"). |
 | Ripples | Recorded, replayable, and **disguised as in-world causes**. Kinds: protect, doom, favour, luck, inject, plant, structural. |
@@ -205,7 +205,7 @@ recipe (engine version, seed, vault commit, ripples, reshuffles)
 
 ### 5.8 Pins, casting and the pin director
 
-- **Kinds:** existence, lineage (a person with an ancestry), event, ordering, **succession** (an ordered list of holders of an office, e.g. the eight Emperors), goal.
+- **Kinds:** existence, lineage (a person with an ancestry), event, ordering, **succession** (an ordered list of holders of an office, e.g. a Great House's heads; the eight Emperors are a lineage pin instead), goal.
 - **Feasibility pass at load:** build the ordering DAG, detect cycles, intersect windows, check that genome and lineage constraints are satisfiable, and classify pins **outside the run window** (or of unsupported kinds) as *out of scope* rather than strained.
 - **Casting** places existence and lineage pins into the initial state, or reserves them for the right moment, and binds pins to entities.
 - **The director, in order of preference:**
@@ -270,7 +270,7 @@ Each entry gives the scope, then *depends on* → *done when*.
 - **S7 Ambitions, actions & schemes.**
   - Scope: ambition lifecycle, the action-class interface, the starter action library, the planner, schemes (accomplices, progress, exposure), hinges.
   - Depends on S3. Done when succession plots, court intrigue and vengeance emerge from drives, and every scheme step traces to its ambition. In M2 it gains belief actions, depending on S6.
-- **S8 Polities & conflict:** factions, offices, the Emperor's succession, diplomacy, war, borders.
+- **S8 Polities & conflict:** factions, offices, the imperial line, diplomacy, war, borders.
 - **S9 Work, crafts & objects:** jobs, materials, crafting, trade, object biographies.
 - **S10 Ecology & catastrophe:** climate, harvests, disease, famine, aberrations and night terrors, Lux Lapis and wards.
 - **S11 Mythic beings & faith (M5):** gods and immortals as agents, worship, faith as a force, divine attribution of ripples.
@@ -337,7 +337,7 @@ S8–S11 each depend on S3, S4 and S7 (and S6 where beliefs are involved). Each 
 **M1: The Fourth Age, lived** (S2, S3, minimal S4, S7 core, S13 v1)
 - **Engine:**
   - The vault bridge, with Fourth Age canon and feasibility.
-  - Casting: the 12 Great Houses, the 8 Emperors as a succession pin, and modern characters with pinned lineage.
+  - Casting: the 12 Great Houses, the 8 Emperors as one pinned imperial bloodline, and modern characters with pinned lineage.
   - Scenario synthesis at 4A 1 (the Psychic Schism's aftermath).
   - Genome, families, houses and succession, the relationship graph, drives.
   - Ambitions, the starter action library, the planner and schemes.
@@ -348,7 +348,7 @@ S8–S11 each depend on S3, S4 and S7 (and S6 where beliefs are involved). Each 
   - **Individuals:** genome with allele origins, family tree, inner life as of a date, ambitions and schemes, relationship web, events.
   - House pages, population charts, the canon-strain report, and promote with event-cause selection.
 - **Demo:**
-  - Simulate 4A 1 to 4A 250. All eight Emperors reign in order, and the modern canon characters are born into their pinned lineages.
+  - Simulate 4A 1 to 4A 256. All eight Emperors reign in order, and the modern canon characters are born into their pinned lineages.
   - Find a saga in 4A 80–140.
   - Pick a latch point (someone who died unfulfilled), protect them, re-run, and see what changed.
   - Promote an arc into the vault.
@@ -453,7 +453,7 @@ S1 ─┬─ S2 ─┐
   - every scheme step traces to an ambition
 - **Promotion no-op:** promoting from a run and re-running gives the same history with zero strain.
 - **Property tests** (`hypothesis`) for the genome, scheduler order, calendar, rendezvous choice and the planner.
-- **Golden scenarios:** the ward failure, a succession plot, and the Emperor succession.
+- **Golden scenarios:** the ward failure, a succession plot, and the imperial bloodline (all eight Emperors, in order).
 - **Benchmarks:** years per second and storage per run, tracked over time.
 
 ## 11. Validated by the proof of concept

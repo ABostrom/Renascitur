@@ -1,6 +1,6 @@
 ---
 title: Fourth Age timeline (draft for correction)
-status: draft (#17); nothing here is canon until Aaron corrects it
+status: draft (#17), partly answered 2026-10-22; nothing here is canon until Aaron corrects it
 dates: age-relative (4A n). 4A 1 is the Psychic Schism.
 ---
 
@@ -36,7 +36,10 @@ and the sim fills in the exact year.
 - Seven Emperors reigned across about 4A 10 to the present, which averages about 31 years each. That
   fits Leonin with a human-like lifespan.
 
-## Emperors (a succession pin)
+## Emperors (one bloodline: a lineage pin)
+
+**Aaron, 2026-10-22:** the present is **4A 256**, Octavian is alive, and "there is no succession, there is only lineage": the Emperors are one bloodline.
+
 
 | # | Emperor | Reign (draft) | Tag | Reign in brief (vault) | Spouse (vault) |
 |---|---|---|---|---|---|
@@ -47,16 +50,8 @@ and the sim fills in the exact year.
 | 5 | **Quintavius** | 4A 140 – 4A 171 | [proposed] | Golden age of culture, festivals and theatres | Duchess Elena |
 | 6 | **Sextus** | 4A 171 – 4A 199 | [proposed] | The scholar-emperor; academies and libraries | Lady Aurelia |
 | 7 | **Septimus** | 4A 199 – 4A 226 | [proposed] | Temples; formalises the funeral rites | High Priestess Selene |
-| 8 | **Octavian** | 4A 226 – present (4A 256+) | [derived] living | The Empire at its peak; bureaucracy, infrastructure, diplomacy | Empress Livia |
+| 8 | **Octavian** | 4A 226 – present (4A 256) | [vault] living (Aaron) | The Empire at its peak; bureaucracy, infrastructure, diplomacy | Empress Livia |
 
-The vault doesn't say whether succession passes **father to son**. Each spouse is a different
-person, so this is your call. The options are:
-
-- **(a)** a dynasty, with each Emperor the child of the last
-- **(b)** elective or adoptive, chosen by the Imperial Council of the Great Houses (Roman-style)
-- **(c)** a mix
-
-(b) gives the sim the most room for succession schemes, and the Great Houses would have real stakes.
 
 ## Key events
 
@@ -80,14 +75,13 @@ person, so this is your call. The options are:
 | 4A 226 | Octavian's accession. | [proposed] |
 | 4A 226 – 256 | The **Vialux** is expanded under Octavian, as his infrastructure reign. | [proposed] |
 | **4A 256** | **The Deep Line opens** from Thelassia to Draumhavn. | [vault] |
-| 4A 256 | **Campaign present** (proposed). | [derived] |
+| 4A 256 | **Campaign present.** | [vault] (Aaron) |
 
 ## Questions for you
 
-1. **Present day:** is it **4A 256** (the Deep Line inscription), or is "4th Era 256" a different
-   count from the Fourth Age?
-2. **Is Octavian alive and reigning now?** The Tomb has no chamber for him.
-3. **Succession:** dynasty, Council election, or a mix? (See above. (b) gives the most story.)
+1. ~~Present day~~ **Answered:** 4A 256.
+2. ~~Is Octavian alive?~~ **Answered:** yes.
+3. ~~Succession~~ **Answered:** one bloodline. Still open: is each Emperor the **child** of the previous, or can the crown skip to a grandchild, sibling or cousin within the line? Draft default: child of the previous.
 4. **Unimus:** is a ~38-year reign ending in ascension at about 4A 48 right, or did he reign much
    longer? His godhood might also have extended his life.
 5. **The Great Houses:** did they exist *before* the Empire, for example as survivor clans that
