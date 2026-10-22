@@ -15,8 +15,9 @@ from renasci.core.calendar import Calendar, Date
 from renasci.core.canon import digest
 from renasci.core.determinism import check_environment, versions
 from renasci.core.context import Ctx, UndeclaredAccess
-from renasci.core.events import CauseIndex, Event, EventType, Registry, Source
+from renasci.core.events import Cause, CauseIndex, Event, EventType, Registry, Source
 from renasci.core.ids import event_id
+from renasci.core.pins import Director, Pin, feasibility
 from renasci.core.rng import KeyedRng, OrdinalTable, Reshuffle
 from renasci.core.scheduler import Activation, Scheduler, next_due
 from renasci.core.store import Store
@@ -25,6 +26,7 @@ from renasci.core.systems import Ruleset
 __all__ = ["Engine", "UndeclaredAccess"]
 
 SWITCH_PRIORITY = -(10**9)
+DEADLINE_PRIORITY = 10**9  # pin deadlines run after everything else that day
 CAST = EventType("engine.cast", 1, roles={"subject": (1, 1)}, payload={"kind": "str"})
 CAST_COLUMN = EventType("engine.cast_column", 1, roles={}, payload={"column": "str"})
 CHECKPOINT_FORMAT = 2  # 2: recipe includes major.minor versions
@@ -60,6 +62,7 @@ class Engine:
         self.dropped: list[str] = []
         self.ruleset: Ruleset | None = None
         self.ruleset_index: int | None = None
+        self.director = Director()
         self._date: Date | None = None
 
         self._register(CAST)
@@ -88,7 +91,7 @@ class Engine:
         eid = event_id("engine", entity, "cast", self.start, 0)
         self.store.create(kind, entity, fields, self.start, eid)
         return self.record(Event(eid, self.start, CAST.name, {"subject": (entity,)}, None, (),
-                                 {"kind": kind}, Source("scenario", "cast")))
+                                 {"kind": kind}, Source("scenario", "cast")), created=[entity])
 
     def cast_column(self, name: str, dtype: str, ids, values) -> Event:
         """Create a numeric column (aggregate state) with starting values, before anything runs."""
@@ -102,11 +105,37 @@ class Engine:
 
     # ------------------------------------------------------------ used by Ctx
 
-    def record(self, event: Event) -> Event:
+    def record(self, event: Event, created=()) -> Event:
         event = self.registry.validate(event, store=self.store, today=self._date or self.start)
         self.causes.add(event)
         self.events.append(event)
+        self.director.observe(event, created)
         return event
+
+    def apply_pins(self, pins, end: Date | None = None, cast: bool = True) -> dict[str, str]:
+        """Load canon pins before the run: classify them, cast what canon places, schedule deadlines."""
+        if self._date is not None and cast:
+            raise ValueError("pins are applied before the run starts")
+        pins = tuple(pins)
+        last = self.rulesets[-1][0]
+        end = end or Date(last.age, self.calendar._by_index[last.age].last_year or 10**6,
+                          self.calendar.days_per_year - 1)
+        self.director = Director(pins)
+        classes = feasibility(pins, self.start, end)
+        for pin in self.director.pins:
+            status = classes[pin.id]
+            self.director.status[pin.id] = "open" if status == "ok" else status
+            if status != "ok":
+                continue
+            if pin.kind == "existence" and pin.subject.startswith(("v:", "t:")):
+                if cast:
+                    self.cast(pin.payload.get("kind", "person"), pin.subject, pin.payload.get("fields", {}))
+                self.director.status[pin.id] = "satisfied"
+                self.director.met[pin.id] = self.start
+            elif pin.kind in ("event", "existence") and pin.window and cast:
+                self.scheduler.push(Activation(pin.window[1], DEADLINE_PRIORITY, "engine", "pin_deadline",
+                                               "engine", {"pin": pin.id}, ()))
+        return classes
 
     def schedule(self, system: str, date: Date, purpose: str, *, entity: str, payload: dict | None = None,
                  priority: int | None = None, causes=()) -> Activation:
@@ -132,11 +161,13 @@ class Engine:
             "reads": list(self.reads),
             "hinges": list(self.hinges),
             "dropped": [{"activation": a} for a in self.dropped],
+            "strain": list(self.director.strain),
         }
 
     def clear_pending(self) -> None:
         """Forget history already written. State (store, cause index, queue) stays."""
         self.events, self.reads, self.hinges, self.dropped = [], [], [], []
+        self.director.strain = []
         self.store.drain()
 
     # ------------------------------------------------------------ running
@@ -153,7 +184,9 @@ class Engine:
         while (nxt := self.scheduler.peek()) is not None and due(nxt.date):
             activation = self.scheduler.pop()
             self._advance(activation.date)
-            if activation.system == "engine":
+            if activation.system == "engine" and activation.purpose == "pin_deadline":
+                self.director.deadline(self, activation.payload["pin"], self._forcer_ctx)
+            elif activation.system == "engine":
                 self._switch(activation)
             else:
                 self._dispatch(activation)
@@ -163,13 +196,18 @@ class Engine:
             self._date = date
             self.ordinals.close_before(self.calendar.canonical_tick(date))
 
+    def _forcer_ctx(self, forcer, pin: Pin) -> Ctx:
+        date = pin.window[1]
+        return Ctx(self, forcer, Activation(date, DEADLINE_PRIORITY, "engine", f"force:{pin.id}", forcer.name, {},
+                                            (Cause("pin", pin.id),)))
+
     def _switch(self, activation: Activation) -> None:
         old = self.ruleset
         self.ruleset_index = activation.payload["index"]
         self.ruleset = new = self.rulesets[self.ruleset_index][1]
 
         def unchanged(name: str) -> bool:
-            a, b = old.get(name) if old else None, new.get(name)
+            a, b = old.get_any(name) if old else None, new.get_any(name)
             return a is not None and b is not None and (a.cadence, a.priority) == (b.cadence, b.priority)
 
         removed = self.scheduler.remove_where(lambda a: a.system != "engine" and not unchanged(a.system))
@@ -182,8 +220,15 @@ class Engine:
                 self.scheduler.push(Activation(activation.date, system.priority, system.name, "cadence",
                                                system.name, {}, ()))
 
+    def finish(self, ctx: Ctx) -> None:
+        """Keep what a completed activation produced besides events and writes: hinges and reads."""
+        self.hinges.extend(ctx.hinges)
+        reads = ctx.recorded_reads()
+        if reads:
+            self.reads.append({"activation": ctx.activation.id, "reads": reads})
+
     def _dispatch(self, activation: Activation) -> None:
-        system = self.ruleset.get(activation.system)
+        system = self.ruleset.get_any(activation.system)
         if system is None:
             self.dropped.append(activation.id)
             return
@@ -195,10 +240,7 @@ class Engine:
                 self.scheduler.push(Activation(due, system.priority, system.name, "cadence", system.name, {}, ()))
         else:
             system.handle(ctx, activation)
-        self.hinges.extend(ctx.hinges)
-        reads = ctx.recorded_reads()
-        if reads:
-            self.reads.append({"activation": activation.id, "reads": reads})
+        self.finish(ctx)
 
     # ------------------------------------------------------------ checkpoints
 
@@ -218,13 +260,16 @@ class Engine:
             "calendar": {"ages": [[a.index, a.abbrev, a.name, a.last_year] for a in cal.ages],
                          "months": cal.months, "seasons": cal.seasons},
             "rulesets": [{"start": d.to_json(), "name": rs.name, "version": rs.version, "params": rs.params,
-                          "systems": [system(s) for s in rs.systems]} for d, rs in self.rulesets],
+                          "systems": [system(s) for s in rs.systems],
+                          "forcers": [system(f) | {"handles": f.handles} for f in rs.forcers]}
+                         for d, rs in self.rulesets],
+            "pins": [p.to_json() for p in self.director.pins],
         }
 
     def _state(self) -> dict:
         return {"store": self.store.to_json(), "scheduler": self.scheduler.to_json(),
                 "ordinals": self.ordinals.to_json(), "causes": self.causes.to_json(),
-                "ruleset_index": self.ruleset_index}
+                "ruleset_index": self.ruleset_index, "director": self.director.to_json()}
 
     def state_hash(self) -> str:
         """A hash of the world state (not of pending history)."""
@@ -258,13 +303,14 @@ class Engine:
     @classmethod
     def restore(cls, checkpoint: dict, calendar: Calendar, rulesets: list[tuple[Date, Ruleset]],
                 seed: int, strict: bool = True, reshuffles: tuple[Reshuffle, ...] = (),
-                hinge_margin: float = 0.05) -> Engine:
-        """Rebuild an engine from a checkpoint and the recipe that produced it."""
+                hinge_margin: float = 0.05, pins=()) -> Engine:
+        """Rebuild an engine from a checkpoint and the recipe (including its pins) that produced it."""
         header = checkpoint["header"]
         if header.get("format") != CHECKPOINT_FORMAT:
             raise ValueError(f"checkpoint format {header.get('format')!r} is not {CHECKPOINT_FORMAT}; "
                              "engine changed, replay from scenario")
         engine = cls(calendar, seed, rulesets, strict=strict, reshuffles=reshuffles, hinge_margin=hinge_margin)
+        engine.apply_pins(pins, cast=False)
         recipe = engine.recipe()
         if digest(recipe, size=16) != header["recipe_hash"]:
             old = header.get("recipe", {})
@@ -277,6 +323,7 @@ class Engine:
         engine.ordinals = OrdinalTable.from_json(state["ordinals"])
         engine.causes = CauseIndex.from_json(state["causes"])
         engine.ruleset_index = state["ruleset_index"]
+        engine.director.load_json(state["director"])
         engine.ruleset = rulesets[engine.ruleset_index][1] if engine.ruleset_index is not None else None
         engine._date = engine.scheduler.now or Date.from_json(header["date"])  # restored engines are running
         return engine

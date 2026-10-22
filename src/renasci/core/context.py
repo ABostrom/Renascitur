@@ -51,6 +51,8 @@ class Ctx:
         self._event: str | None = None  # the event that writes are attributed to
         self._occurrences: dict[tuple[str, str], int] = {}  # per (actor, purpose), this activation only
         self.hinges: list[dict] = []  # buffered; the engine keeps them only if the activation completes
+        self._pin_causes: list = []  # pins that guarded someone here; the next event is caused by them
+        self._guard_rows: list[dict] = []
 
     # ------------------------------------------------------------ declarations
 
@@ -145,7 +147,8 @@ class Ctx:
         occurrence = self._occurrences.get(key, 0)
         self._occurrences[key] = occurrence + 1
         eid = event_id(self.system.name, actor, purpose, self.today, occurrence, self.activation.id)
-        all_causes = tuple(sorted(set(causes) | set(self.activation.causes)))
+        all_causes = tuple(sorted(set(causes) | set(self.activation.causes) | set(self._pin_causes)))
+        self._pin_causes = []
         roles = {r: tuple(m) for r, m in roles.items()}
         births = []
         for role, specs in sorted((creates or {}).items()):
@@ -171,12 +174,30 @@ class Ctx:
                                            today=self.today)
             for kind, entity, fields in births:
                 store.create(kind, entity, fields, self.today, eid, self.activation.id)
-        event = self._engine.record(event)
+        event = self._engine.record(event, created=[b[1] for b in births])
         self._event = event.id
+        for row in self._guard_rows:
+            row["event"] = event.id
+        self._guard_rows = []
         for h in self.hinges:  # close calls decided before this event are what it turned on
             if h["event"] is None:
                 h["event"] = event.id
         return event
+
+    # ------------------------------------------------------------ pins
+
+    def guarded(self, entity: str) -> bool:
+        """Ask before a fatal outcome: True means canon needs `entity` alive, so write a near miss.
+
+        Recorded as a read of `(entity, "pin:<id>")`; the next event emitted here is caused by the pin.
+        """
+        pin = self._engine.director.guard_pin(entity, self.today)
+        if pin is None:
+            return False
+        self._reads[(entity, f"pin:{pin.id}")] = None
+        self._pin_causes.append(Cause("pin", pin.id))
+        self._guard_rows.append(self._engine.director.log_guard(pin, entity, self.today, self.activation.id))
+        return True
 
     # ------------------------------------------------------------ randomness and follow-ups
 
