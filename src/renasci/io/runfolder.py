@@ -29,7 +29,7 @@ from renasci.core.determinism import versions
 
 FORMAT = 1
 TABLES = ("events", "causes", "participants", "entities", "state_deltas", "bulk_deltas", "reads",
-          "hinges", "dropped", "strain", "ripples")
+          "hinges", "dropped", "strain", "ripples", "pins")
 _SEGMENT = re.compile(r"^seg-(\d{5})\.jsonl(\.gz)?$")
 
 

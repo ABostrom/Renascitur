@@ -21,6 +21,7 @@ from renasci.core.events import Cause, CauseIndex, Event, EventType, Registry, S
 from renasci.core.ids import event_id
 from renasci.core.pins import Director, Pin, feasibility
 from renasci.core.ripples import EVENT_TYPES as RIPPLE_TYPES
+from renasci.core.ripples import KINDS as ALL_RIPPLE_KINDS
 from renasci.core.ripples import NEEDS_DISGUISE, SUPPORTED as RIPPLE_KINDS, Ripple
 from renasci.core.rng import KeyedRng, OrdinalTable, Reshuffle
 from renasci.core.scheduler import Activation, Scheduler, next_due
@@ -79,6 +80,9 @@ class Engine:
         for _, rs in rulesets:
             for t in rs.event_types():
                 self._register(t)
+            for d in rs.disguises:
+                if d.handles not in ALL_RIPPLE_KINDS:
+                    raise ValueError(f"disguise {d.name!r} handles {d.handles!r}, which is not a ripple kind")
         for i, d in enumerate(dates):
             self.scheduler.push(Activation(d, SWITCH_PRIORITY, "engine", "switch", "engine", {"index": i}, ()))
 
@@ -172,12 +176,14 @@ class Engine:
             "dropped": [{"activation": a} for a in self.dropped],
             "strain": list(self.director.strain),
             "ripples": list(self.ripple_log),
+            "pins": list(self.director.changes),
         }
 
     def clear_pending(self) -> None:
         """Forget history already written. State (store, cause index, queue) stays."""
         self.events, self.reads, self.hinges, self.dropped = [], [], [], []
         self.director.strain = []
+        self.director.changes = []
         self.ripple_log = []
         self.store.drain()
 
@@ -214,8 +220,18 @@ class Engine:
     def _ruleset_at(self, date: Date) -> Ruleset:
         return [rs for d, rs in self.rulesets if d <= date][-1]
 
-    def apply_ripples(self, ripples, schedule: bool = True) -> None:
-        """Load ripples: validate them and schedule each on its date."""
+    def apply_ripples(self, ripples) -> None:
+        """Load ripples before the run: validate them all, then schedule each on its date."""
+        if self._date is not None or self.ripples:
+            raise ValueError("ripples are applied once, before the run starts "
+                             "(to add one later, replay from a checkpoint with Engine.restore(..., ripples=...))")
+        ripples = self._validate_ripples(ripples)
+        for r in ripples:
+            self.scheduler.push(Activation(r.date, RIPPLE_PRIORITY, "engine", "ripple", "engine",
+                                           {"ripple": r.id}, ()))
+        self.ripples = ripples
+
+    def _validate_ripples(self, ripples) -> tuple[Ripple, ...]:
         ripples = tuple(sorted(ripples, key=lambda r: (r.date, r.id)))
         if len({r.id for r in ripples}) != len(ripples):
             raise ValueError("ripple ids must be unique")
@@ -229,11 +245,7 @@ class Engine:
                 raise ValueError(f"protect ripple {r.id} needs params.until on or after its date")
             if r.kind in NEEDS_DISGUISE and self._ruleset_at(r.date).disguise(r.kind) is None:
                 raise ValueError(f"ripple {r.id}: the ruleset active on {r.date} has no {r.kind!r} disguise")
-        self.ripples = ripples
-        if schedule:
-            for r in ripples:
-                self.scheduler.push(Activation(r.date, RIPPLE_PRIORITY, "engine", "ripple", "engine",
-                                               {"ripple": r.id}, ()))
+        return ripples
 
     def protection(self, entity: str, date: Date) -> Ripple | None:
         for r in self.ripples:
@@ -242,7 +254,8 @@ class Engine:
         return None
 
     def log_ripple(self, ripple: Ripple, action: str, applied: bool, activation: str, **extra) -> dict:
-        row = json.loads(canonical({"ripple": ripple.id, "kind": ripple.kind, "action": action,
+        row = json.loads(canonical({"ripple": ripple.id, "kind": ripple.kind, "target": ripple.target,
+                                    "params": ripple.params, "action": action,
                                      "applied": applied, "date": self._date or ripple.date,
                                      "activation": activation, "event": None, **extra}))
         self.ripple_log.append(row)
@@ -252,7 +265,7 @@ class Engine:
         r = next(x for x in self.ripples if x.id == activation.payload["ripple"])
         roles = {"target": (r.target,)} if self.store.exists(r.target) else {}
         secret = self.record(Event(event_id("engine", r.target, f"ripple:{r.id}", r.date, 0, activation.id),
-                                   r.date, f"ripple.{r.kind}", roles, None, (), {"params": r.params},
+                                   r.date, f"ripple.{r.kind}", roles, None, (), {"target": r.target, "params": r.params},
                                    Source("ripple", r.id), activation=activation.id))
         if r.kind == "protect":
             self.log_ripple(r, "apply", True, activation.id, event=secret.id)
@@ -262,8 +275,15 @@ class Engine:
         if disguise is not None:
             ctx = Ctx(self, disguise, Activation(r.date, RIPPLE_PRIORITY, "engine", f"ripple:{r.id}", disguise.name,
                                                  {}, (Cause("ripple", r.id), Cause("event", secret.id))))
-            applied = bool(disguise.apply(ctx, r))
-            self.finish(ctx)
+            try:
+                applied = bool(disguise.apply(ctx, r))
+            except Exception:
+                self.log_ripple(r, "error", False, activation.id, event=secret.id)
+                raise
+            finally:
+                self.finish(ctx)
+            if not applied and ctx._event is not None:
+                raise ValueError(f"disguise {disguise.name!r} changed the world but reported failure for ripple {r.id}")
         self.log_ripple(r, "apply", applied, activation.id, event=secret.id)
 
     def _forcer_ctx(self, forcer, pin: Pin) -> Ctx:
@@ -357,7 +377,7 @@ class Engine:
         if self.odds_hooks:
             raise ValueError("odds hooks are not checkpointable yet (ripples and the director save state in #48/#49)")
         for _, rs in self.rulesets:
-            for s in rs.systems:
+            for s in rs.systems + rs.forcers + rs.disguises:
                 if vars(s):
                     raise ValueError(f"system {s.name} keeps instance state {sorted(vars(s))}; "
                                      "systems must be stateless, with all state in the store")
@@ -407,7 +427,7 @@ class Engine:
         if before_now != before_then:
             raise ValueError(f"ripples dated before {at} must match the checkpointed run; "
                              "replay from an earlier checkpoint to change them")
-        engine.apply_ripples(given, schedule=False)
+        engine.ripples = engine._validate_ripples(given)
         engine.scheduler.remove_where(lambda a: a.system == "engine" and a.purpose == "ripple")
         for r in given:
             if r.date >= at:

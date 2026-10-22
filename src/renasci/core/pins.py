@@ -131,6 +131,7 @@ class Director:
         self.met: dict[str, tuple[Date, int]] = {}  # (date, event sequence): same-day order is kept
         self.seq = 0  # events observed so far
         self.strain: list[dict] = []  # pending history
+        self.changes: list[dict] = []  # pending history: pin status changes, attributed to the event that caused them
         self._forcing: str | None = None
 
     def _log(self, action: str, pin: Pin, date: Date, activation: str = "", **extra) -> dict:
@@ -139,8 +140,12 @@ class Director:
         self.strain.append(row)
         return row
 
-    def _meet(self, pin: Pin, date: Date, status: str) -> None:
+    def _set(self, pin: Pin, status: str, date: Date, event: str | None = None) -> None:
         self.status[pin.id] = status
+        self.changes.append({"pin": pin.id, "status": status, "event": event, "date": date.to_json()})
+
+    def _meet(self, pin: Pin, date: Date, status: str, event: str) -> None:
+        self._set(pin, status, date, event)
         self.met[pin.id] = (date, self.seq)
 
     # ------------------------------------------------------------ observation (pure)
@@ -151,9 +156,9 @@ class Director:
         for pin in self.pins:  # born entities: met by their creating event, if it falls inside the window
             if pin.kind == "existence" and self.status.get(pin.id) == "open" and pin.subject in created:
                 if pin.covers(event.date):
-                    self._meet(pin, event.date, "satisfied")
+                    self._meet(pin, event.date, "satisfied", event.id)
                 else:
-                    self.status[pin.id] = "violated"
+                    self._set(pin, "violated", event.date, event.id)
                     self._log("violated", pin, event.date, reason="created outside the window")
         for pin in self.pins:  # each event satisfies at most one event pin
             if pin.kind != "event" or self.status.get(pin.id) != "open" or not pin.covers(event.date):
@@ -162,23 +167,23 @@ class Director:
                 continue
             wanted = pin.payload.get("roles", {})
             if all(set(m) <= set(event.roles.get(r, ())) for r, m in wanted.items()):
-                self._meet(pin, event.date, "forced" if self._forcing == pin.id else "satisfied")
+                self._meet(pin, event.date, "forced" if self._forcing == pin.id else "satisfied", event.id)
                 break
-        self._check_orderings(event.date)
+        self._check_orderings(event.date, event.id)
 
-    def _check_orderings(self, date: Date) -> None:
+    def _check_orderings(self, date: Date, event: str | None = None) -> None:
         for o in self.pins:
             if o.kind != "ordering" or self.status.get(o.id) != "open":
                 continue
             a, b = o.payload["before"], o.payload["after"]
             if a in self.met and b in self.met:
                 if self.met[a] < self.met[b]:
-                    self.status[o.id] = "satisfied"
+                    self._set(o, "satisfied", date, event)
                 else:
-                    self.status[o.id] = "violated"
+                    self._set(o, "violated", date, event)
                     self._log("violated", o, date, reason=f"{a} did not come before {b}")
             elif b in self.met and a not in self.met:
-                self.status[o.id] = "violated"
+                self._set(o, "violated", date, event)
                 self._log("violated", o, date, reason=f"{b} happened before {a}")
 
     # ------------------------------------------------------------ guard
@@ -206,7 +211,7 @@ class Director:
         if self.status.get(pin.id) != "open":
             return
         if pin.kind == "existence":
-            self.status[pin.id] = "violated"
+            self._set(pin, "violated", date)
             self._log("violated", pin, date, reason="never came to exist inside the window")
             self._check_orderings(date)
             return
@@ -214,6 +219,7 @@ class Director:
         forced, ctx = False, None
         if forcer is not None:
             ctx = ctx_factory(forcer, pin)
+            ctx._reads[(f"pin:{pin.id}", "status")] = None  # forcing depends on the pin being unmet
             self._forcing = pin.id
             try:
                 forced = bool(forcer.force(ctx, pin)) and self.status.get(pin.id) == "forced"
@@ -223,7 +229,7 @@ class Director:
         if forced:
             self._log("force", pin, date, ctx.activation.id)
         else:
-            self.status[pin.id] = "violated"
+            self._set(pin, "violated", date)
             self._log("violated", pin, date, reason="no forcer could construct it")
         self._check_orderings(date)
 

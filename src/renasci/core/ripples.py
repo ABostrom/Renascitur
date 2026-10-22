@@ -28,7 +28,7 @@ from renasci.core.systems import System
 KINDS = ("protect", "doom", "favour", "luck", "inject", "plant", "structural")
 SUPPORTED = ("protect", "doom", "inject")
 NEEDS_DISGUISE = ("doom", "inject")
-EVENT_TYPES = {k: EventType(f"ripple.{k}", 1, roles={"target": (0, 1)}, payload={"params": "json"},
+EVENT_TYPES = {k: EventType(f"ripple.{k}", 1, roles={"target": (0, 1)}, payload={"target": "str", "params": "json"},
                             visibility="secret", dead_roles=("target",)) for k in KINDS}
 
 

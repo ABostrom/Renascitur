@@ -13,7 +13,7 @@ from renasci.core.calendar import Date  # noqa: E402
 from renasci.core.engine import Engine  # noqa: E402
 from renasci.core.events import Cause, EventType  # noqa: E402
 from renasci.core.ripples import Disguise, Ripple  # noqa: E402
-from renasci.core.systems import Ruleset  # noqa: E402
+from renasci.core.systems import Ruleset, System  # noqa: E402
 
 FALL = EventType("mini.fall", 1, roles={"victim": (1, 1)}, payload={})
 
@@ -155,3 +155,99 @@ def test_runs_with_the_same_ripples_are_identical():
         return [ev.to_json() for ev in e.events]
 
     assert run() == run()
+
+
+# ---------------------------------------------------------------- review fixes
+
+
+def test_ripples_are_applied_before_the_run_and_atomically():
+    e = engine()
+    e.run(until=Date(1, 3, 0))
+    with pytest.raises(ValueError):
+        e.apply_ripples([Ripple("r1", "protect", Date(1, 4, 0), "t:Ada", {"until": [1, 5, 0]})])
+    assert e.ripples == () and e.protection("t:Ada", Date(1, 4, 100)) is None
+    f = engine()
+    with pytest.raises(ValueError):
+        f.apply_ripples([Ripple("ok", "inject", Date(1, 2, 0), "t:sky"), Ripple("bad", "favour", Date(1, 2, 0), "t:Ada")])
+    assert f.ripples == () and len(f.scheduler.pending(lambda a: a.purpose == "ripple")) == 0
+
+
+def test_the_ripple_definition_is_always_in_the_run_folder_rows():
+    e = engine([Ripple("r1", "protect", Date(1, 2, 0), "t:Heir", {"until": [1, 5, 0]})])  # Heir not born yet
+    e.run(until=Date(1, 3, 0))
+    secret = next(ev for ev in e.events if ev.type == "ripple.protect")
+    assert secret.payload["target"] == "t:Heir" and secret.payload["params"] == {"until": [1, 5, 0]}
+    row = next(r for r in e.ripple_log if r["action"] == "apply")
+    assert row["target"] == "t:Heir" and row["params"] == {"until": [1, 5, 0]}
+
+
+def test_pin_status_changes_are_recorded_and_forcers_read_them():
+    from test_pins import ComChanger, sky_engine
+
+    from renasci.core.pins import Pin
+
+    e = sky_engine(systems=())
+    e.apply_pins([Pin("p", "event", window=(Date(1, 3, 0), Date(1, 6, 0)), payload={"type": "mini.comet"})])
+    e.run(until=Date(1, 8, 0))
+    forced = next(ev for ev in e.events if ev.type == "mini.comet")
+    assert any(["pin:p", "status"] in r["reads"] for r in e.reads)
+    rows = e.pending()["pins"]
+    assert {"pin": "p", "status": "forced", "event": forced.id, "date": [1, 6, 0]} in rows
+
+
+class Liar(Disguise):
+    name, handles = "mini.liar", "inject"
+    event_types = (COMET,)
+
+    def apply(self, ctx, ripple):
+        ctx.emit("mini.comet", {}, purpose="x", actor=ripple.target)
+        return False
+
+
+class Raiser(Disguise):
+    name, handles = "mini.raiser", "inject"
+
+    def apply(self, ctx, ripple):
+        raise RuntimeError("boom")
+
+
+def test_a_disguise_cannot_change_the_world_and_report_failure():
+    e = engine([Ripple("r", "inject", Date(1, 2, 0), "t:sky")], disguises=(Liar(),), systems=())
+    with pytest.raises(ValueError):
+        e.run(until=Date(1, 3, 0))
+
+
+def test_a_raising_disguise_still_logs_its_ripple():
+    e = engine([Ripple("r", "inject", Date(1, 2, 0), "t:sky")], disguises=(Raiser(),), systems=())
+    with pytest.raises(RuntimeError):
+        e.run(until=Date(1, 3, 0))
+    assert [r["action"] for r in e.ripple_log] == ["error"]
+
+
+def test_checkpoint_refuses_stateful_disguises():
+    class Counting(Comet):
+        name = "mini.counting"
+
+        def apply(self, ctx, ripple):
+            self.uses = getattr(self, "uses", 0) + 1
+            return super().apply(ctx, ripple)
+
+    e = engine([Ripple("r", "inject", Date(1, 2, 0), "t:sky")], disguises=(Counting(),), systems=())
+    e.run_before(Date(1, 3, 0))
+    e.clear_pending()
+    with pytest.raises(ValueError):
+        e.checkpoint(at=Date(1, 3, 0), segments=0)
+
+
+def test_disguise_kinds_and_system_priorities_are_checked():
+    class Odd(Comet):
+        name, handles = "mini.odd", "smite"
+
+    with pytest.raises(ValueError):
+        engine(disguises=(Odd(),))
+
+    class Early(System):
+        name, cadence, priority = "mini.early", "yearly", -(10**9)
+
+    with pytest.raises(ValueError):
+        Ruleset("x", 1, (Early(),))

@@ -40,8 +40,9 @@ class System:
             raise ValueError(f"system needs a name other than 'engine', got {self.name!r}")
         if self.cadence not in CADENCES:
             raise ValueError(f"{self.name}: cadence must be one of {sorted(CADENCES)}, got {self.cadence!r}")
-        if type(self.priority) is not int:
-            raise ValueError(f"{self.name}: priority must be an int")
+        if type(self.priority) is not int or not -(10**8) <= self.priority <= 10**8:
+            raise ValueError(f"{self.name}: priority must be an int within ±10**8 "
+                             "(the engine reserves the extremes for switches, ripples and pin deadlines)")
         for label in ("reads", "writes"):
             names = getattr(self, label)
             if not isinstance(names, frozenset) or not all(isinstance(n, str) and n for n in names):
