@@ -42,6 +42,28 @@ describe('cause graph', async () => {
 		expect(graph.children({ kind: 'activation', ref: e.activation }).map(nodeKey)).toContain(`event:${e.id}`);
 	});
 
+	it('keys an activation the same with or without the scope it scheduled from', () => {
+		expect(nodeKey({ kind: 'activation', ref: 'A#t:x' })).toBe(nodeKey({ kind: 'activation', ref: 'A' }));
+		// events caused by a scope of A are A's children too
+		for (let i = 0; i < index.count; i++) {
+			const e = index.row(i);
+			for (const [k, r] of e.causes as [string, string][]) {
+				if (k === 'activation' && r.includes('#')) {
+					const kids = graph.children({ kind: 'activation', ref: r.split('#')[0] }).map(nodeKey);
+					expect(kids).toContain(`event:${e.id}`);
+					return;
+				}
+			}
+		}
+	});
+
+	it('gives no node the same parent twice', () => {
+		for (let i = 0; i < index.count; i++) {
+			const keys = graph.parents({ kind: 'event', ref: index.ids[i] }).map(nodeKey);
+			expect(new Set(keys).size).toBe(keys.length);
+		}
+	});
+
 	it('labels nodes for people', () => {
 		expect(graph.label({ kind: 'event', ref: death.id })).toContain('toy.death');
 		expect(graph.label({ kind: 'ripple', ref: 'r2' })).toContain('r2');
@@ -60,6 +82,17 @@ describe('entity detail', async () => {
 		const valley = await entityDetail(run, index, 't:North');
 		expect(valley.changes.some((c) => c.field === 'stock' && c.bulk)).toBe(true);
 		expect(valley.cells.stock).toBeGreaterThanOrEqual(0);
+	});
+
+	it('does not keep a failed final-state load', async () => {
+		const flaky = await openRun(source, 'base');
+		const real = flaky.source.stream.bind(flaky.source);
+		let fail = true;
+		flaky.source = Object.assign(Object.create(flaky.source), { stream: (p: string) => (fail && p.endsWith('state.json.gz') ? Promise.reject(new Error('busy')) : real(p)) });
+		const ix = await buildIndex(flaky);
+		await expect(entityDetail(flaky, ix, 't:Ashford')).rejects.toThrow('busy');
+		fail = false;
+		expect((await entityDetail(flaky, ix, 't:Ashford')).record?.kind).toBe('place');
 	});
 
 	it('handles an entity with no record', async () => {

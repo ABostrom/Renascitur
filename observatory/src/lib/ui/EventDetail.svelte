@@ -39,10 +39,22 @@
 
 	let graph = $state<CauseGraph | null>(null);
 	let direction = $state<'why' | 'led'>('why');
-	let depth = $state(2);
+	let graphFailed = $state<string | null>(null);
+	let depthInput = $state(2);
+	const depth = $derived(Math.min(8, Math.max(1, Math.floor(Number(depthInput) || 1))));
 	$effect(() => {
 		const name = index.run.name;
-		loadGraph(name).then((g) => (graph = g));
+		let stale = false;
+		graph = null;
+		graphFailed = null;
+		loadGraph(name)
+			.then((g) => {
+				if (!stale) graph = g;
+			})
+			.catch((err) => {
+				if (!stale) graphFailed = (err as Error).message;
+			});
+		return () => (stale = true);
 	});
 
 	/** A link to this view with one filter set (and the selection cleared). */
@@ -126,7 +138,7 @@
 				<span class="controls">
 					<button class:active={direction === 'why'} onclick={() => (direction = 'why')}>Why</button>
 					<button class:active={direction === 'led'} onclick={() => (direction = 'led')}>What it led to</button>
-					<label>depth <input type="number" min="1" max="8" bind:value={depth} /></label>
+					<label>depth <input type="number" min="1" max="8" bind:value={depthInput} /></label>
 				</span>
 			</h3>
 			{#if graph}
@@ -135,6 +147,8 @@
 						<CauseTree {graph} node={{ kind: 'event', ref: id }} {direction} {depth} onSelect={onSelect} />
 					</ul>
 				{/key}
+			{:else if graphFailed}
+				<p class="muted">Couldn't build the cause graph: {graphFailed}</p>
 			{:else}
 				<p class="muted">Building the cause graph…</p>
 			{/if}

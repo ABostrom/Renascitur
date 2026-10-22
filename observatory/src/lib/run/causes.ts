@@ -7,7 +7,8 @@ export interface CauseNode {
 	ref: string;
 }
 
-export const nodeKey = (n: CauseNode) => `${n.kind}:${n.ref}`;
+/** A follow-up scheduled from a scope names `<activation>#<scope>`: that is the same activation node. */
+export const nodeKey = (n: CauseNode) => `${n.kind}:${n.kind === 'activation' ? n.ref.split('#')[0] : n.ref}`;
 
 export interface CauseGraph {
 	parents(n: CauseNode): CauseNode[];
@@ -39,21 +40,25 @@ export async function buildCauseGraph(index: EventIndex): Promise<CauseGraph> {
 
 	const eventParents = (i: number): CauseNode[] => {
 		const e = index.row(i);
-		const out: CauseNode[] = e.causes.map(([kind, ref]: [string, string]) => ({ kind, ref }));
-		if (e.source && (e.source[0] === 'ripple' || e.source[0] === 'pin')) {
-			const src = { kind: e.source[0], ref: e.source[1] };
-			if (!out.some((p) => nodeKey(p) === nodeKey(src))) out.push(src);
-		}
-		if (e.activation) out.push({ kind: 'activation', ref: e.activation });
+		const out: CauseNode[] = [];
+		const seen = new Set<string>();
+		const add = (n: CauseNode) => {
+			const k = nodeKey(n);
+			if (!seen.has(k)) seen.add(k), out.push(n);
+		};
+		for (const [kind, ref] of e.causes as [string, string][]) add({ kind, ref });
+		if (e.source && (e.source[0] === 'ripple' || e.source[0] === 'pin')) add({ kind: e.source[0], ref: e.source[1] });
+		if (e.activation) add({ kind: 'activation', ref: e.activation });
 		return out;
 	};
 
 	for (let i = 0; i < index.count; i++) {
 		const child = { kind: 'event', ref: index.ids[i] };
 		for (const p of eventParents(i)) addChild(p, child);
+		if (i % 20000 === 19999) await new Promise((r) => setTimeout(r)); // let the page breathe on big runs
 	}
 	for (const [id, a] of activations) {
-		for (const [kind, ref] of a.causes) addChild({ kind, ref: ref.split('#')[0] }, { kind: 'activation', ref: id });
+		for (const [kind, ref] of a.causes) addChild({ kind, ref }, { kind: 'activation', ref: id });
 	}
 
 	const cal = run.calendar;

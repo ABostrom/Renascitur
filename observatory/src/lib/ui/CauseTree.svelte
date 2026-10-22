@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { untrack } from 'svelte';
+
 	import { nodeKey, type CauseGraph, type CauseNode } from '$lib/run/causes';
 
 	import Self from './CauseTree.svelte';
@@ -6,7 +8,8 @@
 	/**
 	 * A node and, expanded, its parents ("why") or children ("what it led to"). Expansion is lazy;
 	 * `depth` sets how far it opens by itself. Ripples are the author's hand and pins are canon:
-	 * they end a "why" walk.
+	 * they end a "why" walk. `budget` is shared by the whole tree: once that many nodes have opened by
+	 * themselves the rest wait for a click, so a wide or deep run can't freeze the page.
 	 */
 	let {
 		graph,
@@ -14,6 +17,7 @@
 		direction,
 		depth,
 		path = [],
+		budget = { left: 400 },
 		onSelect
 	}: {
 		graph: CauseGraph;
@@ -21,15 +25,22 @@
 		direction: 'why' | 'led';
 		depth: number;
 		path?: string[];
+		budget?: { left: number };
 		onSelect: (eventId: string) => void;
 	} = $props();
 
 	const key = $derived(nodeKey(node));
 	const next = $derived(direction === 'why' ? graph.parents(node) : graph.children(node));
 	const looped = $derived(path.includes(key));
-	let open = $state<boolean | null>(null);
-	const isOpen = $derived(open ?? depth > 0);
 	const LIMIT = 40;
+	// Decided once, when the node mounts: does it open by itself?
+	const auto = untrack(() => {
+		if (depth <= 0 || budget.left <= 0) return false;
+		budget.left -= Math.min(next.length, LIMIT);
+		return true;
+	});
+	let open = $state<boolean | null>(null);
+	const isOpen = $derived(open ?? auto);
 	let showAll = $state(false);
 	const shown = $derived(showAll ? next : next.slice(0, LIMIT));
 </script>
@@ -53,7 +64,7 @@
 	{#if isOpen && next.length && !looped}
 		<ul>
 			{#each shown as child (nodeKey(child))}
-				<Self {graph} node={child} {direction} depth={depth - 1} path={[...path, key]} {onSelect} />
+				<Self {graph} node={child} {direction} depth={depth - 1} path={[...path, key]} {budget} {onSelect} />
 			{/each}
 			{#if next.length > LIMIT && !showAll}
 				<li><button class="link" onclick={() => (showAll = true)}>show all {next.length}</button></li>

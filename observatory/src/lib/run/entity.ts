@@ -31,6 +31,7 @@ export function finalState(run: Run): Promise<any> {
 			).text();
 			return JSON.parse(text);
 		})();
+		p.catch(() => finalStates.delete(run)); // a run still being written may have its state later
 		finalStates.set(run, p);
 	}
 	return p;
@@ -40,15 +41,14 @@ export function finalState(run: Run): Promise<any> {
 export async function entityDetail(run: Run, index: EventIndex, id: string): Promise<EntityDetailData> {
 	let record: EntityDetailData['record'] = null;
 	const cells: Record<string, number> = {};
-	try {
+	// An incomplete run has no final state yet; its events and changes still work.
+	if (run.manifest.meta.complete !== false) {
 		const state = await finalState(run);
 		record = state.entities.find((e: { id: string }) => e.id === id) ?? null;
 		for (const [name, col] of Object.entries(state.columns as Record<string, { ids: string[]; data: number[] }>)) {
 			const at = col.ids.indexOf(id);
 			if (at >= 0) cells[name] = col.data[at];
 		}
-	} catch {
-		// an incomplete run has no final state yet; events and changes still work
 	}
 	const changes: EntityChange[] = [];
 	for await (const d of readTable(run, 'state_deltas')) {

@@ -17,6 +17,8 @@
 		let stale = false;
 		detail = null;
 		error = null;
+		allEvents = false;
+		allChanges = false;
 		loadRun(n)
 			.then(async ({ index: ix }) => {
 				const d = await entityDetail(ix.run, ix, e);
@@ -32,6 +34,12 @@
 	});
 
 	const cal = $derived(index?.run.calendar);
+	// Long lives (a village over centuries) render the first rows until asked for all of them.
+	const CAP = 500;
+	let allEvents = $state(false);
+	let allChanges = $state(false);
+	const events = $derived(detail && !allEvents ? detail.events.slice(0, CAP) : (detail?.events ?? []));
+	const changes = $derived(detail && !allChanges ? detail.changes.slice(0, CAP) : (detail?.changes ?? []));
 	const show = (v: unknown) => (v === null || v === undefined ? '—' : typeof v === 'string' ? v : JSON.stringify(v));
 	const eventsHref = (eid: string) => `/run/${encodeURIComponent(name)}/events?e=${encodeURIComponent(eid)}`;
 </script>
@@ -70,7 +78,7 @@
 		<section class="card">
 			<h2>Life ({detail.events.length} event{detail.events.length === 1 ? '' : 's'})</h2>
 			<ol class="events">
-				{#each detail.events as i (i)}
+				{#each events as i (i)}
 					{@const e = index.row(i)}
 					<li>
 						<span class="date mono">{cal.format(e.date, 'season')}</span>
@@ -79,6 +87,9 @@
 					</li>
 				{/each}
 			</ol>
+			{#if detail.events.length > events.length}
+				<button class="more" onclick={() => (allEvents = true)}>show all {detail.events.length}</button>
+			{/if}
 		</section>
 	</div>
 
@@ -87,7 +98,7 @@
 		<table>
 			<thead><tr><th>when</th><th>field</th><th>from</th><th>to</th><th>because of</th></tr></thead>
 			<tbody>
-				{#each detail.changes as c, k (k)}
+				{#each changes as c, k (k)}
 					<tr>
 						<td class="mono">{cal.format(c.date, 'day')}</td>
 						<td class="mono">{c.field}{c.bulk ? ' (column)' : ''}</td>
@@ -98,6 +109,9 @@
 				{/each}
 			</tbody>
 		</table>
+		{#if detail.changes.length > changes.length}
+			<button class="more" onclick={() => (allChanges = true)}>show all {detail.changes.length}</button>
+		{/if}
 	</section>
 {/if}
 
@@ -169,6 +183,15 @@
 	}
 	.muted {
 		color: var(--muted);
+	}
+	.more {
+		margin-top: 0.5rem;
+		background: none;
+		border: none;
+		padding: 0;
+		color: var(--accent);
+		text-decoration: underline;
+		cursor: pointer;
 	}
 	@media (max-width: 900px) {
 		.grid {
