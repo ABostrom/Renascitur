@@ -1,0 +1,12 @@
+# The toy world at the S1 spec's scale: 600 people, 300 years, a checkpoint every 10 years.
+#   uv run renasci run recipes/toy-baseline.toml
+[run]
+name = "toy-baseline"
+engine = "0.1.0"
+seed = 1234
+world = "toy"
+end = "1X 300"
+checkpoint_every_years = 10
+
+[world]
+people_per_village = 100
