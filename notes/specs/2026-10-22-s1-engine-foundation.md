@@ -220,8 +220,11 @@ The CLI uses `argparse`, so there's no extra dependency. `renasci/__init__.py` s
 - **Read storage (#151).** A recipe run keeps **one digest per scope** (`digest`, `n`) by default.
   `[run] full_reads = true` keeps every read row, for analysis runs. Divergence analysis is exact
   with full reads on both sides. With a digest on either side, any difference in what a scope read
-  taints it, which can hide a bug that changes only *which* fields are read. So the exit test runs
-  with full reads. The engine's Python API keeps full reads unless told otherwise.
+  taints it, which can hide a bug that changes only *which* fields are read. A difference in an
+  activation's **unscoped** reads explains *every* event of that activation. So the exit test runs
+  with full reads, and `renasci diff` reports the mode (`reads`: full, digest or mixed) and warns when
+  it isn't full. A replay may switch `full_reads`, but exact analysis needs both runs recorded with
+  it. The engine's Python API keeps full reads unless told otherwise.
 - **`Ruleset`** is a name, a version, an ordered list of systems, parameters and a `ResolutionPolicy`.
   The engine switches ruleset at configured dates, which are always checkpoints (age boundaries).
 - Systems never call each other. They communicate only through state, events and scheduled

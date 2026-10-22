@@ -172,7 +172,7 @@ def test_diff_signals_unexplained_divergence_with_its_own_code(runs, monkeypatch
     import renasci.cli as cli
 
     tmp, out = runs
-    monkeypatch.setattr(cli, "analyse", lambda *a, **k: {"events": 1, "divergent_events": 1, "unexplained_events": 1,
+    monkeypatch.setattr(cli, "analyse", lambda *a, **k: {"reads": "full", "events": 1, "divergent_events": 1, "unexplained_events": 1,
                                                        "unexplained_entities": 0, "unexplained_cells": 0,
                                                        "unexplained": {"events": []}})
     assert main(["diff", str(out / "base"), str(out / "base")]) == 3

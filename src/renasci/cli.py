@@ -81,12 +81,13 @@ def cmd_replay(args) -> int:
     new = load_recipe(args.recipe)
     world = get_world(new.world)
 
-    def without_name_and_ripples(raw):
-        return {k: ({kk: vv for kk, vv in v.items() if kk != "name"} if k == "run" else v)
+    def without_name_and_ripples(raw):  # full_reads only changes what is recorded, not what happens
+        return {k: ({kk: vv for kk, vv in v.items() if kk not in ("name", "full_reads")} if k == "run" else v)
                 for k, v in raw.items() if k != "ripple"}
 
     if without_name_and_ripples(old.raw) != without_name_and_ripples(new.raw):
-        raise ValueError("a replay may only change ripples (and the run name); for anything else, `renasci run`")
+        raise ValueError("a replay may only change ripples, the run name and full_reads; "
+                         "for anything else, `renasci run`")
     if args.from_:
         target = world.calendar.parse(args.from_)
     else:
@@ -132,6 +133,9 @@ def cmd_diff(args) -> int:
     print(f"{report['divergent_events']} of {report['events']} events diverge; "
           f"{report['unexplained_events']} unexplained events, {report['unexplained_entities']} unexplained "
           f"entities, {report['unexplained_cells']} unexplained cells")
+    if report["reads"] != "full":
+        print(f"  note: reads were kept as digests ({report['reads']}), so this check is coarser; "
+              "for the exact check, run both sides with full_reads = true")
     for e in report["unexplained"]["events"][:5]:
         print(f"  unexplained: {e['type']} {e['date']} {e['roles']}")
     clean = report["unexplained_events"] == report["unexplained_entities"] == report["unexplained_cells"] == 0
@@ -206,7 +210,7 @@ def cmd_bench(args) -> int:
         commit = "unknown"
     v = versions()
     row = {"date": datetime.date.today().isoformat(), "commit": commit, "engine": v["engine"], "python": v["python"],
-           "numpy": v["numpy"], "world": f"toy x{args.people}" + (" full reads" if args.full_reads else ""), "years": args.years, "people_start": people_start,
+           "numpy": v["numpy"], "world": f"toy x{args.people}" + (" full reads" if args.full_reads else " digest reads"), "years": args.years, "people_start": people_start,
            "people_peak": peak, "events": events, "seconds": round(seconds, 2),
            "years_per_s": round(args.years / seconds, 3), "events_per_s": round(events / seconds, 1),
            "run_mb": round(run_mb, 3)}

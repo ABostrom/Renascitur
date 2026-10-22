@@ -91,3 +91,41 @@ people_per_village = 4
     bad.write_text(recipe.read_text(encoding="utf-8").replace("full_reads = true", 'full_reads = "yes"'),
                    encoding="utf-8")
     assert main(["run", str(bad), "--out", str(tmp_path / "runs2")]) != 0  # reported, not run
+
+
+# ---------------------------------------------------------------- review fixes
+
+
+def test_the_report_says_how_reads_were_kept(runs):
+    full, hashed = runs["base"][1], runs["base"][0]
+    assert analyse(full[0], full[0], full[1], full[1])["reads"] == "full"
+    assert analyse(hashed[0], hashed[0], hashed[1], hashed[1])["reads"] == "digest"
+    assert analyse(full[0], hashed[0], full[1], hashed[1])["reads"] == "mixed"
+
+
+def test_a_replay_may_change_full_reads_and_diff_warns_about_digests(tmp_path, capsys):
+    text = """
+[run]
+name = "{n}"
+engine = "0.1.0"
+seed = 1234
+world = "toy"
+end = "1X 4"
+checkpoint_every_years = 2
+{extra}
+[world]
+people_per_village = 4
+{ripple}
+"""
+    ripple = '[[ripple]]\nid = "r1"\nkind = "doom"\ndate = "1X 3"\ntarget = "t:Brook-02"\n'
+    base, variant = tmp_path / "b.toml", tmp_path / "v.toml"
+    base.write_text(text.format(n="base", extra="", ripple=""), encoding="utf-8")
+    variant.write_text(text.format(n="var", extra="full_reads = true", ripple=ripple), encoding="utf-8")
+    out = tmp_path / "runs"
+    assert main(["run", str(base), "--out", str(out)]) == 0
+    assert main(["replay", str(out / "base"), "--recipe", str(variant), "--out", str(out)]) == 0
+    capsys.readouterr()
+    main(["diff", str(out / "base"), str(out / "var")])
+    printed = capsys.readouterr().out
+    report = json.loads((out / "var" / "analysis" / "divergence.json").read_text(encoding="utf-8"))
+    assert report["reads"] in ("digest", "mixed") and "full_reads" in printed

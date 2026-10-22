@@ -166,7 +166,9 @@
 					{event.source?.[1]}{detail.scope.scope ? ` in ${detail.scope.scope}` : ''} read {n}
 					field{n === 1 ? '' : 's'}, informing {detail.scope.events.length} event{detail.scope.events.length === 1 ? '' : 's'}.
 				</p>
-				{#if !detail.scope.reads}
+				{#if n === 0}
+					<!-- nothing read: the line above says so -->
+				{:else if !detail.scope.reads}
 					<p class="muted">
 						This run kept one digest of those reads (<span class="mono">{detail.scope.digest}</span>), which is enough
 						to tell whether the scope saw different inputs. Run with <code>full_reads = true</code> to keep each one.

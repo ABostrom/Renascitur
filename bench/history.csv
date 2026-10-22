@@ -1,3 +1,3 @@
 date,commit,engine,python,numpy,world,years,people_start,people_peak,events,seconds,years_per_s,events_per_s,run_mb
-2026-10-22,994a47a6,0.1.0,3.12,2.5,toy x100,300,600,764,23081,228.7,1.312,100.9,68.784
-2026-10-22,bdb88db0-dirty,0.1.0,3.12,2.5,toy x100,300,600,764,23081,193.56,1.55,119.2,17.817
+2026-10-22,994a47a6,0.1.0,3.12,2.5,toy x100 full reads,300,600,764,23081,228.7,1.312,100.9,68.784
+2026-10-22,bdb88db0-dirty,0.1.0,3.12,2.5,toy x100 digest reads,300,600,764,23081,193.56,1.55,119.2,17.817
