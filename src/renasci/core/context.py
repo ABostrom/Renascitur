@@ -141,7 +141,7 @@ class Ctx:
         `{"child": [("person", {"village": v})]}`. Their ids are causal, `entity_id(event, role, i)`,
         and they are created by this event (each kind needs `new:<kind>` in `writes`).
         """
-        if self._engine.strict and type not in {t.name for t in self.system.event_types}:
+        if self._engine.strict and not type.startswith("lod.") and type not in {t.name for t in self.system.event_types}:
             raise UndeclaredAccess(f"{self.system.name} emitted {type!r} without declaring it")
         key = (actor, purpose)
         occurrence = self._occurrences.get(key, 0)
@@ -183,6 +183,29 @@ class Ctx:
             if h["event"] is None:
                 h["event"] = event.id
         return event
+
+    # ------------------------------------------------------------ level of detail
+
+    def promote(self, aggregate: str, kind: str, fields: dict, *, reason: str, column: str | None = None) -> str:
+        """Pull a named individual out of `aggregate`. With `column`, the aggregate's count drops by one."""
+        if column is not None:
+            count = self.read_column(column, [aggregate])[0]
+            if count <= 0:
+                raise ValueError(f"cannot promote from {aggregate}: {column} is {count}")
+        event = self.emit("lod.promote", {"aggregate": (aggregate,)}, purpose=f"promote:{reason}", actor=aggregate,
+                          payload={"reason": reason}, creates={"individual": [(kind, fields)]})
+        if column is not None:
+            self.write_column(column, [aggregate], [count - 1])
+        return event.roles["individual"][0]
+
+    def demote(self, entity: str, *, reason: str, column: str | None = None, aggregate: str | None = None) -> None:
+        """Fade an individual back into the mass: a dormant record that keeps its history."""
+        roles = {"individual": (entity,)} | ({"aggregate": (aggregate,)} if aggregate else {})
+        self.emit("lod.demote", roles, purpose=f"demote:{reason}", actor=entity, payload={"reason": reason})
+        self.set_status(entity, "dormant")
+        if column is not None and aggregate is not None:
+            count = self.read_column(column, [aggregate])[0]
+            self.write_column(column, [aggregate], [count + 1])
 
     # ------------------------------------------------------------ pins
 
