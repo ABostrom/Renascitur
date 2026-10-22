@@ -103,7 +103,7 @@ A settlement's column changes in one step are written **together** as one bulk d
 - **Models:**
   - `dominant`: the first variant in `order` that is present shows;
   - `additive`: allele effects sum;
-  - `threshold`: sums above a cut-off show a trait (polygenic gifts).
+  - `threshold`: sums that reach a required cut-off show a trait (polygenic gifts).
 - **Groups** give founder frequencies. A settlement names its group, and a race can override it.
 
 ### 3.2 Alleles carry their origin
