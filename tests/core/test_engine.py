@@ -138,8 +138,8 @@ def test_actual_reads_are_recorded_per_activation():
     e = make()
     e.run(until=Date(1, 1, 0))
     rows = e.reads
-    assert rows and all(set(r) == {"activation", "reads"} for r in rows)
-    counter = next(r for r in rows if ["t:world", "count"] in r["reads"])
+    assert rows and all(set(r) == {"activation", "scope", "reads", "events"} for r in rows)
+    counter = next(r for r in rows if ["t:world", "count"] in [k[:2] for k in r["reads"]])
     assert counter["activation"].startswith("a")
 
 
@@ -260,7 +260,7 @@ def test_listing_ids_records_every_status_it_looked_at():
     e.cast("person", "t:a", {})
     e.cast("person", "t:b", {})
     e.run(until=Date(1, 1, 0))
-    reads = e.reads[0]["reads"]
+    reads = [k[:2] for k in e.reads[0]["reads"]]
     assert ["t:a", "status"] in reads and ["t:b", "status"] in reads and ["$person", "ids"] in reads
 
 
@@ -347,7 +347,7 @@ def test_exists_and_kind_are_recorded_reads():
 
     e = make([(Date(1, 1, 0), Ruleset("p", 1, (Prober(),)))])
     e.run(until=Date(1, 1, 0))
-    reads = e.reads[0]["reads"]
+    reads = [k[:2] for k in e.reads[0]["reads"]]
     assert ["t:world", "status"] in reads and ["t:nowhere", "status"] in reads
 
 
@@ -356,3 +356,60 @@ def test_engine_remembers_which_ruleset_is_active():
     e = make(rs)
     e.run(until=Date(1, 2, 0))
     assert e.ruleset_index == 1
+
+
+# ---------------------------------------------------------------- scoped reads and the activations table
+
+
+class Scoped(System):
+    name, cadence = "toy.scoped", "yearly"
+    reads = frozenset({"count"})
+    writes = frozenset({"count"})
+    event_types = (TICK,)
+
+    def run(self, ctx):
+        ctx.get("t:world", "count")  # unscoped: applies to everything this activation does
+        for v in ("t:a", "t:b"):
+            with ctx.scope(v):
+                n = ctx.get(v, "count")
+                ctx.emit("toy.tick", {"subject": (v,)}, payload={"n": n + 1}, purpose="tick", actor=v)
+                ctx.set(v, "count", n + 1)
+
+
+def test_reads_are_recorded_per_scope_with_the_events_they_informed():
+    e = make([(Date(1, 1, 0), Ruleset("s", 1, (Scoped(),)))])
+    e.cast("place", "t:a", {"count": 0})
+    e.cast("place", "t:b", {"count": 0})
+    e.run(until=Date(1, 1, 0))
+    rows = {r["scope"]: r for r in e.reads}
+    keys = lambda row: [k[:2] for k in row["reads"]]  # noqa: E731
+    assert keys(rows[None]) == [["t:world", "count"]] and rows[None]["events"] == []
+    a_tick = next(ev.id for ev in e.events if ev.type == "toy.tick" and ev.roles["subject"] == ("t:a",))
+    assert keys(rows["t:a"]) == [["t:a", "count"]] and rows["t:a"]["events"] == [a_tick]
+    assert keys(rows["t:b"]) == [["t:b", "count"]]
+    from renasci.core.canon import digest
+
+    assert rows["t:a"]["reads"][0][2] == digest(0)  # the value seen is recorded too
+
+
+def test_scopes_do_not_nest():
+    class Nested(Scoped):
+        name = "toy.nested"
+
+        def run(self, ctx):
+            with ctx.scope("t:a"):
+                with ctx.scope("t:b"):
+                    pass
+
+    e = make([(Date(1, 1, 0), Ruleset("n", 1, (Nested(),)))])
+    with pytest.raises(ValueError):
+        e.run(until=Date(1, 1, 0))
+
+
+def test_every_dispatched_activation_is_listed_in_order():
+    e = make()
+    e.run(until=Date(1, 1, 59))
+    acts = e.pending()["activations"]
+    assert [a["system"] for a in acts[:2]] == ["toy.counter", "toy.yearly"]
+    assert all(set(a) == {"activation", "system", "date", "causes"} for a in acts)
+    assert len({a["activation"] for a in acts}) == len(acts)

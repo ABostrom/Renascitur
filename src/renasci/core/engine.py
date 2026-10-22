@@ -77,6 +77,7 @@ class Engine:
         self.director = Director()
         self.ripples: tuple[Ripple, ...] = ()
         self.ripple_log: list[dict] = []  # pending history
+        self.activations: list[dict] = []  # pending history: every activation run, in order
         self._date: Date | None = None
 
         self._register(CAST)
@@ -185,6 +186,7 @@ class Engine:
             "strain": list(self.director.strain),
             "ripples": list(self.ripple_log),
             "pins": list(self.director.changes),
+            "activations": list(self.activations),
         }
 
     def clear_pending(self) -> None:
@@ -193,6 +195,7 @@ class Engine:
         self.director.strain = []
         self.director.changes = []
         self.ripple_log = []
+        self.activations = []
         self.store.drain()
 
     # ------------------------------------------------------------ running
@@ -277,6 +280,7 @@ class Engine:
 
     def _apply_ripple(self, activation: Activation) -> None:
         r = next(x for x in self.ripples if x.id == activation.payload["ripple"])
+        self._note_activation(activation)
         roles = {"target": (r.target,)} if self.store.exists(r.target) else {}
         secret = self.record(Event(event_id("engine", r.target, f"ripple:{r.id}", r.date, 0, activation.id),
                                    r.date, f"ripple.{r.kind}", roles, None, (), {"target": r.target, "params": r.params},
@@ -326,10 +330,14 @@ class Engine:
 
     def finish(self, ctx: Ctx) -> None:
         """Keep what a completed activation produced besides events and writes: hinges and reads."""
+        self._note_activation(ctx.activation)
         self.hinges.extend(ctx.hinges)
-        reads = ctx.recorded_reads()
-        if reads:
-            self.reads.append({"activation": ctx.activation.id, "reads": reads})
+        self.reads.extend(ctx.read_rows())
+
+    def _note_activation(self, activation: Activation) -> None:
+        self.activations.append({"activation": activation.id, "system": activation.system,
+                                 "date": activation.date.to_json(),
+                                 "causes": [c.to_json() for c in activation.causes]})
 
     def _dispatch(self, activation: Activation) -> None:
         system = self.ruleset.get_any(activation.system)
