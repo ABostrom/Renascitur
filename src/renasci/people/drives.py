@@ -4,7 +4,8 @@ A drive is a class with a `name`, the fields it `reads`, and `level(ctx, person,
 starter set reads only what exists so far; deeper systems (food and harvests in S10, violence in S7
 and S8) will feed them later without changing their shape.
 
-- `food`: how crowded the settlement is (masses + notables against its capacity), until S10 has food.
+- `food`: how crowded the settlement is (masses + notables against its capacity, or notables alone in a
+  world without aggregates), until S10 has food.
 - `safety`: one minus the settlement's `danger` (0 when unset).
 - `belonging`: a spouse, living children, and the strength of one's ties.
 - `status`: one's house and its rank, offices held, and being an heir is S7's to add.

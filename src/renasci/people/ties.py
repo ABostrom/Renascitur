@@ -7,8 +7,10 @@ rebuilt from `state_deltas`.
 
 `people.ties` (yearly) runs one `ctx.scope(settlement)` per settlement:
 
-- **Upkeep.** Each live tie is kept by its first member who lives here. It weakens by `tie_decay` a
-  year and ends below 0.1.
+- **Upkeep.** Each live tie is kept once a year, in the scope of its member `a` (always a resident
+  somewhere while the tie lives). Living together, it strengthens or weakens by `tie_decay`, a keyed
+  draw that leans to strengthening (`tie_keep`, default 0.5); living apart, it weakens by twice that.
+  It ends below 0.1, so lifespans vary and strength says how close a tie has stayed.
 - **Endings at once:** a death (`life.die`) or a fade into the masses (`population.demote_person`)
   ends that person's ties straight away, through `end_ties`.
 - **Forming.** Each adult resident with room for more (`max_ties`) forms a tie with `tie_rate` a
@@ -55,7 +57,7 @@ def quantise(x: float) -> float:
 class Ties(System):
     name, cadence = "people.ties", "yearly"
     reads = frozenset({"ids:settlement", "residents", "ties", "status", "born", "house", "a", "b", "kind",
-                       "strength", "ended"})
+                       "strength", "ended", "place"})
     writes = frozenset({"ties", "strength", "ended", "new:tie"})
     event_types = EVENT_TYPES
 
@@ -74,10 +76,16 @@ class Ties(System):
         for p in sorted(here):
             for t in ctx.get(p, "ties") or []:
                 a, b = ctx.get(t, "a"), ctx.get(t, "b")
-                other = b if p == a else a
-                if p == b and a in here:
-                    continue  # kept by a
-                strength = quantise(ctx.get(t, "strength") - decay)
+                if p != a:
+                    continue  # kept by a, wherever a lives
+                if ctx.get(b, "place") == settlement:
+                    up = ctx.chance(float(ctx.params.get("tie_keep", 0.5)), "tie_keep", owner=t)
+                    step = decay if up else -decay
+                else:
+                    step = -2 * decay
+                strength = quantise(ctx.get(t, "strength") + step)
+                if strength == ctx.get(t, "strength"):
+                    continue
                 changes.append((t, a, b, strength, "faded" if strength < 0.1 else None))
         if not changes:
             return

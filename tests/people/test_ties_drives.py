@@ -18,6 +18,7 @@ def world():
     e.full_reads = True
     e.run(until=MID)
     e.mid = {p: (e.store.get(p, "ties"), e.store.get(p, "drives")) for p in e.store.ids("person")}
+    e.mid_ties = {t: (e.store.get(t, "strength"), e.store.get(t, "ended")) for t in e.store.ids("tie")}
     e.mid_history = e.pending()
     e.run(until=END)
     return e
@@ -70,13 +71,12 @@ def as_of(rows, entity, field, date):
 
 def test_ties_and_drives_can_be_rebuilt_as_of_any_date(world):
     deltas = history(world)["state_deltas"]
-    checked = 0
-    for p, (ties, drives) in sorted(world.mid.items())[:200]:
-        if world.store.status(p) == "active" and ties is not None:
-            assert (as_of(deltas, p, "ties", MID) or []) == (ties or [])
-            assert (as_of(deltas, p, "drives", MID) or {}) == (drives or {})
-            checked += 1
-    assert checked > 50
+    for p, (ties, drives) in sorted(world.mid.items()):  # everyone, including those who died after MID
+        assert (as_of(deltas, p, "ties", MID) or []) == (ties or [])
+        assert (as_of(deltas, p, "drives", MID) or {}) == (drives or {})
+    for t, (strength, ended) in sorted(world.mid_ties.items()):
+        assert as_of(deltas, t, "strength", MID) == strength and as_of(deltas, t, "ended", MID) == ended
+    assert len(world.mid_ties) > 50
 
 
 # ---------------------------------------------------------------- drives
@@ -130,3 +130,57 @@ def test_a_protect_ripple_with_ties_and_drives_is_fully_explained(world):
     assert report["divergent_events"] > 0
     assert report["unexplained_events"] == report["unexplained_entities"] == report["unexplained_cells"] == 0, \
         report["unexplained"]
+
+
+# ---------------------------------------------------------------- review fixes
+
+
+def test_ties_last_as_long_as_they_are_kept_up(world):
+    """Strength means something: lives together, and tie lifespans vary."""
+    store = world.store
+    spans = set()
+    for ev in world.events:
+        if ev.type == "people.tie_ended" and ev.payload["why"] == "faded":
+            t = ev.roles["tie"][0]
+            spans.add(ev.date.year - store.get(t, "since")[1])
+    assert len(spans) >= 4
+
+
+def test_endings_say_why(world):
+    whys = {ev.payload["why"] for ev in world.events if ev.type == "people.tie_ended"}
+    assert {"death", "faded"} <= whys and whys <= {"death", "faded", "demoted"}
+
+
+def test_a_tie_between_settlements_is_kept_once_a_year(world):
+    store = world.store
+    upkeep_writes = {}
+    for d in history(world)["state_deltas"]:
+        if d["field"] == "strength" and d["old"] is not None:
+            key = (d["entity"], d["date"][1])
+            upkeep_writes[key] = upkeep_writes.get(key, 0) + 1
+    assert upkeep_writes and max(upkeep_writes.values()) == 1
+    assert store  # (state untouched)
+
+
+def test_a_ripple_on_someone_tied_across_settlements_is_explained(world):
+    store = world.store
+    split = None
+    for t in store.ids("tie"):
+        a, b = store.get(t, "a"), store.get(t, "b")
+        if store.get(t, "ended") is None and store.get(a, "place") != store.get(b, "place"):
+            split = a
+            break
+    if split is None:
+        pytest.skip("no tie spans settlements in this world")
+    when = next((ev.date for ev in world.events if ev.type == "people.death"
+                 and ev.roles["deceased"] == (split,)), None)
+    target = split
+    variant = new_engine(people_per_settlement=20, ripples=[
+        Ripple("r1", "protect", Date(1, 2, 0), target, {"until": [1, 30, 359]})])
+    variant.full_reads = True
+    variant.run(until=END)
+    report = analyse(world.pending(), variant.pending(), world.store.to_json(), variant.store.to_json(),
+                     ripples=["r1"])
+    assert report["unexplained_events"] == report["unexplained_entities"] == report["unexplained_cells"] == 0, \
+        report["unexplained"]
+    assert when is None or report["divergent_events"] > 0

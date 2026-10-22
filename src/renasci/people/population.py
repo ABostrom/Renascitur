@@ -236,7 +236,7 @@ def demote_person(ctx, person: str, settlement: str, *, reason: str) -> None:
     ctx.demote(person, reason=reason, aggregate=settlement, columns=give)
     from renasci.people.ties import end_ties
 
-    end_ties(ctx, person, "faded")
+    end_ties(ctx, person, "demoted")
     ctx.set(settlement, "residents", [p for p in ctx.get(settlement, "residents") if p != person])
     _bump(ctx, settlement, demoted=1)
 
