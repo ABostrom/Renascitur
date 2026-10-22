@@ -137,7 +137,7 @@ The CLI uses `argparse`, so there's no extra dependency. `renasci/__init__.py` s
   place or aggregate id they act on (`ctx.rng(purpose, entity=place_id)`). Otherwise one extra
   stream opened early in a tick would shift every later draw in that tick.
 - `ctx.rng(purpose, entity=None) -> Stream`. A stream has `random()`, `integers()`, `normal()`,
-  `choice_weights()` and array forms for aggregates.
+  `choice_index(weights)`, and `size=` array forms for aggregates. Systems get streams only via `rng.open(table, system, entity, purpose, tick)`, which counts the occurrence and builds the stream in one step. A stream lives inside one activation and never spans a checkpoint.
 - **Reshuffle** (the format slot only in S1; behaviour in #114): a recipe entry
   `reshuffle(from_date, salt)` sets `salt` for every key whose canonical tick is ≥ `from_date`. In S1,
   `salt` is always empty.
