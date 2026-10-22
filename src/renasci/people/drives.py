@@ -66,7 +66,7 @@ class Belonging(Drive):
 
 
 class Status(Drive):
-    name, reads = "status", frozenset({"house", "rank", "offices"})
+    name, reads = "status", frozenset({"house", "rank", "offices", "favour"})
 
     def level(self, ctx, person, settlement):
         house = ctx.get(person, "house")
@@ -75,6 +75,7 @@ class Status(Drive):
             rank = int(ctx.get(house, "rank") or 0)
             x += 0.3 + 0.2 * rank / (rank + 2)
         x += 0.3 * min(1, len(ctx.get(person, "offices") or []))
+        x += 0.3 * float(ctx.get(person, "favour") or 0.0)  # court favour (S7 CourtFavour)
         return x
 
 

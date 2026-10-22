@@ -4,6 +4,7 @@ world params, and its conservation check. Kin and the Fourth Age are both built 
 from __future__ import annotations
 
 from renasci.core.systems import Ruleset
+from renasci.people.ambitions import Ambitions
 from renasci.people.canon import FORCERS
 from renasci.people.drives import Drives
 from renasci.people.families import Marriage
@@ -17,6 +18,6 @@ from renasci.people.ties import Ties
 def people_ruleset(name: str, scenario: dict, version: int = 1) -> Ruleset:
     params = world_params(scenario["races"], scenario["catalogue"], aggregates=True,
                           **{k: v for k, v in scenario.get("params", {}).items() if k != "aggregates"})
-    return Ruleset(name, version, (Population(), Births(), Life(), Marriage(), Houses(), Lod(), Ties(), Drives()),
+    return Ruleset(name, version, (Population(), Births(), Life(), Marriage(), Houses(), Lod(), Ties(), Drives(), Ambitions()),
                    params=params, forcers=FORCERS,
                    conservation=conservation(Catalogue.from_json(scenario["catalogue"])))

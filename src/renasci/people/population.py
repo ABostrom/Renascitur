@@ -246,7 +246,7 @@ class Lod(System):
 
     name, cadence = "people.lod", "yearly"
     reads = COLUMN_READS | {"ids:settlement", "residents", "notable_target", "house", "offices", "spouse", "children",
-                            "born", "status", "sex", "genome", "race", "ties", "a", "b", "kind"}
+                            "born", "status", "sex", "genome", "race", "ties", "a", "b", "kind", "ambitions"}
     writes = frozenset({"pop:*", "allele:*", "flow:*", "residents", "status", "ties", "ended"})
     event_types = LOD_TYPES + (TIE_ENDED,)
 
@@ -274,6 +274,8 @@ class Lod(System):
         """An adult commoner with no spouse and no young child: nobody's story needs them named."""
         if ctx.get(p, "house") is not None or ctx.get(p, "offices") or ctx.get(p, "spouse") is not None:
             return False
+        if ctx.get(p, "ambitions"):
+            return False  # the ambitious are never demoted (master spec §5.10)
         if age_years(ctx.calendar, ctx.get(p, "born"), ctx.today) < races[ctx.get(p, "race")].marriage[0]:
             return False
         return not any(ctx.status(c) == "active" and age_years(ctx.calendar, ctx.get(c, "born"), ctx.today) < 16

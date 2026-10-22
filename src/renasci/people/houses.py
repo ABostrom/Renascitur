@@ -112,6 +112,13 @@ def vacate(ctx, person: str) -> None:
         ctx.schedule(Span(days=1), "succession", entity=office, payload={"office": office, "predecessor": person})
 
 
+def handle_succession(ctx, activation) -> None:
+    """The follow-up `vacate` schedules on whichever system called `life.die`."""
+    if activation.purpose != "succession":
+        raise ValueError(f"{ctx.system.name} has no follow-up {activation.purpose!r}")
+    succeed(ctx, activation.payload["office"], activation.payload["predecessor"])
+
+
 def succeed(ctx, office: str, predecessor: str) -> None:
     """The next in line takes the office, in the house's scope; with nobody left, the house dies out."""
     house = ctx.get(office, "house")
