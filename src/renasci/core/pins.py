@@ -97,7 +97,8 @@ class Forcer(System):
 
     handles: str = ""
 
-    def force(self, ctx, pin: Pin) -> bool:
+    def force(self, ctx, pin: Pin) -> bool | str:
+        """Construct the pinned event and return True; or return False, or a reason, if it can't."""
         raise NotImplementedError
 
 
@@ -266,13 +267,14 @@ class Director:
             self._check_orderings(date)
             return
         forcer = engine.ruleset.forcer(pin.payload["type"]) if engine.ruleset else None
-        forced, ctx = False, None
+        forced, ctx, result = False, None, None
         if forcer is not None:
             ctx = ctx_factory(forcer, pin)
             ctx._note((f"pin:{pin.id}", "status"), self.status.get(pin.id))  # forcing depends on it being unmet
             self._forcing = pin.id
             try:
-                forced = bool(forcer.force(ctx, pin)) and self.status.get(pin.id) == "forced"
+                result = forcer.force(ctx, pin)  # True, or False / a reason why it couldn't
+                forced = result is True and self.status.get(pin.id) == "forced"
             finally:
                 self._forcing = None
             engine.finish(ctx)
@@ -280,7 +282,8 @@ class Director:
             self._log("force", pin, date, ctx.activation.id)
         else:
             self._set(pin, "violated", date)
-            self._log("violated", pin, date, reason="no forcer could construct it")
+            why = result if isinstance(result, str) else "no forcer could construct it"
+            self._log("violated", pin, date, reason=why)
             bind = pin.payload.get("bind")
             for other in self.pins:  # the canon id it would have bound will never exist
                 if bind and other.kind == "existence" and other.subject == bind["subject"] \

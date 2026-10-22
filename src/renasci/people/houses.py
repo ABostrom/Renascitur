@@ -27,7 +27,7 @@ from renasci.core.events import EventType
 from renasci.core.systems import System
 
 HEIR_NAMED = EventType("people.heir_named", 1, roles={"holder": (1, 1), "heir": (0, 1)}, payload={"office": "id"})
-SUCCESSION = EventType("people.succession", 1, roles={"predecessor": (1, 1), "successor": (1, 1)},
+SUCCESSION = EventType("people.succession", 1, roles={"predecessor": (0, 1), "successor": (1, 1)},
                        payload={"office": "id", "abdication": "bool"}, dead_roles=("predecessor",))
 HOUSE_EXTINCT = EventType("people.house_extinct", 1, roles={"last": (1, 1)}, payload={"house": "id"},
                           dead_roles=("last",))

@@ -356,6 +356,12 @@ class Ctx:
         ripple = None if pin is not None else self._engine.protection(entity, self.today)
         return pin, ripple
 
+    def resolve(self, entity: str) -> str:
+        """The sim entity a canon id was bound to (by a birth pin), or the id itself. A recorded read."""
+        bound = self._engine.director.resolve(entity)
+        self._note((entity, "binding"), bound)
+        return bound
+
     def protected(self, entity: str) -> bool:
         """Is `entity` protected (by a pin or a ripple) today? Recorded as the same read as `guarded`,
         but nothing is guarded: no cause for the next event, no guard logged. For decisions that just

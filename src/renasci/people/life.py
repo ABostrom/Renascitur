@@ -167,33 +167,62 @@ class Births(System):
 
     def _birth(self, ctx, settlement: str, mother: str, father: str, race: Race, catalogue: Catalogue,
                house_from: str) -> None:
-        twins = ctx.chance(race.twins, "twins", owner=mother)
-        birth = ctx.peek_event_id(mother, "birth")  # a mutated copy's origin is this birth
-        children, mutated, names = [], [], []
-        for _ in range(2 if twins else 1):
-            sex = "m" if ctx.chance(race.male, "sex", owner=mother) else "f"
-            pool = [n for n in race.names[sex] if n not in names] or list(race.names[sex])  # twins differ
-            name = pool[ctx.rng("name", mother).choice_index([1.0] * len(pool))]
-            names.append(name)
-            seed = int(ctx.rng("meiosis", mother).integers(0, 2**62))  # one stream per child, sub-keyed per locus
-            genome, mutations = inherit(catalogue, ctx.get(mother, "genome"), ctx.get(father, "genome"),
-                                        keyed(seed), birth)
-            mutated.append(len(mutations))
-            parent = mother if house_from == "mother" else father
-            children.append(("person", {
-                "name": name, "sex": sex, "born": ctx.today.to_json(), "race": race.id, "place": settlement,
-                "house": ctx.get(parent, "house"), "mother": mother, "father": father, "children": [],
-                "spouse": None, "genome": genome, "traits": phenotype(catalogue, genome, {}),
-                "drives": {}, "ties": [], "last_birth": None, "offices": []}))
-        event = ctx.emit("people.birth", {"mother": (mother,), "father": (father,)}, purpose="birth", actor=mother,
-                         place=settlement, payload={"twin": twins, "mutations": sum(mutated)},
-                         creates={"child": children})
-        assert event.id == birth
-        born = list(event.roles["child"])
-        # Spouses always live in the same settlement (marriage moves one of them), so the father's
-        # `children` is read and written inside this settlement's scope.
-        for parent in (mother, father):
+        give_birth(ctx, settlement, mother, father, race, catalogue, house_from)
+
+
+def give_birth(ctx, settlement: str, mother: str, father: str | None, race: Race, catalogue: Catalogue,
+               house_from: str, sex: str | None = None) -> list[str]:
+    """A birth to `mother` (and `father`, if known) in `settlement`: the child or twins, their genomes,
+    and everything a birth updates. `sex` fixes the child's sex (a pinned heir); the draw is still made."""
+    twins = ctx.chance(race.twins, "twins", owner=mother)
+    birth = ctx.peek_event_id(mother, "birth")  # a mutated copy's origin is this birth
+    children, mutated, names = [], [], []
+    for _ in range(2 if twins else 1):
+        drawn = "m" if ctx.chance(race.male, "sex", owner=mother) else "f"
+        child_sex = sex or drawn
+        pool = [n for n in race.names[child_sex] if n not in names] or list(race.names[child_sex])  # twins differ
+        name = pool[ctx.rng("name", mother).choice_index([1.0] * len(pool))]
+        names.append(name)
+        seed = int(ctx.rng("meiosis", mother).integers(0, 2**62))  # one stream per child, sub-keyed per locus
+        genome, mutations = inherit(catalogue, ctx.get(mother, "genome"),
+                                    ctx.get(father, "genome") if father else None, keyed(seed), birth,
+                                    unknown=None if father else _settlement_stock(ctx, settlement, catalogue))
+        mutated.append(len(mutations))
+        parent = mother if house_from == "mother" or father is None else father
+        children.append(("person", {
+            "name": name, "sex": child_sex, "born": ctx.today.to_json(), "race": race.id, "place": settlement,
+            "house": ctx.get(parent, "house"), "mother": mother, "father": father, "children": [],
+            "spouse": None, "genome": genome, "traits": phenotype(catalogue, genome, {}),
+            "drives": {}, "ties": [], "last_birth": None, "offices": []}))
+    event = ctx.emit("people.birth", {"mother": (mother,), "father": (father,) if father else ()}, purpose="birth",
+                     actor=mother,
+                     place=settlement, payload={"twin": twins, "mutations": sum(mutated)},
+                     creates={"child": children})
+    assert event.id == birth
+    born = list(event.roles["child"])
+    # Spouses always live in the same settlement (marriage moves one of them), so the father's
+    # `children` is read and written inside this settlement's scope.
+    for parent in (mother, father):
+        if parent:
             ctx.set(parent, "children", ctx.get(parent, "children") + born)
-        ctx.set(mother, "last_birth", ctx.today.to_json())
-        ctx.set(settlement, "residents", sorted(ctx.get(settlement, "residents") + born))
-        population.bump(ctx, settlement, born=len(born))
+    ctx.set(mother, "last_birth", ctx.today.to_json())
+    ctx.set(settlement, "residents", sorted(ctx.get(settlement, "residents") + born))
+    population.bump(ctx, settlement, born=len(born))
+    return born
+
+
+def _settlement_stock(ctx, settlement: str, catalogue: Catalogue):
+    """An unknown father's copies come from the settlement's masses (or the catalogue's first group)."""
+    if ctx.params.get("aggregates"):
+        from renasci.people.population import allele_column
+
+        freqs = {}
+        for lo in catalogue.loci:
+            counts = ctx.read_columns(settlement, [allele_column(lo.id, v) for v in lo.variants])
+            total = sum(counts.values())
+            if total:
+                freqs[lo.id] = {v: counts[allele_column(lo.id, v)] / total for v in lo.variants}
+        if len(freqs) == len(catalogue.loci):
+            return freqs, f"f:{settlement}"
+    group = sorted(catalogue.groups)[0]
+    return catalogue.groups[group], f"f:{group}"
