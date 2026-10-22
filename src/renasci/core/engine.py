@@ -47,6 +47,7 @@ class Engine:
         self.causes = CauseIndex()
         self.events: list[Event] = []
         self.reads: list[dict] = []
+        self.hinges: list[dict] = []  # close calls with stakes: the source data for latch points
         self.dropped: list[str] = []
         self.ruleset: Ruleset | None = None
         self.ruleset_index: int | None = None

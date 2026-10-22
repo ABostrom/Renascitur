@@ -12,9 +12,11 @@ whenever an entity of that kind is created.
 from __future__ import annotations
 
 import json
+import math
 
 from renasci.core.calendar import Span
 from renasci.core.canon import canonical
+from renasci.core.choice import match, rendezvous
 from renasci.core.events import Cause, Event, Source
 from renasci.core.ids import event_id
 from renasci.core.scheduler import Activation
@@ -137,6 +139,35 @@ class Ctx:
         """A stream owned by `entity` (a person, place or aggregate). Every stream has an owner."""
         tick = self.calendar.canonical_tick(self.today)
         return self._engine.rng.open(self._engine.ordinals, self.system.name, entity, purpose, tick)
+
+    def _choice_key(self, purpose: str, owner: str) -> list:
+        tick = self.calendar.canonical_tick(self.today)
+        n = self._engine.ordinals.next(self.system.name, owner, f"choose:{purpose}", tick)
+        return [self._engine.rng.key(self.system.name, owner, f"choose:{purpose}", tick, n)]
+
+    def choose(self, purpose: str, candidates, *, owner: str, weights=None) -> str | None:
+        """Pick one candidate by rendezvous: a loser leaving never changes the winner."""
+        return rendezvous(self._choice_key(purpose, owner), candidates, weights)
+
+    def match(self, purpose: str, seekers: dict[str, list[str]], *, owner: str) -> dict[str, str]:
+        """Pair seekers with targets (e.g. a marriage market) without list-order coupling."""
+        return match(self._choice_key(purpose, owner), seekers)
+
+    def chance(self, p: float, purpose: str, *, owner: str, stakes: float | None = None,
+               roles: dict | None = None) -> bool:
+        """True with probability p. With `stakes`, the draw is recorded as a hinge (a latch-point source)."""
+        p = float(p)
+        if not (math.isfinite(p) and 0.0 <= p <= 1.0):
+            raise ValueError(f"probability must be in [0, 1], got {p!r}")
+        u = float(self.rng(purpose, owner).random())
+        outcome = u < p
+        if stakes is not None:
+            self._engine.hinges.append(json.loads(canonical({
+                "activation": self.activation.id, "date": self.today, "system": self.system.name,
+                "owner": owner, "purpose": purpose, "p": p, "u": u, "margin": abs(u - p),
+                "outcome": outcome, "stakes": float(stakes), "roles": roles or {},
+            })))
+        return outcome
 
     def schedule(self, after: Span, purpose: str, *, entity: str | None = None, payload: dict | None = None,
                  priority: int | None = None) -> Activation:
