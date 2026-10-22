@@ -2,7 +2,7 @@
 
     runs/<name>/
       manifest.json
-      <table>/seg-00000.jsonl.gz   closed segments (gzipped, byte-identical on every platform)
+      <table>/seg-00000.jsonl.gz   closed segments (gzip framing identical on every platform)
       <table>/seg-00003.jsonl      the open segment
 
 Every line is one canonical JSON object. Segments are cut at checkpoints (`cut`), so truncating a

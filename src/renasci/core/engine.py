@@ -27,7 +27,7 @@ __all__ = ["Engine", "UndeclaredAccess"]
 SWITCH_PRIORITY = -(10**9)
 CAST = EventType("engine.cast", 1, roles={"subject": (1, 1)}, payload={"kind": "str"})
 CAST_COLUMN = EventType("engine.cast_column", 1, roles={}, payload={"column": "str"})
-CHECKPOINT_FORMAT = 1
+CHECKPOINT_FORMAT = 2  # 2: recipe includes major.minor versions
 
 
 class Engine:

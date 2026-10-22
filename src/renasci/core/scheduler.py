@@ -127,7 +127,7 @@ class Scheduler:
             gone = {a.key() for a in removed}
             self._heap = [item for item in self._heap if item[0] not in gone]
             heapq.heapify(self._heap)
-            for k in gone:
+            for k in sorted(gone):
                 del self._keys[k]
         return removed
 

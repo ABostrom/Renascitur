@@ -28,6 +28,14 @@ SIM_CODE = [ROOT / "src" / "renasci" / "core", ROOT / "src" / "renasci" / "io"]
         "ys = tuple(set(names))",
         "for x in a | set(b): pass",
         "for x in set(a) - set(b): pass",
+        "s = set(x)\nfor k in s: pass",
+        "for k in set(a).union(b): pass",
+        "for k in a.union(b) if False else set(): pass",
+        "v = set(x).pop()",
+        "t = ', '.join(set(x))",
+        "t = sum({1.0, 2.0})",
+        "ys = list(map(f, set(x)))",
+        "f(*set(x))",
     ],
 )
 def test_the_checker_flags_set_iteration(code):
@@ -41,6 +49,8 @@ def test_the_checker_flags_set_iteration(code):
         "ys = sorted(set(names))",
         "ok = x in set(names)",
         "n = len(set(names))",
+        "m = min(set(names))",
+        "s = set(x)\nok = 3 in s",
         "for x in set(names):  # determinism: ok (order does not matter here)\n    pass",
     ],
 )
@@ -72,9 +82,25 @@ def test_check_environment_fails_when_threads_are_allowed(monkeypatch):
         check_environment()
 
 
-def test_versions_name_python_and_numpy():
+def test_versions_name_python_and_numpy_minor_versions_only():
     v = versions()
-    assert v["python"].startswith("3.12") and v["numpy"].startswith("2.5") and "engine" in v
+    assert v["python"] == "3.12" and v["numpy"] == "2.5" and "engine" in v  # patch upgrades keep checkpoints
+
+
+def test_numpy_imported_before_renasci_is_detected():
+    code = (
+        "import numpy\n"
+        "import renasci\n"
+        "from renasci.core.determinism import check_environment\n"
+        "try:\n"
+        "    check_environment()\n"
+        "    print('passed')\n"
+        "except RuntimeError:\n"
+        "    print('refused')\n"
+    )
+    env = {k: v for k, v in os.environ.items() if k not in ("OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS", "OMP_NUM_THREADS")}
+    out = subprocess.run([sys.executable, "-c", code], env=env, capture_output=True, text=True, check=True)
+    assert out.stdout.strip() == "refused"
 
 
 # ---------------------------------------------------------------- hash randomisation across processes
@@ -86,7 +112,7 @@ from mini_world import new_engine
 from renasci.core.calendar import Date
 from renasci.core.canon import digest
 e = new_engine()
-e.run(until=Date(1, 12, 359))
+e.run(until=Date(1, 25, 0))  # past the ruleset switch at 1X 20
 print(json.dumps({{"history": digest(e.pending(), size=16), "state": e.state_hash()}}))
 """
 
@@ -94,7 +120,7 @@ print(json.dumps({{"history": digest(e.pending(), size=16), "state": e.state_has
 def test_runs_match_across_hash_seeds():
     code = PROGRAM.format(helpers=str(ROOT / "tests" / "helpers"))
     results = []
-    for seed in ("0", "1", "12345"):
+    for seed in ("1", "2", "12345"):  # 0 would switch hash randomisation off
         env = dict(os.environ, PYTHONHASHSEED=seed)
         out = subprocess.run([sys.executable, "-c", code], env=env, capture_output=True, text=True, check=True)
         results.append(json.loads(out.stdout))
