@@ -1,49 +1,550 @@
 {
-  "regions": {
-    "t:Hollow": ["t:Hollow-1", "t:Hollow-2", "t:Hollow-3", "t:Hollow-4"],
-    "t:Ridge": ["t:Ridge-1", "t:Ridge-2", "t:Ridge-3", "t:Ridge-4"],
-    "t:Mere": ["t:Mere-1", "t:Mere-2", "t:Mere-3", "t:Mere-4"]
-  },
-  "region_race": {"t:Hollow": "k:folk", "t:Ridge": "k:folk", "t:Mere": "k:elder"},
-  "region_group": {"t:Hollow": "lowland", "t:Ridge": "upland", "t:Mere": "upland"},
-  "races": [
-    {"id": "k:folk",
-     "mortality": {
-       "f": [0.05, 0.006, 0.004, 0.006, 0.009, 0.01, 0.011, 0.012, 0.013, 0.016, 0.02, 0.026, 0.035, 0.05, 0.07, 0.1, 0.15, 0.22, 0.3, 0.45],
-       "m": [0.055, 0.006, 0.005, 0.008, 0.01, 0.011, 0.012, 0.013, 0.015, 0.018, 0.022, 0.03, 0.04, 0.055, 0.08, 0.11, 0.16, 0.24, 0.32, 0.47]},
-     "fertility": [0, 0, 0, 0.15, 0.3, 0.3, 0.25, 0.2, 0.12, 0.04, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-     "fertile": [16, 45], "spacing_days": 540, "marriage": [16, 60], "twins": 0.012, "male": 0.51,
-     "names": {"f": ["Ama", "Bera", "Cira", "Dena", "Elli", "Fara", "Gwen", "Hila", "Isa", "Jora"],
-               "m": ["Aric", "Bran", "Cael", "Dov", "Edm", "Fen", "Gar", "Hal", "Ivo", "Jory"]}},
-    {"id": "k:elder",
-     "mortality": {
-       "f": [0.03, 0.004, 0.003, 0.003, 0.004, 0.005, 0.005, 0.006, 0.006, 0.007, 0.008, 0.01, 0.012, 0.015, 0.02, 0.03, 0.045, 0.07, 0.12, 0.25],
-       "m": [0.032, 0.004, 0.003, 0.004, 0.005, 0.005, 0.006, 0.006, 0.007, 0.008, 0.009, 0.011, 0.013, 0.017, 0.023, 0.034, 0.05, 0.08, 0.13, 0.27]},
-     "fertility": [0, 0, 0, 0, 0.12, 0.15, 0.15, 0.15, 0.12, 0.1, 0.08, 0.05, 0.02, 0, 0, 0, 0, 0, 0, 0],
-     "fertile": [20, 64], "spacing_days": 900, "marriage": [20, 90], "twins": 0.004, "male": 0.5,
-     "names": {"f": ["Aelin", "Brisa", "Celeth", "Dwyn", "Eirwen"],
-               "m": ["Aldric", "Belan", "Corwen", "Daeron", "Eluan"]}}
-  ],
-  "catalogue": {
-    "loci": [
-      {"id": "eye", "variants": ["brown", "grey", "blue"], "model": "dominant", "order": ["brown", "grey", "blue"],
-       "mutation": 0.00001, "traits": {"eye": {"brown": 0, "grey": 0.5, "blue": 1}}},
-      {"id": "st1", "variants": ["+", "-"], "model": "additive", "mutation": 0.00001,
-       "traits": {"stature": {"+": 0.08, "-": -0.08}}},
-      {"id": "st2", "variants": ["+", "-"], "model": "additive", "mutation": 0.00001,
-       "traits": {"stature": {"+": 0.08, "-": -0.08}}},
-      {"id": "con", "variants": ["hale", "frail"], "model": "dominant", "order": ["hale", "frail"],
-       "mutation": 0.00001, "traits": {"constitution": {"hale": 0.6, "frail": 0.3}}},
-      {"id": "gift", "variants": ["g", "n"], "model": "threshold", "threshold": 2, "mutation": 0.00001,
-       "traits": {"gift": {"g": 1, "n": 0}}}
+ "params": {
+  "house_from": "father",
+  "residence": "husband",
+  "kin_degree": 2,
+  "market_rate": 0.35
+ },
+ "races": [
+  {
+   "id": "k:folk",
+   "mortality": {
+    "f": [
+     0.05,
+     0.006,
+     0.004,
+     0.006,
+     0.009,
+     0.01,
+     0.011,
+     0.012,
+     0.013,
+     0.016,
+     0.02,
+     0.026,
+     0.035,
+     0.05,
+     0.07,
+     0.1,
+     0.15,
+     0.22,
+     0.3,
+     0.45
     ],
-    "groups": {
-      "lowland": {"eye": {"brown": 0.7, "grey": 0.15, "blue": 0.15}, "st1": {"+": 0.5, "-": 0.5},
-                  "st2": {"+": 0.5, "-": 0.5}, "con": {"hale": 0.8, "frail": 0.2}, "gift": {"g": 0.05, "n": 0.95}},
-      "upland": {"eye": {"brown": 0.3, "grey": 0.4, "blue": 0.3}, "st1": {"+": 0.6, "-": 0.4},
-                 "st2": {"+": 0.6, "-": 0.4}, "con": {"hale": 0.85, "frail": 0.15}, "gift": {"g": 0.2, "n": 0.8}}
-    },
-    "traits": {"eye": {"base": 0}, "stature": {"base": 0.5, "range": [0, 1]}, "constitution": {"base": 0},
-               "gift": {"base": 0}}
+    "m": [
+     0.055,
+     0.006,
+     0.005,
+     0.008,
+     0.01,
+     0.011,
+     0.012,
+     0.013,
+     0.015,
+     0.018,
+     0.022,
+     0.03,
+     0.04,
+     0.055,
+     0.08,
+     0.11,
+     0.16,
+     0.24,
+     0.32,
+     0.47
+    ]
+   },
+   "fertility": [
+    0,
+    0,
+    0,
+    0.15,
+    0.3,
+    0.3,
+    0.25,
+    0.2,
+    0.12,
+    0.04,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "fertile": [
+    16,
+    45
+   ],
+   "spacing_days": 540,
+   "marriage": [
+    16,
+    60
+   ],
+   "twins": 0.012,
+   "male": 0.51,
+   "names": {
+    "f": [
+     "Ama",
+     "Bera",
+     "Cira",
+     "Dena",
+     "Elli",
+     "Fara",
+     "Gwen",
+     "Hila",
+     "Isa",
+     "Jora"
+    ],
+    "m": [
+     "Aric",
+     "Bran",
+     "Cael",
+     "Dov",
+     "Edm",
+     "Fen",
+     "Gar",
+     "Hal",
+     "Ivo",
+     "Jory"
+    ]
+   }
+  },
+  {
+   "id": "k:elder",
+   "mortality": {
+    "f": [
+     0.03,
+     0.004,
+     0.003,
+     0.003,
+     0.004,
+     0.005,
+     0.005,
+     0.006,
+     0.006,
+     0.007,
+     0.008,
+     0.01,
+     0.012,
+     0.015,
+     0.02,
+     0.03,
+     0.045,
+     0.07,
+     0.12,
+     0.25
+    ],
+    "m": [
+     0.032,
+     0.004,
+     0.003,
+     0.004,
+     0.005,
+     0.005,
+     0.006,
+     0.006,
+     0.007,
+     0.008,
+     0.009,
+     0.011,
+     0.013,
+     0.017,
+     0.023,
+     0.034,
+     0.05,
+     0.08,
+     0.13,
+     0.27
+    ]
+   },
+   "fertility": [
+    0,
+    0,
+    0,
+    0,
+    0.12,
+    0.15,
+    0.15,
+    0.15,
+    0.12,
+    0.1,
+    0.08,
+    0.05,
+    0.02,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "fertile": [
+    20,
+    64
+   ],
+   "spacing_days": 900,
+   "marriage": [
+    20,
+    90
+   ],
+   "twins": 0.004,
+   "male": 0.5,
+   "names": {
+    "f": [
+     "Aelin",
+     "Brisa",
+     "Celeth",
+     "Dwyn",
+     "Eirwen"
+    ],
+    "m": [
+     "Aldric",
+     "Belan",
+     "Corwen",
+     "Daeron",
+     "Eluan"
+    ]
+   }
   }
+ ],
+ "catalogue": {
+  "loci": [
+   {
+    "id": "eye",
+    "variants": [
+     "brown",
+     "grey",
+     "blue"
+    ],
+    "model": "dominant",
+    "order": [
+     "brown",
+     "grey",
+     "blue"
+    ],
+    "mutation": 1e-05,
+    "traits": {
+     "eye": {
+      "brown": 0,
+      "grey": 0.5,
+      "blue": 1
+     }
+    }
+   },
+   {
+    "id": "st1",
+    "variants": [
+     "+",
+     "-"
+    ],
+    "model": "additive",
+    "mutation": 1e-05,
+    "traits": {
+     "stature": {
+      "+": 0.08,
+      "-": -0.08
+     }
+    }
+   },
+   {
+    "id": "st2",
+    "variants": [
+     "+",
+     "-"
+    ],
+    "model": "additive",
+    "mutation": 1e-05,
+    "traits": {
+     "stature": {
+      "+": 0.08,
+      "-": -0.08
+     }
+    }
+   },
+   {
+    "id": "con",
+    "variants": [
+     "hale",
+     "frail"
+    ],
+    "model": "dominant",
+    "order": [
+     "hale",
+     "frail"
+    ],
+    "mutation": 1e-05,
+    "traits": {
+     "constitution": {
+      "hale": 0.6,
+      "frail": 0.3
+     }
+    }
+   },
+   {
+    "id": "gift",
+    "variants": [
+     "g",
+     "n"
+    ],
+    "model": "threshold",
+    "threshold": 2,
+    "mutation": 1e-05,
+    "traits": {
+     "gift": {
+      "g": 1,
+      "n": 0
+     }
+    }
+   }
+  ],
+  "groups": {
+   "lowland": {
+    "eye": {
+     "brown": 0.7,
+     "grey": 0.15,
+     "blue": 0.15
+    },
+    "st1": {
+     "+": 0.5,
+     "-": 0.5
+    },
+    "st2": {
+     "+": 0.5,
+     "-": 0.5
+    },
+    "con": {
+     "hale": 0.8,
+     "frail": 0.2
+    },
+    "gift": {
+     "g": 0.05,
+     "n": 0.95
+    }
+   },
+   "upland": {
+    "eye": {
+     "brown": 0.3,
+     "grey": 0.4,
+     "blue": 0.3
+    },
+    "st1": {
+     "+": 0.6,
+     "-": 0.4
+    },
+    "st2": {
+     "+": 0.6,
+     "-": 0.4
+    },
+    "con": {
+     "hale": 0.85,
+     "frail": 0.15
+    },
+    "gift": {
+     "g": 0.2,
+     "n": 0.8
+    }
+   }
+  },
+  "traits": {
+   "eye": {
+    "base": 0
+   },
+   "stature": {
+    "base": 0.5,
+    "range": [
+     0,
+     1
+    ]
+   },
+   "constitution": {
+    "base": 0
+   },
+   "gift": {
+    "base": 0
+   }
+  }
+ },
+ "regions": {
+  "t:Hollow": [
+   "t:Hollow-1",
+   "t:Hollow-2",
+   "t:Hollow-3",
+   "t:Hollow-4"
+  ],
+  "t:Ridge": [
+   "t:Ridge-1",
+   "t:Ridge-2",
+   "t:Ridge-3",
+   "t:Ridge-4"
+  ],
+  "t:Mere": [
+   "t:Mere-1",
+   "t:Mere-2",
+   "t:Mere-3",
+   "t:Mere-4"
+  ]
+ },
+ "settlements": [
+  {
+   "id": "t:Hollow-1",
+   "region": "t:Hollow",
+   "race": "k:folk",
+   "genome_group": "lowland",
+   "masses": 200,
+   "commoners": 20,
+   "capacity": 440,
+   "notable_target": 20,
+   "danger": 0.0
+  },
+  {
+   "id": "t:Hollow-2",
+   "region": "t:Hollow",
+   "race": "k:folk",
+   "genome_group": "lowland",
+   "masses": 200,
+   "commoners": 20,
+   "capacity": 440,
+   "notable_target": 20,
+   "danger": 0.0
+  },
+  {
+   "id": "t:Hollow-3",
+   "region": "t:Hollow",
+   "race": "k:folk",
+   "genome_group": "lowland",
+   "masses": 200,
+   "commoners": 20,
+   "capacity": 440,
+   "notable_target": 20,
+   "danger": 0.0
+  },
+  {
+   "id": "t:Hollow-4",
+   "region": "t:Hollow",
+   "race": "k:folk",
+   "genome_group": "lowland",
+   "masses": 200,
+   "commoners": 20,
+   "capacity": 440,
+   "notable_target": 20,
+   "danger": 0.0
+  },
+  {
+   "id": "t:Ridge-1",
+   "region": "t:Ridge",
+   "race": "k:folk",
+   "genome_group": "upland",
+   "masses": 200,
+   "commoners": 20,
+   "capacity": 440,
+   "notable_target": 20,
+   "danger": 0.0
+  },
+  {
+   "id": "t:Ridge-2",
+   "region": "t:Ridge",
+   "race": "k:folk",
+   "genome_group": "upland",
+   "masses": 200,
+   "commoners": 20,
+   "capacity": 440,
+   "notable_target": 20,
+   "danger": 0.0
+  },
+  {
+   "id": "t:Ridge-3",
+   "region": "t:Ridge",
+   "race": "k:folk",
+   "genome_group": "upland",
+   "masses": 200,
+   "commoners": 20,
+   "capacity": 440,
+   "notable_target": 20,
+   "danger": 0.0
+  },
+  {
+   "id": "t:Ridge-4",
+   "region": "t:Ridge",
+   "race": "k:folk",
+   "genome_group": "upland",
+   "masses": 200,
+   "commoners": 20,
+   "capacity": 440,
+   "notable_target": 20,
+   "danger": 0.0
+  },
+  {
+   "id": "t:Mere-1",
+   "region": "t:Mere",
+   "race": "k:elder",
+   "genome_group": "upland",
+   "masses": 200,
+   "commoners": 20,
+   "capacity": 440,
+   "notable_target": 20,
+   "danger": 0.0
+  },
+  {
+   "id": "t:Mere-2",
+   "region": "t:Mere",
+   "race": "k:elder",
+   "genome_group": "upland",
+   "masses": 200,
+   "commoners": 20,
+   "capacity": 440,
+   "notable_target": 20,
+   "danger": 0.0
+  },
+  {
+   "id": "t:Mere-3",
+   "region": "t:Mere",
+   "race": "k:elder",
+   "genome_group": "upland",
+   "masses": 200,
+   "commoners": 20,
+   "capacity": 440,
+   "notable_target": 20,
+   "danger": 0.0
+  },
+  {
+   "id": "t:Mere-4",
+   "region": "t:Mere",
+   "race": "k:elder",
+   "genome_group": "upland",
+   "masses": 200,
+   "commoners": 20,
+   "capacity": 440,
+   "notable_target": 20,
+   "danger": 0.0
+  }
+ ],
+ "houses": [
+  {
+   "id": "t:House-Hollow",
+   "name": "Hollow",
+   "seat": "t:Hollow-1",
+   "rank": 3,
+   "rule": "male_preference_primogeniture"
+  },
+  {
+   "id": "t:House-Ridge",
+   "name": "Ridge",
+   "seat": "t:Ridge-1",
+   "rank": 2,
+   "rule": "male_preference_primogeniture"
+  },
+  {
+   "id": "t:House-Mere",
+   "name": "Mere",
+   "seat": "t:Mere-1",
+   "rank": 1,
+   "rule": "male_preference_primogeniture"
+  }
+ ]
 }

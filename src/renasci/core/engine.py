@@ -18,7 +18,7 @@ from renasci.core.canon import canonical, digest
 from renasci.core.determinism import check_environment, versions
 from renasci.core.context import Ctx, UndeclaredAccess
 from renasci.core.events import Cause, CauseIndex, Event, EventType, Registry, Source
-from renasci.core.ids import event_id
+from renasci.core.ids import CAST_STARTS, event_id
 from renasci.core.lod import EVENT_TYPES as LOD_TYPES
 from renasci.core.lod import ResolutionPolicy
 from renasci.core.pins import Director, Pin, feasibility
@@ -35,7 +35,7 @@ __all__ = ["Engine", "UndeclaredAccess"]
 SWITCH_PRIORITY = -(10**9)
 DEADLINE_PRIORITY = 10**9  # pin deadlines run after everything else that day
 RIPPLE_PRIORITY = SWITCH_PRIORITY + 1  # ripples apply right after a ruleset switch, before systems
-CAST = EventType("engine.cast", 1, roles={"subject": (1, 1)}, payload={"kind": "str"})
+CAST = EventType("engine.cast", 1, roles={"subject": (1, 1)}, payload={"kind": "str"}, dead_roles=("subject",))
 CAST_COLUMN = EventType("engine.cast_column", 1, roles={}, payload={"column": "str"})
 CHECKPOINT_FORMAT = 2  # 2: recipe includes major.minor versions
 
@@ -110,12 +110,13 @@ class Engine:
 
     # ------------------------------------------------------------ setup
 
-    def cast(self, kind: str, entity: str, fields: dict) -> Event:
-        """Place an entity into the world at the start date, before anything runs."""
+    def cast(self, kind: str, entity: str, fields: dict, status: str = "active") -> Event:
+        """Place an entity into the world at the start date, before anything runs. `status` lets a
+        scenario cast the dead (a house's founder, whose children are its line of succession)."""
         if self._date is not None:
             raise ValueError("casting happens before the run starts")
         eid = event_id("engine", entity, "cast", self.start, 0)
-        self.store.create(kind, entity, fields, self.start, eid)
+        self.store.create(kind, entity, fields, self.start, eid, status=status)
         return self.record(Event(eid, self.start, CAST.name, {"subject": (entity,)}, None, (),
                                  {"kind": kind}, Source("scenario", "cast")), created=[entity])
 
@@ -165,7 +166,7 @@ class Engine:
                 self.director.status[pin.id] = "satisfied"  # the scenario already placed it
                 self.director.met[pin.id] = self.start
                 self.director.held.add(pin.id)
-            elif pin.kind == "existence" and pin.subject.startswith(("v:", "t:")):
+            elif pin.kind == "existence" and pin.subject.startswith(CAST_STARTS):
                 if cast:
                     self.cast(pin.payload.get("kind", "person"), pin.subject, pin.payload.get("fields", {}))
                 self.director.status[pin.id] = "satisfied"

@@ -153,7 +153,8 @@ class Store:
 
     # ------------------------------------------------------------ records
 
-    def create(self, kind: str, entity: str, fields: dict, date: Date, event: str, activation: str = "") -> None:
+    def create(self, kind: str, entity: str, fields: dict, date: Date, event: str, activation: str = "",
+               status: str = "active") -> None:
         _need_name("kind", kind)
         _need_name("entity", entity)
         _need_date(date)
@@ -163,10 +164,12 @@ class Store:
         fields = _json_copy(fields)
         for name in fields:
             _need_field(name)
-        self._entities[entity] = _Entity(kind, "active", fields)
+        if status not in ("active", "dormant", "dead"):
+            raise ValueError(f"status is active, dormant or dead, got {status!r}")
+        self._entities[entity] = _Entity(kind, status, fields)
         self.created.append({"id": entity, "kind": kind, "date": date.to_json(), "event": event,
                              "activation": activation})
-        self.deltas.append(StateDelta(date, entity, "status", None, "active", event, activation))
+        self.deltas.append(StateDelta(date, entity, "status", None, status, event, activation))
         for name in sorted(fields):
             self.deltas.append(StateDelta(date, entity, name, None, fields[name], event, activation))
 
