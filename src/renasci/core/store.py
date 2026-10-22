@@ -75,14 +75,16 @@ class StateDelta:
 @dataclass(frozen=True)
 class BulkDelta:
     date: Date
-    component: str
+    component: str  # one column; "" when `components` lists several written together
     ids: tuple[str, ...]  # every id written, sorted: clarity over compactness
     values_hash: str
     event: str
     activation: str
+    components: tuple[str, ...] = ()  # several columns of the same ids in one write (sorted)
 
     def to_json(self) -> dict:
-        return {"date": self.date.to_json(), "component": self.component, "ids": list(self.ids),
+        where = {"components": list(self.components)} if self.components else {"component": self.component}
+        return {"date": self.date.to_json(), **where, "ids": list(self.ids),
                 "values_hash": self.values_hash, "event": self.event, "activation": self.activation}
 
 
@@ -237,6 +239,26 @@ class Store:
         col.ensure(ids)
         col.data[col.lookup(ids)] = values
         self.bulk_deltas.append(BulkDelta(date, name, sorted_ids, values_hash, event, activation))
+
+    def write_columns(self, entity: str, values: dict, date: Date, event: str, activation: str = "") -> None:
+        """Set several columns for one entity as a single change (one bulk delta, not one per column)."""
+        _need_date(date)
+        _need_event(event)
+        _need_name("id", entity)
+        if not values:
+            raise ValueError("write_columns needs at least one column")
+        names = sorted(values)
+        coerced = {}
+        for name in names:
+            if name not in self._columns:
+                raise KeyError(f"no column {name!r}")
+            coerced[name] = self._columns[name].coerce([values[name]])
+        values_hash = digest([[n, self._columns[n].dtype.name, coerced[n].tolist()] for n in names], size=16)
+        for name in names:  # everything is validated: now mutate
+            col = self._columns[name]
+            col.ensure([entity])
+            col.data[col.lookup([entity])] = coerced[name]
+        self.bulk_deltas.append(BulkDelta(date, "", (entity,), values_hash, event, activation, tuple(names)))
 
     # ------------------------------------------------------------ deltas
 

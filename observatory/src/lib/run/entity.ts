@@ -55,7 +55,9 @@ export async function entityDetail(run: Run, index: EventIndex, id: string): Pro
 		if (d.entity === id) changes.push({ date: d.date, field: d.field, old: d.old, new: d.new, event: d.event, bulk: false });
 	}
 	for await (const b of readTable(run, 'bulk_deltas')) {
-		if (b.ids.includes(id)) changes.push({ date: b.date, field: b.component, event: b.event, bulk: true });
+		if (!b.ids.includes(id)) continue;
+		for (const field of (b.components as string[] | undefined) ?? [b.component])
+			changes.push({ date: b.date, field, event: b.event, bulk: true });
 	}
 	changes.sort((a, b) => run.calendar.sortKey(a.date) - run.calendar.sortKey(b.date));
 	return { record, cells, events: [...(index.byEntity.get(id) ?? [])], changes };

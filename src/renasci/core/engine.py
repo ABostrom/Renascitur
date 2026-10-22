@@ -135,7 +135,7 @@ class Engine:
         self.causes.add(event)
         self.events.append(event)
         self._scopes[event.id] = scope
-        self.director.observe(event, created)
+        self.director.observe(event, created, field=lambda entity, name: self.store.get(entity, name))
         return event
 
     def apply_pins(self, pins, end: Date | None = None, cast: bool = True) -> dict[str, str]:
@@ -148,12 +148,16 @@ class Engine:
                           self.calendar.days_per_year - 1)
         self.director = Director(pins)
         classes = feasibility(pins, self.start, end)
+        self.director.born = frozenset(p.payload["bind"]["subject"] for p in self.director.pins
+                                       if p.payload.get("bind") and classes[p.id] == "ok")
         for pin in self.director.pins:
             status = classes[pin.id]
             self.director.status[pin.id] = "open" if status == "ok" else status
             if status != "ok":
                 continue
-            if pin.kind == "existence" and pin.subject.startswith(("v:", "t:")):
+            if pin.kind == "existence" and pin.subject in self.director.born:
+                pass  # born during the run: met when its birth pin binds it, never cast up front
+            elif pin.kind == "existence" and pin.subject.startswith(("v:", "t:")):
                 if cast:
                     self.cast(pin.payload.get("kind", "person"), pin.subject, pin.payload.get("fields", {}))
                 self.director.status[pin.id] = "satisfied"

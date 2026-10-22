@@ -3,6 +3,16 @@
 A pin is a constraint read from canon: an entity exists, an event happens within a window, one pin
 comes before another. (Lineage, succession and goal pins parse, but arrive with S2/S3.)
 
+**Bindings** (#152, S3 spec §4.3). Canon born during the run (an Emperor's heir) is never created up
+front: its id would differ from the one a natural birth gives it, and so would every key after it.
+Instead an event pin carries `bind = {role, subject, fields?}`: when the pinned event happens, the
+entity it created in `role` (with matching `fields`, e.g. the pinned sex) is **bound** to `subject`,
+the canon id. Roles in other pins resolve through bindings, so "born to v:Kid" means born to whoever
+v:Kid turned out to be. An existence pin on a bound subject is met by the binding, and violated with
+its birth pin. `fields` are matched against what the event *created* (its `creates` fields), so a
+system must give them there, not set them afterwards. A birth pin outside the run (out of scope,
+unsupported, infeasible) binds nothing; its subject is cast up front like any other canon id.
+
 The director prefers doing nothing. A pin that history meets naturally is only *observed*: no
 draws, no writes, no events. That is what makes "promote something that happened, then re-run"
 reproduce the same history with zero strain. Only when a pin is threatened does the director act:
@@ -52,6 +62,17 @@ class Pin:
         object.__setattr__(self, "payload", json.loads(canonical(self.payload)))
         if self.kind == "event" and not isinstance(self.payload.get("type"), str):
             raise ValueError(f"event pin {self.id} needs payload.type")
+        bind = self.payload.get("bind")
+        if bind is not None:
+            if (self.kind != "event" or not isinstance(bind, dict) or not isinstance(bind.get("role"), str)
+                    or not isinstance(bind.get("subject"), str) or not isinstance(bind.get("fields", {}), dict)):
+                raise ValueError(f"pin {self.id}: bind is an event pin's {{role, subject, fields?}}")
+            if not bind["subject"].startswith(("v:", "t:")):
+                raise ValueError(f"pin {self.id}: bind.subject must be a canon id (v: or t:), got {bind['subject']!r}")
+            if bind["role"] in self.payload.get("roles", {}):
+                raise ValueError(f"pin {self.id}: the bound role {bind['role']!r} can't also be a required role")
+            if any(v is None for v in bind.get("fields", {}).values()):
+                raise ValueError(f"pin {self.id}: bind.fields can't be None (a missing field would match)")
         if self.kind == "existence" and not self.subject:
             raise ValueError(f"existence pin {self.id} needs a subject")
         if self.kind == "ordering" and not ({"before", "after"} <= set(self.payload)):
@@ -133,6 +154,16 @@ class Director:
         self.strain: list[dict] = []  # pending history
         self.changes: list[dict] = []  # pending history: pin status changes, attributed to the event that caused them
         self._forcing: str | None = None
+        self.bindings: dict[str, str] = {}  # canon id -> the sim entity that fulfilled its birth pin
+        # Canon ids born during the run: never cast up front. Narrowed to usable pins by apply_pins.
+        subjects = [p.payload["bind"]["subject"] for p in self.pins if p.payload.get("bind")]
+        twice = sorted({s for s in subjects if subjects.count(s) > 1})
+        if twice:
+            raise ValueError(f"more than one pin binds {twice}; each canon id is born once")
+        self.born = frozenset(subjects)
+
+    def resolve(self, entity: str) -> str:
+        return self.bindings.get(entity, entity)
 
     def _log(self, action: str, pin: Pin, date: Date, activation: str = "", **extra) -> dict:
         row = json.loads(canonical({"action": action, "pin": pin.id, "kind": pin.kind, "date": date,
@@ -150,9 +181,32 @@ class Director:
 
     # ------------------------------------------------------------ observation (pure)
 
-    def observe(self, event, created=()) -> None:
-        """Called for every recorded event, with the entities it created. Marks pins met; never acts."""
+    def observe(self, event, created=(), field=None) -> None:
+        """Called for every recorded event, with the entities it created (and `field(entity, name)` to
+        look at them). Marks pins met and binds canon ids; never acts."""
         self.seq += 1
+        for pin in self.pins:  # each event satisfies at most one event pin
+            if pin.kind != "event" or self.status.get(pin.id) != "open" or not pin.covers(event.date):
+                continue
+            if event.type != pin.payload["type"]:
+                continue
+            wanted = pin.payload.get("roles", {})
+            if not all({self.resolve(x) for x in m} <= set(event.roles.get(r, ())) for r, m in wanted.items()):
+                continue
+            bound = None
+            bind = pin.payload.get("bind")
+            if bind:
+                fits = [c for c in event.roles.get(bind["role"], ()) if c in created and all(
+                    field is not None and field(c, k) == v for k, v in sorted(bind.get("fields", {}).items()))]
+                if not fits:
+                    continue  # e.g. a daughter where a son was pinned: not this event
+                bound = fits[0]
+            self._meet(pin, event.date, "forced" if self._forcing == pin.id else "satisfied", event.id)
+            if bound is not None:
+                self.bindings[bind["subject"]] = bound
+                self.changes[-1]["binding"] = {bind["subject"]: bound}
+                created = (*created, bind["subject"])  # the canon id now exists
+            break
         for pin in self.pins:  # born entities: met by their creating event, if it falls inside the window
             if pin.kind == "existence" and self.status.get(pin.id) == "open" and pin.subject in created:
                 if pin.covers(event.date):
@@ -160,15 +214,6 @@ class Director:
                 else:
                     self._set(pin, "violated", event.date, event.id)
                     self._log("violated", pin, event.date, reason="created outside the window")
-        for pin in self.pins:  # each event satisfies at most one event pin
-            if pin.kind != "event" or self.status.get(pin.id) != "open" or not pin.covers(event.date):
-                continue
-            if event.type != pin.payload["type"]:
-                continue
-            wanted = pin.payload.get("roles", {})
-            if all(set(m) <= set(event.roles.get(r, ())) for r, m in wanted.items()):
-                self._meet(pin, event.date, "forced" if self._forcing == pin.id else "satisfied", event.id)
-                break
         self._check_orderings(event.date, event.id)
 
     def _check_orderings(self, date: Date, event: str | None = None) -> None:
@@ -192,11 +237,12 @@ class Director:
         """The pin that needs `entity` alive today, if any."""
         for pin in self.pins:
             status = self.status.get(pin.id)
-            if pin.kind == "existence" and pin.subject == entity and status in ("open", "satisfied") \
+            if pin.kind == "existence" and self.resolve(pin.subject) == entity and status in ("open", "satisfied") \
                     and pin.covers(date):
                 return pin
             if pin.kind == "event" and status == "open" and pin.window and date <= pin.window[1] \
-                    and any(entity in members for members in pin.payload.get("roles", {}).values()):
+                    and any(entity in {self.resolve(x) for x in members}
+                            for members in pin.payload.get("roles", {}).values()):
                 return pin
         return None
 
@@ -231,15 +277,23 @@ class Director:
         else:
             self._set(pin, "violated", date)
             self._log("violated", pin, date, reason="no forcer could construct it")
+            bind = pin.payload.get("bind")
+            for other in self.pins:  # the canon id it would have bound will never exist
+                if bind and other.kind == "existence" and other.subject == bind["subject"] \
+                        and self.status.get(other.id) == "open":
+                    self._set(other, "violated", date)
+                    self._log("violated", other, date, reason=f"its birth pin {pin.id} was violated")
         self._check_orderings(date)
 
     # ------------------------------------------------------------ state
 
     def to_json(self) -> dict:
         return {"status": dict(sorted(self.status.items())), "seq": self.seq,
-                "met": {k: [d.to_json(), n] for k, (d, n) in sorted(self.met.items())}}
+                "met": {k: [d.to_json(), n] for k, (d, n) in sorted(self.met.items())},
+                "bindings": dict(sorted(self.bindings.items()))}
 
     def load_json(self, data: dict) -> None:
         self.status = dict(data["status"])
         self.seq = data["seq"]
         self.met = {k: (Date.from_json(d), n) for k, (d, n) in data["met"].items()}
+        self.bindings = dict(data.get("bindings", {}))

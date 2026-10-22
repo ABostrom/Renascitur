@@ -190,6 +190,13 @@ class Ctx:
         event = self._may_write(name)
         self._engine.store.write_column(name, ids, values, self.today, event, activation=self.activation.id)
 
+    def write_columns(self, entity: str, values: dict) -> None:
+        """Several columns of one entity in one change (an aggregate's step): one bulk delta."""
+        if not values:
+            raise ValueError("write_columns needs at least one column")
+        event = [self._may_write(name) for name in sorted(values)][-1]  # checks every column; one event
+        self._engine.store.write_columns(entity, values, self.today, event, activation=self.activation.id)
+
     # ------------------------------------------------------------ events
 
     def emit(self, type: str, roles: dict, *, purpose: str, actor: str, place: str | None = None,
@@ -257,41 +264,55 @@ class Ctx:
             if name not in self.system.writes:
                 raise UndeclaredAccess(f"{self.system.name} wrote {name!r} without declaring it")
 
-    def promote(self, aggregate: str, kind: str, fields: dict, *, reason: str, column: str | None = None,
-                place: str | None = None, causes=()) -> str:
-        """Pull a named individual out of `aggregate`. With `column`, the aggregate's count drops by one.
+    def _take(self, aggregate: str, column: str | None, columns: dict | None) -> dict[str, int]:
+        if column is not None and columns is not None:
+            raise ValueError("give column or columns, not both")
+        amounts = {column: 1} if column is not None else dict(columns or {})
+        for name, n in sorted(amounts.items()):
+            if isinstance(n, bool) or not isinstance(n, int) or n < 0:
+                raise ValueError(f"{name}: the amount must be a non-negative int, got {n!r}")
+        return amounts
 
-        The id is causal (the promote event, role, ordinal); `place` and `causes` say where and why.
-        Every declaration is checked before anything changes.
+    def promote(self, aggregate: str, kind: str, fields: dict, *, reason: str, column: str | None = None,
+                columns: dict | None = None, place: str | None = None, causes=()) -> str:
+        """Pull a named individual out of `aggregate`.
+
+        `column` drops that count by one; `columns` ({column: n}) drops several at once (an age band
+        and the allele copies the person carries), written as one change. The id is causal (the
+        promote event, role, ordinal); `place` and `causes` say where and why. Every declaration and
+        count is checked before anything changes.
         """
-        self._check_writes(f"new:{kind}", *([column] if column else []))
-        count = None
-        if column is not None:
-            count = self.read_column(column, [aggregate])[0]
-            if count <= 0:
-                raise ValueError(f"cannot promote from {aggregate}: {column} is {count}")
+        take = self._take(aggregate, column, columns)
+        self._check_writes(f"new:{kind}", *sorted(take))
+        counts = {name: self.read_column(name, [aggregate])[0] for name in sorted(take)}
+        for name in sorted(take):
+            if counts[name] < take[name]:
+                raise ValueError(f"cannot promote from {aggregate}: {name} is {counts[name]}, needs {take[name]}")
         event = self.emit("lod.promote", {"aggregate": (aggregate,)}, purpose=f"promote:{reason}", actor=aggregate,
                           place=place, payload={"reason": reason}, causes=causes,
                           creates={"individual": [(kind, fields)]})
-        if column is not None:
-            self.write_column(column, [aggregate], [count - 1])
+        if take:
+            self.write_columns(aggregate, {name: counts[name] - take[name] for name in take})
         return event.roles["individual"][0]
 
     def demote(self, entity: str, *, reason: str, column: str | None = None, aggregate: str | None = None,
-               causes=()) -> None:
-        """Fade an individual back into the mass: a dormant record that keeps its history."""
-        if (column is None) != (aggregate is None):
-            raise ValueError("demote needs column and aggregate together (or neither)")
-        self._check_writes("status", *([column] if column else []))
+               columns: dict | None = None, causes=()) -> None:
+        """Fade an individual back into the mass: a dormant record that keeps its history.
+
+        `column` adds one back to that count; `columns` ({column: n}) adds several, as one change."""
+        give = self._take(aggregate, column, columns)
+        if bool(give) != (aggregate is not None):
+            raise ValueError("demote needs columns and aggregate together (or neither)")
+        self._check_writes("status", *sorted(give))
         if self.status(entity) != "active":
             raise ValueError(f"cannot demote {entity}: it is {self._engine.store.status(entity)}")
-        count = self.read_column(column, [aggregate])[0] if column else None
+        counts = {name: self.read_column(name, [aggregate])[0] for name in sorted(give)}
         roles = {"individual": (entity,)} | ({"aggregate": (aggregate,)} if aggregate else {})
         self.emit("lod.demote", roles, purpose=f"demote:{reason}", actor=entity, payload={"reason": reason},
                   causes=causes)
         self.set_status(entity, "dormant")
-        if column is not None:
-            self.write_column(column, [aggregate], [count + 1])
+        if give:
+            self.write_columns(aggregate, {name: counts[name] + give[name] for name in give})
 
     # ------------------------------------------------------------ pins
 
