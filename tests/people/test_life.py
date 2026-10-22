@@ -176,7 +176,11 @@ def test_mutations_record_the_birth_they_happened_in():
 # ---------------------------------------------------------------- review fixes
 
 
-def test_a_protect_ripple_stays_in_the_target_settlement():
+def test_a_protect_ripple_stays_in_the_target_region():
+    """Births and deaths are settlement-scoped; marriages are regional (a wife moves), so a ripple's
+    reach is its region."""
+    from renasci.kin import REGION_OF
+
     base = new_engine(people_per_settlement=12)
     base.run(until=END)
     death = next(ev for ev in base.events if ev.type == "people.death" and 5 <= ev.date.year <= 15)
@@ -187,7 +191,8 @@ def test_a_protect_ripple_stays_in_the_target_settlement():
     where = {ev["id"]: ev["scope"] for ev in base.pending()["events"] + variant.pending()["events"]}
     report = analyse(base.pending(), variant.pending(), base.store.to_json(), variant.store.to_json(), ripples=["r1"])
     divergent = report["divergent"]["only_baseline"] + report["divergent"]["only_variant"] + report["divergent"]["changed"]
-    assert divergent and {where[i] for i in divergent} <= {home, None}  # None: the ripple's own events
+    touched = {where[i] for i in divergent} - {None}  # None: the ripple's own events
+    assert divergent and {REGION_OF.get(s, s) for s in touched} <= {REGION_OF[home]}
 
 
 def test_mutated_copies_are_created_with_their_origin():
