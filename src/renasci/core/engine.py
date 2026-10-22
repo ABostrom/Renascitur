@@ -13,6 +13,7 @@ from __future__ import annotations
 from renasci import __version__
 from renasci.core.calendar import Calendar, Date
 from renasci.core.canon import digest
+from renasci.core.determinism import check_environment, versions
 from renasci.core.context import Ctx, UndeclaredAccess
 from renasci.core.events import CauseIndex, Event, EventType, Registry, Source
 from renasci.core.ids import event_id
@@ -32,6 +33,7 @@ CHECKPOINT_FORMAT = 1
 class Engine:
     def __init__(self, calendar: Calendar, seed: int, rulesets: list[tuple[Date, Ruleset]],
                  strict: bool = True, reshuffles: tuple[Reshuffle, ...] = (), hinge_margin: float = 0.05):
+        check_environment()
         if not rulesets:
             raise ValueError("an engine needs at least one ruleset")
         dates = [d for d, _ in rulesets]
@@ -211,7 +213,7 @@ class Engine:
 
         cal = self.calendar
         return {
-            "engine": __version__, "seed": self.seed, "strict": self.strict, "hinge_margin": self.hinge_margin,
+            "engine": __version__, "versions": versions(), "seed": self.seed, "strict": self.strict, "hinge_margin": self.hinge_margin,
             "reshuffles": sorted((r.to_json() for r in self.reshuffles), key=lambda r: (r["from"], r["salt"])),
             "calendar": {"ages": [[a.index, a.abbrev, a.name, a.last_year] for a in cal.ages],
                          "months": cal.months, "seasons": cal.seasons},
