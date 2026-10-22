@@ -32,6 +32,7 @@ START = Date(1, 1, 0)
 VALLEYS = {"t:North": ("t:Ashford", "t:Brook", "t:Cairn"), "t:South": ("t:Dale", "t:Elm", "t:Fen")}
 VILLAGES = tuple(v for vs in VALLEYS.values() for v in vs)
 VALLEY_OF = {v: valley for valley, vs in VALLEYS.items() for v in vs}
+FARMLAND = 110  # each village can feed about this many; beyond it, famine checks growth
 
 DEATH = EventType("toy.death", 1, roles={"deceased": (1, 1)}, payload={"cause": "str"})
 NEAR_MISS = EventType("toy.near_miss", 1, roles={"survivor": (1, 1)}, payload={"cause": "str"})
@@ -146,7 +147,7 @@ class Granary(System):
                 if autumn:
                     for v in villages:
                         harvest += max(0.0, float(ctx.rng("harvest", entity=v).normal(1.0, 0.4))) \
-                            * len(ctx.get(v, "residents"))
+                            * min(len(ctx.get(v, "residents")), FARMLAND)  # land, not mouths, limits the harvest
                 eaten = heads * 0.25
                 stock = float(ctx.read_column("stock", [valley])[0]) + harvest - eaten
                 famine = stock < 0

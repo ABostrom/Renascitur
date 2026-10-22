@@ -450,7 +450,7 @@ This world is deliberately not Renascita ⟨#16⟩.
 ### 3.17 Benchmarks (#52)
 
 - `renasci bench` runs the toy for N years and appends to `bench/history.csv`:
-  `date, commit, engine, years, people_peak, events, seconds, years_per_s, events_per_s, run_mb`
+  `date, commit (git describe, with -dirty), engine, python, numpy, world, years, people_start, people_peak, events, seconds, years_per_s, events_per_s, run_mb`. Seconds cover the simulation and writing the run folder, not world setup
 - Not gated in CI. The plan records the first baseline as the M0 exit.
 
 ## 4. Testing summary

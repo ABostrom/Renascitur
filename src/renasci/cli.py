@@ -4,6 +4,7 @@
     renasci replay <run-folder> --recipe <recipe.toml> [--from "1X 40"] [--out runs]
     renasci diff <baseline-run> <variant-run>      (exit 3 if anything is unexplained)
     renasci inspect <run-folder> (--event <id> | --entity <id>)
+    renasci bench [--years 300] [--people 100] [--history bench/history.csv]
 
 `run` writes a run folder with a checkpoint every N years. `replay` forks a run at the latest
 checkpoint before the first changed ripple (or `--from`), restores, and continues with the new
@@ -13,9 +14,14 @@ recipe. `diff` explains every difference between two runs (no unexplained diverg
 from __future__ import annotations
 
 import argparse
+import csv
+import datetime
 import gzip
 import json
+import shutil
+import subprocess
 import sys
+import time
 from pathlib import Path
 
 from renasci.analysis.divergence import analyse
@@ -155,6 +161,68 @@ def cmd_inspect(args) -> int:
     return 0
 
 
+BENCH_FIELDS = ["date", "commit", "engine", "python", "numpy", "world", "years", "people_start", "people_peak",
+                "events", "seconds", "years_per_s", "events_per_s", "run_mb"]
+
+
+def cmd_bench(args) -> int:
+    """Run the toy world for N years into a scratch run folder and append the numbers to the history."""
+    from renasci.core.determinism import versions
+    from renasci.toy import CAL, new_engine
+
+    if args.years < 1 or args.people < 1:
+        raise ValueError("--years and --people must be at least 1")
+    out = Path(args.out)
+    if out.exists():  # only ever delete a previous bench folder
+        manifest = out / "manifest.json"
+        is_bench = manifest.is_file() and json.loads(manifest.read_text(encoding="utf-8"))["meta"].get("bench") is True
+        if not (out.is_dir() and (is_bench or not any(out.iterdir()))):
+            raise FileExistsError(f"{out} exists and is not a previous bench run; choose another --out")
+        shutil.rmtree(out)
+    engine = new_engine(seed=1234, people_per_village=args.people)
+    folder = RunFolder.create(out, {"bench": True})
+    people_start = peak = len(engine.store.ids("person", "active"))
+    events = 0
+    began = time.perf_counter()
+    for year in range(1, args.years + 1):
+        engine.run(until=Date(1, year, CAL.days_per_year - 1))
+        peak = max(peak, len(engine.store.ids("person", "active")))
+        events += len(engine.events)
+        flush(engine, folder)
+        if year % 10 == 0:
+            folder.close_segment()
+    folder.close_segment()
+    seconds = time.perf_counter() - began
+    run_mb = sum(f.stat().st_size for f in out.rglob("*") if f.is_file()) / 1e6
+    try:
+        commit = subprocess.run(["git", "describe", "--always", "--dirty"], capture_output=True, text=True,
+                                check=True, cwd=Path(__file__).parent).stdout.strip()
+    except (OSError, subprocess.CalledProcessError):
+        commit = "unknown"
+    v = versions()
+    row = {"date": datetime.date.today().isoformat(), "commit": commit, "engine": v["engine"], "python": v["python"],
+           "numpy": v["numpy"], "world": f"toy x{args.people}", "years": args.years, "people_start": people_start,
+           "people_peak": peak, "events": events, "seconds": round(seconds, 2),
+           "years_per_s": round(args.years / seconds, 3), "events_per_s": round(events / seconds, 1),
+           "run_mb": round(run_mb, 3)}
+    history = Path(args.history)
+    history.parent.mkdir(parents=True, exist_ok=True)
+    new_file = not history.exists() or history.stat().st_size == 0
+    if not new_file:
+        with history.open(encoding="utf-8", newline="") as f:
+            header = next(csv.reader(f), [])
+        if header != BENCH_FIELDS:
+            raise ValueError(f"{history} has columns {header}, expected {BENCH_FIELDS}; start a new history file")
+    with history.open("a", encoding="utf-8", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=BENCH_FIELDS)
+        if new_file:
+            writer.writeheader()
+        writer.writerow(row)
+    print(f"{args.years} years, {events} events in {seconds:.1f}s: {row['years_per_s']} years/s, "
+          f"{row['events_per_s']} events/s, {row['run_mb']} MB, peak {peak} people")
+    return 0
+
+
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(prog="renasci", description="The Renascitur History Engine")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -174,9 +242,16 @@ def main(argv=None) -> int:
     target = p.add_mutually_exclusive_group(required=True)
     target.add_argument("--event")
     target.add_argument("--entity")
+    p = sub.add_parser("bench", help="time the toy world (simulation plus writing the run folder, "
+                                      "not world setup) and append to the benchmark history")
+    p.add_argument("--years", type=int, default=300)
+    p.add_argument("--people", type=int, default=100, help="people per village (6 villages)")
+    p.add_argument("--history", default="bench/history.csv")
+    p.add_argument("--out", default="runs/_bench")
     args = parser.parse_args(argv)
     try:
-        return {"run": cmd_run, "replay": cmd_replay, "diff": cmd_diff, "inspect": cmd_inspect}[args.command](args)
+        commands = {"run": cmd_run, "replay": cmd_replay, "diff": cmd_diff, "inspect": cmd_inspect, "bench": cmd_bench}
+        return commands[args.command](args)
     except (ValueError, FileExistsError, FileNotFoundError) as err:
         print(f"renasci: {err}", file=sys.stderr)
         return 1

@@ -191,3 +191,35 @@ def test_inspect_needs_exactly_one_target_and_shows_field_changes(runs, capsys):
     capsys.readouterr()
     assert main(["inspect", str(out / "base"), "--entity", "t:Ashford-01"]) == 0
     assert "state changes:" in capsys.readouterr().out
+
+
+def test_bench_appends_a_row(tmp_path, capsys):
+    import csv
+
+    history = tmp_path / "history.csv"
+    assert main(["bench", "--years", "3", "--people", "8", "--history", str(history), "--out", str(tmp_path / "b")]) == 0
+    assert main(["bench", "--years", "3", "--people", "8", "--history", str(history), "--out", str(tmp_path / "b")]) == 0
+    rows = list(csv.DictReader(history.open(encoding="utf-8")))
+    assert len(rows) == 2
+    assert set(rows[0]) == {"date", "commit", "engine", "python", "numpy", "world", "years", "people_start",
+                            "people_peak", "events", "seconds", "years_per_s", "events_per_s", "run_mb"}
+    assert int(rows[0]["events"]) > 0 and float(rows[0]["years_per_s"]) > 0 and float(rows[0]["run_mb"]) > 0
+    assert rows[0]["events"] == rows[1]["events"]  # deterministic
+    assert "years/s" in capsys.readouterr().out
+
+
+def test_bench_never_deletes_a_folder_that_is_not_a_bench_run(tmp_path):
+    keep = tmp_path / "precious"
+    keep.mkdir()
+    (keep / "notes.md").write_text("keep me", encoding="utf-8")
+    assert main(["bench", "--years", "1", "--people", "4", "--out", str(keep),
+                 "--history", str(tmp_path / "h.csv")]) == 1
+    assert (keep / "notes.md").exists()
+    assert main(["bench", "--years", "0", "--out", str(tmp_path / "b"), "--history", str(tmp_path / "h.csv")]) == 1
+
+
+def test_bench_refuses_a_history_with_other_columns(tmp_path):
+    history = tmp_path / "h.csv"
+    history.write_text("date,something\n", encoding="utf-8")
+    assert main(["bench", "--years", "1", "--people", "4", "--out", str(tmp_path / "b"),
+                 "--history", str(history)]) == 1
