@@ -153,7 +153,14 @@ All of the following run settlement by settlement, each in `ctx.scope(settlement
   - gets the genome by §3.3 and traits by §3.4;
   - takes the house by the house rule (default the father's) and the place of the mother;
   - is appended to both parents' `children` and to the settlement's `residents`, and counted in `flow:born`.
-- **Twins:** a keyed draw.
+- **Twins:** a keyed draw. Twins get different names.
+- **The same season:** births run before deaths, so a mother who dies this season may still give birth,
+  and a newborn takes its first (band-0) death draw in the season it is born.
+- **Spouses live together:** marriage moves one spouse (§4.4), so a birth reads and writes the father's
+  `children` inside the mother's settlement scope. If a world ever lets spouses live apart, that write
+  becomes cross-scope and must be revisited.
+- **A mutated copy names its birth** through `ctx.peek_event_id`, so the child is created right the
+  first time (no second write).
 
 ### 4.3 Canon born during the run: birth pins
 

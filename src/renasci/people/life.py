@@ -23,7 +23,7 @@ import json
 from renasci.core.canon import canonical
 from renasci.core.events import EventType
 from renasci.core.systems import System
-from renasci.people.genome import Catalogue, allele, inherit, keyed, origin_of, phenotype, variant_of
+from renasci.people.genome import Catalogue, inherit, keyed, phenotype
 from renasci.people.races import Race, age_years, band, days_since, quarterly
 
 BIRTH = EventType("people.birth", 1, roles={"mother": (1, 1), "father": (0, 1), "child": (1, 2)},
@@ -32,7 +32,6 @@ DEATH = EventType("people.death", 1, roles={"deceased": (1, 1)}, payload={"age":
 NEAR_MISS = EventType("people.near_miss", 1, roles={"survivor": (1, 1)}, payload={"would_have": "str"})
 EVENT_TYPES = (BIRTH, DEATH, NEAR_MISS)
 
-_PENDING = "_birth"  # the origin given to a mutated copy until the birth event has an id
 WORLD_PARAMS = ("races", "catalogue", "house_from")
 
 
@@ -98,7 +97,7 @@ class Births(System):
     priority = -1  # before deaths on the same day, so a mother who dies this season may still give birth
     reads = frozenset({"ids:settlement", "residents", "born", "sex", "race", "spouse", "last_birth", "genome",
                        "house", "status", "children"})
-    writes = frozenset({"new:person", "residents", "children", "last_birth", "genome"})
+    writes = frozenset({"new:person", "residents", "children", "last_birth"})
     event_types = (BIRTH,)
 
     def run(self, ctx):
@@ -123,14 +122,16 @@ class Births(System):
     def _birth(self, ctx, settlement: str, mother: str, father: str, race: Race, catalogue: Catalogue,
                house_from: str) -> None:
         twins = ctx.chance(race.twins, "twins", owner=mother)
-        children, mutated = [], []
+        birth = ctx.peek_event_id(mother, "birth")  # a mutated copy's origin is this birth
+        children, mutated, names = [], [], []
         for _ in range(2 if twins else 1):
             sex = "m" if ctx.chance(race.male, "sex", owner=mother) else "f"
-            pool = race.names[sex]
+            pool = [n for n in race.names[sex] if n not in names] or list(race.names[sex])  # twins differ
             name = pool[ctx.rng("name", mother).choice_index([1.0] * len(pool))]
+            names.append(name)
             seed = int(ctx.rng("meiosis", mother).integers(0, 2**62))  # one stream per child, sub-keyed per locus
             genome, mutations = inherit(catalogue, ctx.get(mother, "genome"), ctx.get(father, "genome"),
-                                        keyed(seed), _PENDING)
+                                        keyed(seed), birth)
             mutated.append(len(mutations))
             parent = mother if house_from == "mother" else father
             children.append(("person", {
@@ -141,12 +142,10 @@ class Births(System):
         event = ctx.emit("people.birth", {"mother": (mother,), "father": (father,)}, purpose="birth", actor=mother,
                          place=settlement, payload={"twin": twins, "mutations": sum(mutated)},
                          creates={"child": children})
+        assert event.id == birth
         born = list(event.roles["child"])
-        for child, n in zip(born, mutated):
-            if n:  # a mutated copy's origin is this birth, known only now
-                genome = ctx.get(child, "genome")
-                ctx.set(child, "genome", {locus: [allele(variant_of(c), event.id) if origin_of(c) == _PENDING else c
-                                                  for c in pair] for locus, pair in genome.items()})
+        # Spouses always live in the same settlement (marriage moves one of them), so the father's
+        # `children` is read and written inside this settlement's scope.
         for parent in (mother, father):
             ctx.set(parent, "children", ctx.get(parent, "children") + born)
         ctx.set(mother, "last_birth", ctx.today.to_json())

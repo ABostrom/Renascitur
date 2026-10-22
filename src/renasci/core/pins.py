@@ -155,6 +155,9 @@ class Director:
         self.changes: list[dict] = []  # pending history: pin status changes, attributed to the event that caused them
         self._forcing: str | None = None
         self.bindings: dict[str, str] = {}  # canon id -> the sim entity that fulfilled its birth pin
+        # Existence pins on entities that already existed at the start: guarded from then until their
+        # window ends, so a death before the window opens can't leave the pin "satisfied".
+        self.held: set[str] = set()
         # Canon ids born during the run: never cast up front. Narrowed to usable pins by apply_pins.
         subjects = [p.payload["bind"]["subject"] for p in self.pins if p.payload.get("bind")]
         twice = sorted({s for s in subjects if subjects.count(s) > 1})
@@ -238,7 +241,7 @@ class Director:
         for pin in self.pins:
             status = self.status.get(pin.id)
             if pin.kind == "existence" and self.resolve(pin.subject) == entity and status in ("open", "satisfied") \
-                    and pin.covers(date):
+                    and (pin.covers(date) or (pin.id in self.held and (pin.window is None or date <= pin.window[1]))):
                 return pin
             if pin.kind == "event" and status == "open" and pin.window and date <= pin.window[1] \
                     and any(entity in {self.resolve(x) for x in members}
@@ -290,10 +293,11 @@ class Director:
     def to_json(self) -> dict:
         return {"status": dict(sorted(self.status.items())), "seq": self.seq,
                 "met": {k: [d.to_json(), n] for k, (d, n) in sorted(self.met.items())},
-                "bindings": dict(sorted(self.bindings.items()))}
+                "bindings": dict(sorted(self.bindings.items())), "held": sorted(self.held)}
 
     def load_json(self, data: dict) -> None:
         self.status = dict(data["status"])
         self.seq = data["seq"]
         self.met = {k: (Date.from_json(d), n) for k, (d, n) in data["met"].items()}
         self.bindings = dict(data.get("bindings", {}))
+        self.held = set(data.get("held", []))

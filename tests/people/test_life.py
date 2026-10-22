@@ -171,3 +171,63 @@ def test_mutations_record_the_birth_they_happened_in():
         child = ev.roles["child"][0]
         assert all(origin_of(c) == ev.id for pair in e.store.get(child, "genome").values() for c in pair)
         assert ev.payload["mutations"] == 2 * len(mutant["loci"])
+
+
+# ---------------------------------------------------------------- review fixes
+
+
+def test_a_protect_ripple_stays_in_the_target_settlement():
+    base = new_engine(people_per_settlement=12)
+    base.run(until=END)
+    death = next(ev for ev in base.events if ev.type == "people.death" and 5 <= ev.date.year <= 15)
+    target, home = death.roles["deceased"][0], death.place
+    variant = new_engine(people_per_settlement=12, ripples=[
+        Ripple("r1", "protect", Date(1, death.date.year - 1, 0), target, {"until": [1, 30, 359]})])
+    variant.run(until=END)
+    where = {ev["id"]: ev["scope"] for ev in base.pending()["events"] + variant.pending()["events"]}
+    report = analyse(base.pending(), variant.pending(), base.store.to_json(), variant.store.to_json(), ripples=["r1"])
+    divergent = report["divergent"]["only_baseline"] + report["divergent"]["only_variant"] + report["divergent"]["changed"]
+    assert divergent and {where[i] for i in divergent} <= {home, None}  # None: the ripple's own events
+
+
+def test_mutated_copies_are_created_with_their_origin():
+    from renasci.kin import CATALOGUE
+
+    mutant = copy.deepcopy(CATALOGUE)
+    for locus in mutant["loci"]:
+        locus["mutation"] = 1.0
+    e = run(until=Date(1, 10, 359), people_per_settlement=12, catalogue=mutant)
+    created = {row["id"]: row for row in e.pending()["entities"]}
+    births = [ev for ev in e.events if ev.type == "people.birth"]
+    for ev in births:
+        child = ev.roles["child"][0]
+        assert "_birth" not in str(created[child])
+    assert not [d for d in e.pending()["state_deltas"] if d["field"] == "genome" and d["old"] is not None]  # no rewrite
+
+
+def test_no_one_starts_married_under_age():
+    e = new_engine(people_per_settlement=40)
+    race = {r["id"]: Race.from_json(r) for r in RACES}
+    for p in e.store.ids("person"):
+        if e.store.get(p, "spouse"):
+            assert age_years(e.calendar, e.store.get(p, "born"), Date(1, 1, 0)) >= race[e.store.get(p, "race")].marriage[0]
+
+
+def test_twins_get_different_names():
+    twinny = copy.deepcopy(RACES)
+    for r in twinny:
+        r["twins"] = 1.0
+    e = run(until=Date(1, 12, 359), people_per_settlement=12, races=twinny)
+    pairs = [ev.roles["child"] for ev in e.events if ev.type == "people.birth"]
+    assert pairs and all(e.store.get(a, "name") != e.store.get(b, "name") for a, b in pairs)
+
+
+def test_a_cast_person_pinned_for_a_later_window_is_guarded_until_then():
+    doomed = copy.deepcopy(RACES)
+    for r in doomed:
+        r["mortality"] = {"f": [1.0] * 20, "m": [1.0] * 20}
+    first = new_engine(people_per_settlement=4).store.ids("person")[0]
+    e = run(until=Date(1, 3, 359), people_per_settlement=4, races=doomed,
+            pins=[Pin("p", "existence", subject=first, window=(Date(1, 3, 0), Date(1, 4, 0)))])
+    assert e.store.status(first) == "active"  # kept alive from the start, not only inside the window
+    assert any(ev.type == "people.near_miss" and ev.date.year == 1 for ev in e.events)

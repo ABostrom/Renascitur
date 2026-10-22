@@ -199,6 +199,14 @@ class Ctx:
 
     # ------------------------------------------------------------ events
 
+    def peek_event_id(self, actor: str, purpose: str) -> str:
+        """The id the next `emit(..., actor=actor, purpose=purpose)` in this activation will get.
+
+        For fields that must name their own creating event (a mutated allele's origin is its birth),
+        so the entity is created right the first time."""
+        occurrence = self._occurrences.get((actor, purpose), 0)
+        return event_id(self.system.name, actor, purpose, self.today, occurrence, self.activation.id)
+
     def emit(self, type: str, roles: dict, *, purpose: str, actor: str, place: str | None = None,
              payload: dict | None = None, causes=(), visibility: str | None = None,
              creates: dict | None = None) -> Event:

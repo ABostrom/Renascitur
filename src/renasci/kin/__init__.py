@@ -19,7 +19,7 @@ from renasci.core.engine import Engine
 from renasci.core.systems import Ruleset
 from renasci.people.genome import Catalogue, founder, keyed
 from renasci.people.life import Births, Life, world_params
-from renasci.people.races import Race
+from renasci.people.races import Race, age_years
 
 CAL = Calendar(ages=(Age(1, "1K", "Kin Age", last_year=1000),))
 START = Date(1, 1, 0)
@@ -49,16 +49,18 @@ def new_engine(seed: int = 1234, ripples=(), pins=(), people_per_settlement: int
         people = [f"{s}-{i:02d}" for i in range(people_per_settlement)]
         e.cast("settlement", s, {"region": region, "genome_group": group, "residents": sorted(people)})
         ages = [1 + (i * 7 + si * 3) % 50 for i in range(people_per_settlement)]
+        born = [[1, 1 - ages[i], (i * 37) % CAL.days_per_year] for i in range(people_per_settlement)]
         for i, p in enumerate(people):
             sex = "f" if i % 2 else "m"
             spouse = None
             partner = i + 1 if i % 2 == 0 else i - 1
-            if partner < people_per_settlement and all(race.marriage[0] <= ages[k] for k in (i, partner)):
+            if partner < people_per_settlement and all(race.marriage[0] <= age_years(CAL, born[k], START)
+                                                       for k in (i, partner)):
                 spouse = people[partner]
             genome = founder(cat, group, lambda name, p=p: streams(f"{p}:{name}"), f"f:{group}")
             e.cast("person", p, {
                 "name": race.names[sex][i % len(race.names[sex])], "sex": sex,
-                "born": [1, 1 - ages[i], (i * 37) % CAL.days_per_year], "race": race_id, "place": s, "house": None,
+                "born": born[i], "race": race_id, "place": s, "house": None,
                 "mother": None, "father": None, "children": [], "spouse": spouse, "genome": genome,
                 "traits": {}, "drives": {}, "ties": [], "last_birth": None})
     e.apply_pins(pins)

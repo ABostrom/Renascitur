@@ -9,7 +9,7 @@ from renasci.core.canon import digest
 from renasci.toy import new_engine
 
 HISTORY = "bdf959168249558a389e0c1a6b244ec2"  # event rows gained "scope" (#54)
-STATE = "0c7b8c22204422eb8263224aa3448536"  # pin director state gained "bindings" (#152)
+STATE = "2b6e139d658aaa95e2d60c12f2c09015"  # pin director state gained "bindings" (#152), "held" (#66)
 
 
 def test_toy_baseline_is_pinned():
