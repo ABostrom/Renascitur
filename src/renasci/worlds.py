@@ -43,7 +43,16 @@ def _kin() -> World:
                  frozenset({"people_per_settlement", "races", "catalogue", "residence", "masses", "scenario"}))
 
 
-WORLDS: dict[str, Callable[[], World]] = {"toy": _toy, "kin": _kin}
+def _fourth_age() -> World:
+    from renasci import renascita
+
+    def rulesets(scenario=None):
+        return [(renascita.START, renascita.ruleset(scenario))]
+
+    return World("fourth_age", renascita.CAL, renascita.new_engine, rulesets, frozenset({"scenario"}))
+
+
+WORLDS: dict[str, Callable[[], World]] = {"toy": _toy, "kin": _kin, "fourth_age": _fourth_age}
 
 
 def get_world(name: str) -> World:
