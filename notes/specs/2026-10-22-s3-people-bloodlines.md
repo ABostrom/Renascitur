@@ -154,6 +154,10 @@ All of the following run settlement by settlement, each in `ctx.scope(settlement
   - takes the house by the house rule (default the father's) and the place of the mother;
   - is appended to both parents' `children` and to the settlement's `residents`, and counted in `flow:born`.
 - **Twins:** a keyed draw. Twins get different names.
+- **Crowding** (#67): a settlement may have a `capacity`. Fertility is scaled by
+  `clamp(2 * (1 - residents / capacity), 0, 1.5)`: 1.5x when nearly empty, 1x at half capacity, none when
+  full. Without a capacity, fertility is unlimited. (Aggregates and food arrive with #71 and S10; until
+  then this keeps notable-only worlds from exploding.)
 - **The same season:** births run before deaths, so a mother who dies this season may still give birth,
   and a newborn takes its first (band-0) death draw in the season it is born.
 - **Spouses live together:** marriage moves one spouse (§4.4), so a birth reads and writes the father's
@@ -188,6 +192,16 @@ S1 §3.9's rule applies: **an entity with a natural origin is never pre-created*
   - an alliance bonus for crossing houses;
   - the age gap;
   - race.
+- **Entering the market** (#67): each eligible man enters with `market_rate` per year (default 0.35).
+  He weighs each eligible woman by `exp(-age gap / 8)`, ×2 for the same settlement and ×0.1 for another
+  race. Kin are left out entirely, not just down-weighted.
+- **One-way drain:** wives move to husbands, so a shrinking village can lose its young women and empty
+  out (seen on some kin seeds; whole regions hold). Movement between places (S4 #77) rebalances it.
+- **`flow:in` / `flow:out`** are written once aggregates and their ledgers exist (#71/#72); until then a
+  move updates only `residents` and `place`.
+- **Market size matters:** a closed market of a few dozen people runs out of unrelated partners within
+  generations (seen on the kin world at 10 per settlement). Worlds need regions of a few hundred, or
+  commoner spouses (below).
 - **Commoner spouses:** a notable still unmatched `commoner_after` years past the minimum age may marry a commoner. The spouse is **promoted** from the local aggregate (§8.2).
 - **Residence:** set by a world parameter (default: the wife moves to the husband's settlement). The move updates both settlements' `residents` and their `flow:in` and `flow:out`.
 

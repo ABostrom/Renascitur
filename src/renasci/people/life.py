@@ -32,7 +32,7 @@ DEATH = EventType("people.death", 1, roles={"deceased": (1, 1)}, payload={"age":
 NEAR_MISS = EventType("people.near_miss", 1, roles={"survivor": (1, 1)}, payload={"would_have": "str"})
 EVENT_TYPES = (BIRTH, DEATH, NEAR_MISS)
 
-WORLD_PARAMS = ("races", "catalogue", "house_from")
+WORLD_PARAMS = ("races", "catalogue", "house_from")  # (families.py also reads kin_degree, residence, market_rate)
 
 
 @functools.lru_cache(maxsize=8)
@@ -50,10 +50,18 @@ def world(ctx) -> tuple[dict[str, Race], Catalogue, str]:
     return _parse(canonical({k: ctx.params[k] for k in WORLD_PARAMS if k in ctx.params}))
 
 
-def world_params(races: list, catalogue: dict, house_from: str = "father") -> dict:
-    """Ruleset params for these systems, checked now rather than at the first activation."""
-    params = {"races": races, "catalogue": catalogue, "house_from": house_from}
-    _parse(canonical(params))
+def world_params(races: list, catalogue: dict, house_from: str = "father", kin_degree: int = 2,
+                 residence: str = "husband", market_rate: float = 0.35) -> dict:
+    """Ruleset params for the people systems, checked now rather than at the first activation."""
+    if type(kin_degree) is not int or kin_degree < 0:
+        raise ValueError("kin_degree must be a non-negative int")
+    if residence not in ("husband", "wife"):
+        raise ValueError(f"residence is husband or wife, got {residence!r}")
+    if type(market_rate) not in (int, float) or not 0 <= market_rate <= 1:
+        raise ValueError(f"market_rate must be a probability, got {market_rate!r}")
+    params = {"races": races, "catalogue": catalogue, "house_from": house_from, "kin_degree": kin_degree,
+              "residence": residence, "market_rate": market_rate}
+    _parse(canonical({k: params[k] for k in WORLD_PARAMS}))
     return params
 
 
@@ -66,6 +74,16 @@ def die(ctx, person: str, settlement: str, cause: str) -> None:
     spouse = ctx.get(person, "spouse")
     if spouse:
         ctx.set(spouse, "spouse", None)
+
+
+def _crowding(people: int, capacity) -> float:
+    """Fertility's response to a settlement filling up: 1.5x when nearly empty, 1x at half its
+    capacity, nothing when full. No capacity: no limit (1x)."""
+    if capacity is None:
+        return 1.0
+    if capacity <= 0:
+        return 0.0  # nowhere to raise a child
+    return max(0.0, min(1.5, 2.0 * (1.0 - people / capacity)))
 
 
 class Life(System):
@@ -96,7 +114,7 @@ class Births(System):
     name, cadence = "people.births", "seasonal"
     priority = -1  # before deaths on the same day, so a mother who dies this season may still give birth
     reads = frozenset({"ids:settlement", "residents", "born", "sex", "race", "spouse", "last_birth", "genome",
-                       "house", "status", "children"})
+                       "house", "status", "children", "capacity"})
     writes = frozenset({"new:person", "residents", "children", "last_birth"})
     event_types = (BIRTH,)
 
@@ -104,6 +122,7 @@ class Births(System):
         races, catalogue, house_from = world(ctx)
         for settlement in ctx.ids("settlement"):
             with ctx.scope(settlement):
+                crowding = _crowding(len(ctx.get(settlement, "residents")), ctx.get(settlement, "capacity"))
                 for mother in ctx.get(settlement, "residents"):
                     father = ctx.get(mother, "spouse")
                     if ctx.get(mother, "sex") != "f" or father is None:
@@ -115,7 +134,7 @@ class Births(System):
                     last = ctx.get(mother, "last_birth")
                     if last is not None and days_since(ctx.calendar, last, ctx.today) < race.spacing_days:
                         continue
-                    p = quarterly(race.fertility[band(age)])
+                    p = quarterly(race.fertility[band(age)]) * crowding
                     if p and ctx.chance(p, "birth", owner=mother, stakes=0.5, roles={"mother": [mother]}):
                         self._birth(ctx, settlement, mother, father, race, catalogue, house_from)
 

@@ -18,6 +18,7 @@ from renasci.core.calendar import Age, Calendar, Date
 from renasci.core.engine import Engine
 from renasci.core.systems import Ruleset
 from renasci.people.genome import Catalogue, founder, keyed
+from renasci.people.families import Marriage
 from renasci.people.life import Births, Life, world_params
 from renasci.people.races import Race, age_years
 
@@ -31,14 +32,15 @@ RACES: list[dict] = WORLD["races"]
 CATALOGUE: dict = WORLD["catalogue"]
 
 
-def ruleset(races=None, catalogue=None) -> Ruleset:
-    return Ruleset("kin", 1, (Births(), Life()), params=world_params(races or RACES, catalogue or CATALOGUE))
+def ruleset(races=None, catalogue=None, residence="husband") -> Ruleset:
+    return Ruleset("kin", 1, (Births(), Life(), Marriage()),
+                   params=world_params(races or RACES, catalogue or CATALOGUE, residence=residence))
 
 
 def new_engine(seed: int = 1234, ripples=(), pins=(), people_per_settlement: int = 20, races=None,
-               catalogue=None) -> Engine:
+               catalogue=None, residence: str = "husband") -> Engine:
     """A fresh kin world at 1K 1, before anything runs."""
-    e = Engine(CAL, seed=seed, rulesets=[(START, ruleset(races, catalogue))])
+    e = Engine(CAL, seed=seed, rulesets=[(START, ruleset(races, catalogue, residence))])
     cat = Catalogue.from_json(catalogue or CATALOGUE)
     table = {r["id"]: r for r in (races or RACES)}
     streams = keyed(seed)
@@ -47,7 +49,8 @@ def new_engine(seed: int = 1234, ripples=(), pins=(), people_per_settlement: int
         race_id, group = WORLD["region_race"][region], WORLD["region_group"][region]
         race = Race.from_json(table[race_id])
         people = [f"{s}-{i:02d}" for i in range(people_per_settlement)]
-        e.cast("settlement", s, {"region": region, "genome_group": group, "residents": sorted(people)})
+        e.cast("settlement", s, {"region": region, "genome_group": group, "residents": sorted(people),
+                                 "capacity": 2 * people_per_settlement})
         ages = [1 + (i * 7 + si * 3) % 50 for i in range(people_per_settlement)]
         born = [[1, 1 - ages[i], (i * 37) % CAL.days_per_year] for i in range(people_per_settlement)]
         for i, p in enumerate(people):
