@@ -1,0 +1,865 @@
+{
+ "draft": true,
+ "about": "PROVISIONAL Fourth Age scenario for 4A 1 (#73). Names come from the vault (the 12 Great Houses; Pyrosia's cities and provinces); every number is a placeholder, and none of it is canon. Open questions are on the review queue (#150).",
+ "start": [
+  4,
+  1,
+  0
+ ],
+ "params": {
+  "house_from": "father",
+  "residence": "husband",
+  "kin_degree": 2,
+  "market_rate": 0.35
+ },
+ "races": [
+  {
+   "id": "r:leonin",
+   "mortality": {
+    "f": [
+     0.0425,
+     0.0051,
+     0.0034,
+     0.0051,
+     0.0076,
+     0.0085,
+     0.0093,
+     0.0102,
+     0.011,
+     0.0136,
+     0.017,
+     0.0221,
+     0.0298,
+     0.0425,
+     0.0595,
+     0.085,
+     0.1275,
+     0.187,
+     0.255,
+     0.3825
+    ],
+    "m": [
+     0.0467,
+     0.0051,
+     0.0043,
+     0.0068,
+     0.0085,
+     0.0093,
+     0.0102,
+     0.011,
+     0.0127,
+     0.0153,
+     0.0187,
+     0.0255,
+     0.034,
+     0.0467,
+     0.068,
+     0.0935,
+     0.136,
+     0.204,
+     0.272,
+     0.3995
+    ]
+   },
+   "fertility": [
+    0,
+    0,
+    0,
+    0.15,
+    0.3,
+    0.3,
+    0.25,
+    0.2,
+    0.12,
+    0.04,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "fertile": [
+    16,
+    45
+   ],
+   "spacing_days": 540,
+   "marriage": [
+    16,
+    60
+   ],
+   "twins": 0.02,
+   "male": 0.5,
+   "names": {
+    "f": [
+     "Ama",
+     "Bessa",
+     "Cyra",
+     "Daia",
+     "Erin",
+     "Fera",
+     "Hela",
+     "Ira",
+     "Kesh",
+     "Lyra"
+    ],
+    "m": [
+     "Arn",
+     "Brak",
+     "Cass",
+     "Dorn",
+     "Eron",
+     "Garr",
+     "Hask",
+     "Ivo",
+     "Kael",
+     "Lorn"
+    ]
+   }
+  },
+  {
+   "id": "r:human",
+   "mortality": {
+    "f": [
+     0.05,
+     0.006,
+     0.004,
+     0.006,
+     0.009,
+     0.01,
+     0.011,
+     0.012,
+     0.013,
+     0.016,
+     0.02,
+     0.026,
+     0.035,
+     0.05,
+     0.07,
+     0.1,
+     0.15,
+     0.22,
+     0.3,
+     0.45
+    ],
+    "m": [
+     0.055,
+     0.006,
+     0.005,
+     0.008,
+     0.01,
+     0.011,
+     0.012,
+     0.013,
+     0.015,
+     0.018,
+     0.022,
+     0.03,
+     0.04,
+     0.055,
+     0.08,
+     0.11,
+     0.16,
+     0.24,
+     0.32,
+     0.47
+    ]
+   },
+   "fertility": [
+    0,
+    0,
+    0,
+    0.15,
+    0.3,
+    0.3,
+    0.25,
+    0.2,
+    0.12,
+    0.04,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "fertile": [
+    16,
+    45
+   ],
+   "spacing_days": 540,
+   "marriage": [
+    16,
+    60
+   ],
+   "twins": 0.012,
+   "male": 0.51,
+   "names": {
+    "f": [
+     "Alys",
+     "Bryn",
+     "Cara",
+     "Della",
+     "Edda",
+     "Fen",
+     "Gwen",
+     "Hild",
+     "Isa",
+     "Jo"
+    ],
+    "m": [
+     "Alder",
+     "Bram",
+     "Cole",
+     "Dain",
+     "Ewan",
+     "Finn",
+     "Gareth",
+     "Hugh",
+     "Ivor",
+     "Jory"
+    ]
+   }
+  },
+  {
+   "id": "r:dwarf",
+   "mortality": {
+    "f": [
+     0.03,
+     0.0036,
+     0.0024,
+     0.0036,
+     0.0054,
+     0.006,
+     0.0066,
+     0.0072,
+     0.0078,
+     0.0096,
+     0.012,
+     0.0156,
+     0.021,
+     0.03,
+     0.042,
+     0.06,
+     0.09,
+     0.132,
+     0.18,
+     0.27
+    ],
+    "m": [
+     0.033,
+     0.0036,
+     0.003,
+     0.0048,
+     0.006,
+     0.0066,
+     0.0072,
+     0.0078,
+     0.009,
+     0.0108,
+     0.0132,
+     0.018,
+     0.024,
+     0.033,
+     0.048,
+     0.066,
+     0.096,
+     0.144,
+     0.192,
+     0.282
+    ]
+   },
+   "fertility": [
+    0,
+    0,
+    0,
+    0,
+    0.12,
+    0.15,
+    0.15,
+    0.15,
+    0.12,
+    0.1,
+    0.08,
+    0.05,
+    0.02,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "fertile": [
+    20,
+    64
+   ],
+   "spacing_days": 900,
+   "marriage": [
+    20,
+    90
+   ],
+   "twins": 0.005,
+   "male": 0.52,
+   "names": {
+    "f": [
+     "Aud",
+     "Brenna",
+     "Dagny",
+     "Edda",
+     "Frida",
+     "Gunna",
+     "Hild",
+     "Ingrid"
+    ],
+    "m": [
+     "Bardin",
+     "Dorrek",
+     "Grimm",
+     "Harn",
+     "Korin",
+     "Morgrim",
+     "Thrain",
+     "Ulf"
+    ]
+   }
+  }
+ ],
+ "catalogue": {
+  "loci": [
+   {
+    "id": "eye",
+    "variants": [
+     "brown",
+     "amber",
+     "grey",
+     "blue"
+    ],
+    "model": "dominant",
+    "order": [
+     "brown",
+     "amber",
+     "grey",
+     "blue"
+    ],
+    "mutation": 1e-05,
+    "traits": {
+     "eye": {
+      "brown": 0,
+      "amber": 0.33,
+      "grey": 0.66,
+      "blue": 1
+     }
+    }
+   },
+   {
+    "id": "hair",
+    "variants": [
+     "black",
+     "brown",
+     "red",
+     "fair"
+    ],
+    "model": "dominant",
+    "order": [
+     "black",
+     "brown",
+     "red",
+     "fair"
+    ],
+    "mutation": 1e-05,
+    "traits": {
+     "hair": {
+      "black": 0,
+      "brown": 0.33,
+      "red": 0.66,
+      "fair": 1
+     }
+    }
+   },
+   {
+    "id": "stature1",
+    "variants": [
+     "+",
+     "-"
+    ],
+    "model": "additive",
+    "mutation": 1e-05,
+    "traits": {
+     "stature": {
+      "+": 0.08,
+      "-": -0.08
+     }
+    }
+   },
+   {
+    "id": "stature2",
+    "variants": [
+     "+",
+     "-"
+    ],
+    "model": "additive",
+    "mutation": 1e-05,
+    "traits": {
+     "stature": {
+      "+": 0.08,
+      "-": -0.08
+     }
+    }
+   },
+   {
+    "id": "build",
+    "variants": [
+     "+",
+     "-"
+    ],
+    "model": "additive",
+    "mutation": 1e-05,
+    "traits": {
+     "build": {
+      "+": 0.15,
+      "-": -0.15
+     }
+    }
+   },
+   {
+    "id": "constitution",
+    "variants": [
+     "+",
+     "-"
+    ],
+    "model": "additive",
+    "mutation": 1e-05,
+    "traits": {
+     "constitution": {
+      "+": 0.15,
+      "-": -0.15
+     }
+    }
+   },
+   {
+    "id": "longevity",
+    "variants": [
+     "+",
+     "-"
+    ],
+    "model": "additive",
+    "mutation": 1e-05,
+    "traits": {
+     "longevity": {
+      "+": 0.12,
+      "-": -0.12
+     }
+    }
+   },
+   {
+    "id": "fertility",
+    "variants": [
+     "+",
+     "-"
+    ],
+    "model": "additive",
+    "mutation": 1e-05,
+    "traits": {
+     "fertility": {
+      "+": 0.12,
+      "-": -0.12
+     }
+    }
+   },
+   {
+    "id": "wits",
+    "variants": [
+     "+",
+     "-"
+    ],
+    "model": "additive",
+    "mutation": 1e-05,
+    "traits": {
+     "wits": {
+      "+": 0.15,
+      "-": -0.15
+     }
+    }
+   },
+   {
+    "id": "charm",
+    "variants": [
+     "+",
+     "-"
+    ],
+    "model": "additive",
+    "mutation": 1e-05,
+    "traits": {
+     "charm": {
+      "+": 0.15,
+      "-": -0.15
+     }
+    }
+   },
+   {
+    "id": "will",
+    "variants": [
+     "+",
+     "-"
+    ],
+    "model": "additive",
+    "mutation": 1e-05,
+    "traits": {
+     "will": {
+      "+": 0.15,
+      "-": -0.15
+     }
+    }
+   },
+   {
+    "id": "temper",
+    "variants": [
+     "+",
+     "-"
+    ],
+    "model": "additive",
+    "mutation": 1e-05,
+    "traits": {
+     "temper": {
+      "+": 0.15,
+      "-": -0.15
+     }
+    }
+   },
+   {
+    "id": "gift",
+    "variants": [
+     "g",
+     "n"
+    ],
+    "model": "threshold",
+    "threshold": 2,
+    "mutation": 1e-05,
+    "traits": {
+     "gift": {
+      "g": 1,
+      "n": 0
+     }
+    }
+   }
+  ],
+  "groups": {
+   "pyrosia": {
+    "eye": {
+     "brown": 0.5,
+     "amber": 0.25,
+     "grey": 0.15,
+     "blue": 0.1
+    },
+    "hair": {
+     "black": 0.35,
+     "brown": 0.4,
+     "red": 0.1,
+     "fair": 0.15
+    },
+    "stature1": {
+     "+": 0.5,
+     "-": 0.5
+    },
+    "stature2": {
+     "+": 0.5,
+     "-": 0.5
+    },
+    "build": {
+     "+": 0.5,
+     "-": 0.5
+    },
+    "constitution": {
+     "+": 0.55,
+     "-": 0.45
+    },
+    "longevity": {
+     "+": 0.5,
+     "-": 0.5
+    },
+    "fertility": {
+     "+": 0.5,
+     "-": 0.5
+    },
+    "wits": {
+     "+": 0.5,
+     "-": 0.5
+    },
+    "charm": {
+     "+": 0.5,
+     "-": 0.5
+    },
+    "will": {
+     "+": 0.5,
+     "-": 0.5
+    },
+    "temper": {
+     "+": 0.5,
+     "-": 0.5
+    },
+    "gift": {
+     "g": 0.12,
+     "n": 0.88
+    }
+   }
+  },
+  "traits": {
+   "eye": {
+    "base": 0
+   },
+   "hair": {
+    "base": 0
+   },
+   "gift": {
+    "base": 0
+   },
+   "stature": {
+    "base": 0.5,
+    "range": [
+     0,
+     1
+    ]
+   },
+   "build": {
+    "base": 0.5,
+    "range": [
+     0,
+     1
+    ]
+   },
+   "constitution": {
+    "base": 0.5,
+    "range": [
+     0,
+     1
+    ]
+   },
+   "longevity": {
+    "base": 0.5,
+    "range": [
+     0,
+     1
+    ]
+   },
+   "fertility": {
+    "base": 0.5,
+    "range": [
+     0,
+     1
+    ]
+   },
+   "wits": {
+    "base": 0.5,
+    "range": [
+     0,
+     1
+    ]
+   },
+   "charm": {
+    "base": 0.5,
+    "range": [
+     0,
+     1
+    ]
+   },
+   "will": {
+    "base": 0.5,
+    "range": [
+     0,
+     1
+    ]
+   },
+   "temper": {
+    "base": 0.5,
+    "range": [
+     0,
+     1
+    ]
+   }
+  }
+ },
+ "regions": {
+  "v:ashen-plains": [
+   "v:lions-rest",
+   "v:lux-oescus",
+   "v:port-ardere",
+   "v:magnus-rest"
+  ],
+  "v:ember-peaks": [
+   "v:old-westgate"
+  ],
+  "v:flame-coast": [
+   "v:raining-bay"
+  ]
+ },
+ "settlements": [
+  {
+   "id": "v:lions-rest",
+   "name": "Lion’s Rest",
+   "region": "v:ashen-plains",
+   "race": "r:leonin",
+   "genome_group": "pyrosia",
+   "masses": 4000,
+   "commoners": 60,
+   "capacity": 12180,
+   "notable_target": 60,
+   "danger": 0.0
+  },
+  {
+   "id": "v:lux-oescus",
+   "name": "Lux Oescus",
+   "region": "v:ashen-plains",
+   "race": "r:human",
+   "genome_group": "pyrosia",
+   "masses": 1500,
+   "commoners": 30,
+   "capacity": 4590,
+   "notable_target": 30,
+   "danger": 0.0
+  },
+  {
+   "id": "v:port-ardere",
+   "name": "Port Ardere",
+   "region": "v:ashen-plains",
+   "race": "r:human",
+   "genome_group": "pyrosia",
+   "masses": 1500,
+   "commoners": 30,
+   "capacity": 4590,
+   "notable_target": 30,
+   "danger": 0.0
+  },
+  {
+   "id": "v:magnus-rest",
+   "name": "Magnus’ Rest",
+   "region": "v:ashen-plains",
+   "race": "r:dwarf",
+   "genome_group": "pyrosia",
+   "masses": 800,
+   "commoners": 20,
+   "capacity": 2460,
+   "notable_target": 20,
+   "danger": 0.0
+  },
+  {
+   "id": "v:old-westgate",
+   "name": "Old Westgate",
+   "region": "v:ember-peaks",
+   "race": "r:human",
+   "genome_group": "pyrosia",
+   "masses": 1000,
+   "commoners": 25,
+   "capacity": 3075,
+   "notable_target": 25,
+   "danger": 0.0
+  },
+  {
+   "id": "v:raining-bay",
+   "name": "Raining Bay",
+   "region": "v:flame-coast",
+   "race": "r:human",
+   "genome_group": "pyrosia",
+   "masses": 1000,
+   "commoners": 25,
+   "capacity": 3075,
+   "notable_target": 25,
+   "danger": 0.0
+  }
+ ],
+ "houses": [
+  {
+   "id": "v:house-medani",
+   "name": "Medani",
+   "seat": "v:lions-rest",
+   "rank": 1,
+   "rule": "male_preference_primogeniture"
+  },
+  {
+   "id": "v:house-tharashk",
+   "name": "Tharashk",
+   "seat": "v:lions-rest",
+   "rank": 1,
+   "rule": "male_preference_primogeniture"
+  },
+  {
+   "id": "v:house-vadalis",
+   "name": "Vadalis",
+   "seat": "v:old-westgate",
+   "rank": 1,
+   "rule": "male_preference_primogeniture"
+  },
+  {
+   "id": "v:house-jorasco",
+   "name": "Jorasco",
+   "seat": "v:lions-rest",
+   "rank": 1,
+   "rule": "male_preference_primogeniture"
+  },
+  {
+   "id": "v:house-silverhand",
+   "name": "Silverhand",
+   "seat": "v:lions-rest",
+   "rank": 1,
+   "rule": "male_preference_primogeniture"
+  },
+  {
+   "id": "v:house-cannith",
+   "name": "Cannith",
+   "seat": "v:lions-rest",
+   "rank": 1,
+   "rule": "male_preference_primogeniture"
+  },
+  {
+   "id": "v:house-orien",
+   "name": "Orien",
+   "seat": "v:port-ardere",
+   "rank": 1,
+   "rule": "male_preference_primogeniture"
+  },
+  {
+   "id": "v:house-sivis",
+   "name": "Sivis",
+   "seat": "v:lux-oescus",
+   "rank": 1,
+   "rule": "male_preference_primogeniture"
+  },
+  {
+   "id": "v:house-deneith",
+   "name": "Deneith",
+   "seat": "v:lions-rest",
+   "rank": 1,
+   "rule": "male_preference_primogeniture"
+  },
+  {
+   "id": "v:house-phiarlan",
+   "name": "Phiarlan",
+   "seat": "v:raining-bay",
+   "rank": 1,
+   "rule": "male_preference_primogeniture"
+  },
+  {
+   "id": "v:house-lyrandar",
+   "name": "Lyrandar",
+   "seat": "v:raining-bay",
+   "rank": 1,
+   "rule": "male_preference_primogeniture"
+  },
+  {
+   "id": "v:house-kundarak",
+   "name": "Kundarak",
+   "seat": "v:lux-oescus",
+   "rank": 1,
+   "rule": "male_preference_primogeniture"
+  }
+ ]
+}

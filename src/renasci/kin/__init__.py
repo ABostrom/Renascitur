@@ -17,14 +17,8 @@ from pathlib import Path
 from renasci.core.calendar import Age, Calendar, Date
 from renasci.core.engine import Engine
 from renasci.core.systems import Ruleset
-from renasci.people.drives import Drives
-from renasci.people.families import Marriage
-from renasci.people.genome import Catalogue
-from renasci.people.houses import Houses
-from renasci.people.life import Births, Life, world_params
-from renasci.people.population import Lod, Population, conservation
 from renasci.people.scenario import synthesise
-from renasci.people.ties import Ties
+from renasci.people.world import people_ruleset
 
 CAL = Calendar(ages=(Age(1, "1K", "Kin Age", last_year=1000),))
 START = Date(1, 1, 0)
@@ -55,11 +49,7 @@ def scenario(people_per_settlement=None, races=None, catalogue=None, residence=N
 
 
 def ruleset(races=None, catalogue=None, residence=None, sc=None) -> Ruleset:
-    sc = sc or scenario(races=races, catalogue=catalogue, residence=residence)
-    params = world_params(sc["races"], sc["catalogue"], aggregates=True,
-                          **{k: v for k, v in sc["params"].items() if k != "aggregates"})
-    return Ruleset("kin", 1, (Population(), Births(), Life(), Marriage(), Houses(), Lod(), Ties(), Drives()),
-                   params=params, conservation=conservation(Catalogue.from_json(sc["catalogue"])))
+    return people_ruleset("kin", sc or scenario(races=races, catalogue=catalogue, residence=residence))
 
 
 def new_engine(seed: int = 1234, ripples=(), pins=(), people_per_settlement: int | None = None, races=None,
