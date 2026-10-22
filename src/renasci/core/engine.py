@@ -99,6 +99,11 @@ class Engine:
         for i, d in enumerate(dates):
             self.scheduler.push(Activation(d, SWITCH_PRIORITY, "engine", "switch", "engine", {"index": i}, ()))
 
+    def register_event_types(self, types) -> None:
+        """Register event types for systems added after the engine was built (tools and tests)."""
+        for t in types:
+            self._register(t)
+
     def _register(self, t: EventType) -> None:
         try:
             existing = self.registry.get(t.name)

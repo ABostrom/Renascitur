@@ -85,10 +85,10 @@ def world_params(races: list, catalogue: dict, house_from: str = "father", kin_d
     return params
 
 
-def die(ctx, person: str, settlement: str, cause: str, *, killer: str | None = None) -> None:
+def die(ctx, person: str, settlement: str, cause: str, *, killer: str | None = None, causes=()) -> None:
     """A death and what it undoes: the record, the settlement's roster, the spouse's marriage."""
     death = ctx.emit("people.death", {"deceased": (person,), "killer": (killer,) if killer else ()}, purpose="death",
-                     actor=person, place=settlement,
+                     actor=person, place=settlement, causes=causes,
                      payload={"age": age_years(ctx.calendar, ctx.get(person, "born"), ctx.today), "cause": cause})
     ctx.set_status(person, "dead")
     ctx.set(settlement, "residents", [p for p in ctx.get(settlement, "residents") if p != person])
