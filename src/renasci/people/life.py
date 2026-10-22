@@ -23,6 +23,7 @@ import json
 from renasci.core.canon import canonical
 from renasci.core.events import EventType
 from renasci.core.systems import System
+from renasci.people import houses
 from renasci.people.genome import Catalogue, inherit, keyed, phenotype
 from renasci.people.races import Race, age_years, band, days_since, quarterly
 
@@ -74,6 +75,7 @@ def die(ctx, person: str, settlement: str, cause: str) -> None:
     spouse = ctx.get(person, "spouse")
     if spouse:
         ctx.set(spouse, "spouse", None)
+    houses.vacate(ctx, person)
 
 
 def _crowding(people: int, capacity) -> float:
@@ -88,9 +90,14 @@ def _crowding(people: int, capacity) -> float:
 
 class Life(System):
     name, cadence = "people.life", "seasonal"
-    reads = frozenset({"ids:settlement", "residents", "born", "sex", "race", "spouse", "status"})
-    writes = frozenset({"status", "residents", "spouse"})
-    event_types = (DEATH, NEAR_MISS)
+    reads = frozenset({"ids:settlement", "residents", "born", "sex", "race", "spouse", "status"}) | houses.READS
+    writes = frozenset({"status", "residents", "spouse"}) | houses.WRITES
+    event_types = (DEATH, NEAR_MISS) + houses.EVENT_TYPES
+
+    def handle(self, ctx, activation):
+        if activation.purpose != "succession":
+            raise ValueError(f"people.life has no follow-up {activation.purpose!r}")
+        houses.succeed(ctx, activation.payload["office"], activation.payload["predecessor"])
 
     def run(self, ctx):
         races, _, _ = world(ctx)
@@ -157,7 +164,7 @@ class Births(System):
                 "name": name, "sex": sex, "born": ctx.today.to_json(), "race": race.id, "place": settlement,
                 "house": ctx.get(parent, "house"), "mother": mother, "father": father, "children": [],
                 "spouse": None, "genome": genome, "traits": phenotype(catalogue, genome, {}),
-                "drives": {}, "ties": [], "last_birth": None}))
+                "drives": {}, "ties": [], "last_birth": None, "offices": []}))
         event = ctx.emit("people.birth", {"mother": (mother,), "father": (father,)}, purpose="birth", actor=mother,
                          place=settlement, payload={"twin": twins, "mutations": sum(mutated)},
                          creates={"child": children})
