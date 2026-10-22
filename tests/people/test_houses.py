@@ -122,3 +122,74 @@ def test_protecting_a_head_is_fully_explained(world):
     assert report["unexplained_events"] == report["unexplained_entities"] == report["unexplained_cells"] == 0, \
         report["unexplained"]
     assert store  # (the baseline is unchanged)
+
+
+# ---------------------------------------------------------------- review fixes
+
+
+def test_the_line_climbs_through_the_parent_the_house_comes_through():
+    tree = {
+        "M": {"sex": "f", "children": ["H", "a"], "status": "dead", "house": "h", "father": "X", "mother": None},
+        "H": {"sex": "m", "children": [], "status": "active", "house": "h", "father": "P", "mother": "M"},
+        "a": {"sex": "f", "children": ["c"], "status": "active", "house": "h", "father": "P", "mother": "M"},
+        "c": {"sex": "m", "children": [], "status": "active", "house": "h", "father": "Q", "mother": "a"},
+        "P": {"sex": "m", "children": ["H", "a"], "status": "active", "house": "other", "father": None, "mother": None},
+    }
+    get, status = look(tree)
+    assert line_of_succession(get, status, "H", "h", male_first=True, via="mother") == ["a", "c"]
+
+
+def test_ancestors_are_passed_through_not_chosen():
+    tree = {
+        "G": {"sex": "m", "children": ["U", "F"], "status": "dead", "house": "h", "father": None},
+        "U": {"sex": "m", "children": ["c"], "status": "active", "house": "h", "father": "G"},
+        "c": {"sex": "m", "children": [], "status": "active", "house": "h", "father": "U"},
+        "F": {"sex": "m", "children": ["H", "b"], "status": "active", "house": "h", "father": "G"},
+        "H": {"sex": "m", "children": [], "status": "active", "house": "h", "father": "F"},
+        "b": {"sex": "m", "children": [], "status": "active", "house": "h", "father": "F"},
+    }
+    get, status = look(tree)
+    assert line_of_succession(get, status, "H", "h", male_first=True) == ["b", "U", "c"]
+
+
+def test_no_heir_is_named_for_a_dead_holder():
+    e = new_engine(people_per_settlement=20)
+    house = e.store.ids("house")[0]
+    office = e.store.get(house, "headship")
+    holder = e.store.get(office, "holder")
+    ev, store, day = e.events[-1].id, e.store, Date(1, 1, 0)
+    store.set_status(holder, "dead", day, ev)  # killed outside people.life: no succession follows
+    store.set(store.get(holder, "spouse"), "spouse", None, day, ev)
+    place = store.get(holder, "place")
+    store.set(place, "residents", [p for p in store.get(place, "residents") if p != holder], day, ev)
+    e.run(until=Date(1, 2, 359))
+    assert not any(ev.type == "people.heir_named" and ev.roles["holder"] == (holder,) for ev in e.events
+                   if ev.date >= Date(1, 1, 0) and ev.type != "engine.cast")
+
+
+def test_a_title_that_is_not_a_headship_falls_vacant_without_ending_the_house():
+    doomed = copy.deepcopy(RACES)
+    for r in doomed:
+        r["mortality"] = {"f": [1.0] * 20, "m": [1.0] * 20}
+    e = new_engine(people_per_settlement=6, races=doomed)
+    house = e.store.ids("house")[0]
+    head = e.store.get(e.store.get(house, "headship"), "holder")
+    e.cast("office", "t:Throne", {"name": "Throne", "holder": head, "heir": None,
+                                  "rule": "male_preference_primogeniture", "house": house})
+    e.store.set(head, "offices", sorted(e.store.get(head, "offices") + ["t:Throne"]), Date(1, 1, 0), e.events[-1].id)
+    e.run(until=Date(1, 1, 359))
+    vacant = [ev for ev in e.events if ev.type == "people.office_vacant"]
+    extinct = [ev for ev in e.events if ev.type == "people.house_extinct"]
+    assert [ev.payload["office"] for ev in vacant] == ["t:Throne"]
+    assert all(ev.payload["house"] != "t:Throne" for ev in extinct)
+    assert e.store.get("t:Throne", "holder") is None
+
+
+def test_kin_heads_are_cast_with_their_house():
+    e = new_engine(people_per_settlement=20)
+    rows = {r["id"]: r for r in e.pending()["entities"]}
+    for h in e.store.ids("house"):
+        head = e.store.get(e.store.get(h, "headship"), "holder")
+        cast = next(ev for ev in e.events if ev.type == "engine.cast" and ev.roles["subject"] == (head,))
+        assert rows[head]["event"] == cast.id
+        assert not [d for d in e.pending()["state_deltas"] if d["entity"] == head and d["old"] is not None]

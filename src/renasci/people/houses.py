@@ -6,8 +6,9 @@ rule class, which orders the living candidates.
 
 **Line of succession** (`line_of_succession`): the holder's children in birth order, each followed by
 their own line (a dead child's line still counts), sons before daughters under male preference; then
-the same from the holder's father (the holder's siblings and their lines), then his father, up to
-`reach` generations. Only living members of the office's house are candidates, but the walk passes
+the same from the holder's parent the house comes through (`house_from`: the father, or the mother),
+which adds the holder's siblings and their lines, then that parent's parent, up to `reach`
+generations. Ancestors are passed through, never chosen: succession goes down and across, not up. Only living members of the office's house are candidates, but the walk passes
 through anyone, so a house member whose parent left the house is still found. Every step reads the
 recorded `children`, `father`, `sex`, `status` and `house` fields, so a birth or death that changes the
 line is a recorded read that differs (explainable).
@@ -30,15 +31,18 @@ SUCCESSION = EventType("people.succession", 1, roles={"predecessor": (1, 1), "su
                        payload={"office": "id", "abdication": "bool"}, dead_roles=("predecessor",))
 HOUSE_EXTINCT = EventType("people.house_extinct", 1, roles={"last": (1, 1)}, payload={"house": "id"},
                           dead_roles=("last",))
-EVENT_TYPES = (HEIR_NAMED, SUCCESSION, HOUSE_EXTINCT)
+OFFICE_VACANT = EventType("people.office_vacant", 1, roles={"last": (1, 1)}, payload={"office": "id"},
+                          dead_roles=("last",))
+EVENT_TYPES = (HEIR_NAMED, SUCCESSION, HOUSE_EXTINCT, OFFICE_VACANT)
 
 # What succession reads and writes; people.life declares these too, since it runs the follow-up.
-READS = frozenset({"offices", "headship", "holder", "heir", "rule", "house", "children", "father", "sex",
-                   "status", "extinct"})
+READS = frozenset({"offices", "headship", "holder", "heir", "rule", "house", "children", "father", "mother",
+                   "sex", "status", "extinct"})
 WRITES = frozenset({"holder", "heir", "offices", "extinct"})
 
 
-def line_of_succession(get, status, holder: str, house: str | None, male_first: bool, reach: int = 3) -> list[str]:
+def line_of_succession(get, status, holder: str, house: str | None, male_first: bool, reach: int = 3,
+                       via: str = "father") -> list[str]:
     """Living members of `house` in order of succession to `holder`.
 
     `get(entity, field)` and `status(entity)` read the world (a ctx, or a dict in tests).
@@ -64,9 +68,10 @@ def line_of_succession(get, status, holder: str, house: str | None, male_first: 
     descend(holder)
     ancestor = holder
     for _ in range(reach):
-        ancestor = get(ancestor, "father")
+        ancestor = get(ancestor, via)
         if not ancestor:
             break
+        seen.add(ancestor)  # passed through, never a candidate
         descend(ancestor)  # the holder's own line is already seen, so this adds siblings, then uncles...
     return order
 
@@ -76,7 +81,8 @@ class SuccessionRule:
     male_first = True
 
     def candidates(self, ctx, office: str, holder: str) -> list[str]:
-        return line_of_succession(ctx.get, ctx.status, holder, ctx.get(office, "house"), self.male_first)
+        via = "mother" if ctx.params.get("house_from") == "mother" else "father"
+        return line_of_succession(ctx.get, ctx.status, holder, ctx.get(office, "house"), self.male_first, via=via)
 
 
 class MalePreferencePrimogeniture(SuccessionRule):
@@ -114,12 +120,15 @@ def succeed(ctx, office: str, predecessor: str) -> None:
             return  # already settled
         line = RULES[ctx.get(office, "rule")].candidates(ctx, office, predecessor)
         if not line:
-            ctx.emit("people.house_extinct", {"last": (predecessor,)}, purpose="extinct", actor=office,
-                     payload={"house": house or office})
+            if house and ctx.get(house, "headship") == office:  # the house itself ends
+                ctx.emit("people.house_extinct", {"last": (predecessor,)}, purpose="extinct", actor=office,
+                         payload={"house": house})
+                ctx.set(house, "extinct", ctx.today.to_json())
+            else:  # a title with nobody to take it
+                ctx.emit("people.office_vacant", {"last": (predecessor,)}, purpose="vacant", actor=office,
+                         payload={"office": office})
             ctx.set(office, "holder", None)
             ctx.set(office, "heir", None)
-            if house and ctx.get(house, "headship") == office:
-                ctx.set(house, "extinct", ctx.today.to_json())
             return
         successor = line[0]
         ctx.emit("people.succession", {"predecessor": (predecessor,), "successor": (successor,)},
@@ -142,5 +151,5 @@ class Houses(System):
                     continue
                 office = ctx.get(house, "headship")
                 holder = ctx.get(office, "holder")
-                if holder is not None:
+                if holder is not None and ctx.status(holder) == "active":  # a dead holder's succession is pending
                     name_heir(ctx, office, holder)
