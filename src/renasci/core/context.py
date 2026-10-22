@@ -23,6 +23,12 @@ from renasci.core.ids import entity_id, event_id
 from renasci.core.scheduler import Activation
 
 
+def declared(name: str, names: frozenset) -> bool:
+    """Is `name` in a read or write set? A declaration ending in `*` covers a prefix: `"allele:*"`
+    covers every allele column, whose names come from the world's genome catalogue."""
+    return name in names or any(d.endswith("*") and name.startswith(d[:-1]) for d in names)
+
+
 def reads_digest(reads: list) -> str:
     """One digest of a scope's sorted [entity, field, value digest] reads. A full row and a
     digest-only row of the same reads give the same value, so the two forms compare."""
@@ -61,17 +67,18 @@ class Ctx:
         self._event: str | None = None  # the event that writes are attributed to
         self._occurrences: dict[tuple[str, str], int] = {}  # per (actor, purpose), this activation only
         self.hinges: list[dict] = []  # buffered; the engine keeps them only if the activation completes
+        self._series: list[dict] = []  # buffered likewise
         self._pin_causes: list = []  # pins that guarded someone here; the next event is caused by them
         self._guard_rows: list[dict] = []
 
     # ------------------------------------------------------------ declarations
 
     def _may_read(self, name: str) -> None:
-        if self._engine.strict and name not in self.system.reads:
+        if self._engine.strict and not declared(name, self.system.reads):
             raise UndeclaredAccess(f"{self.system.name} read {name!r} without declaring it")
 
     def _may_write(self, name: str) -> str:
-        if name not in self.system.writes:
+        if not declared(name, self.system.writes):
             raise UndeclaredAccess(f"{self.system.name} wrote {name!r} without declaring it")
         if self._event is None:
             raise ValueError(f"{self.system.name} wrote {name!r} before emitting an event to explain it")
@@ -190,6 +197,12 @@ class Ctx:
         event = self._may_write(name)
         self._engine.store.write_column(name, ids, values, self.today, event, activation=self.activation.id)
 
+    def series(self, entity: str, values: dict) -> None:
+        """Log numbers about `entity` today (an aggregate's counts) to the `timeseries` table. Not
+        state and not an event: a record for charts. Kept only if the activation completes."""
+        self._series.append(json.loads(canonical({"date": self.today, "system": self.system.name, "entity": entity,
+                                                  "values": values, "activation": self.activation.id})))
+
     def write_columns(self, entity: str, values: dict) -> None:
         """Several columns of one entity in one change (an aggregate's step): one bulk delta."""
         if not values:
@@ -269,7 +282,7 @@ class Ctx:
 
     def _check_writes(self, *names: str) -> None:
         for name in names:
-            if name not in self.system.writes:
+            if not declared(name, self.system.writes):
                 raise UndeclaredAccess(f"{self.system.name} wrote {name!r} without declaring it")
 
     def _take(self, aggregate: str, column: str | None, columns: dict | None) -> dict[str, int]:

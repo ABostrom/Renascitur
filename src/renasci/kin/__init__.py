@@ -20,6 +20,7 @@ from renasci.core.systems import Ruleset
 from renasci.people.genome import Catalogue, founder, keyed
 from renasci.people.families import Marriage
 from renasci.people.houses import Houses
+from renasci.people.population import Lod, Population, cast_masses, conservation
 from renasci.people.life import Births, Life, world_params
 from renasci.people.races import Race, age_years
 
@@ -34,12 +35,13 @@ CATALOGUE: dict = WORLD["catalogue"]
 
 
 def ruleset(races=None, catalogue=None, residence="husband") -> Ruleset:
-    return Ruleset("kin", 1, (Births(), Life(), Marriage(), Houses()),
-                   params=world_params(races or RACES, catalogue or CATALOGUE, residence=residence))
+    return Ruleset("kin", 1, (Population(), Births(), Life(), Marriage(), Houses(), Lod()),
+                   params=world_params(races or RACES, catalogue or CATALOGUE, residence=residence, aggregates=True),
+                   conservation=conservation(Catalogue.from_json(catalogue or CATALOGUE)))
 
 
 def new_engine(seed: int = 1234, ripples=(), pins=(), people_per_settlement: int = 20, races=None,
-               catalogue=None, residence: str = "husband") -> Engine:
+               catalogue=None, residence: str = "husband", masses: int = 200) -> Engine:
     """A fresh kin world at 1K 1, before anything runs."""
     e = Engine(CAL, seed=seed, rulesets=[(START, ruleset(races, catalogue, residence))])
     cat = Catalogue.from_json(catalogue or CATALOGUE)
@@ -52,7 +54,8 @@ def new_engine(seed: int = 1234, ripples=(), pins=(), people_per_settlement: int
         race = Race.from_json(table[race_id])
         people = [f"{s}-{i:02d}" for i in range(people_per_settlement)]
         e.cast("settlement", s, {"region": region, "genome_group": group, "residents": sorted(people),
-                                 "capacity": 2 * people_per_settlement})
+                                 "race": race_id, "capacity": 2 * (people_per_settlement + masses),
+                                 "notable_target": people_per_settlement})
         ages = [1 + (i * 7 + si * 3) % 50 for i in range(people_per_settlement)]
         born = [[1, 1 - ages[i], (i * 37) % CAL.days_per_year] for i in range(people_per_settlement)]
         for i, p in enumerate(people):
@@ -67,6 +70,9 @@ def new_engine(seed: int = 1234, ripples=(), pins=(), people_per_settlement: int
                         "race": race_id, "place": s, "house": None, "mother": None, "father": None,
                         "children": [], "spouse": spouse, "genome": genome, "traits": {}, "drives": {},
                         "ties": [], "last_birth": None, "offices": []}
+    cast_masses(e, {s: (WORLD["region_race"][REGION_OF[s]], WORLD["region_group"][REGION_OF[s]], masses,
+                        people_per_settlement) for s in SETTLEMENTS},
+                cat, {r["id"]: Race.from_json(r) for r in (races or RACES)})
     houses = _plan_houses(plans, people_per_settlement)
     for p in sorted(plans, key=lambda x: (SETTLEMENTS.index(plans[x]["place"]), x)):  # the casting order of old
         e.cast("person", p, plans[p])

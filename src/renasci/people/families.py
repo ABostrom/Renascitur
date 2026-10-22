@@ -12,7 +12,9 @@ person would have been part of.
 - **Preferences:** a man weighs each woman by age gap, the same settlement, and the same race.
 - **Residence** (`residence`, default "husband"): the wife moves to her husband's settlement.
 
-Commoner spouses promoted from the masses arrive with aggregates (#71/#72).
+**Commoner spouses** (#72, worlds with aggregates): a notable still unmarried `commoner_after` years
+past the marriage age may, with `commoner_rate` a year, marry someone promoted from their own
+settlement's masses (`people.population.promote_person`).
 """
 
 from __future__ import annotations
@@ -21,6 +23,8 @@ import math
 
 from renasci.core.events import EventType
 from renasci.core.systems import System
+from renasci.core.lod import EVENT_TYPES as LOD_TYPES
+from renasci.people import population
 from renasci.people.life import world
 from renasci.people.races import age_years
 
@@ -45,9 +49,9 @@ def ancestors(ctx, person: str, depth: int) -> set[str]:
 class Marriage(System):
     name, cadence = "people.marriage", "yearly"
     reads = frozenset({"ids:settlement", "region", "residents", "sex", "race", "born", "spouse", "mother",
-                       "father", "place", "status"})
-    writes = frozenset({"spouse", "residents", "place"})
-    event_types = (MARRIAGE,)
+                       "father", "place", "status"}) | population.COLUMN_READS
+    writes = frozenset({"spouse", "residents", "place", "new:person", "pop:*", "allele:*", "flow:*"})
+    event_types = (MARRIAGE,) + LOD_TYPES
 
     def run(self, ctx):
         races, _, _ = world(ctx)
@@ -72,7 +76,7 @@ class Marriage(System):
                 lo, hi = races[ctx.get(p, "race")].marriage
                 if lo <= age_years(ctx.calendar, ctx.get(p, "born"), ctx.today) <= hi:
                     (men if ctx.get(p, "sex") == "m" else women).append(p)
-        if not men or not women:
+        if not men and not women:
             return
         seekers = {}
         lineage = {p: ancestors(ctx, p, kin_degree) for p in sorted(men + women)}
@@ -90,14 +94,42 @@ class Marriage(System):
                 prefs[woman] = w
             if prefs:
                 seekers[man] = prefs
-        for man, woman in ctx.match("marriage", seekers, owner=region).items():
-            ctx.emit("people.marriage", {"spouse": (man, woman)}, purpose="marriage", actor=man,
-                     place=ctx.get(man, "place"), payload={"commoner": False})
-            ctx.set(man, "spouse", woman)
-            ctx.set(woman, "spouse", man)
-            mover, stayer = (woman, man) if residence == "husband" else (man, woman)
-            old, new = ctx.get(mover, "place"), ctx.get(stayer, "place")
-            if old != new:
-                ctx.set(old, "residents", [p for p in ctx.get(old, "residents") if p != mover])
-                ctx.set(new, "residents", sorted(ctx.get(new, "residents") + [mover]))
-                ctx.set(mover, "place", new)
+        matched = ctx.match("marriage", seekers, owner=region) if seekers else {}
+        for man, woman in matched.items():
+            self._wed(ctx, man, woman, residence, commoner=False)
+        if ctx.params.get("aggregates"):
+            self._commoners(ctx, men, women, matched, races)
+
+    def _commoners(self, ctx, men, women, matched, races) -> None:
+        """Notables long past the marriage age marry someone from their own settlement's masses."""
+        after, rate = int(ctx.params.get("commoner_after", 6)), float(ctx.params.get("commoner_rate", 0.3))
+        taken = set(matched) | set(matched.values())
+        for notable in sorted(men + women):
+            if notable in taken:
+                continue
+            lo, hi = races[ctx.get(notable, "race")].marriage
+            if age_years(ctx.calendar, ctx.get(notable, "born"), ctx.today) < lo + after:
+                continue
+            if not ctx.chance(rate, "commoner", owner=notable):
+                continue
+            home = ctx.get(notable, "place")
+            sex = "f" if ctx.get(notable, "sex") == "m" else "m"
+            spouse = population.promote_person(ctx, home, "spouse", sex=sex, ages=(lo, hi))
+            if spouse is not None:
+                man, woman = (notable, spouse) if sex == "f" else (spouse, notable)
+                self._wed(ctx, man, woman, ctx.params.get("residence", "husband"), commoner=True)
+
+    @staticmethod
+    def _wed(ctx, man: str, woman: str, residence: str, commoner: bool) -> None:
+        ctx.emit("people.marriage", {"spouse": (man, woman)}, purpose="marriage", actor=man,
+                 place=ctx.get(man, "place"), payload={"commoner": commoner})
+        ctx.set(man, "spouse", woman)
+        ctx.set(woman, "spouse", man)
+        mover, stayer = (woman, man) if residence == "husband" else (man, woman)
+        old, new = ctx.get(mover, "place"), ctx.get(stayer, "place")
+        if old != new:
+            ctx.set(old, "residents", [p for p in ctx.get(old, "residents") if p != mover])
+            ctx.set(new, "residents", sorted(ctx.get(new, "residents") + [mover]))
+            ctx.set(mover, "place", new)
+            population.bump(ctx, old, out=1)
+            population.bump(ctx, new, **{"in": 1})

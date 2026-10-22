@@ -23,7 +23,7 @@ import json
 from renasci.core.canon import canonical
 from renasci.core.events import EventType
 from renasci.core.systems import System
-from renasci.people import houses
+from renasci.people import houses, population
 from renasci.people.genome import Catalogue, inherit, keyed, phenotype
 from renasci.people.races import Race, age_years, band, days_since, quarterly
 
@@ -52,7 +52,9 @@ def world(ctx) -> tuple[dict[str, Race], Catalogue, str]:
 
 
 def world_params(races: list, catalogue: dict, house_from: str = "father", kin_degree: int = 2,
-                 residence: str = "husband", market_rate: float = 0.35) -> dict:
+                 residence: str = "husband", market_rate: float = 0.35, aggregates: bool = False,
+                 married_share: float = 0.7, demote_rate: float = 0.2, commoner_after: int = 6,
+                 commoner_rate: float = 0.3) -> dict:
     """Ruleset params for the people systems, checked now rather than at the first activation."""
     if type(kin_degree) is not int or kin_degree < 0:
         raise ValueError("kin_degree must be a non-negative int")
@@ -60,8 +62,17 @@ def world_params(races: list, catalogue: dict, house_from: str = "father", kin_d
         raise ValueError(f"residence is husband or wife, got {residence!r}")
     if type(market_rate) not in (int, float) or not 0 <= market_rate <= 1:
         raise ValueError(f"market_rate must be a probability, got {market_rate!r}")
+    for name, p in (("married_share", married_share), ("demote_rate", demote_rate), ("commoner_rate", commoner_rate)):
+        if type(p) not in (int, float) or not 0 <= p <= 1:
+            raise ValueError(f"{name} must be a probability, got {p!r}")
+    if type(aggregates) is not bool:
+        raise ValueError("aggregates must be true or false")
+    if type(commoner_after) is not int or commoner_after < 0:
+        raise ValueError("commoner_after must be a non-negative int")
     params = {"races": races, "catalogue": catalogue, "house_from": house_from, "kin_degree": kin_degree,
-              "residence": residence, "market_rate": market_rate}
+              "residence": residence, "market_rate": market_rate, "aggregates": aggregates,
+              "married_share": married_share, "demote_rate": demote_rate, "commoner_after": commoner_after,
+              "commoner_rate": commoner_rate}
     _parse(canonical({k: params[k] for k in WORLD_PARAMS}))
     return params
 
@@ -76,9 +87,10 @@ def die(ctx, person: str, settlement: str, cause: str) -> None:
     if spouse:
         ctx.set(spouse, "spouse", None)
     houses.vacate(ctx, person)
+    population.bump(ctx, settlement, died=1)
 
 
-def _crowding(people: int, capacity) -> float:
+def crowding(people: int, capacity) -> float:
     """Fertility's response to a settlement filling up: 1.5x when nearly empty, 1x at half its
     capacity, nothing when full. No capacity: no limit (1x)."""
     if capacity is None:
@@ -88,10 +100,13 @@ def _crowding(people: int, capacity) -> float:
     return max(0.0, min(1.5, 2.0 * (1.0 - people / capacity)))
 
 
+_crowding = crowding  # (the name tests used first)
+
+
 class Life(System):
     name, cadence = "people.life", "seasonal"
-    reads = frozenset({"ids:settlement", "residents", "born", "sex", "race", "spouse", "status"}) | houses.READS
-    writes = frozenset({"status", "residents", "spouse"}) | houses.WRITES
+    reads = frozenset({"ids:settlement", "residents", "born", "sex", "race", "spouse", "status", "flow:*"}) | houses.READS
+    writes = frozenset({"status", "residents", "spouse", "flow:*"}) | houses.WRITES
     event_types = (DEATH, NEAR_MISS) + houses.EVENT_TYPES
 
     def handle(self, ctx, activation):
@@ -121,15 +136,18 @@ class Births(System):
     name, cadence = "people.births", "seasonal"
     priority = -1  # before deaths on the same day, so a mother who dies this season may still give birth
     reads = frozenset({"ids:settlement", "residents", "born", "sex", "race", "spouse", "last_birth", "genome",
-                       "house", "status", "children", "capacity"})
-    writes = frozenset({"new:person", "residents", "children", "last_birth"})
+                       "house", "status", "children", "capacity", "pop:*", "flow:*"})
+    writes = frozenset({"new:person", "residents", "children", "last_birth", "flow:*"})
     event_types = (BIRTH,)
 
     def run(self, ctx):
         races, catalogue, house_from = world(ctx)
         for settlement in ctx.ids("settlement"):
             with ctx.scope(settlement):
-                crowding = _crowding(len(ctx.get(settlement, "residents")), ctx.get(settlement, "capacity"))
+                people = len(ctx.get(settlement, "residents"))
+                if ctx.params.get("aggregates"):
+                    people += population.masses(ctx, settlement)
+                damp = crowding(people, ctx.get(settlement, "capacity"))
                 for mother in ctx.get(settlement, "residents"):
                     father = ctx.get(mother, "spouse")
                     if ctx.get(mother, "sex") != "f" or father is None:
@@ -141,7 +159,7 @@ class Births(System):
                     last = ctx.get(mother, "last_birth")
                     if last is not None and days_since(ctx.calendar, last, ctx.today) < race.spacing_days:
                         continue
-                    p = quarterly(race.fertility[band(age)]) * crowding
+                    p = quarterly(race.fertility[band(age)]) * damp
                     if p and ctx.chance(p, "birth", owner=mother, stakes=0.5, roles={"mother": [mother]}):
                         self._birth(ctx, settlement, mother, father, race, catalogue, house_from)
 
@@ -176,3 +194,4 @@ class Births(System):
             ctx.set(parent, "children", ctx.get(parent, "children") + born)
         ctx.set(mother, "last_birth", ctx.today.to_json())
         ctx.set(settlement, "residents", sorted(ctx.get(settlement, "residents") + born))
+        population.bump(ctx, settlement, born=len(born))

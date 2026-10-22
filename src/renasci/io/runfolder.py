@@ -29,7 +29,7 @@ from renasci.core.determinism import versions
 
 FORMAT = 1
 TABLES = ("events", "causes", "participants", "entities", "state_deltas", "bulk_deltas", "reads",
-          "hinges", "dropped", "strain", "ripples", "pins", "activations")
+          "hinges", "dropped", "strain", "ripples", "pins", "activations", "timeseries")
 _SEGMENT = re.compile(r"^seg-(\d{5})\.jsonl(\.gz)?$")
 
 
@@ -89,6 +89,8 @@ class RunFolder:
         child = cls.create(path, meta, parent={"run": src.path.name, "segments": keep})
         for t in TABLES:
             for i in range(keep):
+                if not (src.path / t / f"{_seg(i)}.jsonl.gz").exists():
+                    continue  # a table added after the source was written (e.g. timeseries, #71)
                 shutil.copyfile(src.path / t / f"{_seg(i)}.jsonl.gz", child.path / t / f"{_seg(i)}.jsonl.gz")
         for i in range(keep):
             side = src.path / "index" / f"{_seg(i)}.json"

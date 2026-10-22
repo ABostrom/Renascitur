@@ -68,6 +68,7 @@ class Engine:
         self.causes = CauseIndex()
         self.events: list[Event] = []
         self.reads: list[dict] = []
+        self.timeseries: list[dict] = []  # pending history: aggregate numbers over time (ctx.series)
         # Every read row (the Python API and tests). Recipe runs default to one digest per scope (#151).
         self.full_reads = True
         self.hinges: list[dict] = []  # close calls with stakes: the source data for latch points
@@ -202,6 +203,7 @@ class Engine:
             "ripples": list(self.ripple_log),
             "pins": list(self.director.changes),
             "activations": list(self.activations),
+            "timeseries": list(self.timeseries),
         }
 
     def clear_pending(self) -> None:
@@ -211,6 +213,7 @@ class Engine:
         self.director.changes = []
         self.ripple_log = []
         self.activations = []
+        self.timeseries = []
         self._scopes = {}
         self.store.drain()
 
@@ -348,6 +351,7 @@ class Engine:
         """Keep what a completed activation produced besides events and writes: hinges and reads."""
         self._note_activation(ctx.activation)
         self.hinges.extend(ctx.hinges)
+        self.timeseries.extend(ctx._series)
         self.reads.extend(ctx.read_rows(full=self.full_reads))
 
     def _note_activation(self, activation: Activation) -> None:
