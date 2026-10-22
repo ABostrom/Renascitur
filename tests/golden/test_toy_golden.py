@@ -8,7 +8,7 @@ from renasci.core.calendar import Date
 from renasci.core.canon import digest
 from renasci.toy import new_engine
 
-HISTORY = "b267882ceeb11977f389beebc5f681f4"
+HISTORY = "bdf959168249558a389e0c1a6b244ec2"  # event rows gained "scope" (#54)
 STATE = "28197ccc245e4bc6c164dc4921c7b560"
 
 

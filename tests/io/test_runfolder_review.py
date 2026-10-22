@@ -115,3 +115,39 @@ def test_truncate_ignores_files_that_are_not_segments(tmp_path):
     (tmp_path / "r" / "events" / "desktop.ini").write_text("x", encoding="utf-8")
     rf.truncate(keep=0)
     assert (tmp_path / "r" / "events" / "desktop.ini").exists()
+
+
+# ---------------------------------------------------------------- #54: event scopes and segment sidecars
+
+
+def test_event_rows_record_their_scope():
+    from renasci.toy import new_engine
+
+    e = new_engine(people_per_village=6)
+    e.run(until=Date(1, 1, 359))
+    rows = e.pending()
+    by_scope = {(r["activation"], r["scope"]): set(r["events"]) for r in rows["reads"]}
+    for ev in rows["events"]:
+        assert "scope" in ev
+        if ev["activation"] and (ev["activation"], ev["scope"]) in by_scope:
+            assert ev["id"] in by_scope[(ev["activation"], ev["scope"])]
+    assert {ev["scope"] for ev in rows["events"] if ev["type"] == "toy.granary"} == {"t:North", "t:South"}
+
+
+def test_closed_segments_get_a_sidecar_with_dates_and_counts(tmp_path):
+    import json
+
+    rf = RunFolder.create(tmp_path / "r", {})
+    rf.write_many({"events": [{"id": "x1", "date": [1, 2, 10]}, {"id": "x2", "date": [1, 3, 5]}],
+                   "causes": [{"event": "x1", "kind": "event", "ref": "x0"}]})
+    rf.close_segment()
+    rf.close_segment()  # an empty segment
+    side = json.loads((tmp_path / "r" / "index" / "seg-00000.json").read_text(encoding="utf-8"))
+    assert side == {"segment": 0, "first": [1, 2, 10], "last": [1, 3, 5],
+                    "rows": {**{t: 0 for t in TABLES}, "events": 2, "causes": 1}}
+    empty = json.loads((tmp_path / "r" / "index" / "seg-00001.json").read_text(encoding="utf-8"))
+    assert empty["first"] is None and empty["rows"]["events"] == 0
+    rf.truncate(keep=1)
+    assert not (tmp_path / "r" / "index" / "seg-00001.json").exists()
+    child = RunFolder.fork(tmp_path / "r", tmp_path / "c", keep=1, meta={})
+    assert (tmp_path / "c" / "index" / "seg-00000.json").exists()

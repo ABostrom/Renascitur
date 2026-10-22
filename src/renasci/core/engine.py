@@ -78,6 +78,7 @@ class Engine:
         self.ripples: tuple[Ripple, ...] = ()
         self.ripple_log: list[dict] = []  # pending history
         self.activations: list[dict] = []  # pending history: every activation run, in order
+        self._scopes: dict[str, str | None] = {}  # pending: the ctx scope each event was emitted in
         self._date: Date | None = None
 
         self._register(CAST)
@@ -127,10 +128,11 @@ class Engine:
 
     # ------------------------------------------------------------ used by Ctx
 
-    def record(self, event: Event, created=()) -> Event:
+    def record(self, event: Event, created=(), scope: str | None = None) -> Event:
         event = self.registry.validate(event, store=self.store, today=self._date or self.start)
         self.causes.add(event)
         self.events.append(event)
+        self._scopes[event.id] = scope
         self.director.observe(event, created)
         return event
 
@@ -173,7 +175,7 @@ class Engine:
         """Pending history as run-folder rows. Call `clear_pending` once they are safely written."""
         events = self.events
         return {
-            "events": [ev.to_json() for ev in events],
+            "events": [ev.to_json() | {"scope": self._scopes.get(ev.id)} for ev in events],
             "causes": [{"event": ev.id, "kind": c.kind, "ref": c.ref} for ev in events for c in ev.causes],
             "participants": [{"event": ev.id, "role": role, "entity": entity}
                              for ev in events for role, members in ev.roles.items() for entity in members],
@@ -196,6 +198,7 @@ class Engine:
         self.director.changes = []
         self.ripple_log = []
         self.activations = []
+        self._scopes = {}
         self.store.drain()
 
     # ------------------------------------------------------------ running
