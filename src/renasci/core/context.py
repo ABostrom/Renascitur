@@ -227,7 +227,7 @@ class Ctx:
                                            today=self.today)
             for kind, entity, fields in births:
                 store.create(kind, entity, fields, self.today, eid, self.activation.id)
-        event = self._engine.record(event, created=[b[1] for b in births])
+        event = self._engine.record(event, created=[b[1] for b in births], scope=self._scope)
         self._event = event.id
         self._events[self._scope].append(event.id)
         for row in self._guard_rows:

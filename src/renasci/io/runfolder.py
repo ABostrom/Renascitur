@@ -90,6 +90,11 @@ class RunFolder:
         for t in TABLES:
             for i in range(keep):
                 shutil.copyfile(src.path / t / f"{_seg(i)}.jsonl.gz", child.path / t / f"{_seg(i)}.jsonl.gz")
+        for i in range(keep):
+            side = src.path / "index" / f"{_seg(i)}.json"
+            if side.exists():
+                (child.path / "index").mkdir(exist_ok=True)
+                shutil.copyfile(side, child.path / "index" / side.name)
         child.manifest["segments"] = keep
         child.manifest["marks"] = [m for m in src.manifest["marks"] if m["segment"] < keep]
         child.save_manifest()
@@ -138,12 +143,24 @@ class RunFolder:
                     f.write(text)
 
     def close_segment(self) -> int:
-        """Gzip the open segment of every table and start the next. Returns the closed index."""
+        """Gzip the open segment of every table and start the next. Returns the closed index.
+
+        Also writes `index/seg-N.json`: the segment's first and last event dates and its row counts
+        per table, so readers can find the segment for a date without opening every one.
+        """
         index = self.manifest["segments"]
         raws = [self.path / t / f"{_seg(index)}.jsonl" for t in TABLES]
-        for raw in raws:
+        rows, first, last = {}, None, None
+        for table, raw in zip(TABLES, raws):
             data = raw.read_bytes() if raw.exists() else b""
+            lines = [ln for ln in data.split(b"\n") if ln]
+            rows[table] = len(lines)
+            if table == "events" and lines:
+                first, last = json.loads(lines[0]).get("date"), json.loads(lines[-1]).get("date")
             _atomic_write(raw.with_name(raw.name + ".gz"), _gzip(data))
+        (self.path / "index").mkdir(exist_ok=True)
+        sidecar = {"segment": index, "first": first, "last": last, "rows": rows}
+        _atomic_write(self.path / "index" / f"{_seg(index)}.json", (canonical(sidecar) + "\n").encode("utf-8"))
         self.manifest["segments"] = index + 1
         self.save_manifest()  # the commit point
         for raw in raws:
@@ -161,6 +178,11 @@ class RunFolder:
         for t in TABLES:
             for index, _, f in list(self._segment_files(t)):
                 if index >= keep:
+                    f.unlink()
+        if (self.path / "index").is_dir():
+            for f in sorted((self.path / "index").iterdir()):
+                m = re.match(r"^seg-(\d{5})\.json$", f.name)
+                if m and int(m.group(1)) >= keep:
                     f.unlink()
 
     # ------------------------------------------------------------ reading
