@@ -60,6 +60,7 @@ class Census(System):
     """Year 2: promote a named villager out of the village aggregate. Year 4: they fade back."""
 
     name, cadence = "x.census", "yearly"
+    event_types = __import__("renasci.core.lod", fromlist=["EVENT_TYPES"]).EVENT_TYPES
     reads = frozenset({"headcount", "ids:person", "status"})
     writes = frozenset({"new:person", "status", "headcount"})
 
@@ -117,3 +118,83 @@ def test_rulesets_can_check_conservation():
     assert e.check_conservation() == []
     e.store.write_column("headcount", ["t:village"], [50], Date(1, 5, 0), "x9")
     assert e.check_conservation() == ["population changed: 50 + 0"]
+
+
+# ---------------------------------------------------------------- review fixes
+
+from renasci.core.lod import EVENT_TYPES as LOD_TYPES  # noqa: E402
+
+
+def test_resolution_and_coarse_declarations_are_in_the_recipe():
+    policy = ResolutionPolicy(focus=[(Date(1, 5, 0), Date(1, 6, 0))])
+    e = Engine(CAL, seed=1, rulesets=[(START, Ruleset("c", 1, (Census(),)))], resolution=policy)
+    r = e.recipe()
+    assert r["resolution"] == {"default": {"kind": "fine", "step": None}, "focus": [[[1, 5, 0], [1, 6, 0]]]}
+    sysrow = r["rulesets"][0]["systems"][0]
+    assert sysrow["coarse_ok"] is False and sysrow["coarse_fallback"] is None
+
+
+def test_lod_events_must_be_declared():
+    class Undeclared(Census):
+        name = "x.undeclared"
+        event_types = ()
+
+    e = Engine(CAL, seed=1, rulesets=[(START, Ruleset("c", 1, (Undeclared(),)))])
+    e.cast("place", "t:village", {})
+    e.cast_column("headcount", "int64", ["t:village"], [100])
+    from renasci.core.context import UndeclaredAccess
+
+    with pytest.raises(UndeclaredAccess):
+        e.run(until=Date(1, 3, 0))
+
+
+def test_promote_checks_its_declarations_before_changing_anything():
+    class NoColumnWrite(Census):
+        name = "x.nocol"
+        writes = frozenset({"new:person"})
+
+    e = Engine(CAL, seed=1, rulesets=[(START, Ruleset("c", 1, (NoColumnWrite(),)))])
+    e.cast("place", "t:village", {})
+    e.cast_column("headcount", "int64", ["t:village"], [100])
+    with pytest.raises(Exception):
+        e.run(until=Date(1, 3, 0))
+    assert e.store.ids("person") == []
+
+
+def test_demote_refuses_the_dormant_and_needs_column_with_aggregate():
+    class Twice(System):
+        name, cadence = "x.twice", "yearly"
+        reads = frozenset({"headcount", "status"})
+        writes = frozenset({"new:person", "status", "headcount"})
+        event_types = LOD_TYPES
+
+        def run(self, ctx):
+            if ctx.today.year == 2:
+                p = ctx.promote("t:village", "person", {}, reason="hero", column="headcount", place="t:village")
+                ctx.demote(p, reason="faded", column="headcount", aggregate="t:village")
+                ctx.demote(p, reason="again", column="headcount", aggregate="t:village")
+
+    e = Engine(CAL, seed=1, rulesets=[(START, Ruleset("c", 1, (Twice(),)))])
+    e.cast("place", "t:village", {})
+    e.cast_column("headcount", "int64", ["t:village"], [100])
+    with pytest.raises(ValueError):
+        e.run(until=Date(1, 3, 0))
+
+
+def test_promote_takes_a_place_and_causes():
+    from renasci.core.events import Cause
+
+    class Placed(Census):
+        name = "x.placed"
+
+        def run(self, ctx):
+            if ctx.today.year == 2:
+                ctx.promote("t:village", "person", {}, reason="hero", column="headcount", place="t:village",
+                            causes=(Cause("event", ctx._engine.events[0].id),))
+
+    e = Engine(CAL, seed=1, rulesets=[(START, Ruleset("c", 1, (Placed(),)))])
+    e.cast("place", "t:village", {})
+    e.cast_column("headcount", "int64", ["t:village"], [100])
+    e.run(until=Date(1, 3, 0))
+    promo = next(ev for ev in e.events if ev.type == "lod.promote")
+    assert promo.place == "t:village" and Cause("event", e.events[0].id) in promo.causes

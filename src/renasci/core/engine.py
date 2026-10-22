@@ -351,7 +351,10 @@ class Engine:
     def recipe(self) -> dict:
         """Everything that shapes history besides the state: checked on restore, hashed in full."""
         def system(s):
+            fallback = s.coarse_fallback
             return {"name": s.name, "class": type(s).__qualname__, "cadence": s.cadence, "priority": s.priority,
+                    "coarse_ok": s.coarse_ok,
+                    "coarse_fallback": getattr(fallback, "__qualname__", None) if fallback else None,
                     "reads": sorted(s.reads), "writes": sorted(s.writes),
                     "event_types": [{"name": t.name, "version": t.version, "roles": t.roles, "payload": t.payload,
                                      "visibility": t.visibility, "dead_roles": list(t.dead_roles)}
@@ -369,6 +372,7 @@ class Engine:
                           "disguises": [system(d) | {"handles": d.handles} for d in rs.disguises]}
                          for d, rs in self.rulesets],
             "pins": [p.to_json() for p in self.director.pins],
+            "resolution": self.resolution.to_json(),
         }
 
     def _state(self) -> dict:
@@ -409,7 +413,7 @@ class Engine:
     @classmethod
     def restore(cls, checkpoint: dict, calendar: Calendar, rulesets: list[tuple[Date, Ruleset]],
                 seed: int, strict: bool = True, reshuffles: tuple[Reshuffle, ...] = (),
-                hinge_margin: float = 0.05, pins=(), ripples=()) -> Engine:
+                hinge_margin: float = 0.05, pins=(), ripples=(), resolution: ResolutionPolicy | None = None) -> Engine:
         """Rebuild an engine from a checkpoint and the recipe (including its pins) that produced it.
 
         Ripples dated before the checkpoint must be exactly the original run's. Ripples on or after
@@ -419,7 +423,8 @@ class Engine:
         if header.get("format") != CHECKPOINT_FORMAT:
             raise ValueError(f"checkpoint format {header.get('format')!r} is not {CHECKPOINT_FORMAT}; "
                              "engine changed, replay from scenario")
-        engine = cls(calendar, seed, rulesets, strict=strict, reshuffles=reshuffles, hinge_margin=hinge_margin)
+        engine = cls(calendar, seed, rulesets, strict=strict, reshuffles=reshuffles, hinge_margin=hinge_margin,
+                     resolution=resolution)
         engine.apply_pins(pins, cast=False)
         recipe = engine.recipe()
         if digest(recipe, size=16) != header["recipe_hash"]:

@@ -60,3 +60,8 @@ class ResolutionPolicy:
 
     def ever_coarse(self) -> bool:
         return self.default.kind == "coarse"
+
+    def to_json(self) -> dict:
+        step = self.default.step
+        return {"default": {"kind": self.default.kind, "step": [step.years, step.days] if step else None},
+                "focus": [[a.to_json(), b.to_json()] for a, b in self.focus]}
