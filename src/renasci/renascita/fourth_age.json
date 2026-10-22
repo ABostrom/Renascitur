@@ -228,6 +228,110 @@
      "Jory"
     ]
    }
+  },
+  {
+   "id": "r:dwarf",
+   "mortality": {
+    "f": [
+     0.03,
+     0.0036,
+     0.0024,
+     0.0036,
+     0.0054,
+     0.006,
+     0.0066,
+     0.0072,
+     0.0078,
+     0.0096,
+     0.012,
+     0.0156,
+     0.021,
+     0.03,
+     0.042,
+     0.06,
+     0.09,
+     0.132,
+     0.18,
+     0.27
+    ],
+    "m": [
+     0.033,
+     0.0036,
+     0.003,
+     0.0048,
+     0.006,
+     0.0066,
+     0.0072,
+     0.0078,
+     0.009,
+     0.0108,
+     0.0132,
+     0.018,
+     0.024,
+     0.033,
+     0.048,
+     0.066,
+     0.096,
+     0.144,
+     0.192,
+     0.282
+    ]
+   },
+   "fertility": [
+    0,
+    0,
+    0,
+    0,
+    0.12,
+    0.15,
+    0.15,
+    0.15,
+    0.12,
+    0.1,
+    0.08,
+    0.05,
+    0.02,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "fertile": [
+    20,
+    64
+   ],
+   "spacing_days": 900,
+   "marriage": [
+    20,
+    90
+   ],
+   "twins": 0.005,
+   "male": 0.52,
+   "names": {
+    "f": [
+     "Aud",
+     "Brenna",
+     "Dagny",
+     "Edda",
+     "Frida",
+     "Gunna",
+     "Hild",
+     "Ingrid"
+    ],
+    "m": [
+     "Bardin",
+     "Dorrek",
+     "Grimm",
+     "Harn",
+     "Korin",
+     "Morgrim",
+     "Thrain",
+     "Ulf"
+    ]
+   }
   }
  ],
  "catalogue": {
@@ -601,7 +705,7 @@
  "settlements": [
   {
    "id": "v:lions-rest",
-   "name": "Lion's Rest",
+   "name": "Lion’s Rest",
    "region": "v:ashen-plains",
    "race": "r:leonin",
    "genome_group": "pyrosia",
@@ -637,9 +741,9 @@
   },
   {
    "id": "v:magnus-rest",
-   "name": "Magnus' Rest",
+   "name": "Magnus’ Rest",
    "region": "v:ashen-plains",
-   "race": "r:human",
+   "race": "r:dwarf",
    "genome_group": "pyrosia",
    "masses": 800,
    "commoners": 20,
@@ -690,7 +794,7 @@
   {
    "id": "v:house-vadalis",
    "name": "Vadalis",
-   "seat": "v:lions-rest",
+   "seat": "v:old-westgate",
    "rank": 1,
    "rule": "male_preference_primogeniture"
   },
@@ -718,14 +822,14 @@
   {
    "id": "v:house-orien",
    "name": "Orien",
-   "seat": "v:lions-rest",
+   "seat": "v:port-ardere",
    "rank": 1,
    "rule": "male_preference_primogeniture"
   },
   {
    "id": "v:house-sivis",
    "name": "Sivis",
-   "seat": "v:lions-rest",
+   "seat": "v:lux-oescus",
    "rank": 1,
    "rule": "male_preference_primogeniture"
   },
@@ -739,21 +843,21 @@
   {
    "id": "v:house-phiarlan",
    "name": "Phiarlan",
-   "seat": "v:lions-rest",
+   "seat": "v:raining-bay",
    "rank": 1,
    "rule": "male_preference_primogeniture"
   },
   {
    "id": "v:house-lyrandar",
    "name": "Lyrandar",
-   "seat": "v:lions-rest",
+   "seat": "v:raining-bay",
    "rank": 1,
    "rule": "male_preference_primogeniture"
   },
   {
    "id": "v:house-kundarak",
    "name": "Kundarak",
-   "seat": "v:lions-rest",
+   "seat": "v:lux-oescus",
    "rank": 1,
    "rule": "male_preference_primogeniture"
   }

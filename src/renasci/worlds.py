@@ -47,7 +47,7 @@ def _fourth_age() -> World:
     from renasci import renascita
 
     def rulesets(scenario=None):
-        return [(renascita.START, renascita.ruleset(scenario))]
+        return renascita.rulesets(scenario)
 
     return World("fourth_age", renascita.CAL, renascita.new_engine, rulesets, frozenset({"scenario"}))
 
