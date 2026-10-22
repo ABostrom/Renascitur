@@ -1,14 +1,14 @@
 from __future__ import annotations
 from dataclasses import dataclass, field
-from renasci.family import Family, Marriage
-from renasci.house import House
-from renasci.orientation import Gender, Sexuality
-from renasci.race import Race
-from renasci.stats import StatBlock
+from renasci_legacy.family import Family, Marriage
+from renasci_legacy.house import House
+from renasci_legacy.orientation import Gender, Sexuality
+from renasci_legacy.race import Race
+from renasci_legacy.stats import StatBlock
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from renasci.world import World
+    from renasci_legacy.world import World
 
 @dataclass
 class PersonView:

@@ -1,13 +1,13 @@
 from __future__ import annotations
 import random
 from typing import Iterator
-from renasci.generators.base import CoreEventGenerator
-from renasci.events.person_events import BirthEvent
+from renasci_legacy.generators.base import CoreEventGenerator
+from renasci_legacy.events.person_events import BirthEvent
 from typing import TYPE_CHECKING
 
-from renasci.person import Person
+from renasci_legacy.person import Person
 if TYPE_CHECKING:
-    from renasci.world import World
+    from renasci_legacy.world import World
 
 class BirthGenerator(CoreEventGenerator):
     def generate(self, world: World) -> Iterator[BirthEvent]:

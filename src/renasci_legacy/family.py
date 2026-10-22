@@ -1,12 +1,12 @@
 from __future__ import annotations
 from dataclasses import dataclass, field
 
-from renasci.orientation import Gender
+from renasci_legacy.orientation import Gender
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from renasci.person import Person, PersonView
-    from renasci.house import House
+    from renasci_legacy.person import Person, PersonView
+    from renasci_legacy.house import House
 
 @dataclass
 class Family:

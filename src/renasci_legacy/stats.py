@@ -4,7 +4,7 @@ from typing import Any, Dict
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from renasci.world import World
+    from renasci_legacy.world import World
 
 @dataclass
 class StatDelta:

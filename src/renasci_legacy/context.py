@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from typing import Any
-from renasci.stats import StatDelta
+from renasci_legacy.stats import StatDelta
 
 @dataclass
 class WorldContext:
