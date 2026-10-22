@@ -52,7 +52,8 @@ class System:
 
 
 class Ruleset:
-    def __init__(self, name: str, version: int, systems: tuple[System, ...], params: dict | None = None):
+    def __init__(self, name: str, version: int, systems: tuple[System, ...], params: dict | None = None,
+                 forcers: tuple = ()):
         if not isinstance(name, str) or not name or type(version) is not int:
             raise ValueError("a ruleset needs a name and an int version")
         by_name: dict[str, System] = {}
@@ -65,9 +66,21 @@ class Ruleset:
         self.systems = tuple(by_name[n] for n in sorted(by_name))  # stable order
         self.params = dict(params or {})
         self._by_name = by_name
+        self.forcers = tuple(sorted(forcers, key=lambda f: f.name))
+        self._forcer_for = {}
+        for f in self.forcers:
+            f.check()
+            if not getattr(f, "handles", "") or not callable(getattr(f, "force", None)):
+                raise ValueError(f"forcer {f.name!r} needs `handles` (an event type) and `force(ctx, pin)`")
+            if f.handles in self._forcer_for:
+                raise ValueError(f"ruleset {name!r} has two forcers for {f.handles!r}")
+            self._forcer_for[f.handles] = f
+
+    def forcer(self, event_type: str):
+        return self._forcer_for.get(event_type)
 
     def get(self, name: str) -> System | None:
         return self._by_name.get(name)
 
     def event_types(self) -> list[EventType]:
-        return [t for s in self.systems for t in s.event_types]
+        return [t for s in self.systems + self.forcers for t in s.event_types]

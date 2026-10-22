@@ -178,6 +178,12 @@ class Ctx:
                 h["event"] = event.id
         return event
 
+    # ------------------------------------------------------------ pins
+
+    def guarded(self, entity: str) -> bool:
+        """Ask before a fatal outcome: True means canon needs `entity` alive, so write a near miss."""
+        return self._engine.director.guarded(entity, self.today, self.activation.id)
+
     # ------------------------------------------------------------ randomness and follow-ups
 
     def rng(self, purpose: str, entity: str):
