@@ -102,13 +102,15 @@ def test_promotion_then_demotion_restores_the_masses_exactly():
     from renasci.core.systems import Ruleset, System
     from renasci.kin import CAL, START, ruleset
     from renasci.people.population import demote_person, promote_person
+    from renasci.people.ties import TIE_ENDED
 
     class RoundTrip(System):
         name, cadence = "test.roundtrip", "yearly"
         reads = frozenset(ruleset().systems[0].reads) | frozenset(BAND_COLUMNS) | {"residents", "genome", "born",
-                                                                                    "sex", "race", "status"}
-        writes = frozenset({"new:person", "residents", "status"}) | frozenset(BAND_COLUMNS)
-        event_types = LOD
+                                                                                    "sex", "race", "status",
+                                                                                    "ties", "a", "b", "kind"}
+        writes = frozenset({"new:person", "residents", "status", "ties", "ended"}) | frozenset(BAND_COLUMNS)
+        event_types = LOD + (TIE_ENDED,)
 
         def run(self, ctx):
             s = SETTLEMENTS[0]

@@ -23,7 +23,7 @@ import json
 from renasci.core.canon import canonical
 from renasci.core.events import EventType
 from renasci.core.systems import System
-from renasci.people import houses, population
+from renasci.people import houses, population, ties
 from renasci.people.genome import Catalogue, inherit, keyed, phenotype
 from renasci.people.races import Race, age_years, band, days_since, quarterly
 
@@ -87,6 +87,7 @@ def die(ctx, person: str, settlement: str, cause: str) -> None:
     if spouse:
         ctx.set(spouse, "spouse", None)
     houses.vacate(ctx, person)
+    ties.end_ties(ctx, person, "death")
     population.bump(ctx, settlement, died=1)
 
 
@@ -105,9 +106,10 @@ _crowding = crowding  # (the name tests used first)
 
 class Life(System):
     name, cadence = "people.life", "seasonal"
-    reads = frozenset({"ids:settlement", "residents", "born", "sex", "race", "spouse", "status", "flow:*"}) | houses.READS
-    writes = frozenset({"status", "residents", "spouse", "flow:*"}) | houses.WRITES
-    event_types = (DEATH, NEAR_MISS) + houses.EVENT_TYPES
+    reads = frozenset({"ids:settlement", "residents", "born", "sex", "race", "spouse", "status", "flow:*"}) \
+        | houses.READS | ties.READS
+    writes = frozenset({"status", "residents", "spouse", "flow:*"}) | houses.WRITES | ties.WRITES
+    event_types = (DEATH, NEAR_MISS) + houses.EVENT_TYPES + (ties.TIE_ENDED,)
 
     def handle(self, ctx, activation):
         if activation.purpose != "succession":

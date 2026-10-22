@@ -27,6 +27,7 @@ from __future__ import annotations
 
 from renasci.core.events import EventType
 from renasci.core.lod import EVENT_TYPES as LOD_TYPES
+from renasci.people.ties import TIE_ENDED
 from renasci.core.systems import System
 from renasci.people.races import BANDS, BAND_YEARS, age_years, band, quarterly
 
@@ -233,6 +234,9 @@ def demote_person(ctx, person: str, settlement: str, *, reason: str) -> None:
             col = allele_column(locus, variant_of(c))
             give[col] = give.get(col, 0) + 1
     ctx.demote(person, reason=reason, aggregate=settlement, columns=give)
+    from renasci.people.ties import end_ties
+
+    end_ties(ctx, person, "demoted")
     ctx.set(settlement, "residents", [p for p in ctx.get(settlement, "residents") if p != person])
     _bump(ctx, settlement, demoted=1)
 
@@ -242,9 +246,9 @@ class Lod(System):
 
     name, cadence = "people.lod", "yearly"
     reads = COLUMN_READS | {"ids:settlement", "residents", "notable_target", "house", "offices", "spouse", "children",
-                            "born", "status", "sex", "genome", "race"}
-    writes = frozenset({"pop:*", "allele:*", "flow:*", "residents", "status"})
-    event_types = LOD_TYPES
+                            "born", "status", "sex", "genome", "race", "ties", "a", "b", "kind"}
+    writes = frozenset({"pop:*", "allele:*", "flow:*", "residents", "status", "ties", "ended"})
+    event_types = LOD_TYPES + (TIE_ENDED,)
 
     def run(self, ctx):
         from renasci.people.life import world
