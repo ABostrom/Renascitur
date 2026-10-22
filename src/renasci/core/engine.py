@@ -1,8 +1,11 @@
 """The engine: owns the world state and runs systems in scheduler order.
 
 Rulesets switch on configured dates. Each switch is an engine activation that runs before
-anything else on that day. At a switch, systems that carry over keep their cadence, new systems
-start one, and activations of systems that left are dropped (and listed in `dropped`).
+anything else on that day. At a switch:
+- a system that left, or changed its cadence or priority, has its queued activations removed
+  (listed in `dropped`);
+- every cadence system in the new ruleset without a queued cadence run starts one that day. That
+  covers new systems, changed ones, and carried ones whose chain ended at an age boundary.
 """
 
 from __future__ import annotations
@@ -46,8 +49,8 @@ class Engine:
         self.reads: list[dict] = []
         self.dropped: list[str] = []
         self.ruleset: Ruleset | None = None
+        self.ruleset_index: int | None = None
         self._date: Date | None = None
-        self._event_counts: dict[tuple[str, str, str], int] = {}
 
         self._register(CAST)
         for _, rs in rulesets:
@@ -84,11 +87,15 @@ class Engine:
         self.events.append(event)
         return event
 
-    def next_event_occurrence(self, system: str, actor: str, purpose: str) -> int:
-        key = (system, actor, purpose)
-        n = self._event_counts.get(key, 0)
-        self._event_counts[key] = n + 1
-        return n
+    def schedule(self, system: str, date: Date, purpose: str, *, entity: str, payload: dict | None = None,
+                 priority: int | None = None, causes=()) -> Activation:
+        """Schedule an activation of any system (pins, ripples and scenarios start on_demand systems)."""
+        rs_system = self.ruleset.get(system) if self.ruleset else None
+        if priority is None:
+            priority = rs_system.priority if rs_system else 0
+        activation = Activation(date, priority, entity, purpose, system, payload or {}, tuple(causes))
+        self.scheduler.push(activation)
+        return activation
 
     # ------------------------------------------------------------ running
 
@@ -105,15 +112,24 @@ class Engine:
     def _advance(self, date: Date) -> None:
         if date != self._date:
             self._date = date
-            self._event_counts = {}  # event occurrences count per day
             self.ordinals.close_before(self.calendar.canonical_tick(date))
 
     def _switch(self, activation: Activation) -> None:
         old = self.ruleset
-        self.ruleset = self.rulesets[activation.payload["index"]][1]
-        for system in self.ruleset.systems:
-            carried = old is not None and old.get(system.name) is not None
-            if system.cadence != "on_demand" and not carried:
+        self.ruleset_index = activation.payload["index"]
+        self.ruleset = new = self.rulesets[self.ruleset_index][1]
+
+        def unchanged(name: str) -> bool:
+            a, b = old.get(name) if old else None, new.get(name)
+            return a is not None and b is not None and (a.cadence, a.priority) == (b.cadence, b.priority)
+
+        removed = self.scheduler.remove_where(lambda a: a.system != "engine" and not unchanged(a.system))
+        self.dropped.extend(a.id for a in removed)
+        for system in new.systems:
+            if system.cadence == "on_demand":
+                continue
+            queued = self.scheduler.pending(lambda a, n=system.name: a.system == n and a.purpose == "cadence")
+            if not queued:
                 self.scheduler.push(Activation(activation.date, system.priority, system.name, "cadence",
                                                system.name, {}, ()))
 

@@ -199,3 +199,160 @@ def test_system_declarations_are_checked():
         Ruleset("r", 1, (Bad(),))
     with pytest.raises(ValueError):
         Ruleset("r", 1, (Counter(), Counter()))
+
+
+# ---------------------------------------------------------------- review fixes
+
+CAL2 = Calendar(ages=(Age(1, "1X", "Toy Age", last_year=2), Age(2, "2X", "Next Age")))
+
+
+def make2(rulesets, strict=True):
+    e = Engine(CAL2, seed=1, rulesets=rulesets, strict=strict)
+    world(e)
+    return e
+
+
+def test_a_system_carried_across_an_age_boundary_keeps_running():
+    rs = [(Date(1, 1, 0), Ruleset("a", 1, (Counter(),))), (Date(2, 1, 0), Ruleset("b", 1, (Counter(),)))]
+    e = make2(rs)
+    e.run(until=Date(2, 1, 359))
+    assert sum(1 for ev in e.events if ev.type == "toy.tick" and ev.date.age == 2) == 12
+
+
+def test_a_system_can_leave_and_come_back():
+    rs = [
+        (Date(1, 1, 0), Ruleset("in", 1, (Yearly(),))),
+        (Date(1, 1, 100), Ruleset("out", 1, ())),
+        (Date(1, 1, 200), Ruleset("back", 1, (Yearly(),))),
+    ]
+    e = make(rs)
+    e.run(until=Date(1, 2, 359))
+    notes = sorted(ev.date for ev in e.events if ev.type == "toy.note" and ev.payload == {})
+    # day 0 run + day 10 follow-up; restarted at day 200 (+ follow-up day 210); then year 2 (+ follow-up)
+    assert notes == [Date(1, 1, 0), Date(1, 1, 10), Date(1, 1, 200), Date(1, 1, 210), Date(1, 2, 0), Date(1, 2, 10)]
+
+
+class YearlyOnDemand(Yearly):
+    cadence = "on_demand"
+
+
+def test_a_system_whose_cadence_changes_restarts_its_chain():
+    rs = [(Date(1, 1, 0), Ruleset("a", 1, (YearlyOnDemand(),))), (Date(1, 2, 0), Ruleset("b", 1, (Yearly(),)))]
+    e = make(rs)
+    e.run(until=Date(1, 3, 359))
+    assert [ev.date for ev in e.events if ev.type == "toy.note" and ev.date.day == 0] == [Date(1, 2, 0), Date(1, 3, 0)]
+    rs = [(Date(1, 1, 0), Ruleset("a", 1, (Yearly(),))), (Date(1, 2, 0), Ruleset("b", 1, (YearlyOnDemand(),)))]
+    e = make(rs)
+    e.run(until=Date(1, 3, 359))
+    assert [ev.date for ev in e.events if ev.type == "toy.note" and ev.date.day == 0] == [Date(1, 1, 0)]
+
+
+class Lister(System):
+    name, cadence = "toy.lister", "yearly"
+    reads, writes = frozenset({"ids:person", "status"}), frozenset()
+
+    def run(self, ctx):
+        ctx.ids("person", status="active")
+
+
+def test_listing_ids_records_every_status_it_looked_at():
+    e = make([(Date(1, 1, 0), Ruleset("l", 1, (Lister(),)))])
+    e.cast("person", "t:a", {})
+    e.cast("person", "t:b", {})
+    e.run(until=Date(1, 1, 0))
+    reads = e.reads[0]["reads"]
+    assert ["t:a", "status"] in reads and ["t:b", "status"] in reads and ["$person", "ids"] in reads
+
+
+DEATH = EventType("toy.death", 1, roles={"deceased": (1, 1)}, payload={})
+
+
+class Reaper(System):
+    """Kills everyone in the skip list's complement, one event per person."""
+
+    name, cadence = "toy.reaper", "yearly"
+    reads, writes = frozenset({"ids:person", "status"}), frozenset({"status"})
+    event_types = (DEATH,)
+    skip = ()
+
+    def run(self, ctx):
+        for p in ctx.ids("person", status="active"):
+            if p in self.skip:
+                continue
+            ctx.emit("toy.death", {"deceased": (p,)}, purpose="death", actor=p)
+            ctx.set_status(p, "dead")
+
+
+def test_event_ids_do_not_shift_when_an_earlier_event_is_skipped():
+    def run(skip):
+        reaper = Reaper()
+        reaper.skip = skip
+        e = make([(Date(1, 1, 0), Ruleset("r", 1, (reaper,)))])
+        for p in ("t:a", "t:b", "t:c"):
+            e.cast("person", p, {})
+        e.run(until=Date(1, 1, 0))
+        return {ev.roles["deceased"][0]: ev.id for ev in e.events if ev.type == "toy.death"}
+
+    assert run(())["t:c"] == run(("t:a",))["t:c"]
+
+
+def test_emit_requires_an_explicit_actor():
+    class NoActor(Counter):
+        def run(self, ctx):
+            ctx.emit("toy.tick", {"subject": ("t:world",)}, payload={"n": 1}, purpose="tick")
+
+    e = make([(Date(1, 1, 0), Ruleset("n", 1, (NoActor(),)))])
+    with pytest.raises(TypeError):
+        e.run(until=Date(1, 1, 0))
+
+
+def test_writes_and_events_name_their_activation_and_follow_ups_their_parent():
+    e = make()
+    e.run(until=Date(1, 1, 10))
+    tick = next(ev for ev in e.events if ev.type == "toy.tick")
+    assert tick.activation and tick.activation.startswith("a")
+    delta = next(d for d in e.store.deltas if d.field == "count" and d.event == tick.id)
+    assert delta.activation == tick.activation
+    follow = next(ev for ev in e.events if ev.date == Date(1, 1, 10))
+    assert any(c.kind == "activation" for c in follow.causes)
+
+
+def test_engine_can_schedule_any_system():
+    e = make([(Date(1, 1, 0), Ruleset("o", 1, (YearlyOnDemand(),)))])
+    e.run(until=Date(1, 1, 0))
+    e.schedule("toy.yearly", Date(1, 1, 5), "follow", entity="t:world")
+    e.run(until=Date(1, 1, 5))
+    assert any(ev.date == Date(1, 1, 5) for ev in e.events)
+
+
+def test_params_cannot_be_mutated_through_ctx():
+    class Mutator(Counter):
+        def run(self, ctx):
+            ctx.params["x"] = 99
+
+    rs = Ruleset("m", 1, (Mutator(),), params={"x": 1})
+    e = make([(Date(1, 1, 0), rs)])
+    e.run(until=Date(1, 1, 30))
+    assert rs.params == {"x": 1}
+
+
+def test_exists_and_kind_are_recorded_reads():
+    class Prober(System):
+        name, cadence = "toy.prober", "yearly"
+        reads = frozenset({"status"})
+
+        def run(self, ctx):
+            assert ctx.exists("t:world") and ctx.kind("t:world") == "place"
+            assert not ctx.exists("t:nowhere")
+
+    e = make([(Date(1, 1, 0), Ruleset("p", 1, (Prober(),)))])
+    e.run(until=Date(1, 1, 0))
+    reads = e.reads[0]["reads"]
+    assert ["t:world", "status"] in reads and ["t:nowhere", "status"] in reads
+
+
+def test_engine_remembers_which_ruleset_is_active():
+    rs = [(Date(1, 1, 0), Ruleset("a", 1, ())), (Date(1, 2, 0), Ruleset("b", 1, ()))]
+    e = make(rs)
+    e.run(until=Date(1, 2, 0))
+    assert e.ruleset_index == 1

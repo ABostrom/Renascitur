@@ -153,9 +153,11 @@ The CLI uses `argparse`, so there's no extra dependency. `renasci/__init__.py` s
 - **EntityId:** `"e" + blake2b(creator_event_id, role, ordinal)[:16 hex]`. Entities cast from the
   vault get `"v:" + vault_id`. Toy cast entities get `"t:" + name`.
 - **EventId:** `"x" + blake2b(event_key)[:16]`. The `event_key` is
-  `(system, actor_id, purpose, date, occurrence)`. Here, occurrence is the n-th event emitted for
-  that `(system, actor_id, purpose, date)`, counted per activation scope. So the same cause in the
-  same place gives the same id in another run, and that is what makes runs comparable by id.
+  `(system, actor_id, purpose, date, occurrence, activation_id)`. Here, occurrence is the n-th event emitted for
+  that `(actor_id, purpose)` within one activation, and `actor_id` must be given explicitly. Skipping one
+  event therefore never renumbers the others. The same cause in the same place gives the same id in another
+  run, and that is what makes runs comparable by id. Events and state deltas also carry their activation id,
+  and follow-ups carry a `Cause("activation", parent)`.
 - **Store:**
   - `records[kind][id]` holds dataclass records for notables.
   - `ComponentTable` holds columnar data for bulk state: NumPy columns plus a sorted id index.
