@@ -114,3 +114,80 @@ def test_inspect_prints_an_event_with_its_causes(runs, capsys):
     child = birth["roles"]["child"][0]
     assert main(["inspect", str(out / "base"), "--entity", child]) == 0
     assert child in capsys.readouterr().out
+
+
+# ---------------------------------------------------------------- review fixes
+
+
+def ripple_at(date, until="[1, 12, 359]"):
+    return f'\n[[ripple]]\nid = "r1"\nkind = "protect"\ndate = "{date}"\ntarget = "t:Ashford-00"\nparams = {{ until = {until} }}\n'
+
+
+def test_moving_a_ripple_later_replays_from_before_its_old_date(runs):
+    tmp, out = runs
+    early = write(tmp, "early", ripple_at("1X 6"))
+    assert main(["run", str(early), "--out", str(out)]) == 0
+    late = write(tmp, "late", ripple_at("1X 10"))
+    assert main(["replay", str(out / "early"), "--recipe", str(late), "--out", str(out)]) == 0
+    assert RunFolder.open(out / "late").manifest["parent"]["segments"] == 1  # the 1X 5 checkpoint
+
+
+def test_replay_refuses_changes_other_than_ripples(runs):
+    tmp, out = runs
+    for name, edit in (("bigger", ("people_per_village = 12", "people_per_village = 20")),
+                       ("cadence", ("checkpoint_every_years = 4", "checkpoint_every_years = 3")),
+                       ("longer", ('end = "1X 12"', 'end = "1X 13"'))):
+        path = tmp / f"{name}.toml"
+        path.write_text(RECIPE.format(name=name, extra="").replace(*edit), encoding="utf-8")
+        assert main(["replay", str(out / "base"), "--recipe", str(path), "--out", str(out)]) == 1, name
+
+
+def test_unknown_world_params_are_rejected(tmp_path):
+    path = tmp_path / "typo.toml"
+    path.write_text(RECIPE.format(name="typo", extra="").replace("people_per_village", "peopel_per_village"),
+                    encoding="utf-8")
+    with pytest.raises(ValueError):
+        load_recipe(path)
+
+
+def test_a_replayed_run_can_itself_be_replayed(runs):
+    tmp, out = runs
+    first = write(tmp, "gen1", ripple_at("1X 9"))
+    assert main(["replay", str(out / "base"), "--recipe", str(first), "--out", str(out)]) == 0
+    assert (out / "gen1" / "checkpoints" / "1-5-0.json.gz").exists()
+    second = write(tmp, "gen2", ripple_at("1X 9"))
+    assert main(["replay", str(out / "gen1"), "--recipe", str(second), "--from", "1X 5", "--out", str(out)]) == 0
+
+
+def test_incomplete_run_folders_are_refused(runs):
+    tmp, out = runs
+    rf = RunFolder.create(out / "broken", {"recipe": {}, "complete": False})
+    assert rf.manifest["meta"]["complete"] is False
+    assert main(["diff", str(out / "base"), str(out / "broken")]) == 1
+    assert main(["inspect", str(out / "broken"), "--event", "x1"]) == 1
+
+
+def test_diff_signals_unexplained_divergence_with_its_own_code(runs, monkeypatch):
+    import renasci.cli as cli
+
+    tmp, out = runs
+    monkeypatch.setattr(cli, "analyse", lambda *a, **k: {"events": 1, "divergent_events": 1, "unexplained_events": 1,
+                                                       "unexplained_entities": 0, "unexplained_cells": 0,
+                                                       "unexplained": {"events": []}})
+    assert main(["diff", str(out / "base"), str(out / "base")]) == 3
+
+
+def test_ripples_missing_keys_are_a_clear_error(tmp_path):
+    path = tmp_path / "r.toml"
+    path.write_text(RECIPE.format(name="r", extra='\n[[ripple]]\nid = "r1"\nkind = "protect"\n'), encoding="utf-8")
+    with pytest.raises(ValueError):
+        load_recipe(path)
+
+
+def test_inspect_needs_exactly_one_target_and_shows_field_changes(runs, capsys):
+    tmp, out = runs
+    with pytest.raises(SystemExit):
+        main(["inspect", str(out / "base")])
+    capsys.readouterr()
+    assert main(["inspect", str(out / "base"), "--entity", "t:Ashford-01"]) == 0
+    assert "state changes:" in capsys.readouterr().out

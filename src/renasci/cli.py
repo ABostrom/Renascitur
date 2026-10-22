@@ -2,7 +2,7 @@
 
     renasci run <recipe.toml> [--out runs]
     renasci replay <run-folder> --recipe <recipe.toml> [--from "1X 40"] [--out runs]
-    renasci diff <baseline-run> <variant-run>
+    renasci diff <baseline-run> <variant-run>      (exit 3 if anything is unexplained)
     renasci inspect <run-folder> (--event <id> | --entity <id>)
 
 `run` writes a run folder with a checkpoint every N years. `replay` forks a run at the latest
@@ -45,30 +45,48 @@ def _finish(engine, folder: RunFolder, recipe, after: Date | None = None) -> Non
     folder.close_segment()
     save_checkpoint(folder.path / "state.json.gz", engine.store.to_json())
     folder.manifest["meta"]["state_hash"] = engine.state_hash()
+    folder.manifest["meta"]["complete"] = True  # written last: readers refuse folders without it
     folder.save_manifest()
+
+
+def _open_complete(path) -> RunFolder:
+    rf = RunFolder.open(path)
+    if rf.manifest["meta"].get("complete") is not True:
+        raise ValueError(f"{path} is not a complete run (it may have failed); remove it and run again")
+    return rf
 
 
 def cmd_run(args) -> int:
     recipe = load_recipe(args.recipe)
     world = get_world(recipe.world)
     engine = world.new_engine(recipe.seed, ripples=recipe.ripples, **recipe.params)
-    folder = RunFolder.create(Path(args.out) / recipe.name, {"recipe": recipe.raw})
+    folder = RunFolder.create(Path(args.out) / recipe.name, {"recipe": recipe.raw, "complete": False})
     _finish(engine, folder, recipe)
     print(f"run {recipe.name}: {folder.manifest['segments']} segments, state {folder.manifest['meta']['state_hash']}")
     return 0
 
 
 def cmd_replay(args) -> int:
-    base = RunFolder.open(args.run)
+    base = _open_complete(args.run)
     old = parse_recipe(base.manifest["meta"]["recipe"])
     new = load_recipe(args.recipe)
     world = get_world(new.world)
+
+    def without_name_and_ripples(raw):
+        return {k: ({kk: vv for kk, vv in v.items() if kk != "name"} if k == "run" else v)
+                for k, v in raw.items() if k != "ripple"}
+
+    if without_name_and_ripples(old.raw) != without_name_and_ripples(new.raw):
+        raise ValueError("a replay may only change ripples (and the run name); for anything else, `renasci run`")
     if args.from_:
         target = world.calendar.parse(args.from_)
     else:
-        before = {json.dumps(r.to_json(), sort_keys=True) for r in old.ripples}
-        changed = [r.date for r in new.ripples if json.dumps(r.to_json(), sort_keys=True) not in before]
-        changed += [r.date for r in old.ripples if r.id not in {x.id for x in new.ripples}]
+        def key(r):
+            return json.dumps(r.to_json(), sort_keys=True)
+
+        before, after = {key(r) for r in old.ripples}, {key(r) for r in new.ripples}
+        changed = [r.date for r in new.ripples if key(r) not in before]  # added or changed: new date
+        changed += [r.date for r in old.ripples if key(r) not in after]  # removed or changed: old date
         target = min(changed) if changed else new.end
     marks = [m for m in base.manifest["marks"] if Date.from_json(m["before"]) <= target]
     if not marks:
@@ -78,14 +96,15 @@ def cmd_replay(args) -> int:
     cp = load_checkpoint(base.path / "checkpoints" / f"{at.age}-{at.year}-{at.day}.json.gz")
     engine = world.restore(cp, new.seed, ripples=new.ripples, **new.params)
     folder = RunFolder.fork(base.path, Path(args.out) / new.name, keep=mark["segment"] + 1,
-                            meta={"recipe": new.raw, "replayed_from": {"run": base.path.name, "at": mark["before"]}})
+                            meta={"recipe": new.raw, "complete": False,
+                                  "replayed_from": {"run": base.path.name, "at": mark["before"]}})
     _finish(engine, folder, new, after=at)
     print(f"replayed {new.name} from {base.path.name} at {world.calendar.format(at)}")
     return 0
 
 
 def _load(path: Path) -> tuple[dict, dict, dict]:
-    rf = RunFolder.open(path)
+    rf = _open_complete(path)
     tables = {t: list(rf.read(t)) for t in TABLES}
     state = json.loads(gzip.decompress((path / "state.json.gz").read_bytes()))
     ripples = {r["id"]: json.dumps(r, sort_keys=True) for r in rf.manifest["meta"]["recipe"].get("ripple", [])}
@@ -105,12 +124,13 @@ def cmd_diff(args) -> int:
           f"entities, {report['unexplained_cells']} unexplained cells")
     for e in report["unexplained"]["events"][:5]:
         print(f"  unexplained: {e['type']} {e['date']} {e['roles']}")
-    return 0 if report["unexplained_events"] == report["unexplained_entities"] == report["unexplained_cells"] == 0 else 2
+    clean = report["unexplained_events"] == report["unexplained_entities"] == report["unexplained_cells"] == 0
+    return 0 if clean else 3  # 3, not 2: argparse uses 2 for usage errors
 
 
 def cmd_inspect(args) -> int:
     path = Path(args.run)
-    rf = RunFolder.open(path)
+    rf = _open_complete(path)
     if args.event:
         event = next((e for e in rf.read("events") if e["id"] == args.event), None)
         if event is None:
@@ -124,9 +144,14 @@ def cmd_inspect(args) -> int:
         record = next((e for e in state["entities"] if e["id"] == args.entity), None)
         print(json.dumps(record, indent=1) if record else f"{args.entity}: not in the final state")
         ids = {p["event"] for p in rf.read("participants") if p["entity"] == args.entity}
+        print("events:")
         for e in rf.read("events"):
             if e["id"] in ids:
                 print(f"  {e['date']} {e['type']} {e['id']}")
+        print("state changes:")
+        for d in rf.read("state_deltas"):
+            if d["entity"] == args.entity:
+                print(f"  {d['date']} {d['field']}: {json.dumps(d['old'])} -> {json.dumps(d['new'])}  ({d['event']})")
     return 0
 
 
@@ -146,8 +171,9 @@ def main(argv=None) -> int:
     p.add_argument("b")
     p = sub.add_parser("inspect", help="show an event or an entity")
     p.add_argument("run")
-    p.add_argument("--event")
-    p.add_argument("--entity")
+    target = p.add_mutually_exclusive_group(required=True)
+    target.add_argument("--event")
+    target.add_argument("--entity")
     args = parser.parse_args(argv)
     try:
         return {"run": cmd_run, "replay": cmd_replay, "diff": cmd_diff, "inspect": cmd_inspect}[args.command](args)

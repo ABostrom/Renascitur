@@ -62,6 +62,10 @@ def parse_recipe(raw: dict) -> Recipe:
     if type(run["seed"]) is not int:
         raise ValueError("seed must be an int")
     world = get_world(run["world"])
+    unknown_params = set(raw.get("world", {})) - world.params
+    if unknown_params:
+        raise ValueError(f"unknown [world] settings for {world.name}: {sorted(unknown_params)} "
+                         f"(allowed: {sorted(world.params)})")
     cal = world.calendar
     end = cal.parse(run["end"])
     end = Date(end.age, end.year, cal.days_per_year - 1)
@@ -69,6 +73,9 @@ def parse_recipe(raw: dict) -> Recipe:
     for r in raw.get("ripple", []):
         if set(r) - RIPPLE_KEYS:
             raise ValueError(f"unknown ripple keys: {sorted(set(r) - RIPPLE_KEYS)}")
+        missing = {"id", "kind", "date", "target"} - set(r)
+        if missing:
+            raise ValueError(f"ripple {r.get('id', '?')} is missing {sorted(missing)}")
         ripples.append(Ripple(r["id"], r["kind"], cal.parse(r["date"]), r["target"], r.get("params", {})))
     every = run.get("checkpoint_every_years", 10)
     if type(every) is not int or every < 1:

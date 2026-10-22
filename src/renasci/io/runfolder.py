@@ -93,6 +93,12 @@ class RunFolder:
         child.manifest["segments"] = keep
         child.manifest["marks"] = [m for m in src.manifest["marks"] if m["segment"] < keep]
         child.save_manifest()
+        if (src.path / "checkpoints").is_dir():  # keep the checkpoints the copied segments end at
+            (child.path / "checkpoints").mkdir(exist_ok=True)
+            for m in child.manifest["marks"]:
+                name = "{}-{}-{}.json.gz".format(*m["before"])
+                if (src.path / "checkpoints" / name).exists():
+                    shutil.copyfile(src.path / "checkpoints" / name, child.path / "checkpoints" / name)
         return child
 
     def save_manifest(self) -> None:

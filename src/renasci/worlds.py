@@ -16,6 +16,7 @@ class World:
     calendar: Calendar
     new_engine: Callable[..., Engine]  # (seed, ripples, pins, **params) -> Engine, cast and ready
     rulesets: Callable[..., list[tuple[Date, object]]]  # (**params) -> [(start, Ruleset)]
+    params: frozenset[str] = frozenset()  # the [world] keys a recipe may set
 
     def restore(self, checkpoint: dict, seed: int, ripples=(), pins=(), **params) -> Engine:
         return Engine.restore(checkpoint, self.calendar, self.rulesets(**params), seed=seed, ripples=ripples, pins=pins)
@@ -24,10 +25,10 @@ class World:
 def _toy() -> World:
     from renasci import toy
 
-    def rulesets(buggy=False, **_):
+    def rulesets(buggy=False, people_per_village=None):
         return [(toy.START, toy.ruleset(buggy))]
 
-    return World("toy", toy.CAL, toy.new_engine, rulesets)
+    return World("toy", toy.CAL, toy.new_engine, rulesets, frozenset({"people_per_village", "buggy"}))
 
 
 WORLDS: dict[str, Callable[[], World]] = {"toy": _toy}
