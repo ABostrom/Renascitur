@@ -22,6 +22,9 @@ from __future__ import annotations
 
 from renasci.core.canon import canonical
 
+# Unexplained events described in full (roots first). Counts and the divergent id lists are never cut.
+DETAIL_LIMIT = 1000
+
 
 class _Run:
     """One run's history, indexed for the comparison."""
@@ -154,6 +157,12 @@ def analyse(baseline: dict, variant: dict, baseline_state: dict, variant_state: 
         cell[2] += 1
         cell[3] += i in div and i not in ev_b
 
+    def is_root(i):
+        e = ev_b.get(i) or ev_a[i]
+        return not any(k == "event" and r in unexpl for k, r in e["causes"])
+
+    detailed = sorted(unexplained_events, key=lambda i: not is_root(i))[:DETAIL_LIMIT]
+
     def describe(i):
         return {**{k: (ev_b.get(i) or ev_a[i])[k] for k in ("id", "date", "type", "place", "roles", "causes", "activation")},
                 "side": side(i, ev_a, ev_b)}
@@ -171,7 +180,7 @@ def analyse(baseline: dict, variant: dict, baseline_state: dict, variant_state: 
         "divergent": {"only_baseline": [i for i in divergent if i not in ev_b],
                       "only_variant": [i for i in divergent if i not in ev_a],
                       "changed": [i for i in divergent if i in ev_a and i in ev_b]},
-        "unexplained": {"events": [describe(i) for i in unexplained_events],
+        "unexplained": {"events": [describe(i) for i in detailed],
                         "entities": [{"id": i, "side": side(i, ents_a, ents_b)} for i in unexplained_entities],
                         "cells": [{"id": i, "column": c, "side": side((i, c), ca, cb)} for i, c in unexplained_cells]},
         "wave": [{"age": g, "year": y, "place": p or None, "divergent": d, "unexplained": u, "total": n,

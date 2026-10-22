@@ -35,11 +35,15 @@
 		diff: params.get('diff') || ''
 	});
 
-	// `diff=<variant>`: only the events that diverge in that diff (its report lives in the variant's folder).
+	// `diff=<variant>&base=<baseline>`: only the events that diverge in that diff (its report lives in
+	// the variant's folder). Primitive deriveds, so other filter changes don't reload it.
+	const diffParam = $derived(params.get('diff') || '');
+	const baseParam = $derived(params.get('base') || '');
 	let diffIds = $state<Set<string> | null>(null);
 	let diffError = $state<string | null>(null);
 	$effect(() => {
-		const v = filter.diff;
+		const v = diffParam;
+		const base = baseParam;
 		const run = index?.run;
 		diffIds = null;
 		diffError = null;
@@ -49,6 +53,7 @@
 			.then((d) => {
 				if (stale) return;
 				if (!d) diffError = `No diff report in ${v}.`;
+				else if (base && d.runs.baseline !== base) diffError = `${v} has since been diffed against ${d.runs.baseline}, not ${base}.`;
 				else if (d.runs.variant !== run.name && d.runs.baseline !== run.name) diffError = `That diff doesn't involve ${run.name}.`;
 				else diffIds = divergentIds(d, d.runs.variant === run.name ? 'variant' : 'baseline');
 			})
@@ -64,6 +69,13 @@
 		if (value) p.set(key, value);
 		else p.delete(key);
 		goto(`?${p}`, { replace: key !== 'e', reset: false });
+	}
+
+	function clearDiff() {
+		const p = new URLSearchParams(page.url.searchParams.toString());
+		p.delete('diff');
+		p.delete('base');
+		goto(`?${p}`, { replace: true, reset: false });
 	}
 
 	// Text search waits for a pause in typing, so each keystroke doesn't rescan every event.
@@ -130,6 +142,7 @@
 			<select value={filter.place} onchange={(e) => setParam('place', e.currentTarget.value)}>
 				<option value="">anywhere</option>
 				{#each [...index.places].sort() as p (p)}<option value={p}>{p}</option>{/each}
+				<option value="-">nowhere (engine)</option>
 			</select>
 		</label>
 		<label>Who <input placeholder="entity id" value={filter.entity} onchange={(e) => setParam('entity', e.currentTarget.value.trim())} /></label>
@@ -139,7 +152,7 @@
 		{#if filter.diff}
 			<span class="diffing">
 				{#if diffError}<span class="warn">{diffError}</span>{:else}divergent in the diff of <span class="mono">{filter.diff}</span>{/if}
-				<button class="clear" onclick={() => setParam('diff', null)}>show all</button>
+				<button class="clear" onclick={clearDiff}>show all</button>
 			</span>
 		{/if}
 		{#if badDates}<span class="warn">Dates look like “1X 40” or “1X 40 m3 d12”.</span>{/if}
@@ -147,7 +160,11 @@
 
 	<div class="layout" class:with-detail={!!selected}>
 		<div>
-			<p class="muted count">{matches.length.toLocaleString()} event{matches.length === 1 ? '' : 's'}</p>
+			{#if diffParam && !diffIds && !diffError}
+				<p class="muted count">Loading the diff…</p>
+			{:else}
+				<p class="muted count">{matches.length.toLocaleString()} event{matches.length === 1 ? '' : 's'}</p>
+			{/if}
 			<VirtualList count={matches.length} rowHeight={32} resetKey={JSON.stringify(filter) + (diffIds ? 'd' : '')}>
 				{#snippet row(k)}
 					{@const i = matches[k]}

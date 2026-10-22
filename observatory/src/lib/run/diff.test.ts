@@ -77,6 +77,13 @@ describe('run diff', async () => {
 });
 
 describe('where an event happened', async () => {
+	it('can be nowhere: place "-" finds the events with neither place nor scope', async () => {
+		const index = await buildIndex(await openRun(source, 'base'));
+		const nowhere = filterEvents(index, { place: '-' });
+		expect(nowhere.length).toBeGreaterThan(0);
+		for (const i of nowhere) expect(index.placeOf[i]).toBe(-1);
+	});
+
 	it('is its place, else the scope that decided it', async () => {
 		const index = await buildIndex(await openRun(source, 'base'));
 		const granary = index.ids.findIndex((_, i) => index.types[index.typeOf[i]] === 'toy.granary');

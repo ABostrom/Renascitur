@@ -42,8 +42,8 @@
 	// A cell opens its divergent events in the run that has them (a prevented death is in the baseline).
 	function cellHref(place: string | null, [age, year]: YearKey, cell: WaveCell) {
 		const cal = variant!.calendar;
-		const p = new URLSearchParams({ diff: b, from: cal.format([age, year, 0], 'year'), to: cal.format([age, year, 0], 'year') });
-		if (place) p.set('place', place);
+		const y = cal.format([age, year, 0], 'year');
+		const p = new URLSearchParams({ diff: b, base: a, from: y, to: y, place: place ?? '-' });
 		return `/run/${enc(cellSide(cell) === 'baseline' ? a : b)}/events?${p}`;
 	}
 	// Roots first: where the bug first showed, then what followed from it.

@@ -104,7 +104,7 @@ export async function buildIndex(run: Run, onProgress?: (n: number) => void): Pr
 
 export interface EventFilter {
 	type?: string;
-	place?: string;
+	place?: string; // "-": nowhere (neither place nor scope)
 	entity?: string;
 	from?: DateTuple;
 	to?: DateTuple;
@@ -116,8 +116,8 @@ export interface EventFilter {
 export function filterEvents(index: EventIndex, f: EventFilter): Int32Array {
 	const cal = index.run.calendar;
 	const type = f.type ? index.types.indexOf(f.type) : null;
-	const place = f.place ? index.places.indexOf(f.place) : null;
-	if ((f.type && type === -1) || (f.place && place === -1)) return new Int32Array(0);
+	const place = f.place === '-' ? -1 : f.place ? index.places.indexOf(f.place) : null;
+	if ((f.type && type === -1) || (f.place && f.place !== '-' && place === -1)) return new Int32Array(0);
 	const from = f.from ? cal.sortKey(f.from) : -Infinity;
 	const to = f.to ? cal.sortKey(f.to) : Infinity;
 	const text = f.text?.trim().toLowerCase() || null;

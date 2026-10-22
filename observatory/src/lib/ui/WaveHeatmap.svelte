@@ -20,7 +20,8 @@
 	const label = (y: YearKey) => calendar.format([y[0], y[1], 0], 'year');
 	const shade = (c: WaveCell) => (c.divergent ? 15 + Math.round((85 * c.divergent) / c.total) : 0);
 	const title = (p: string | null, y: YearKey, c: WaveCell) =>
-		`${p ?? 'nowhere'} · ${label(y)}: ${c.divergent} of ${c.total} diverge` + (c.unexplained ? `, ${c.unexplained} unexplained` : '');
+		`${p ?? 'nowhere'} · ${label(y)}: ${c.divergent} of ${c.total} diverge` + (c.unexplained ? `, ${c.unexplained} unexplained` : '') +
+		(c.only_baseline && c.only_baseline < c.divergent ? ` (${c.only_baseline} only in the baseline, not shown)` : '');
 </script>
 
 <div class="wrap">

@@ -225,3 +225,17 @@ def test_wave_cells_count_events_only_the_baseline_has(baseline, doomed):
     report = analyse(baseline[0], variant[0], baseline[1], variant[1], ripples=["r1"])
     assert sum(w["only_baseline"] for w in report["wave"]) == len(report["divergent"]["only_baseline"]) > 0
     assert all(w["only_baseline"] <= w["divergent"] for w in report["wave"])
+
+
+def test_unexplained_event_detail_is_capped_but_counts_and_ids_are_not(monkeypatch, doomed):
+    """A run where most events diverge must not write a report of hundreds of MB."""
+    import renasci.analysis.divergence as dv
+
+    monkeypatch.setattr(dv, "DETAIL_LIMIT", 0)
+    person, died = doomed
+    ripple = Ripple("r1", "protect", Date(1, died[1] - 1, 0), person, {"until": [1, YEARS, 359]})
+    base, variant = run(buggy=True), run(buggy=True, ripples=[ripple])
+    report = dv.analyse(base[0], variant[0], base[1], variant[1], ripples=["r1"])
+    assert report["unexplained_events"] > 0 and report["unexplained"]["events"] == []
+    d = report["divergent"]
+    assert len(d["only_baseline"]) + len(d["only_variant"]) + len(d["changed"]) == report["divergent_events"]
