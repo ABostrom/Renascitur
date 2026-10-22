@@ -79,6 +79,10 @@ class Ruleset:
     def forcer(self, event_type: str):
         return self._forcer_for.get(event_type)
 
+    def get_any(self, name: str):
+        """A system or a forcer by name (forcers can schedule follow-ups too)."""
+        return self._by_name.get(name) or next((f for f in self.forcers if f.name == name), None)
+
     def get(self, name: str) -> System | None:
         return self._by_name.get(name)
 

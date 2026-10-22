@@ -7,8 +7,10 @@ The director prefers doing nothing. A pin that history meets naturally is only *
 draws, no writes, no events. That is what makes "promote something that happened, then re-run"
 reproduce the same history with zero strain. Only when a pin is threatened does the director act:
 
-- **guard:** a system about to kill a pinned entity asks `ctx.guarded(entity)` and writes a near
-  miss instead;
+- **guard:** a system about to kill someone asks `ctx.guarded(entity)`. While a pin needs that
+  entity (an existence pin in its window, or a role in an open event pin), the answer is yes and the
+  system writes a near miss instead. The near miss is caused by the pin, and the guard is a recorded
+  read, so divergence analysis can explain it;
 - **force:** at an event pin's deadline, the ruleset's `Forcer` for that event type constructs it,
   caused by the pin;
 - **violated:** if forcing is impossible, the pin is logged as violated and the run continues.
@@ -84,6 +86,8 @@ def feasibility(pins, start: Date, end: Date) -> dict[str, str]:
     for p in sorted(pins, key=lambda p: p.id):
         if p.kind not in SUPPORTED:
             result[p.id] = "unsupported"
+        elif p.kind == "existence" and not p.subject.startswith(("v:", "t:")) and p.window is None:
+            result[p.id] = "infeasible"  # a born entity's pin needs a window to be checked against
         elif p.window and p.window[0] > p.window[1]:
             result[p.id] = "infeasible"
         elif p.window and (p.window[1] < start or p.window[0] > end):
@@ -124,28 +128,43 @@ class Director:
         self.pins: tuple[Pin, ...] = tuple(sorted(pins, key=lambda p: p.id))
         self._by_id = {p.id: p for p in self.pins}
         self.status: dict[str, str] = {}
-        self.met: dict[str, Date] = {}  # when each pin was satisfied or forced
+        self.met: dict[str, tuple[Date, int]] = {}  # (date, event sequence): same-day order is kept
+        self.seq = 0  # events observed so far
         self.strain: list[dict] = []  # pending history
         self._forcing: str | None = None
 
-    def _log(self, action: str, pin: Pin, date: Date, activation: str = "", **extra) -> None:
-        self.strain.append(json.loads(canonical({"action": action, "pin": pin.id, "kind": pin.kind, "date": date,
-                                                  "activation": activation, **extra})))
+    def _log(self, action: str, pin: Pin, date: Date, activation: str = "", **extra) -> dict:
+        row = json.loads(canonical({"action": action, "pin": pin.id, "kind": pin.kind, "date": date,
+                                    "activation": activation, "event": None, **extra}))
+        self.strain.append(row)
+        return row
+
+    def _meet(self, pin: Pin, date: Date, status: str) -> None:
+        self.status[pin.id] = status
+        self.met[pin.id] = (date, self.seq)
 
     # ------------------------------------------------------------ observation (pure)
 
-    def observe(self, event) -> None:
-        """Called for every recorded event. Marks matching event pins met; never acts."""
-        for pin in self.pins:
+    def observe(self, event, created=()) -> None:
+        """Called for every recorded event, with the entities it created. Marks pins met; never acts."""
+        self.seq += 1
+        for pin in self.pins:  # born entities: met by their creating event, if it falls inside the window
+            if pin.kind == "existence" and self.status.get(pin.id) == "open" and pin.subject in created:
+                if pin.covers(event.date):
+                    self._meet(pin, event.date, "satisfied")
+                else:
+                    self.status[pin.id] = "violated"
+                    self._log("violated", pin, event.date, reason="created outside the window")
+        for pin in self.pins:  # each event satisfies at most one event pin
             if pin.kind != "event" or self.status.get(pin.id) != "open" or not pin.covers(event.date):
                 continue
             if event.type != pin.payload["type"]:
                 continue
             wanted = pin.payload.get("roles", {})
             if all(set(m) <= set(event.roles.get(r, ())) for r, m in wanted.items()):
-                self.status[pin.id] = "forced" if self._forcing == pin.id else "satisfied"
-                self.met[pin.id] = event.date
-                self._check_orderings(event.date)
+                self._meet(pin, event.date, "forced" if self._forcing == pin.id else "satisfied")
+                break
+        self._check_orderings(event.date)
 
     def _check_orderings(self, date: Date) -> None:
         for o in self.pins:
@@ -164,28 +183,32 @@ class Director:
 
     # ------------------------------------------------------------ guard
 
-    def guarded(self, entity: str, date: Date, activation: str) -> bool:
-        """Whether `entity` must survive today. Logs strain when it says yes."""
+    def guard_pin(self, entity: str, date: Date) -> Pin | None:
+        """The pin that needs `entity` alive today, if any."""
         for pin in self.pins:
-            if pin.kind == "existence" and pin.subject == entity and self.status.get(pin.id) == "satisfied" \
+            status = self.status.get(pin.id)
+            if pin.kind == "existence" and pin.subject == entity and status in ("open", "satisfied") \
                     and pin.covers(date):
-                self._log("guard", pin, date, activation, entity=entity)
-                return True
-        return False
+                return pin
+            if pin.kind == "event" and status == "open" and pin.window and date <= pin.window[1] \
+                    and any(entity in members for members in pin.payload.get("roles", {}).values()):
+                return pin
+        return None
+
+    def log_guard(self, pin: Pin, entity: str, date: Date, activation: str) -> dict:
+        return self._log("guard", pin, date, activation, entity=entity)
 
     # ------------------------------------------------------------ deadlines
 
     def deadline(self, engine, pin_id: str, ctx_factory) -> None:
         pin = self._by_id[pin_id]
         date = pin.window[1]
-        if pin.kind == "existence":
-            if self.status.get(pin.id) == "open":
-                ok = engine.store.exists(pin.subject)
-                self.status[pin.id] = "satisfied" if ok else "violated"
-                if not ok:
-                    self._log("violated", pin, date, reason="never came to exist")
-            return
         if self.status.get(pin.id) != "open":
+            return
+        if pin.kind == "existence":
+            self.status[pin.id] = "violated"
+            self._log("violated", pin, date, reason="never came to exist inside the window")
+            self._check_orderings(date)
             return
         forcer = engine.ruleset.forcer(pin.payload["type"]) if engine.ruleset else None
         forced, ctx = False, None
@@ -196,7 +219,7 @@ class Director:
                 forced = bool(forcer.force(ctx, pin)) and self.status.get(pin.id) == "forced"
             finally:
                 self._forcing = None
-            engine.hinges.extend(ctx.hinges)
+            engine.finish(ctx)
         if forced:
             self._log("force", pin, date, ctx.activation.id)
         else:
@@ -207,9 +230,10 @@ class Director:
     # ------------------------------------------------------------ state
 
     def to_json(self) -> dict:
-        return {"status": dict(sorted(self.status.items())),
-                "met": {k: v.to_json() for k, v in sorted(self.met.items())}}
+        return {"status": dict(sorted(self.status.items())), "seq": self.seq,
+                "met": {k: [d.to_json(), n] for k, (d, n) in sorted(self.met.items())}}
 
     def load_json(self, data: dict) -> None:
         self.status = dict(data["status"])
-        self.met = {k: Date.from_json(v) for k, v in data["met"].items()}
+        self.seq = data["seq"]
+        self.met = {k: (Date.from_json(d), n) for k, (d, n) in data["met"].items()}

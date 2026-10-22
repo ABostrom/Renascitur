@@ -91,7 +91,7 @@ class Engine:
         eid = event_id("engine", entity, "cast", self.start, 0)
         self.store.create(kind, entity, fields, self.start, eid)
         return self.record(Event(eid, self.start, CAST.name, {"subject": (entity,)}, None, (),
-                                 {"kind": kind}, Source("scenario", "cast")))
+                                 {"kind": kind}, Source("scenario", "cast")), created=[entity])
 
     def cast_column(self, name: str, dtype: str, ids, values) -> Event:
         """Create a numeric column (aggregate state) with starting values, before anything runs."""
@@ -105,11 +105,11 @@ class Engine:
 
     # ------------------------------------------------------------ used by Ctx
 
-    def record(self, event: Event) -> Event:
+    def record(self, event: Event, created=()) -> Event:
         event = self.registry.validate(event, store=self.store, today=self._date or self.start)
         self.causes.add(event)
         self.events.append(event)
-        self.director.observe(event)
+        self.director.observe(event, created)
         return event
 
     def apply_pins(self, pins, end: Date | None = None, cast: bool = True) -> dict[str, str]:
@@ -118,7 +118,8 @@ class Engine:
             raise ValueError("pins are applied before the run starts")
         pins = tuple(pins)
         last = self.rulesets[-1][0]
-        end = end or Date(last.age, (self.calendar._by_index[last.age].last_year or 10**6), 0)
+        end = end or Date(last.age, self.calendar._by_index[last.age].last_year or 10**6,
+                          self.calendar.days_per_year - 1)
         self.director = Director(pins)
         classes = feasibility(pins, self.start, end)
         for pin in self.director.pins:
@@ -206,7 +207,7 @@ class Engine:
         self.ruleset = new = self.rulesets[self.ruleset_index][1]
 
         def unchanged(name: str) -> bool:
-            a, b = old.get(name) if old else None, new.get(name)
+            a, b = old.get_any(name) if old else None, new.get_any(name)
             return a is not None and b is not None and (a.cadence, a.priority) == (b.cadence, b.priority)
 
         removed = self.scheduler.remove_where(lambda a: a.system != "engine" and not unchanged(a.system))
@@ -219,8 +220,15 @@ class Engine:
                 self.scheduler.push(Activation(activation.date, system.priority, system.name, "cadence",
                                                system.name, {}, ()))
 
+    def finish(self, ctx: Ctx) -> None:
+        """Keep what a completed activation produced besides events and writes: hinges and reads."""
+        self.hinges.extend(ctx.hinges)
+        reads = ctx.recorded_reads()
+        if reads:
+            self.reads.append({"activation": ctx.activation.id, "reads": reads})
+
     def _dispatch(self, activation: Activation) -> None:
-        system = self.ruleset.get(activation.system)
+        system = self.ruleset.get_any(activation.system)
         if system is None:
             self.dropped.append(activation.id)
             return
@@ -232,10 +240,7 @@ class Engine:
                 self.scheduler.push(Activation(due, system.priority, system.name, "cadence", system.name, {}, ()))
         else:
             system.handle(ctx, activation)
-        self.hinges.extend(ctx.hinges)
-        reads = ctx.recorded_reads()
-        if reads:
-            self.reads.append({"activation": activation.id, "reads": reads})
+        self.finish(ctx)
 
     # ------------------------------------------------------------ checkpoints
 
