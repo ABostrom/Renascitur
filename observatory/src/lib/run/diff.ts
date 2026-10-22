@@ -22,6 +22,7 @@ export interface WaveCell {
 	divergent: number;
 	unexplained: number;
 	total: number;
+	only_baseline: number; // divergent events only the baseline has (the variant's browser can't show them)
 }
 
 /** `analysis/divergence.json`, written into the variant's folder by `renasci diff`. */
@@ -60,6 +61,11 @@ export async function loadDivergence(source: RunSource, variant: string): Promis
 export function divergentIds(d: Divergence, side: 'baseline' | 'variant'): Set<string> {
 	const only = side === 'baseline' ? d.divergent.only_baseline : d.divergent.only_variant;
 	return new Set([...only, ...d.divergent.changed]);
+}
+
+/** The run to open a wave cell in: the variant, unless all its divergent events are baseline-only. */
+export function cellSide(c: WaveCell): 'baseline' | 'variant' {
+	return c.divergent > c.only_baseline ? 'variant' : 'baseline';
 }
 
 /** Unexplained events no other unexplained event caused: where the bug first showed. */

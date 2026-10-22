@@ -148,10 +148,11 @@ def analyse(baseline: dict, variant: dict, baseline_state: dict, variant_state: 
     div, unexpl = set(divergent), set(unexplained_events)
     for i in sorted(set(ev_a) | set(ev_b)):
         e = ev_b.get(i) or ev_a[i]
-        cell = wave.setdefault((e["date"][0], e["date"][1], b.where.get(i) or a.where.get(i) or ""), [0, 0, 0])
+        cell = wave.setdefault((e["date"][0], e["date"][1], b.where.get(i) or a.where.get(i) or ""), [0, 0, 0, 0])
         cell[0] += i in div
         cell[1] += i in unexpl
         cell[2] += 1
+        cell[3] += i in div and i not in ev_b
 
     def describe(i):
         return {**{k: (ev_b.get(i) or ev_a[i])[k] for k in ("id", "date", "type", "place", "roles", "causes", "activation")},
@@ -173,6 +174,7 @@ def analyse(baseline: dict, variant: dict, baseline_state: dict, variant_state: 
         "unexplained": {"events": [describe(i) for i in unexplained_events],
                         "entities": [{"id": i, "side": side(i, ents_a, ents_b)} for i in unexplained_entities],
                         "cells": [{"id": i, "column": c, "side": side((i, c), ca, cb)} for i, c in unexplained_cells]},
-        "wave": [{"age": g, "year": y, "place": p or None, "divergent": d, "unexplained": u, "total": n}
-                 for (g, y, p), (d, u, n) in sorted(wave.items())],
+        "wave": [{"age": g, "year": y, "place": p or None, "divergent": d, "unexplained": u, "total": n,
+                  "only_baseline": ob}
+                 for (g, y, p), (d, u, n, ob) in sorted(wave.items())],
     }

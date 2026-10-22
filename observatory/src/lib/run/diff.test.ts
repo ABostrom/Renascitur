@@ -1,7 +1,7 @@
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
-import { defaultBaseline, divergentIds, loadDivergence, rootEvents, waveGrid } from './diff';
+import { cellSide, defaultBaseline, divergentIds, loadDivergence, rootEvents, waveGrid } from './diff';
 import { buildIndex, filterEvents } from './index';
 import { NodeSource } from './node-source';
 import { openRun } from './run';
@@ -39,6 +39,13 @@ describe('run diff', async () => {
 			const causedByAnother = e.causes.some(([k, r]) => k === 'event' && buggy!.unexplained.events.some((u) => u.id === r));
 			expect(roots.has(e.id)).toBe(!causedByAnother);
 		}
+	});
+
+	it('opens a wave cell in the run its divergent events are in', () => {
+		const cell = { age: 1, year: 4, place: 't:Fen', unexplained: 0, total: 3 };
+		expect(cellSide({ ...cell, divergent: 1, only_baseline: 1 })).toBe('baseline'); // a death the ripple prevented
+		expect(cellSide({ ...cell, divergent: 2, only_baseline: 1 })).toBe('variant');
+		expect(clean!.wave.reduce((n, c) => n + c.only_baseline, 0)).toBe(clean!.divergent.only_baseline.length);
 	});
 
 	it('gives each side its divergent ids', () => {

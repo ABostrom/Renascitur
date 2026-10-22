@@ -215,3 +215,13 @@ def test_wave_places_events_without_a_place_by_their_scope(baseline):
     unplaced = sum(w["total"] for w in report["wave"] if w["place"] is None)
     casts = sum(1 for e in baseline[0]["events"] if e["type"].startswith("engine."))
     assert unplaced == casts
+
+
+def test_wave_cells_count_events_only_the_baseline_has(baseline, doomed):
+    """So a cell can open the run its divergent events are in."""
+    person, died = doomed
+    ripple = Ripple("r1", "protect", Date(1, died[1] - 1, 0), person, {"until": [1, YEARS, 359]})
+    variant = run(ripples=[ripple])
+    report = analyse(baseline[0], variant[0], baseline[1], variant[1], ripples=["r1"])
+    assert sum(w["only_baseline"] for w in report["wave"]) == len(report["divergent"]["only_baseline"]) > 0
+    assert all(w["only_baseline"] <= w["divergent"] for w in report["wave"])

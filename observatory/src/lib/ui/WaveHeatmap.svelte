@@ -13,7 +13,7 @@
 	}: {
 		divergence: Divergence;
 		calendar: Calendar;
-		href: (place: string | null, year: YearKey) => string;
+		href: (place: string | null, year: YearKey, cell: WaveCell) => string;
 	} = $props();
 
 	const grid = $derived(waveGrid(divergence));
@@ -43,7 +43,7 @@
 									class="cell"
 									class:unexplained={c.unexplained > 0}
 									style={`--shade: ${shade(c)}%`}
-									href={href(p, y)}
+									href={href(p, y, c)}
 									title={title(p, y, c)}
 									aria-label={title(p, y, c)}
 								></a>

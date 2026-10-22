@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 
-	import { loadDivergence, rootEvents, type Divergence, type Side, type YearKey } from '$lib/run/diff';
+	import { cellSide, loadDivergence, rootEvents, type Divergence, type Side, type WaveCell, type YearKey } from '$lib/run/diff';
 	import { openRun, type Run } from '$lib/run/run';
 	import { HttpSource } from '$lib/run/source';
 	import WaveHeatmap from '$lib/ui/WaveHeatmap.svelte';
@@ -39,11 +39,12 @@
 	const enc = encodeURIComponent;
 	const eventHref = (id: string, side: Side) => `/run/${enc(runOf(side))}/events?e=${enc(id)}`;
 	const entityHref = (id: string, side: Side) => `/run/${enc(runOf(side))}/entity/${enc(id)}`;
-	function cellHref(place: string | null, [age, year]: YearKey) {
+	// A cell opens its divergent events in the run that has them (a prevented death is in the baseline).
+	function cellHref(place: string | null, [age, year]: YearKey, cell: WaveCell) {
 		const cal = variant!.calendar;
 		const p = new URLSearchParams({ diff: b, from: cal.format([age, year, 0], 'year'), to: cal.format([age, year, 0], 'year') });
 		if (place) p.set('place', place);
-		return `/run/${enc(b)}/events?${p}`;
+		return `/run/${enc(cellSide(cell) === 'baseline' ? a : b)}/events?${p}`;
 	}
 	// Roots first: where the bug first showed, then what followed from it.
 	const unexplainedEvents = $derived(
@@ -86,7 +87,7 @@
 
 	<section class="card">
 		<h2>Causal wave</h2>
-		<p class="muted">Divergent events by where they happened and when. Click a cell to see its divergent events in {b}.</p>
+		<p class="muted">Divergent events by where they happened and when. Click a cell to see its divergent events.</p>
 		<WaveHeatmap divergence={d} calendar={variant.calendar} href={cellHref} />
 	</section>
 
