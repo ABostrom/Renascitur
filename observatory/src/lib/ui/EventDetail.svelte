@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { page } from '$app/state';
+
 	import { eventDetail, type EventDetail, type EventIndex } from '$lib/run/index';
 
 	let { index, id, onSelect }: { index: EventIndex; id: string; onSelect: (id: string) => void } = $props();
@@ -9,16 +11,35 @@
 	});
 	let detail = $state<EventDetail | null>(null);
 	let loading = $state(false);
+	let failed = $state<string | null>(null);
 
 	$effect(() => {
 		const e = event;
 		detail = null;
+		failed = null;
 		if (!e) return;
+		let stale = false; // a newer selection supersedes this load
 		loading = true;
-		eventDetail(index.run, e)
-			.then((d) => (detail = d))
-			.finally(() => (loading = false));
+		eventDetail(index.run, e, index.segmentOf[index.position.get(id) ?? 0])
+			.then((d) => {
+				if (!stale) detail = d;
+			})
+			.catch((err) => {
+				if (!stale) failed = (err as Error).message;
+			})
+			.finally(() => {
+				if (!stale) loading = false;
+			});
+		return () => (stale = true);
 	});
+
+	/** A link to this view with one filter set (and the selection cleared). */
+	function filterHref(key: string, value: string): string {
+		const p = new URLSearchParams(page.url.searchParams.toString());
+		p.delete('e');
+		p.set(key, value);
+		return `?${p}`;
+	}
 
 	const cal = $derived(index.run.calendar);
 	const causeLabel: Record<string, string> = {
@@ -37,7 +58,7 @@
 			<h2>{event.type}</h2>
 			<div class="meta">
 				<span>{cal.format(event.date, 'day')}</span>
-				{#if event.place}<span>at <a href={`?entity=${encodeURIComponent(event.place)}`}>{event.place}</a></span>{/if}
+				{#if event.place}<span>at <a href={filterHref('place', event.place)}>{event.place}</a></span>{/if}
 				{#if event.visibility === 'secret'}<span class="badge warn">secret</span>{/if}
 				{#if event.source?.[0] === 'ripple'}<span class="badge ripple">ripple {event.source[1]}</span>{/if}
 			</div>
@@ -50,7 +71,7 @@
 				{#each Object.entries(event.roles as Record<string, string[]>) as [role, members] (role)}
 					<dt>{role}</dt>
 					<dd>
-						{#each members as m (m)}<a class="mono chip" href={`?entity=${encodeURIComponent(m)}`}>{m}</a>{/each}
+						{#each members as m (m)}<a class="mono chip" href={filterHref('entity', m)}>{m}</a>{/each}
 					</dd>
 				{/each}
 			</dl>
@@ -88,6 +109,8 @@
 			<h3>What it read</h3>
 			{#if loading}
 				<p class="muted">Loading the scope’s reads…</p>
+			{:else if failed}
+				<p class="warn">Couldn’t load the reads: {failed}</p>
 			{:else if detail?.scope}
 				<p class="muted">
 					{event.source?.[1]}{detail.scope.scope ? ` in ${detail.scope.scope}` : ''} read {detail.scope.reads.length}
@@ -102,7 +125,18 @@
 					</tbody>
 				</table>
 				{#if detail.scope.reads.length > 200}<p class="muted">…and {detail.scope.reads.length - 200} more.</p>{/if}
-			{:else}
+			{/if}
+			{#if !loading && detail?.unscoped && detail.unscoped.reads.length}
+				<p class="muted">Before any village or valley, the activation also read {detail.unscoped.reads.length} field{detail.unscoped.reads.length === 1 ? '' : 's'}; these inform everything it did:</p>
+				<table class="reads">
+					<tbody>
+						{#each detail.unscoped.reads.slice(0, 50) as [entity, field, digest] (entity + field)}
+							<tr><td class="mono">{entity}</td><td class="mono">{field}</td><td class="mono muted">{digest}</td></tr>
+						{/each}
+					</tbody>
+				</table>
+			{/if}
+			{#if !loading && !failed && !detail?.scope && !detail?.unscoped}
 				<p class="muted">No recorded reads (casting and engine events read nothing).</p>
 			{/if}
 		</section>
@@ -221,6 +255,9 @@
 	}
 	.muted {
 		color: var(--muted);
+	}
+	.warn {
+		color: var(--unexplained);
 	}
 	.hinges {
 		padding-left: 1.1rem;

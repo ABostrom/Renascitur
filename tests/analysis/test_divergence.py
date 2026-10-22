@@ -152,3 +152,15 @@ def test_toy_pins_are_honoured_and_ripples_stay_explained():
     report = analyse(base[0], variant[0], base[1], variant[1], ripples=["r1"])
     assert report["divergent_events"] > 0
     assert report["unexplained_events"] == 0 and report["unexplained_entities"] == 0, report["unexplained"]
+
+
+def test_scope_is_not_part_of_event_identity_for_divergence():
+    """Runs from before event rows carried `scope` must still diff cleanly against newer ones."""
+    import copy
+
+    base = run()
+    older = copy.deepcopy(base)
+    for ev in older[0]["events"]:
+        ev.pop("scope", None)
+    report = analyse(older[0], base[0], older[1], base[1])
+    assert report["divergent_events"] == 0

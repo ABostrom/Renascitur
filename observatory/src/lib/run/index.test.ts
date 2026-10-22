@@ -57,3 +57,32 @@ describe('event index', async () => {
 		expect(Array.isArray(detail.hinges)).toBe(true);
 	});
 });
+
+describe('review fixes', async () => {
+	const run = await openRun(source, 'base');
+	const index = await buildIndex(run);
+
+	it("knows each event's segment, so detail needs no sidecars", async () => {
+		expect(index.segmentOf.length).toBe(index.count);
+		const last = index.count - 1;
+		expect(index.segmentOf[last]).toBe(run.manifest.segments - 1);
+		const src = run.source;
+		const hidden = {
+			list: async (d: string) => (d.endsWith('/index') ? [] : src.list(d)), // no sidecars anywhere
+			has: (p: string) => src.has(p),
+			stream: (p: string) => src.stream(p),
+			text: (p: string) => src.text(p)
+		};
+		const noSidecars = { ...run, source: hidden };
+		const i = [...filterEvents(index, { type: 'toy.birth' })][0];
+		const detail = await eventDetail(noSidecars, index.row(i), index.segmentOf[i]);
+		expect(detail.scope?.events).toContain(index.row(i).id);
+	});
+
+	it('includes the activation-wide reads alongside the scope reads', async () => {
+		const i = [...filterEvents(index, { type: 'toy.birth' })][0];
+		const detail = await eventDetail(run, index.row(i), index.segmentOf[i]);
+		expect(detail.scope?.scope).toBe(index.row(i).scope);
+		expect(Array.isArray(detail.unscoped?.reads ?? [])).toBe(true);
+	});
+});

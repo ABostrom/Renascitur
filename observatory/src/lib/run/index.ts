@@ -23,6 +23,8 @@ export interface EventIndex {
 	placeOf: Int32Array; // -1: no place
 	places: string[];
 	byEntity: Map<string, Int32Array>; // events each entity took part in, in order
+	segmentOf: Uint16Array; // the segment each event was read from (so detail never guesses by date)
+	lower?: string[]; // lowercased lines, built the first time text search is used
 	row(i: number): any;
 }
 
@@ -38,13 +40,16 @@ export async function buildIndex(run: Run, onProgress?: (n: number) => void): Pr
 	const placeId = new Map<string, number>();
 	const postings = new Map<string, number[]>();
 	const typeCounts = new Map<string, number>();
+	const segmentOf: number[] = [];
 
 	for (const f of await segmentFiles(run, 'events')) {
+		const segment = Number(/seg-(\d{5})/.exec(f.path)?.[1]);
 		const stream = await run.source.stream(`${run.name}/${f.path}`);
 		for await (const line of lines(stream, f.gz)) {
 			const e = JSON.parse(line);
 			const i = raw.length;
 			raw.push(line);
+			segmentOf.push(segment);
 			ids.push(e.id);
 			keys.push(run.calendar.sortKey(e.date));
 			let t = typeId.get(e.type);
@@ -91,6 +96,7 @@ export async function buildIndex(run: Run, onProgress?: (n: number) => void): Pr
 		placeOf: Int32Array.from(placeOf),
 		places,
 		byEntity,
+		segmentOf: Uint16Array.from(segmentOf),
 		row: (i: number) => JSON.parse(raw[i])
 	};
 }
@@ -123,7 +129,7 @@ export function filterEvents(index: EventIndex, f: EventFilter): Int32Array {
 		if (place !== null && index.placeOf[i] !== place) continue;
 		const k = index.keys[i];
 		if (k < from || k > to) continue;
-		if (text && !index.lines[i].toLowerCase().includes(text)) continue;
+		if (text && !(index.lower ??= index.lines.map((l) => l.toLowerCase()))[i].includes(text)) continue;
 		out.push(i);
 	}
 	return Int32Array.from(out);
@@ -171,24 +177,32 @@ async function* readSegments(run: Run, table: string, segments: number[]): Async
 	}
 }
 
+type ReadRow = { activation: string; scope: string | null; reads: [string, string, string][]; events: string[] };
+
 export interface EventDetail {
-	scope: { activation: string; scope: string | null; reads: [string, string, string][]; events: string[] } | null;
+	scope: ReadRow | null; // the reads of the scope the event was emitted in
+	unscoped: ReadRow | null; // the activation's unscoped reads, which inform everything it did
 	hinges: any[];
 }
 
-/** What an event turned on: the reads its scope made (with value digests) and its hinges. */
-export async function eventDetail(run: Run, event: any): Promise<EventDetail> {
-	const segments = await segmentsFor(run, event.date);
-	let scope: EventDetail['scope'] = null;
+/**
+ * What an event turned on: its scope's reads and the activation's unscoped reads (with value
+ * digests), and its hinges. `segment` (from the index) says where to look; without it the
+ * sidecars are used to guess from the date.
+ */
+export async function eventDetail(run: Run, event: any, segment?: number): Promise<EventDetail> {
+	const segments = segment !== undefined ? [segment] : await segmentsFor(run, event.date);
+	let scope: ReadRow | null = null;
+	let unscoped: ReadRow | null = null;
 	if (event.activation) {
 		for await (const r of readSegments(run, 'reads', segments)) {
-			if (r.activation === event.activation && r.scope === (event.scope ?? null)) {
-				scope = r;
-				break;
-			}
+			if (r.activation !== event.activation) continue;
+			if (r.events.includes(event.id) && r.scope !== null) scope = r;
+			else if (r.scope === null) unscoped = r;
+			if (scope && unscoped) break;
 		}
 	}
 	const hinges: any[] = [];
 	for await (const h of readSegments(run, 'hinges', segments)) if (h.event === event.id) hinges.push(h);
-	return { scope, hinges };
+	return { scope, unscoped, hinges };
 }

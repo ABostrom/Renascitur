@@ -41,6 +41,13 @@
 		goto(`?${p}`, { replace: key !== 'e', reset: false });
 	}
 
+	// Text search waits for a pause in typing, so each keystroke doesn't rescan every event.
+	let textTimer: ReturnType<typeof setTimeout> | undefined;
+	function setTextSoon(value: string) {
+		clearTimeout(textTimer);
+		textTimer = setTimeout(() => setParam('q', value), 200);
+	}
+
 	function parseDate(text: string, end: boolean): DateTuple | undefined {
 		if (!text || !index) return undefined;
 		try {
@@ -102,14 +109,14 @@
 		<label>Who <input placeholder="entity id" value={filter.entity} onchange={(e) => setParam('entity', e.currentTarget.value.trim())} /></label>
 		<label>From <input placeholder="e.g. 1X 40" value={filter.from} onchange={(e) => setParam('from', e.currentTarget.value.trim())} /></label>
 		<label>To <input placeholder="e.g. 1X 60" value={filter.to} onchange={(e) => setParam('to', e.currentTarget.value.trim())} /></label>
-		<label class="grow">Text <input placeholder="search ids, roles, payloads" value={filter.q} oninput={(e) => setParam('q', e.currentTarget.value)} /></label>
+		<label class="grow">Text <input placeholder="search ids, roles, payloads" value={filter.q} oninput={(e) => setTextSoon(e.currentTarget.value)} /></label>
 		{#if badDates}<span class="warn">Dates look like “1X 40” or “1X 40 m3 d12”.</span>{/if}
 	</div>
 
 	<div class="layout" class:with-detail={!!selected}>
 		<div>
 			<p class="muted count">{matches.length.toLocaleString()} event{matches.length === 1 ? '' : 's'}</p>
-			<VirtualList count={matches.length} rowHeight={32}>
+			<VirtualList count={matches.length} rowHeight={32} resetKey={JSON.stringify(filter)}>
 				{#snippet row(k)}
 					{@const i = matches[k]}
 					{@const id = index!.ids[i]}

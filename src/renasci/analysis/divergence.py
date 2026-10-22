@@ -27,7 +27,8 @@ class _Run:
     """One run's history, indexed for the comparison."""
 
     def __init__(self, history: dict):
-        self.events = {e["id"]: e for e in history["events"]}
+        # `scope` says where an event was emitted (metadata added in #54); it is not part of what happened.
+        self.events = {e["id"]: {k: v for k, v in e.items() if k != "scope"} for e in history["events"]}
         self.order = [a["activation"] for a in history.get("activations", [])]
         self.activations = {a["activation"]: a for a in history.get("activations", [])}
         self.scope_of: dict[str, tuple[str, str | None]] = {}
