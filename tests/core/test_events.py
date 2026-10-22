@@ -86,6 +86,7 @@ def test_dead_participants_are_rejected():
     store = Store()
     store.create("person", "e1", {}, D, "x0")
     store.create("person", "e2", {}, D, "x0")
+    store.create("place", "t:Millbrook", {}, D, "x0")
     store.set_status("e2", "dead", D, "x0")
     with pytest.raises(ValueError):
         registry().validate(marriage(), store=store)
@@ -182,3 +183,77 @@ def test_edges_json_is_sorted(order):
     for e in sorted(order):
         b.add(events[e])
     assert a.to_json() == b.to_json()
+
+
+# ---------------------------------------------------------------- review fixes
+
+
+def ev(eid, *causes, source=("system", "s")):
+    return Event(eid, D, "t", {}, None, tuple(Cause(*c) for c in causes), {}, Source(*source))
+
+
+def test_index_requires_event_causes_to_exist_first_so_it_stays_acyclic():
+    idx = CauseIndex()
+    with pytest.raises(ValueError):
+        idx.add(ev("a", ("event", "b")))
+    idx.add(ev("b"))
+    idx.add(ev("a", ("event", "b")))
+    assert idx.ancestors(("event", "a")) == [("event", "b")]
+
+
+def test_index_from_json_rejects_unknown_event_causes():
+    with pytest.raises(ValueError):
+        CauseIndex.from_json({"events": ["a"], "edges": [["a", "event", "zzz"]]})
+
+
+def test_index_json_restores_when_child_sorts_before_parent():
+    idx = CauseIndex()
+    idx.add(ev("x9"))
+    idx.add(ev("x1", ("event", "x9")))
+    assert CauseIndex.from_json(idx.to_json()).ancestors(("event", "x1")) == [("event", "x9")]
+
+
+def test_role_members_must_be_a_list_or_tuple():
+    with pytest.raises(TypeError):
+        marriage(roles={"spouse": "al"})
+
+
+def test_duplicate_causes_are_rejected():
+    with pytest.raises(ValueError):
+        registry().validate(marriage(causes=(Cause("event", "x0"), Cause("event", "x0"))))
+
+
+def test_empty_roles_and_int_floats_have_one_canonical_form():
+    t = EventType("toy.harvest", 1, roles={"farmer": (0, 5)}, payload={"yield": "float"})
+    r = Registry()
+    r.register(t)
+    a = r.validate(Event("x1", D, "toy.harvest", {"farmer": ()}, None, (), {"yield": 1}, Source("system", "s")))
+    b = r.validate(Event("x1", D, "toy.harvest", {}, None, (), {"yield": 1.0}, Source("system", "s")))
+    assert canonical(a.to_json()) == canonical(b.to_json())
+
+
+def test_ripple_and_pin_sources_are_indexed_as_causes():
+    idx = CauseIndex()
+    idx.add(ev("x1", source=("ripple", "r1")))
+    idx.add(ev("x2", source=("pin", "p1")))
+    assert idx.descendants(("ripple", "r1")) == [("event", "x1")]
+    assert idx.descendants(("pin", "p1")) == [("event", "x2")]
+
+
+def test_place_and_id_payloads_must_exist_when_a_store_is_given():
+    store = Store()
+    store.create("person", "e1", {}, D, "x0")
+    store.create("person", "e2", {}, D, "x0")
+    with pytest.raises(ValueError):  # place t:Millbrook missing
+        registry().validate(marriage(payload={"dowry": 3, "village": "e1"}), store=store)
+    store.create("place", "t:Millbrook", {}, D, "x0")
+    with pytest.raises(ValueError):  # payload id missing
+        registry().validate(marriage(payload={"dowry": 3, "village": "t:Nowhere"}), store=store)
+    registry().validate(marriage(), store=store)
+
+
+def test_validated_events_record_their_schema_version():
+    e = registry().validate(marriage())
+    assert e.version == 1
+    assert e.to_json()["version"] == 1
+    assert Event.from_json(e.to_json()) == e

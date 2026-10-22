@@ -91,10 +91,15 @@ class Event:
     payload: dict
     source: Source
     visibility: str | None = None  # None: take the type's default at validation
+    version: int | None = None  # the event type's schema version, filled in at validation
 
     def __post_init__(self):
-        # Normalise: roles sorted by name, members sorted; causes sorted; payload copied.
-        roles = {r: tuple(sorted(m)) for r, m in sorted(self.roles.items())}
+        # One canonical form: roles sorted by name with empty roles dropped, members sorted;
+        # causes sorted; payload copied.
+        for role, members in self.roles.items():
+            if not isinstance(members, (list, tuple)):
+                raise TypeError(f"role {role!r} must list its members, got {members!r}")
+        roles = {r: tuple(sorted(m)) for r, m in sorted(self.roles.items()) if m}
         object.__setattr__(self, "roles", roles)
         object.__setattr__(self, "causes", tuple(sorted(self.causes)))
         object.__setattr__(self, "payload", json.loads(canonical(self.payload)))
@@ -107,7 +112,7 @@ class Event:
             "id": self.id, "date": self.date.to_json(), "type": self.type,
             "roles": {r: list(m) for r, m in self.roles.items()}, "place": self.place,
             "causes": [c.to_json() for c in self.causes], "payload": self.payload,
-            "source": self.source.to_json(), "visibility": self.visibility,
+            "source": self.source.to_json(), "visibility": self.visibility, "version": self.version,
         }
 
     @classmethod
@@ -116,7 +121,7 @@ class Event:
             id=d["id"], date=Date.from_json(d["date"]), type=d["type"],
             roles={r: tuple(m) for r, m in d["roles"].items()}, place=d["place"],
             causes=tuple(Cause(*c) for c in d["causes"]), payload=d["payload"],
-            source=Source(*d["source"]), visibility=d["visibility"],
+            source=Source(*d["source"]), visibility=d["visibility"], version=d["version"],
         )
 
 
@@ -163,8 +168,12 @@ class Registry:
             raise ValueError(f"event {event.id} is dated {event.date}, but today is {today}")
         if Cause("event", event.id) in event.causes:
             raise ValueError(f"event {event.id} cannot cause itself")
+        if len(set(event.causes)) != len(event.causes):
+            raise ValueError(f"event {event.id} lists a cause twice")
         if event.place is not None:
             _ref("place", event.place)
+            if store is not None and not store.exists(event.place):
+                raise ValueError(f"place {event.place!r} does not exist")
 
         for role in event.roles:
             if role not in t.roles:
@@ -186,17 +195,29 @@ class Registry:
         if set(event.payload) != set(t.payload):
             raise ValueError(f"{event.type} payload fields must be exactly {sorted(t.payload)}, "
                              f"got {sorted(event.payload)}")
+        payload = dict(event.payload)
         for name, kind in t.payload.items():
-            _check_payload_value(name, kind, event.payload[name])
+            _check_payload_value(name, kind, payload[name])
+            if kind == "float":
+                payload[name] = float(payload[name])  # 1 and 1.0 must serialise the same
+            if store is not None and kind in ("id", "ids"):
+                for ref in payload[name] if kind == "ids" else [payload[name]]:
+                    if not store.exists(ref):
+                        raise ValueError(f"payload {name!r} refers to missing entity {ref!r}")
 
         visibility = t.visibility if event.visibility is None else event.visibility
         if visibility not in VISIBILITIES:
             raise ValueError(f"visibility must be one of {VISIBILITIES}, got {visibility!r}")
-        return replace(event, visibility=visibility)
+        return replace(event, visibility=visibility, version=t.version, payload=payload)
 
 
 class CauseIndex:
-    """The cause graph, queryable both ways. Every edge runs from an event to one of its causes."""
+    """The cause graph, queryable both ways. Every edge runs from an event to one of its causes.
+
+    An event's `event` causes must already be indexed, which keeps the graph acyclic by
+    construction. A `ripple` or `pin` source is indexed as a cause too, so everything a ripple
+    produced is reachable from it.
+    """
 
     def __init__(self):
         self._events: list[str] = []  # sorted
@@ -204,7 +225,17 @@ class CauseIndex:
         self._children: dict[Node, list[Node]] = {}
 
     def add(self, event: Event) -> None:
-        self._add(event.id, [(c.kind, c.ref) for c in event.causes])
+        causes = [(c.kind, c.ref) for c in event.causes]
+        if event.source.kind in ("ripple", "pin"):
+            causes.append((event.source.kind, event.source.ref))
+        for kind, ref in causes:
+            if kind == "event" and not self.has(ref):
+                raise ValueError(f"event {event.id} is caused by {ref}, which is not indexed")
+        self._add(event.id, causes)
+
+    def has(self, event_id: str) -> bool:
+        r = bisect.bisect_left(self._events, event_id)
+        return r < len(self._events) and self._events[r] == event_id
 
     def _add(self, event_id: str, causes: list[Node]) -> None:
         r = bisect.bisect_left(self._events, event_id)
@@ -249,4 +280,7 @@ class CauseIndex:
             causes[e].append((Cause(k, r).kind, r))
         for e in data["events"]:
             idx._add(e, causes[e])
+        for e, k, r in data["edges"]:
+            if k == "event" and not idx.has(r):
+                raise ValueError(f"checkpoint cause index: {e} is caused by unknown event {r}")
         return idx
