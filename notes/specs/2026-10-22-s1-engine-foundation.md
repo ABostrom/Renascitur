@@ -200,7 +200,7 @@ The CLI uses `argparse`, so there's no extra dependency. `renasci/__init__.py` s
   - A **batch system** runs once per due date over its population, in id order.
   - **Follow-ups** go through `ctx.schedule(after=Span, purpose, payload)`. They carry the current
     event as a cause.
-- The queue is a heap of key tuples and is checkpointed as a sorted list.
+- The queue is a heap of key tuples, checkpointed as versioned, sorted JSON together with the last activation run. **A push must sort strictly after the last activation popped.** A same-day follow-up therefore needs a higher priority number, or the next day, which keeps the order independent of when things were scheduled.
 
 ### 3.6 Systems, read-sets, rulesets (#45)
 
