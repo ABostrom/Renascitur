@@ -148,6 +148,8 @@ class Engine:
                           self.calendar.days_per_year - 1)
         self.director = Director(pins)
         classes = feasibility(pins, self.start, end)
+        self.director.born = frozenset(p.payload["bind"]["subject"] for p in self.director.pins
+                                       if p.payload.get("bind") and classes[p.id] == "ok")
         for pin in self.director.pins:
             status = classes[pin.id]
             self.director.status[pin.id] = "open" if status == "ok" else status

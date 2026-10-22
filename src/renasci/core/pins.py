@@ -8,7 +8,10 @@ front: its id would differ from the one a natural birth gives it, and so would e
 Instead an event pin carries `bind = {role, subject, fields?}`: when the pinned event happens, the
 entity it created in `role` (with matching `fields`, e.g. the pinned sex) is **bound** to `subject`,
 the canon id. Roles in other pins resolve through bindings, so "born to v:Kid" means born to whoever
-v:Kid turned out to be. An existence pin on a bound subject is met by the binding.
+v:Kid turned out to be. An existence pin on a bound subject is met by the binding, and violated with
+its birth pin. `fields` are matched against what the event *created* (its `creates` fields), so a
+system must give them there, not set them afterwards. A birth pin outside the run (out of scope,
+unsupported, infeasible) binds nothing; its subject is cast up front like any other canon id.
 
 The director prefers doing nothing. A pin that history meets naturally is only *observed*: no
 draws, no writes, no events. That is what makes "promote something that happened, then re-run"
@@ -60,10 +63,16 @@ class Pin:
         if self.kind == "event" and not isinstance(self.payload.get("type"), str):
             raise ValueError(f"event pin {self.id} needs payload.type")
         bind = self.payload.get("bind")
-        if bind is not None and (self.kind != "event" or not isinstance(bind, dict)
-                                 or not isinstance(bind.get("role"), str) or not isinstance(bind.get("subject"), str)
-                                 or not isinstance(bind.get("fields", {}), dict)):
-            raise ValueError(f"pin {self.id}: bind is an event pin's {{role, subject, fields?}}")
+        if bind is not None:
+            if (self.kind != "event" or not isinstance(bind, dict) or not isinstance(bind.get("role"), str)
+                    or not isinstance(bind.get("subject"), str) or not isinstance(bind.get("fields", {}), dict)):
+                raise ValueError(f"pin {self.id}: bind is an event pin's {{role, subject, fields?}}")
+            if not bind["subject"].startswith(("v:", "t:")):
+                raise ValueError(f"pin {self.id}: bind.subject must be a canon id (v: or t:), got {bind['subject']!r}")
+            if bind["role"] in self.payload.get("roles", {}):
+                raise ValueError(f"pin {self.id}: the bound role {bind['role']!r} can't also be a required role")
+            if any(v is None for v in bind.get("fields", {}).values()):
+                raise ValueError(f"pin {self.id}: bind.fields can't be None (a missing field would match)")
         if self.kind == "existence" and not self.subject:
             raise ValueError(f"existence pin {self.id} needs a subject")
         if self.kind == "ordering" and not ({"before", "after"} <= set(self.payload)):
@@ -146,8 +155,12 @@ class Director:
         self.changes: list[dict] = []  # pending history: pin status changes, attributed to the event that caused them
         self._forcing: str | None = None
         self.bindings: dict[str, str] = {}  # canon id -> the sim entity that fulfilled its birth pin
-        # Canon ids born during the run: never cast up front.
-        self.born = frozenset(p.payload["bind"]["subject"] for p in self.pins if p.payload.get("bind"))
+        # Canon ids born during the run: never cast up front. Narrowed to usable pins by apply_pins.
+        subjects = [p.payload["bind"]["subject"] for p in self.pins if p.payload.get("bind")]
+        twice = sorted({s for s in subjects if subjects.count(s) > 1})
+        if twice:
+            raise ValueError(f"more than one pin binds {twice}; each canon id is born once")
+        self.born = frozenset(subjects)
 
     def resolve(self, entity: str) -> str:
         return self.bindings.get(entity, entity)
@@ -264,6 +277,12 @@ class Director:
         else:
             self._set(pin, "violated", date)
             self._log("violated", pin, date, reason="no forcer could construct it")
+            bind = pin.payload.get("bind")
+            for other in self.pins:  # the canon id it would have bound will never exist
+                if bind and other.kind == "existence" and other.subject == bind["subject"] \
+                        and self.status.get(other.id) == "open":
+                    self._set(other, "violated", date)
+                    self._log("violated", other, date, reason=f"its birth pin {pin.id} was violated")
         self._check_orderings(date)
 
     # ------------------------------------------------------------ state

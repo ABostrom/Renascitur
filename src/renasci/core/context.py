@@ -267,7 +267,11 @@ class Ctx:
     def _take(self, aggregate: str, column: str | None, columns: dict | None) -> dict[str, int]:
         if column is not None and columns is not None:
             raise ValueError("give column or columns, not both")
-        return {column: 1} if column is not None else dict(columns or {})
+        amounts = {column: 1} if column is not None else dict(columns or {})
+        for name, n in sorted(amounts.items()):
+            if isinstance(n, bool) or not isinstance(n, int) or n < 0:
+                raise ValueError(f"{name}: the amount must be a non-negative int, got {n!r}")
+        return amounts
 
     def promote(self, aggregate: str, kind: str, fields: dict, *, reason: str, column: str | None = None,
                 columns: dict | None = None, place: str | None = None, causes=()) -> str:
@@ -282,7 +286,7 @@ class Ctx:
         self._check_writes(f"new:{kind}", *sorted(take))
         counts = {name: self.read_column(name, [aggregate])[0] for name in sorted(take)}
         for name in sorted(take):
-            if take[name] < 0 or counts[name] < take[name]:
+            if counts[name] < take[name]:
                 raise ValueError(f"cannot promote from {aggregate}: {name} is {counts[name]}, needs {take[name]}")
         event = self.emit("lod.promote", {"aggregate": (aggregate,)}, purpose=f"promote:{reason}", actor=aggregate,
                           place=place, payload={"reason": reason}, causes=causes,
@@ -303,8 +307,6 @@ class Ctx:
         if self.status(entity) != "active":
             raise ValueError(f"cannot demote {entity}: it is {self._engine.store.status(entity)}")
         counts = {name: self.read_column(name, [aggregate])[0] for name in sorted(give)}
-        if any(n < 0 for n in give.values()):
-            raise ValueError("demote adds non-negative counts")
         roles = {"individual": (entity,)} | ({"aggregate": (aggregate,)} if aggregate else {})
         self.emit("lod.demote", roles, purpose=f"demote:{reason}", actor=entity, payload={"reason": reason},
                   causes=causes)

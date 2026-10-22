@@ -242,3 +242,74 @@ def test_bindings_survive_a_checkpoint(baseline):
     d = Director(e.director.pins)
     d.load_json(e.director.to_json())
     assert d.bindings == e.director.bindings
+
+
+# ---------------------------------------------------------------- review fixes
+
+
+def test_draws_match_a_golden_vector():
+    """Catches drift across platforms and NumPy versions (they use libm inside NumPy)."""
+    s = Stream(20261022)
+    got = [s.binomial(40, 0.3), s.binomial(1000, 0.01), s.multinomial(30, [0.2, 0.3, 0.5]),
+           s.hypergeometric([10, 5, 20], 12)]
+    assert got == GOLDEN_DRAWS
+
+
+GOLDEN_DRAWS = [13, 10, [6, 10, 14], [7, 1, 4]]  # NumPy 2.5, Philox
+
+
+@pytest.mark.parametrize("columns", [{"pop:a": 0.5}, {"pop:a": True}, {"pop:a": -1}])
+def test_promote_rejects_non_count_amounts_before_anything_happens(columns):
+    class Odd(System):
+        name, cadence = "mini.odd", "yearly"
+        reads = frozenset({"pop:a"})
+        writes = frozenset({"pop:a", "new:person"})
+        event_types = LOD_TYPES
+
+        def run(self, ctx):
+            with ctx.scope("t:town"):
+                ctx.promote("t:town", "person", {}, reason="test", columns=columns)
+
+    e = column_engine(Odd())
+    with pytest.raises(ValueError):
+        e.run(until=Date(1, 1, 359))
+    assert e.events == [] or all(ev.type != "lod.promote" for ev in e.events)
+    assert int(e.store.read_column("pop:a", ["t:town"])[0]) == 5
+
+
+def test_a_birth_pin_outside_the_run_falls_back_to_casting():
+    late = Pin("p_kid", "event", window=(Date(1, 500, 0), Date(1, 501, 0)),
+               payload={"type": "toy.birth", "roles": {}, "bind": {"role": "child", "subject": "v:Kid"}})
+    e = new_engine(people_per_village=4, pins=[late, Pin("p_kid_exists", "existence", subject="v:Kid")])
+    assert e.director.status["p_kid"] == "out_of_scope"
+    assert e.store.exists("v:Kid") and e.director.status["p_kid_exists"] == "satisfied"
+
+
+def test_a_violated_birth_pin_violates_existence_on_its_subject():
+    e = new_engine(people_per_village=4, pins=[
+        Pin("p_kid", "event", window=(Date(1, 2, 0), Date(1, 2, 10)),
+            payload={"type": "toy.birth", "roles": {"mother": ["t:Ashford-01"]},
+                     "bind": {"role": "child", "subject": "v:Kid"}}),
+        Pin("p_kid_exists", "existence", subject="v:Kid")])
+    e.run(until=Date(1, 3, 0))  # the toy has no forcer for births
+    assert e.director.status["p_kid"] == "violated" and e.director.status["p_kid_exists"] == "violated"
+
+
+@pytest.mark.parametrize("payload, message", [
+    ({"type": "toy.birth", "roles": {}, "bind": {"role": "child", "subject": "Kid"}}, "v:"),
+    ({"type": "toy.birth", "roles": {"child": ["x"]}, "bind": {"role": "child", "subject": "v:Kid"}}, "role"),
+    ({"type": "toy.birth", "roles": {}, "bind": {"role": "child", "subject": "v:Kid", "fields": {"sex": None}}},
+     "None"),
+])
+def test_bind_shapes_are_checked(payload, message):
+    with pytest.raises(ValueError, match=message):
+        Pin("p", "event", window=(Date(1, 2, 0), Date(1, 3, 0)), payload=payload)
+
+
+def test_two_pins_cannot_bind_the_same_subject():
+    from renasci.core.pins import Director
+
+    bind = {"type": "toy.birth", "roles": {}, "bind": {"role": "child", "subject": "v:Kid"}}
+    with pytest.raises(ValueError, match="v:Kid"):
+        Director([Pin("a", "event", window=(Date(1, 2, 0), Date(1, 3, 0)), payload=bind),
+                  Pin("b", "event", window=(Date(1, 4, 0), Date(1, 5, 0)), payload=bind)])
