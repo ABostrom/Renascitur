@@ -99,6 +99,23 @@ class Engine:
         self.scheduler.push(activation)
         return activation
 
+    def drain(self) -> dict[str, list[dict]]:
+        """Hand over pending history as run-folder rows and forget it. State (store, index) stays."""
+        events, self.events = self.events, []
+        deltas, bulk = self.store.drain()
+        reads, self.reads = self.reads, []
+        hinges, self.hinges = self.hinges, []
+        return {
+            "events": [ev.to_json() for ev in events],
+            "causes": [{"event": ev.id, "kind": c.kind, "ref": c.ref} for ev in events for c in ev.causes],
+            "participants": [{"event": ev.id, "role": role, "entity": entity}
+                             for ev in events for role, members in ev.roles.items() for entity in members],
+            "state_deltas": [d.to_json() for d in deltas],
+            "bulk_deltas": [d.to_json() for d in bulk],
+            "reads": reads,
+            "hinges": hinges,
+        }
+
     # ------------------------------------------------------------ running
 
     def run(self, until: Date) -> None:
