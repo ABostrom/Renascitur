@@ -26,3 +26,8 @@ packages = ["src/renasci", "src/renasci_legacy"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-q"
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
+pythonVersion = "3.12"
