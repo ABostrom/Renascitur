@@ -2,7 +2,7 @@
 	import { page } from '$app/state';
 
 	import type { CauseGraph } from '$lib/run/causes';
-	import { eventDetail, type EventDetail, type EventIndex } from '$lib/run/index';
+	import { eventDetail, readCount, type EventDetail, type EventIndex } from '$lib/run/index';
 	import { loadGraph } from '$lib/runs';
 
 	import CauseTree from './CauseTree.svelte';
@@ -161,10 +161,19 @@
 			{:else if failed}
 				<p class="warn">Couldn’t load the reads: {failed}</p>
 			{:else if detail?.scope}
+				{@const n = readCount(detail.scope)}
 				<p class="muted">
-					{event.source?.[1]}{detail.scope.scope ? ` in ${detail.scope.scope}` : ''} read {detail.scope.reads.length}
-					field{detail.scope.reads.length === 1 ? '' : 's'}, informing {detail.scope.events.length} event{detail.scope.events.length === 1 ? '' : 's'}.
+					{event.source?.[1]}{detail.scope.scope ? ` in ${detail.scope.scope}` : ''} read {n}
+					field{n === 1 ? '' : 's'}, informing {detail.scope.events.length} event{detail.scope.events.length === 1 ? '' : 's'}.
 				</p>
+				{#if n === 0}
+					<!-- nothing read: the line above says so -->
+				{:else if !detail.scope.reads}
+					<p class="muted">
+						This run kept one digest of those reads (<span class="mono">{detail.scope.digest}</span>), which is enough
+						to tell whether the scope saw different inputs. Run with <code>full_reads = true</code> to keep each one.
+					</p>
+				{:else}
 				<table class="reads">
 					<thead><tr><th>entity</th><th>field</th><th>value seen</th></tr></thead>
 					<tbody>
@@ -174,8 +183,9 @@
 					</tbody>
 				</table>
 				{#if detail.scope.reads.length > 200}<p class="muted">…and {detail.scope.reads.length - 200} more.</p>{/if}
+				{/if}
 			{/if}
-			{#if !loading && detail?.unscoped && detail.unscoped.reads.length}
+			{#if !loading && detail?.unscoped?.reads?.length}
 				<p class="muted">Before any village or valley, the activation also read {detail.unscoped.reads.length} field{detail.unscoped.reads.length === 1 ? '' : 's'}; these inform everything it did:</p>
 				<table class="reads">
 					<tbody>
@@ -184,6 +194,8 @@
 						{/each}
 					</tbody>
 				</table>
+			{:else if !loading && detail?.unscoped && readCount(detail.unscoped)}
+				<p class="muted">Before any village or valley, the activation also read {readCount(detail.unscoped)} field{readCount(detail.unscoped) === 1 ? '' : 's'} (kept as one digest); these inform everything it did.</p>
 			{/if}
 			{#if !loading && !failed && !detail?.scope && !detail?.unscoped}
 				<p class="muted">No recorded reads (casting and engine events read nothing).</p>

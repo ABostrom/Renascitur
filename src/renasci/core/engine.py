@@ -68,6 +68,8 @@ class Engine:
         self.causes = CauseIndex()
         self.events: list[Event] = []
         self.reads: list[dict] = []
+        # Every read row (the Python API and tests). Recipe runs default to one digest per scope (#151).
+        self.full_reads = True
         self.hinges: list[dict] = []  # close calls with stakes: the source data for latch points
         self.hinge_margin = float(hinge_margin)  # a draw with stakes is a hinge only if it was this close
         self.odds_hooks: list = []  # (ctx, p, purpose, owner) -> (p, cause or None): ripples, director
@@ -335,7 +337,7 @@ class Engine:
         """Keep what a completed activation produced besides events and writes: hinges and reads."""
         self._note_activation(ctx.activation)
         self.hinges.extend(ctx.hinges)
-        self.reads.extend(ctx.read_rows())
+        self.reads.extend(ctx.read_rows(full=self.full_reads))
 
     def _note_activation(self, activation: Activation) -> None:
         self.activations.append({"activation": activation.id, "system": activation.system,

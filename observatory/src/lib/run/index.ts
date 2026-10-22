@@ -180,7 +180,20 @@ async function* readSegments(run: Run, table: string, segments: number[]): Async
 	}
 }
 
-type ReadRow = { activation: string; scope: string | null; reads: [string, string, string][]; events: string[] };
+/**
+ * What a scope read. A run recorded with `full_reads` keeps every read (entity, field, digest of the
+ * value seen); otherwise one digest of them all and their count (#151).
+ */
+export type ReadRow = {
+	activation: string;
+	scope: string | null;
+	reads?: [string, string, string][];
+	digest?: string;
+	n?: number;
+	events: string[];
+};
+
+export const readCount = (row: ReadRow) => row.reads?.length ?? row.n ?? 0;
 
 export interface EventDetail {
 	scope: ReadRow | null; // the reads of the scope the event was emitted in

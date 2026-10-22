@@ -21,6 +21,7 @@ explained, including a list-order coupling *within* that scope. Use scopes as fi
 from __future__ import annotations
 
 from renasci.core.canon import canonical
+from renasci.core.context import reads_digest
 
 # Unexplained events described in full (roots first). Counts and the divergent id lists are never cut.
 DETAIL_LIMIT = 1000
@@ -37,10 +38,11 @@ class _Run:
         self.order = [a["activation"] for a in history.get("activations", [])]
         self.activations = {a["activation"]: a for a in history.get("activations", [])}
         self.scope_of: dict[str, tuple[str, str | None]] = {}
-        self.seen: dict[tuple[str, str | None], dict] = {}
+        # Per scope: (reads by key, or None when only a digest was kept; the row, for its digest).
+        self.seen: dict[tuple[str, str | None], tuple[dict | None, dict]] = {}
         for row in history.get("reads", []):
             key = (row["activation"], row["scope"])
-            self.seen[key] = {(r[0], r[1]): r[2] for r in row["reads"]}
+            self.seen[key] = ({(r[0], r[1]): r[2] for r in row["reads"]} if "reads" in row else None, row)
             for eid in row["events"]:
                 self.scope_of[eid] = key
         for eid, e in self.events.items():  # events recorded outside a ctx belong to their activation
@@ -56,11 +58,28 @@ class _Run:
             self.pin_history.setdefault(p["pin"], []).append(p["status"])
 
 
-def _differs(seen_a: dict, seen_b: dict) -> bool:
-    """Did the scope see different inputs? Only reads made in both runs count: deterministic code
-    diverges first at a shared read whose value differs. A read made in only one run follows a
-    decision that already differed."""
-    return any(seen_a[k] != seen_b[k] for k in seen_a.keys() & seen_b.keys())
+def _differs(seen_a: tuple, seen_b: tuple) -> bool:
+    """Did the scope see different inputs?
+
+    With full reads on both sides, only reads made in both runs count: deterministic code diverges
+    first at a shared read whose value differs, and a read made in only one run follows a decision
+    that already differed. With a digest on either side (#151) the test is coarser: any difference
+    in what the scope read taints it. That can hide a bug that changes only *which* fields a scope
+    reads, so the exit test runs with full reads."""
+    (a, row_a), (b, row_b) = seen_a, seen_b
+    if a is not None and b is not None:
+        return any(a[k] != b[k] for k in a.keys() & b.keys())
+    return _digest(row_a) != _digest(row_b)
+
+
+def _digest(row: dict) -> str:
+    return row["digest"] if "reads" not in row else reads_digest(row["reads"])
+
+
+def _reads_mode(*histories: dict) -> str:
+    """How the compared runs kept their reads: "full" (exact analysis), "digest" or "mixed"."""
+    kinds = {"reads" in row for h in histories for row in h.get("reads", [])}
+    return "full" if kinds <= {True} else "digest" if kinds == {False} else "mixed"
 
 
 def analyse(baseline: dict, variant: dict, baseline_state: dict, variant_state: dict, ripples=()) -> dict:
@@ -168,6 +187,7 @@ def analyse(baseline: dict, variant: dict, baseline_state: dict, variant_state: 
                 "side": side(i, ev_a, ev_b)}
 
     return {
+        "reads": _reads_mode(baseline, variant),
         "events": len(set(ev_a) | set(ev_b)),
         "divergent_events": len(divergent),
         "unexplained_events": len(unexplained_events),

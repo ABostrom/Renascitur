@@ -20,6 +20,7 @@ seed = 1234
 world = "toy"
 end = "1X 6"
 checkpoint_every_years = 2
+{run_extra}
 
 [world]
 people_per_village = 6
@@ -41,9 +42,11 @@ target = "t:Brook-02"
 """
 
 
-def recipe(name, extra=""):
+def recipe(name, extra="", full_reads=True):
+    """base and protected keep every read (the Observatory shows them); the buggy pair keeps digests."""
     path = OUT.parent / f"{name}.toml"
-    path.write_text(RECIPE.format(name=name, extra=extra), encoding="utf-8", newline="\n")
+    run_extra = "full_reads = true" if full_reads else ""
+    path.write_text(RECIPE.format(name=name, extra=extra, run_extra=run_extra), encoding="utf-8", newline="\n")
     return str(path)
 
 
@@ -55,9 +58,9 @@ def main_() -> None:
     assert main(["replay", str(OUT / "base"), "--recipe", recipe("protected", RIPPLE), "--out", str(OUT)]) == 0
     main(["diff", str(OUT / "base"), str(OUT / "protected")])
     # A negative control: a world with a planted coupling bug, so its diff has unexplained divergence.
-    assert main(["run", recipe("buggy", "buggy = true"), "--out", str(OUT)]) == 0
-    assert main(["replay", str(OUT / "buggy"), "--recipe", recipe("buggy-protected", "buggy = true\n" + RIPPLE),
-                 "--out", str(OUT)]) == 0
+    assert main(["run", recipe("buggy", "buggy = true", full_reads=False), "--out", str(OUT)]) == 0
+    assert main(["replay", str(OUT / "buggy"), "--recipe", recipe("buggy-protected", "buggy = true\n" + RIPPLE,
+                                                                      full_reads=False), "--out", str(OUT)]) == 0
     assert main(["diff", str(OUT / "buggy"), str(OUT / "buggy-protected")]) == 3, "the planted bug went unnoticed"
 
     # An interrupted folder: the open segment ends in a partial line, a stale .tmp is left behind, and a

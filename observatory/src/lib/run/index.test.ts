@@ -1,7 +1,7 @@
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
-import { buildIndex, filterEvents, eventDetail, segmentsFor } from './index';
+import { buildIndex, filterEvents, eventDetail, readCount, segmentsFor } from './index';
 import { NodeSource } from './node-source';
 import { openRun } from './run';
 
@@ -52,7 +52,7 @@ describe('event index', async () => {
 		const i = [...filterEvents(index, { type: 'toy.birth' })][0];
 		const detail = await eventDetail(run, index.row(i));
 		expect(detail.scope?.scope).toBe(index.row(i).place);
-		expect(detail.scope?.reads.length).toBeGreaterThan(0);
+		expect(detail.scope?.reads?.length).toBeGreaterThan(0);
 		expect(detail.scope?.events).toContain(index.row(i).id);
 		expect(Array.isArray(detail.hinges)).toBe(true);
 	});
@@ -84,5 +84,25 @@ describe('review fixes', async () => {
 		const detail = await eventDetail(run, index.row(i), index.segmentOf[i]);
 		expect(detail.scope?.scope).toBe(index.row(i).scope);
 		expect(Array.isArray(detail.unscoped?.reads ?? [])).toBe(true);
+	});
+});
+
+describe('reads kept as digests (#151)', async () => {
+	it('shows a digest-only scope by its count and digest', async () => {
+		const run = await openRun(source, 'buggy'); // recorded without full reads
+		const index = await buildIndex(run);
+		const i = index.ids.findIndex((_, k) => index.types[index.typeOf[k]] === 'toy.granary');
+		const detail = await eventDetail(run, index.row(i), index.segmentOf[i]);
+		expect(detail.scope?.reads).toBeUndefined();
+		expect(detail.scope?.digest).toMatch(/^[0-9a-f]+$/);
+		expect(readCount(detail.scope!)).toBeGreaterThan(0);
+	});
+
+	it('counts full rows the same way', async () => {
+		const run = await openRun(source, 'base'); // recorded with full_reads
+		const index = await buildIndex(run);
+		const i = index.ids.findIndex((_, k) => index.types[index.typeOf[k]] === 'toy.granary');
+		const detail = await eventDetail(run, index.row(i), index.segmentOf[i]);
+		expect(readCount(detail.scope!)).toBe(detail.scope!.reads!.length);
 	});
 });

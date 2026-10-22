@@ -32,7 +32,7 @@ from renasci.core.calendar import Date
 from renasci.core.ripples import Ripple
 from renasci.worlds import get_world
 
-RUN_KEYS = {"name", "engine", "seed", "world", "end", "checkpoint_every_years"}
+RUN_KEYS = {"name", "engine", "seed", "world", "end", "checkpoint_every_years", "full_reads"}
 SECTIONS = {"run", "world", "ripple"}
 RIPPLE_KEYS = {"id", "kind", "date", "target", "params"}
 
@@ -47,6 +47,7 @@ class Recipe:
     params: dict
     ripples: tuple[Ripple, ...]
     raw: dict
+    full_reads: bool = False  # keep every read row (analysis runs); otherwise one digest per scope
 
 
 def parse_recipe(raw: dict) -> Recipe:
@@ -55,7 +56,7 @@ def parse_recipe(raw: dict) -> Recipe:
         raise ValueError(f"unknown recipe sections: {sorted(unknown)}")
     run = raw.get("run", {})
     if set(run) - RUN_KEYS or not {"name", "engine", "seed", "world", "end"} <= set(run):
-        raise ValueError(f"[run] needs {sorted(RUN_KEYS - {'checkpoint_every_years'})} and allows only "
+        raise ValueError(f"[run] needs {sorted(RUN_KEYS - {'checkpoint_every_years', 'full_reads'})} and allows only "
                          f"{sorted(RUN_KEYS)}; got {sorted(run)}")
     if run["engine"] != __version__:
         raise ValueError(f"recipe is for engine {run['engine']}, this is {__version__}")
@@ -80,8 +81,11 @@ def parse_recipe(raw: dict) -> Recipe:
     every = run.get("checkpoint_every_years", 10)
     if type(every) is not int or every < 1:
         raise ValueError("checkpoint_every_years must be a positive int")
+    full_reads = run.get("full_reads", False)
+    if type(full_reads) is not bool:
+        raise ValueError("full_reads must be true or false")
     return Recipe(run["name"], run["seed"], run["world"], end, every, dict(raw.get("world", {})),
-                  tuple(ripples), raw)
+                  tuple(ripples), raw, full_reads)
 
 
 def load_recipe(path) -> Recipe:
