@@ -1,6 +1,6 @@
 ---
 title: S1 Engine foundation: sub-project spec
-status: draft r2 (independent review folded in; awaiting Aaron on #22 and #16)
+status: draft r3 (review folded in; JSON everywhere, no pickle, per Aaron 2026-10-22)
 parent: notes/specs/2026-10-21-history-engine-design.md
 tickets: "#22 (this spec), epic #2, build tickets #36–#52 (#114 is M3)"
 ---
@@ -14,6 +14,13 @@ It runs a **toy ruleset** that is just rich enough to test the things that are h
 - replay from checkpoints
 - locality (no unexplained divergence)
 - pins
+
+**Guiding choices (Aaron, 2026-10-22):**
+- **JSON is the structure everywhere.** It's readable from any tool, and any future Rust rewrite can
+  read it.
+- **No pickle.**
+- **Clarity beats speed.** A later Rust rewrite is the performance plan, so S1 picks the simple,
+  inspectable option whenever there's a choice.
 
 This spec refines master spec §4–§5 and §10 for S1 only. Where the two disagree, this one wins for S1,
 and the master spec should be updated to match.
@@ -133,8 +140,7 @@ The CLI uses `argparse`, so there's no extra dependency. `renasci/__init__.py` s
 - **Reshuffle** (the format slot only in S1; behaviour in #114): a recipe entry
   `reshuffle(from_date, salt)` sets `salt` for every key whose canonical tick is ≥ `from_date`. In S1,
   `salt` is always empty.
-- **Cost:** Philox setup is around a microsecond. If the benchmark flags it, cache `Generator`
-  objects per key within a tick.
+- **Cost:** Philox setup is around a microsecond. That's accepted; speed isn't an S1 goal.
 - Tests:
   - the same key gives the same draws
   - changing an unrelated key leaves the draws unchanged
@@ -293,7 +299,7 @@ runs/<name>/
   state_deltas/  seg-…                 # date, entity_id, field, old(json), new(json), event_id
   entities/      seg-…                 # id, kind, created_by, status changes
   hinges/ strain/ timeseries/ seg-…
-  checkpoints/   <age>-<year>-<day>.ckpt
+  checkpoints/   <age>-<year>-<day>.json.gz
 ```
 
 - **Segments** are cut at each checkpoint. That makes truncating on replay a file operation:
@@ -301,28 +307,36 @@ runs/<name>/
 - **Forks:** in S1, a replay copies the prefix segments into its own folder. The manifest still records
   `parent: {run, upto_segment}`, so prefix sharing by reference (M3) is not a format change.
 - An extra table, **`reads/`**, holds the recorded actual reads per activation (§3.6).
-- Payloads are canonical JSON strings in S1. Typed columns per event type can come later behind the
-  same reader.
+- **Payloads are canonical JSON** (decided). Parquet stays as the *table container*, because the
+  Observatory's DuckDB-WASM needs it and it is just as language-neutral. Every cell that holds
+  structure (payloads, old/new values) is canonical JSON. `renasci inspect --json` dumps any table as
+  JSON lines.
 - The reader API (`RunFolder.events(where…)`) is used by tests, diff and the CLI. The Observatory
   reads the same files with DuckDB-WASM.
 
 ### 3.12 Checkpoints and replay (#43)
 
-- **A checkpoint** is a versioned header (engine, checkpoint format, ruleset versions, recipe hash)
-  followed by a pickle (protocol 5) of:
-  - the store, including its NumPy arrays
-  - the scheduler queue
+- **A checkpoint is a single canonical JSON document**, gzipped (`.json.gz`). There is no pickle. It
+  contains:
+  - a `header`: engine, checkpoint format, ruleset versions, recipe hash, date
+  - the store: records, sorted by kind then id
+  - NumPy columns as `{dtype, shape, data}`, where `data` is a plain JSON list
+  - the scheduler queue, as a sorted list
   - the ordinal tables
-  - the director state, fired ripples, the cause index and the run-folder high-water mark
-- Pickle is acceptable because checkpoints are local, our own, and never shared. Loading rejects a
-  version mismatch with a clear message: "engine changed; replay from scenario".
+  - the director state, fired ripples, the cause index (as sorted edges) and the run-folder high-water
+    mark
+- **Every engine type serialises explicitly** through `to_json()` / `from_json()`. Loading is
+  schema-checked. A version mismatch is rejected with a clear message: "engine changed; replay from
+  scenario". Because the format is language-neutral, a future Rust engine could load the same
+  checkpoints.
+- **Floats** are written with Python's shortest round-trip `repr`. That is exact for float64, and
+  Rust's serde reads it back bit-identically. NaN and infinities are forbidden.
 - **Position:** a checkpoint dated D is taken **before any activation dated D**. At that point every
   ordinal table for the previous tick is closed, and only the open tick's tables (if D is mid-tick)
   are saved.
-- **`state_hash`** comes from a **canonical state serialiser**, not from the pickle. It walks the
-  records (sorted by kind, then id), the NumPy columns (raw bytes plus dtype and shape), the scheduler
-  heap (as a sorted list), the ordinal tables, the cause index (sorted edges) and the director state.
-  Replay equivalence compares the event hash and the final `state_hash`.
+- **`state_hash` is the blake2b of the checkpoint's canonical JSON**, excluding the header. There is
+  one serialiser for both saving and hashing, so the two can't drift apart. Replay equivalence
+  compares the event hash and the final `state_hash`.
 - **Isolation:** the replay-equivalence test loads each checkpoint in a **fresh subprocess**, so no
   in-process state can leak between the two runs.
 - **Cadence:** every N years (recipe; default 10), plus every ruleset switch.
@@ -494,6 +508,8 @@ All eight concerns were accepted:
 1. ⟨#16⟩ The base grain is a season, with daily or monthly sub-steps.
 2. ⟨#16⟩ Run folders live in `runs/` (gitignored), and recipes in `recipes/` (committed).
 3. ⟨#16⟩ The toy world is villages, a marriage market and a shared granary.
-4. Payloads are JSON strings in S1, with typed columns later. Do you agree to defer typed columns?
-5. Checkpoints use pickle with a version header. That's fast and simple, but a checkpoint can't be
-   read across engine versions, and the master spec already accepts that.
+4. ~~Payload format~~ **Decided:** canonical JSON.
+5. ~~Checkpoint format~~ **Decided:** canonical JSON, gzipped, with no pickle. Engine changes still
+   invalidate checkpoints, as the master spec accepts.
+6. ~~Recording actual reads costs speed~~ **Decided:** always record them. Speed is not an S1 concern,
+   and a Rust rewrite is the later performance path.
