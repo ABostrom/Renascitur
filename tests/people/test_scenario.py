@@ -87,3 +87,56 @@ def test_a_scenario_with_more_houses_and_settlements_is_just_data():
     assert e.store.exists("t:House-Extra") and e.store.get("t:House-Extra-head", "rule") == "absolute_primogeniture"
     e.run(until=Date(1, 5, 359))
     assert e.check_conservation() == []
+
+
+# ---------------------------------------------------------------- review fixes
+
+
+@pytest.fixture(scope="module")
+def many():
+    return [new_engine(seed=s) for s in range(12)]
+
+
+def test_the_head_is_the_eldest_son(many):
+    for e in many:
+        store = e.store
+        for h in store.ids("house"):
+            head = store.get(store.get(h, "headship"), "holder")
+            father = store.get(head, "father")
+            sons = [c for c in store.get(father, "children") if store.get(c, "sex") == "m"]
+            assert sons[0] == head
+
+
+def test_parents_were_of_age_and_children_spaced(many):
+    race = {r["id"]: Race.from_json(r) for r in SCENARIO["races"]}
+    for e in many:
+        store = e.store
+        for p in store.ids("person"):
+            kids = store.get(p, "children") or []
+            if not kids:
+                continue
+            r = race[store.get(p, "race")]
+            ages = [age_years(CAL, store.get(c, "born"), START) for c in kids]
+            assert ages == sorted(ages, reverse=True)  # eldest first
+            assert age_years(CAL, store.get(p, "born"), START) - ages[0] >= r.marriage[0]
+            if store.get(p, "sex") == "f":
+                for older, younger in zip(kids, kids[1:]):
+                    a, b = store.get(older, "born"), store.get(younger, "born")
+                    gap = (b[1] - a[1]) * CAL.days_per_year + b[2] - a[2]
+                    assert gap >= r.spacing_days
+                assert store.get(p, "last_birth") == store.get(kids[-1], "born")
+
+
+def test_synthesised_copies_are_founder_stock(world):
+    store = world.store
+    for p in store.ids("person"):
+        for pair in store.get(p, "genome").values():
+            for c in pair:
+                assert c.split("@", 1)[1].startswith("f:")
+
+
+def test_seats_have_room_for_their_house(world):
+    store = world.store
+    for spec in SCENARIO["settlements"]:
+        s = spec["id"]
+        assert store.get(s, "notable_target") >= len(store.get(s, "residents"))

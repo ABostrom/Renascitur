@@ -324,7 +324,9 @@ A **scenario** is world data (JSON):
 - the genome catalogue;
 - world parameters (residence, house inheritance, `kin_degree`, `quiet_years`, `commoner_after`).
 
-Synthesis is deterministic from the seed, the scenario and the pin set. Casting (S2) runs first, so canon is placed and synthesis grows around it.
+Synthesis is deterministic from the seed and the scenario. **As built (#73):** synthesis runs before pins
+are applied, since a pin may name a synthesised `s:` person. S2's casting (#63) will place canon *into* the synthesised
+families, replacing members it names.
 
 1. **Aggregates:** each settlement's age structure comes from the race's stable population, a life table computed from the hazard and fertility curves. Counts are keyed draws, and allele counts come from the genome group's frequencies.
 2. **Houses:** each house gets a synthesised family:

@@ -11,17 +11,18 @@
 ```
 
 Everything is drawn from one keyed stream per purpose (`genome.keyed(seed)`), so the same seed and
-scenario always give the same world. Casting happens first (S2 places canon), and synthesis grows
-the rest around it:
+scenario always give the same world. Synthesis runs before pins are applied (a pin may name a
+synthesised `s:` person); S2's casting (#63) will place canon *into* the synthesised families.
 
 1. **Masses:** each settlement's age structure is its race's life table (`population.cast_masses`).
 2. **Commoners:** `commoners` notables per settlement with ages drawn from the same life table and
    founder genomes; neighbours of opposite sex and marriageable age are married.
-3. **Houses:** a family at the seat. A founder (dead) whose children are the head (30-55) and 0-3
-   siblings; the head and adult brothers marry and have 0-4 children (inheriting from both parents)
-   born while the mother was fertile and spaced apart; sisters stay in the house unmarried. Wives join
-   their husband's house (with `house_from: father`). The head holds the headship; the yearly heir
-   pass names the heir.
+3. **Houses:** a family at the seat. A founder (dead, a father no younger than the marriage age)
+   whose children are the head (30-55, the eldest son) and 0-3 younger siblings; the head and adult
+   brothers marry and have up to 4 children (inheriting from both parents), born while the mother was
+   fertile, spaced by her race's birth spacing (her `last_birth` is her youngest); sisters stay in the
+   house unmarried. Wives join their husband's house. A seat's notable target and capacity grow by the
+   house living there. The head holds the headship; the yearly heir pass names the heir.
 
 Synthesised ids start `s:` (cast, not born): `s:<house>:<n>`, `s:<settlement>:<n>`.
 """
@@ -124,7 +125,7 @@ class _Builder:
             mg = self.people[mother]["genome"] if mother else None
             fg = self.people[father]["genome"]
             unknown = None if mg else ({lo.id: self.cat.groups[group][lo.id] for lo in self.cat.loci}, f"f:{group}")
-            genome, _ = inherit(self.cat, mg, fg, self.genome_streams(pid), f"s:{pid}", unknown=unknown)
+            genome, _ = inherit(self.cat, mg, fg, self.genome_streams(pid), f"f:{group}", unknown=unknown)  # stock
             self.people[pid] = _person(self.name(race, sex, rng), sex, _born(self.today, age, day), race.id, s,
                                        genome, self.cat, house=house if member else None, mother=mother, father=father)
             for parent in (mother, father):
@@ -132,32 +133,37 @@ class _Builder:
                     self.people[parent]["children"].append(pid)
             return pid
 
+        # Whole years between a mother's births: her spacing, plus a year so birth days can't close the gap.
+        gap = -(-race.spacing_days // self.cal.days_per_year) + 1
         head_age = 30 + int(rng.integers(0, 26))
-        founder_id = founder_person("m", head_age + 25 + int(rng.integers(0, 10)), True)
+        founder_id = founder_person("m", head_age + race.marriage[0] + int(rng.integers(0, 11)), True)
         self.dead.add(founder_id)
-        ages = sorted({head_age} | {max(1, head_age + int(rng.integers(-12, 13))) for _ in range(int(rng.integers(0, 4)))},
-                      reverse=True)
-        siblings = [child_of(None, founder_id, a, True, sex="m" if a == head_age else None) for a in ages]
-        head = siblings[ages.index(head_age)]  # the founder's son
+        ages = [head_age]  # the head is the eldest son; his brothers and sisters are younger
+        for _ in range(int(rng.integers(0, 4))):
+            nxt = ages[-1] - gap - int(rng.integers(0, 4))
+            if nxt < 1:
+                break
+            ages.append(nxt)
+        siblings = [child_of(None, founder_id, a, True, sex="m" if i == 0 else None) for i, a in enumerate(ages)]
+        head = siblings[0]
         for p, age in zip(siblings, ages):
-            person = self.people[p]
-            if person["sex"] != "m" or age < race.marriage[0]:
+            if self.people[p]["sex"] != "m" or age < race.marriage[0]:
                 continue  # sisters and the young stay unmarried in the house
             wife_age = max(race.marriage[0], min(age - 10 + int(rng.integers(0, 16)), race.fertile[1] + 15))
             wife = founder_person("f", wife_age, True)
             self.marry(p, wife)
+            # Children eldest first: she was fertile at each birth, he was of age, and births are spaced.
+            child_age = min(wife_age - race.fertile[0], age - race.marriage[0])
+            child_age = int(rng.integers(0, child_age + 1)) if child_age >= 0 else -1
             for _ in range(int(rng.integers(0, 5))):
-                youngest_mother_age = race.fertile[0]
-                oldest_child = min(wife_age - youngest_mother_age, age - race.marriage[0])
-                if oldest_child < 0:
+                if child_age < 0:
                     break
-                child_age = int(rng.integers(0, oldest_child + 1))
-                if wife_age - child_age > race.fertile[1]:
-                    continue
-                child_of(wife, p, child_age, True)
-        for p in [x for x in self.people if self.people[x]["house"] == house and self.people[x]["children"]]:
-            kids = self.people[p]["children"]  # birth order: eldest first
-            self.people[p]["children"] = sorted(kids, key=lambda c: tuple(self.people[c]["born"]))
+                if wife_age - child_age <= race.fertile[1]:
+                    child_of(wife, p, child_age, True)
+                child_age -= gap + int(rng.integers(0, 3))
+            kids = self.people[wife]["children"]
+            if kids:
+                self.people[wife]["last_birth"] = self.people[kids[-1]]["born"]
         return head, siblings
 
     # ------------------------------------------------------------ cast it all
@@ -174,10 +180,15 @@ class _Builder:
             if pid not in self.dead:
                 residents[person["place"]].append(pid)
         for spec in self.sc["settlements"]:
-            self.e.cast("settlement", spec["id"], {
+            s = spec["id"]
+            extra = len(residents[s]) - spec.get("commoners", 0)  # a seat's house lives there too
+            target, capacity = spec.get("notable_target"), spec.get("capacity")
+            self.e.cast("settlement", s, {
                 "region": spec["region"], "race": spec["race"], "genome_group": spec["genome_group"],
-                "residents": sorted(residents[spec["id"]]), "capacity": spec.get("capacity"),
-                "notable_target": spec.get("notable_target"), "danger": spec.get("danger", 0.0)})
+                "residents": sorted(residents[s]),
+                "capacity": None if capacity is None else capacity + max(0, extra),
+                "notable_target": None if target is None else target + max(0, extra),
+                "danger": spec.get("danger", 0.0)})
         cast_masses(self.e, {s: (spec["race"], spec["genome_group"], spec.get("masses", 0), len(residents[s]))
                              for s, spec in settlements.items()}, self.cat, self.races)
         for pid in sorted(self.people):
