@@ -57,8 +57,8 @@ Guiding beliefs:
 | First Age | High fantasy blended with science fiction: Solarans, the Endless Sun, World Trees, the stars. It is the largest body of lore to generate, so it gets its **own milestone (M5)** and ruleset (S14), right after the story layer. |
 | Realms | Renascita only for now. Pyrosia is the first mapped region. |
 | Run budget | Overnight for a full multi-age run; minutes for a replay from a checkpoint. A full Fourth Age run (about 250 years) should take minutes at M1 scale. |
-| Observatory | The **driver and the viewer**: a **SvelteKit** web app. **Viewing needs no server**: the page reads run folders (Parquet + a JSON manifest) directly, querying them in the browser with DuckDB-WASM, and a run can be published as a static page. **Acting needs the local engine**: `renasci serve` (FastAPI, local only) starts runs and replays and promotes to the vault. Without it, the page is read-only. |
-| Stack | Python 3.12 with uv, NumPy, Parquet/Arrow, pytest and hypothesis. Rust or PyO3 only where profiling demands it. |
+| Observatory | The **driver and the viewer**: a **SvelteKit** web app. **Viewing needs no server**: the page reads run folders (**plain JSON Lines + a JSON manifest**) directly with ordinary JavaScript. There's no database or query engine, which keeps the stack small. A run can be published as a static page. **Acting needs the local engine**: `renasci serve` (FastAPI, local only) starts runs and replays and promotes to the vault. Without it, the page is read-only. |
+| Stack | Python 3.12 with uv, NumPy, pytest and hypothesis. **Keep the stack small.** Data is JSON everywhere, with no Parquet, DuckDB or pickle. A Rust rewrite may come much later; speed is not an early goal. |
 | Engine | A rewrite in this repo. The `renasci` prototype is reference only. |
 | Geography | `images/Renascitur.png` (Inkarnate) is the source map; 1 cell = 24 miles. We build our own map editor. Routes have travel time by mode and season, danger by time of day, and access rules. The Vialux is safe at night. |
 
@@ -94,7 +94,7 @@ Guiding beliefs:
 
 ```
  vault (docs/, Obsidian)                 Observatory (SvelteKit)
-   │  canon notes ─► pins, casting        │ view: reads run folders directly (DuckDB-WASM)
+   │  canon notes ─► pins, casting        │ view: reads run folders directly (JSON Lines)
    │  ◄─ proposed notes                   │ act:  calls `renasci serve` when it is running
    ▼                                      ▼
 ┌──────────────────────── renasci (Python package) ────────────────────────┐
@@ -108,7 +108,7 @@ Guiding beliefs:
 │ rulesets       per age                                                     │
 │ story finder   sagas · arcs · beats · hinges · latch points · salience     │
 │ story layer    context packs · POV chronicles · canon checks · MCP         │
-│ outputs        run folder (Parquet + manifest) · `renasci serve` (FastAPI) │
+│ outputs        run folder (JSONL + manifest) · `renasci serve` (FastAPI) │
 └───────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -171,7 +171,7 @@ recipe (engine version, seed, vault commit, ripples, reshuffles)
 
 - **Entity store:** stable ids, columnar NumPy components for bulk data (aggregates, genomes), and records for notables. **Dormant records are never deleted.**
 - **Run folder** (the unit the Observatory reads):
-  - **Contents:** a `manifest.json` (recipe, engine and schema versions, vault commit, checks) plus Parquet tables: `events`, `causes`, `participants`, `people`, `ambitions`, `schemes`, `beliefs` (provenance), `state_deltas` (dated changes for "as of" views), `timeseries`, `hinges`, `stories`.
+  - **Contents:** a `manifest.json` (recipe, engine and schema versions, vault commit, checks) plus JSON Lines tables (one `.jsonl` per table per segment): `events`, `causes`, `participants`, `people`, `ambitions`, `schemes`, `beliefs` (provenance), `state_deltas` (dated changes for "as of" views), `timeseries`, `hinges`, `stories`.
   - **Partitioning:** files are partitioned by age or segment.
   - **Forks** share the prefix before the fork point by reference.
   - **Aggregates** are logged as timeseries, not events. Belief provenance is sampled in aggregates and complete for notables.
@@ -250,7 +250,7 @@ Each ripple is applied through an **in-world disguise** (a physician's care, a L
 Each entry gives the scope, then *depends on* → *done when*.
 
 - **S1 Engine foundation.**
-  - Scope: calendar (age-relative), scheduler with total order, keyed RNG with canonical ticks, causal ids, entity store, typed events (with causes and visibility), run-folder writer (Parquet + manifest), checkpoints and replay, recipes, ruleset switching, the temporal-LOD interface, pin director and casting skeletons, ripple applier, rendezvous choice, hinge recording, test harness.
+  - Scope: calendar (age-relative), scheduler with total order, keyed RNG with canonical ticks, causal ids, entity store, typed events (with causes and visibility), run-folder writer (JSON Lines + manifest), checkpoints and replay, recipes, ruleset switching, the temporal-LOD interface, pin director and casting skeletons, ripple applier, rendezvous choice, hinge recording, test harness.
   - Depends on nothing. Done when a toy ruleset *that includes matching and a shared resource* runs deterministically, replays equivalently from many checkpoint positions, passes the no-unexplained-divergence test for a ripple, and honours toy pins.
 - **S2 Vault bridge.**
   - Scope: loader, note-type mapping, `id:` handling, pin extraction (vague dates, succession, lineage), feasibility pass, casting inputs, the proposed-note writer with `generated_hash`.
@@ -286,7 +286,7 @@ Each entry gives the scope, then *depends on* → *done when*.
   - Done when a full First Age run holds its canon within budget and produces promotable lore.
 - **S12 Story layer:** context packs, POV chronicles (the victor's account vs the truth), canon checks of prose, the MCP server. **Story finding (sagas, arcs, latch points) is not here.** It belongs to S7 plus S13, and lands in M1.
 - **S13 Observatory:**
-  - The SvelteKit driver and viewer. It reads run folders with DuckDB-WASM and acts through `renasci serve`. It grows every milestone.
+  - The SvelteKit driver and viewer. It reads JSON Lines run folders directly and acts through `renasci serve`. It grows every milestone.
   - Its core inspectors:
     - **Stories:** period selector, story river, sagas › arcs › beats, latch points with what-if launching and diffs.
     - **World history:** timeline, cause chains, map by year.

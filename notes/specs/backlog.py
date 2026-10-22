@@ -37,7 +37,7 @@ SUBS = {
     "S11": ("Mythic beings & faith", "M5", "Gods and immortals as agents, worship, faith as a force, divine ripple attribution.", "Pinned divine deeds hold; faith shifts belief and power.", ["S3", "S7"]),
     "S12": ("Story layer", "M4", "Context packs, POV chronicles, canon checks, MCP server.", "Schema-valid packs, >=90% canon-check recall, chronicle + campaign brief from one run.", ["S6", "S7"]),
     "S14": ("First Age ruleset", "M5", "Solaran civilisation and technology (research, inventions, colonies, schisms), World Trees, Elder Races, elemental/cosmic events, the stars as an abstract realm, First Age canon pins, myth formation for later ages.", "A full First Age run holds its canon within the overnight budget and produces promotable lore.", ["S3", "S6", "S7", "S11"]),
-    "S13": ("Observatory", "M0", "SvelteKit driver/viewer: reads Parquet run folders with DuckDB-WASM, acts via `renasci serve`; grows v0-v6.", "Defined per milestone.", ["S1"]),
+    "S13": ("Observatory", "M0", "SvelteKit driver/viewer: reads JSON Lines run folders directly, acts via `renasci serve`; grows v0-v6.", "Defined per milestone.", ["S1"]),
 }
 
 # (sub, milestone, kind, title, scope, acceptance, extra_labels)
@@ -70,7 +70,7 @@ S1 = [
     ("Causal ids and entity store", "ids = hash(parent ids, creating event key, ordinal); vault ids for cast entities; columnar NumPy components + notable records; dormant records never deleted.", ["No global counters", "Adding an entity does not change other ids"], False),
     ("Multi-rate scheduler with total ordering", "Priority queue ordered by (time, priority, stable id, purpose); monthly/seasonal/yearly cadences; urgent follow-ups.", ["Insertion order never affects execution order (property test)"], False),
     ("Typed events: schema registry, causes, visibility, cause DAG queries", "Event types with schemas; participants by role; causes; source; public/secret visibility; why/what-next queries.", ["Cause DAG queries both directions", "Schemas versioned"], False),
-    ("Run folder writer: Parquet tables and manifest", "manifest.json + Parquet (events, causes, participants, people, ambitions, schemes, beliefs, state_deltas, timeseries, hinges, stories), partitioned by age/segment.", ["DuckDB can query every table", "Schema version in manifest"], False),
+    ("Run folder writer: JSON Lines tables and manifest", "manifest.json + JSON Lines (events, causes, participants, people, ambitions, schemes, beliefs, state_deltas, timeseries, hinges, stories), partitioned by age/segment.", ["Every table readable with jq", "Schema version in manifest"], False),
     ("Checkpoints and replay", "Checkpoint contents per spec 5.4; replay truncates the run folder at the high-water mark; version invalidation policy.", ["Replay from N positions equals the continuous run"], False),
     ("Run recipes (TOML) and CLI: run, replay, diff", "Recipe = engine version, seed, vault commit/pin hash, ripples, reshuffles. `renasci run|replay|diff`.", ["Recipe reproduces a run exactly", "diff reports changed entities and causal wave"], False),
     ("System registry, read-set declarations and ruleset switching", "Systems declare cadence and read-sets; rulesets enable systems/params per age and switch at boundaries.", ["Ruleset switch at a boundary is checkpointed"], False),
@@ -87,7 +87,7 @@ for title, scope, acc, ready in S1:
 
 # ---------------------------------------------------------------- S13 v0 (M0)
 for title, scope, acc in [
-    ("Observatory v0: SvelteKit scaffold, design tokens, open a run folder via DuckDB-WASM", "SvelteKit app; theme tokens (light/dark); load a run folder's Parquet + manifest in the browser.", ["Opens a run folder with no server", "Builds to a static page"]),
+    ("Observatory v0: SvelteKit scaffold, design tokens, open a run folder", "SvelteKit app; theme tokens (light/dark); load a run folder's JSON Lines + manifest in the browser.", ["Opens a run folder with no server", "Builds to a static page"]),
     ("Observatory v0: event browser", "Filter by type, place, salience, text; virtualised list.", ["Handles 100k+ events smoothly"]),
     ("Observatory v0: cause-chain explorer", "Why did this happen / what did it lead to, across events, pins and ripples.", ["Walks causes both ways from any event"]),
     ("Observatory v0: run diff and causal wave", "Compare two run folders; divergence per place over time; unexplained-divergence count.", ["Matches CLI diff output"]),

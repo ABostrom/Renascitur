@@ -19,6 +19,7 @@ It runs a **toy ruleset** that is just rich enough to test the things that are h
 - **JSON is the structure everywhere.** It's readable from any tool, and any future Rust rewrite can
   read it.
 - **No pickle.**
+- **A small stack.** No Parquet, DuckDB or Arrow: run folders are plain JSON Lines.
 - **Clarity beats speed.** A later Rust rewrite is the performance plan, so S1 picks the simple,
   inspectable option whenever there's a choice.
 
@@ -86,7 +87,7 @@ src/renasci/
     canon.py      # canonical serialisation, quantised floats, state and event hashes
     engine.py     # Engine: run loop, checkpoint cadence, run lifecycle
   io/
-    runfolder.py  # Parquet writer/reader + manifest
+    runfolder.py  # JSON Lines writer/reader + manifest
     checkpoint.py # save/load, versioned
     recipe.py     # TOML recipe load/validate
   analysis/
@@ -103,7 +104,7 @@ bench/history.csv     # committed benchmark history
 
 **Dependencies:**
 
-- runtime: `numpy` and `pyarrow` (the standard library `tomllib` reads recipes)
+- runtime: `numpy` only. The standard library covers `json`, `gzip` and `tomllib` (for recipes).
 - dev: `pytest` and `hypothesis`
 
 The CLI uses `argparse`, so there's no extra dependency. `renasci/__init__.py` sets
@@ -293,7 +294,7 @@ ordinal**.
 ```
 runs/<name>/
   manifest.json      # recipe, engine/schema versions, ruleset versions, seed, casting, checkpoints, checks, hashes
-  events/        seg-00000.parquet …   # id, date(age,year,day), type, place, source_kind, source_ref, visibility, payload(json)
+  events/        seg-00000.jsonl …     # one canonical JSON object per line: id, date, type, place, source, visibility, roles, causes, payload
   participants/  seg-…                 # event_id, role, entity_id
   causes/        seg-…                 # event_id, cause_kind, cause_ref
   state_deltas/  seg-…                 # date, entity_id, field, old(json), new(json), event_id
@@ -307,12 +308,11 @@ runs/<name>/
 - **Forks:** in S1, a replay copies the prefix segments into its own folder. The manifest still records
   `parent: {run, upto_segment}`, so prefix sharing by reference (M3) is not a format change.
 - An extra table, **`reads/`**, holds the recorded actual reads per activation (§3.6).
-- **Payloads are canonical JSON** (decided). Parquet stays as the *table container*, because the
-  Observatory's DuckDB-WASM needs it and it is just as language-neutral. Every cell that holds
-  structure (payloads, old/new values) is canonical JSON. `renasci inspect --json` dumps any table as
-  JSON lines.
+- **Everything is canonical JSON Lines** (decided). Each table segment is a `.jsonl` file with one
+  object per line, in emission order. Segments are gzipped (`.jsonl.gz`) once they are closed, and
+  the reader handles both forms. You can grep it, `jq` it, or read it from any language.
 - The reader API (`RunFolder.events(where…)`) is used by tests, diff and the CLI. The Observatory
-  reads the same files with DuckDB-WASM.
+  reads the same files with plain `fetch` and JSON parsing.
 
 ### 3.12 Checkpoints and replay (#43)
 
@@ -415,7 +415,7 @@ This ports the PoC's taint tracking.
   - the counts
   - the first 20 unexplained events with their keys
   - the causal wave (the share of events divergent per place per year), which is written to
-    `runs/<b>/analysis/wave.parquet` for the Observatory
+    `runs/<b>/analysis/wave.json` for the Observatory
 
 ### 3.16 Toy ruleset (#51)
 
