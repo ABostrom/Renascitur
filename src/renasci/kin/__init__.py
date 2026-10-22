@@ -19,7 +19,9 @@ from renasci.core.engine import Engine
 from renasci.core.systems import Ruleset
 from renasci.people.genome import Catalogue, founder, keyed
 from renasci.people.families import Marriage
+from renasci.people.drives import Drives
 from renasci.people.houses import Houses
+from renasci.people.ties import Ties
 from renasci.people.population import Lod, Population, cast_masses, conservation
 from renasci.people.life import Births, Life, world_params
 from renasci.people.races import Race, age_years
@@ -35,7 +37,7 @@ CATALOGUE: dict = WORLD["catalogue"]
 
 
 def ruleset(races=None, catalogue=None, residence="husband") -> Ruleset:
-    return Ruleset("kin", 1, (Population(), Births(), Life(), Marriage(), Houses(), Lod()),
+    return Ruleset("kin", 1, (Population(), Births(), Life(), Marriage(), Houses(), Lod(), Ties(), Drives()),
                    params=world_params(races or RACES, catalogue or CATALOGUE, residence=residence, aggregates=True),
                    conservation=conservation(Catalogue.from_json(catalogue or CATALOGUE)))
 
