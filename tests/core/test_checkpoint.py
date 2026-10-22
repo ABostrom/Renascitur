@@ -53,7 +53,7 @@ def test_checkpoint_needs_flushed_history_and_round_trips(tmp_path):
         e.checkpoint(at=Date(1, 3, 0), segments=0)
     e.clear_pending()
     cp = e.checkpoint(at=Date(1, 3, 0), segments=0)
-    assert cp["header"]["date"] == [1, 3, 0] and cp["header"]["format"] == 1
+    assert cp["header"]["date"] == [1, 3, 0] and cp["header"]["format"] == 2
     save_checkpoint(tmp_path / "c.json.gz", cp)
     assert load_checkpoint(tmp_path / "c.json.gz") == json.loads(json.dumps(cp))
     restored = Engine.restore(cp, CAL, RULESETS, seed=SEED)

@@ -13,6 +13,7 @@ from __future__ import annotations
 from renasci import __version__
 from renasci.core.calendar import Calendar, Date
 from renasci.core.canon import digest
+from renasci.core.determinism import check_environment, versions
 from renasci.core.context import Ctx, UndeclaredAccess
 from renasci.core.events import CauseIndex, Event, EventType, Registry, Source
 from renasci.core.ids import event_id
@@ -26,12 +27,13 @@ __all__ = ["Engine", "UndeclaredAccess"]
 SWITCH_PRIORITY = -(10**9)
 CAST = EventType("engine.cast", 1, roles={"subject": (1, 1)}, payload={"kind": "str"})
 CAST_COLUMN = EventType("engine.cast_column", 1, roles={}, payload={"column": "str"})
-CHECKPOINT_FORMAT = 1
+CHECKPOINT_FORMAT = 2  # 2: recipe includes major.minor versions
 
 
 class Engine:
     def __init__(self, calendar: Calendar, seed: int, rulesets: list[tuple[Date, Ruleset]],
                  strict: bool = True, reshuffles: tuple[Reshuffle, ...] = (), hinge_margin: float = 0.05):
+        check_environment()
         if not rulesets:
             raise ValueError("an engine needs at least one ruleset")
         dates = [d for d, _ in rulesets]
@@ -211,7 +213,7 @@ class Engine:
 
         cal = self.calendar
         return {
-            "engine": __version__, "seed": self.seed, "strict": self.strict, "hinge_margin": self.hinge_margin,
+            "engine": __version__, "versions": versions(), "seed": self.seed, "strict": self.strict, "hinge_margin": self.hinge_margin,
             "reshuffles": sorted((r.to_json() for r in self.reshuffles), key=lambda r: (r["from"], r["salt"])),
             "calendar": {"ages": [[a.index, a.abbrev, a.name, a.last_year] for a in cal.ages],
                          "months": cal.months, "seasons": cal.seasons},

@@ -2,7 +2,7 @@
 
     runs/<name>/
       manifest.json
-      <table>/seg-00000.jsonl.gz   closed segments (gzipped, byte-identical on every platform)
+      <table>/seg-00000.jsonl.gz   closed segments (gzip framing identical on every platform)
       <table>/seg-00003.jsonl      the open segment
 
 Every line is one canonical JSON object. Segments are cut at checkpoints (`cut`), so truncating a
@@ -25,6 +25,7 @@ from pathlib import Path
 from renasci import __version__
 from renasci.core.calendar import Date
 from renasci.core.canon import canonical
+from renasci.core.determinism import versions
 
 FORMAT = 1
 TABLES = ("events", "causes", "participants", "entities", "state_deltas", "bulk_deltas", "reads",
@@ -63,7 +64,8 @@ class RunFolder:
         path.mkdir(parents=True, exist_ok=True)
         for t in TABLES:
             (path / t).mkdir()
-        rf = cls(path, {"format": FORMAT, "engine": __version__, "tables": {t: 1 for t in TABLES},
+        rf = cls(path, {"format": FORMAT, "engine": __version__, "versions": versions(),
+                        "tables": {t: 1 for t in TABLES},
                         "segments": 0, "marks": [], "parent": parent, "meta": json.loads(canonical(meta))})
         rf.save_manifest()
         return rf
