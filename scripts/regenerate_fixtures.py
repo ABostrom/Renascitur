@@ -32,6 +32,12 @@ kind = "protect"
 date = "1X 3"
 target = "t:Ashford-00"
 params = { until = [1, 6, 359] }
+
+[[ripple]]
+id = "r2"
+kind = "doom"
+date = "1X 4"
+target = "t:Brook-02"
 """
 
 

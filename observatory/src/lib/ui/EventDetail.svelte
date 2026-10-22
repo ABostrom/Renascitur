@@ -1,7 +1,11 @@
 <script lang="ts">
 	import { page } from '$app/state';
 
+	import type { CauseGraph } from '$lib/run/causes';
 	import { eventDetail, type EventDetail, type EventIndex } from '$lib/run/index';
+	import { loadGraph } from '$lib/runs';
+
+	import CauseTree from './CauseTree.svelte';
 
 	let { index, id, onSelect }: { index: EventIndex; id: string; onSelect: (id: string) => void } = $props();
 
@@ -29,6 +33,26 @@
 			})
 			.finally(() => {
 				if (!stale) loading = false;
+			});
+		return () => (stale = true);
+	});
+
+	let graph = $state<CauseGraph | null>(null);
+	let direction = $state<'why' | 'led'>('why');
+	let graphFailed = $state<string | null>(null);
+	let depthInput = $state(2);
+	const depth = $derived(Math.min(8, Math.max(1, Math.floor(Number(depthInput) || 1))));
+	$effect(() => {
+		const name = index.run.name;
+		let stale = false;
+		graph = null;
+		graphFailed = null;
+		loadGraph(name)
+			.then((g) => {
+				if (!stale) graph = g;
+			})
+			.catch((err) => {
+				if (!stale) graphFailed = (err as Error).message;
 			});
 		return () => (stale = true);
 	});
@@ -71,7 +95,10 @@
 				{#each Object.entries(event.roles as Record<string, string[]>) as [role, members] (role)}
 					<dt>{role}</dt>
 					<dd>
-						{#each members as m (m)}<a class="mono chip" href={filterHref('entity', m)}>{m}</a>{/each}
+						{#each members as m (m)}
+							<span class="chip"><a class="mono" href={`/run/${encodeURIComponent(index.run.name)}/entity/${encodeURIComponent(m)}`}>{m}</a>
+								<a class="filter" href={filterHref('entity', m)} title="Filter to this entity's events">⌕</a></span>
+						{/each}
 					</dd>
 				{/each}
 			</dl>
@@ -102,6 +129,28 @@
 						</li>
 					{/each}
 				</ul>
+			{/if}
+		</section>
+
+		<section>
+			<h3>
+				Cause chain
+				<span class="controls">
+					<button class:active={direction === 'why'} onclick={() => (direction = 'why')}>Why</button>
+					<button class:active={direction === 'led'} onclick={() => (direction = 'led')}>What it led to</button>
+					<label>depth <input type="number" min="1" max="8" bind:value={depthInput} /></label>
+				</span>
+			</h3>
+			{#if graph}
+				{#key `${id}:${direction}:${depth}`}
+					<ul class="tree">
+						<CauseTree {graph} node={{ kind: 'event', ref: id }} {direction} {depth} onSelect={onSelect} />
+					</ul>
+				{/key}
+			{:else if graphFailed}
+				<p class="muted">Couldn't build the cause graph: {graphFailed}</p>
+			{:else}
+				<p class="muted">Building the cause graph…</p>
 			{/if}
 		</section>
 
@@ -196,7 +245,39 @@
 		margin: 0;
 	}
 	.chip {
-		margin-right: 0.4rem;
+		margin-right: 0.6rem;
+		white-space: nowrap;
+	}
+	.filter {
+		text-decoration: none;
+		color: var(--muted);
+		margin-left: 0.15rem;
+	}
+	.controls {
+		display: inline-flex;
+		gap: 0.35rem;
+		margin-left: 0.6rem;
+		font-family: var(--sans);
+		font-weight: 400;
+		font-size: 0.8rem;
+		align-items: center;
+	}
+	.controls button {
+		padding: 0.1rem 0.5rem;
+	}
+	.controls button.active {
+		border-color: var(--accent);
+		color: var(--accent);
+	}
+	.controls input {
+		width: 3rem;
+	}
+	.tree {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		font-size: 0.9rem;
+		overflow-x: auto;
 	}
 	pre {
 		margin: 0;

@@ -77,8 +77,16 @@ try {
 	await page.locator('button.event').first().click();
 	await page.getByRole('heading', { name: 'What it read' }).waitFor({ timeout: 10000 });
 	await page.locator('table.reads tbody tr').first().waitFor({ timeout: 10000 }); // the scope's reads, with digests
+	// the cause chain: from a doom ripple's secret event forward to the death it caused
+	await page.goto(`http://127.0.0.1:${port}/run/protected/events?type=ripple.doom`);
+	await page.locator('button.event').first().click();
+	await page.getByRole('button', { name: 'What it led to' }).click();
+	await page.locator('.tree').getByText(/toy\.death/).first().waitFor({ timeout: 15000 });
+	// an entity page: record, life and state changes
+	await page.goto(`http://127.0.0.1:${port}/run/base/entity/t%3AAshford`);
+	await page.getByRole('heading', { name: /State changes \(\d+\)/ }).waitFor({ timeout: 15000 });
 	if (errors.length) throw new Error(`page errors: ${errors.join('; ')}`);
-	console.log(`smoke: ok (browser read ${counts.base.n} events from base; ${shown} granary events listed; detail shown)`);
+	console.log(`smoke: ok (browser read ${counts.base.n} events from base; ${shown} granary events listed; detail, cause chain and entity page shown)`);
 } catch (e) {
 	failed = true;
 	console.error('smoke: FAILED', e);
