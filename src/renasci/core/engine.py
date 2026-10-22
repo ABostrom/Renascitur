@@ -48,6 +48,7 @@ class Engine:
         self.events: list[Event] = []
         self.reads: list[dict] = []
         self.hinges: list[dict] = []  # close calls with stakes: the source data for latch points
+        self.odds_hooks: list = []  # (ctx, p, purpose, owner) -> (p, cause or None): ripples, director
         self.dropped: list[str] = []
         self.ruleset: Ruleset | None = None
         self.ruleset_index: int | None = None
@@ -147,6 +148,7 @@ class Engine:
                 self.scheduler.push(Activation(due, system.priority, system.name, "cadence", system.name, {}, ()))
         else:
             system.handle(ctx, activation)
+        self.hinges.extend(ctx.hinges)
         reads = ctx.recorded_reads()
         if reads:
             self.reads.append({"activation": activation.id, "reads": reads})
