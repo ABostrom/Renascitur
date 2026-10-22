@@ -3,7 +3,7 @@ description: Pull the next ready History Engine ticket from GitHub, do it, and r
 ---
 
 You are working the Renascitur History Engine backlog on GitHub (ABostrom/Renascitur, public).
-Do **one ticket per run**. The master spec is `notes/specs/2026-10-21-history-engine-design.md`;
+Do **one ticket per run**. **Focus on the engine.** It is a world-agnostic(ish) history engine, and Renascita lore is just data it loads. Don't get absorbed in lore. The master spec is `notes/specs/2026-10-21-history-engine-design.md`;
 the backlog generator is `notes/specs/backlog.py`. Integration branch: `feat/history-engine`.
 
 Aaron and you post from the same GitHub account. Start every comment you write with `🤖`.
@@ -23,15 +23,14 @@ Remove `needs-aaron`, act on what they said (revise, finish, or close), then go 
 
     gh issue list --label ready --state open --json number,title,labels,milestone --limit 100
 
-Skip anything labelled `in-progress`, `needs-aaron` or `blocked`. Of the rest, take the one in the
-earliest milestone (M0 < M1 < … < M7b). Break ties with `spec`/`plan` before `build`, then `lore`, then
-the lowest number. Read the issue and its parent epic. If nothing is left, go to step 6.
+Skip anything labelled `in-progress`, `needs-aaron` or `blocked`, and **skip `lore` tickets** unless Aaron has asked for one by number. Of the rest, take the one in the
+earliest milestone (M0 < M1 < … < M7b). Break ties with `spec`/`plan` before `build`, then the lowest number. Read the issue and its parent epic. If nothing is left, go to step 6.
 
 Claim it: `gh issue edit <n> --add-label in-progress` and post a `🤖 Picking this up.` comment.
 
 ## 3. Do the work, by ticket kind
 
-- **lore**: Aaron owns the canon. Draft into `notes/` (or a vault note with `canon: proposed`), read
+- **lore** (only when Aaron asks): Aaron owns the canon. Keep it brief, and keep engine design free of setting specifics. Draft into `notes/` (or a vault note with `canon: proposed`), read
   the relevant vault notes first, never mark anything `canon: true`. Commit to `feat/history-engine`.
   Comment with a summary, the file path and numbered questions. Label `needs-aaron`. Do not close.
 - **spec** (review or write a spec): write or update it under `notes/specs/`, self-review it, commit,
