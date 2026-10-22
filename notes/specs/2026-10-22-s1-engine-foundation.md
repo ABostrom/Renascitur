@@ -119,8 +119,8 @@ The CLI uses `argparse`, so there's no extra dependency. `renasci/__init__.py` s
 - `Calendar` holds the age names and abbreviations (`"4A"`), `days_per_year` (placeholder: 360),
   `months` (12×30) and `seasons` (4×90). Formatting gives `"4A 37"`, `"4A 37 Spring"` and
   `"4A 37 m3 d12"`. Names are placeholders until lore exists.
-- `canonical_tick(date) = (age, year, day // 90)`, i.e. the season ⟨#16⟩.
-- Arithmetic: `date + Span(days=…, months=…, years=…)`. It never crosses an age boundary
+- `canonical_tick(date) = (age, year, quarter)`, where quarter is `day * 4 // days_per_year`. These are fixed quarters, not the named seasons, so changing a setting's seasons never changes RNG keys.
+- Arithmetic: `calendar.add(date, Span(years=…, days=…))`, plus `start_of_next(date, unit)` for month, season and year cadences. There are no month spans, because months have uneven lengths. It never crosses an age boundary
   implicitly: crossing one raises an error unless the ruleset handles the boundary.
 - Property tests:
   - ordering is total and consistent with arithmetic

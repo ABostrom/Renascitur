@@ -152,3 +152,59 @@ def test_parse_rejects_unknown_age():
 def test_json_round_trip(d):
     assert Date.from_json(d.to_json()) == d
     assert d.to_json() == [d.age, d.year, d.day]
+
+
+# ---------------------------------------------------------------- review fixes
+
+
+def test_start_of_next_rejects_unknown_units():
+    for bad in ("months", "week", ""):
+        with pytest.raises(ValueError):
+            CAL.start_of_next(Date(4, 1, 5), bad)
+
+
+@pytest.mark.parametrize("bad", [(4, 1.0, 2), (4, 1, 2.5), (True, 1, 0), ("4", 1, 0)])
+def test_date_fields_must_be_exact_ints(bad):
+    with pytest.raises(TypeError):
+        Date(*bad)
+    with pytest.raises(TypeError):
+        Date.from_json(list(bad))
+
+
+def test_canonical_tick_validates_the_date():
+    with pytest.raises(ValueError):
+        CAL.canonical_tick(Date(4, 1, -5))
+
+
+def test_canonical_tick_is_fixed_quarters_not_the_season_table():
+    # Renaming or resizing seasons (lore) must never change RNG keys.
+    lopsided = Calendar(
+        ages=(Age(4, "4A", "Fourth Age"),),
+        seasons=(("Long", 200), ("Short", 160)),
+    )
+    for day in (0, 89, 90, 179, 180, 269, 270, 359):
+        d = Date(4, 7, day)
+        assert lopsided.canonical_tick(d) == CAL.canonical_tick(d) == (4, 7, day // 90)
+
+
+@given(dates())
+def test_year_and_season_formats_parse_to_their_first_day(d):
+    assert CAL.parse(CAL.format(d, "year")) == Date(d.age, d.year, 0)
+    season_start = Date(d.age, d.year, CAL.season(d) * 90)
+    assert CAL.parse(CAL.format(d, "season")) == season_start
+
+
+@pytest.mark.parametrize(
+    "kwargs",
+    [
+        dict(ages=(Age(1, "1A", "a"), Age(1, "2A", "b"))),  # duplicate index
+        dict(ages=(Age(1, "1A", "a"), Age(2, "1A", "b"))),  # duplicate abbrev
+        dict(ages=(Age(1, "1 A", "a"),)),  # unparseable abbrev
+        dict(ages=(Age(1, "1A", "a"),), months=(), seasons=()),  # empty year
+        dict(ages=(Age(1, "1A", "a"),), months=(("a", 0), ("b", 360))),  # zero-length month
+        dict(ages=()),  # no ages
+    ],
+)
+def test_bad_calendar_config_is_rejected(kwargs):
+    with pytest.raises(ValueError):
+        Calendar(**kwargs)

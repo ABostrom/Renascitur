@@ -22,6 +22,13 @@ class Date:
     year: int  # 1-based
     day: int  # 0-based day of year
 
+    def __post_init__(self):
+        # Exact ints only: 37.0 or True would hash differently from 37 inside RNG keys.
+        for name in ("age", "year", "day"):
+            value = getattr(self, name)
+            if type(value) is not int:
+                raise TypeError(f"Date.{name} must be an int, got {value!r}")
+
     def to_json(self) -> list[int]:
         return [self.age, self.year, self.day]
 
@@ -62,6 +69,18 @@ class Calendar:
     _by_abbrev: dict[str, Age] = field(init=False, repr=False, compare=False)
 
     def __post_init__(self):
+        if not self.ages:
+            raise ValueError("a calendar needs at least one age")
+        if len({a.index for a in self.ages}) != len(self.ages):
+            raise ValueError("age indexes must be unique")
+        if len({a.abbrev for a in self.ages}) != len(self.ages):
+            raise ValueError("age abbreviations must be unique")
+        if any(not a.abbrev or any(c.isspace() for c in a.abbrev) for a in self.ages):
+            raise ValueError("age abbreviations must be non-empty with no whitespace")
+        if not self.months or not self.seasons:
+            raise ValueError("a calendar needs months and seasons")
+        if any(n <= 0 for _, n in self.months + self.seasons):
+            raise ValueError("month and season lengths must be positive")
         dpy = sum(n for _, n in self.months)
         if sum(n for _, n in self.seasons) != dpy:
             raise ValueError("month and season lengths must fill the same year")
@@ -105,6 +124,10 @@ class Calendar:
         return self.ordinal(b) - self.ordinal(a)
 
     def start_of_next(self, d: Date, unit: str) -> Date:
+        """The first day of the next `unit`. Raises AgeBoundaryError past the age's last year;
+        the scheduler treats that as the end of the run for that cadence."""
+        if unit not in UNITS:
+            raise ValueError(f"unknown unit {unit!r}; expected one of {UNITS}")
         if unit == "day":
             return self.add(d, Span(days=1))
         if unit == "year":
@@ -147,8 +170,13 @@ class Calendar:
         return self.seasons[self.season(d)][0]
 
     def canonical_tick(self, d: Date) -> tuple[int, int, int]:
-        """The coarse time key for randomness: (age, year, season)."""
-        return (d.age, d.year, self.season(d))
+        """The coarse time key for randomness: (age, year, quarter).
+
+        Quarters are fixed fractions of the year, not the named seasons, so renaming or resizing
+        seasons in a setting never changes RNG keys.
+        """
+        self.check(d)
+        return (d.age, d.year, d.day * 4 // self.days_per_year)
 
     # ------------------------------------------------------------ text
 
@@ -164,18 +192,24 @@ class Calendar:
             return f"{head} m{m + 1} d{day_of_month + 1}"
         raise ValueError(f"unknown format style {style!r}")
 
-    _PATTERN = re.compile(r"^(\S+) (\d+)(?: m(\d+) d(\d+))?$")
+    _PATTERN = re.compile(r"^(\S+) (\d+)(?: m(\d+) d(\d+)| (.+))?$")
 
     def parse(self, text: str) -> Date:
+        """Parse any `format` style. Year and season forms give the first day of that period."""
         match = self._PATTERN.match(text.strip())
         if not match:
             raise ValueError(f"cannot parse date {text!r}")
-        abbrev, year, month, day = match.groups()
+        abbrev, year, month, day, season = match.groups()
         age = self._by_abbrev.get(abbrev)
         if age is None:
             raise ValueError(f"unknown age {abbrev!r}")
         doy = 0
-        if month is not None:
+        if season is not None:
+            names = [name for name, _ in self.seasons]
+            if season not in names:
+                raise ValueError(f"unknown season {season!r} in {text!r}")
+            doy = self._starts(self.seasons)[names.index(season)]
+        elif month is not None:
             m, dom = int(month) - 1, int(day) - 1
             if not (0 <= m < len(self.months) and 0 <= dom < self.months[m][1]):
                 raise ValueError(f"no such day in the calendar: {text!r}")
