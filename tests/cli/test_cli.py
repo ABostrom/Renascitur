@@ -206,3 +206,20 @@ def test_bench_appends_a_row(tmp_path, capsys):
     assert int(rows[0]["events"]) > 0 and float(rows[0]["years_per_s"]) > 0 and float(rows[0]["run_mb"]) > 0
     assert rows[0]["events"] == rows[1]["events"]  # deterministic
     assert "years/s" in capsys.readouterr().out
+
+
+def test_bench_never_deletes_a_folder_that_is_not_a_bench_run(tmp_path):
+    keep = tmp_path / "precious"
+    keep.mkdir()
+    (keep / "notes.md").write_text("keep me", encoding="utf-8")
+    assert main(["bench", "--years", "1", "--people", "4", "--out", str(keep),
+                 "--history", str(tmp_path / "h.csv")]) == 1
+    assert (keep / "notes.md").exists()
+    assert main(["bench", "--years", "0", "--out", str(tmp_path / "b"), "--history", str(tmp_path / "h.csv")]) == 1
+
+
+def test_bench_refuses_a_history_with_other_columns(tmp_path):
+    history = tmp_path / "h.csv"
+    history.write_text("date,something\n", encoding="utf-8")
+    assert main(["bench", "--years", "1", "--people", "4", "--out", str(tmp_path / "b"),
+                 "--history", str(history)]) == 1

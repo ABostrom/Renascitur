@@ -170,8 +170,14 @@ def cmd_bench(args) -> int:
     from renasci.core.determinism import versions
     from renasci.toy import CAL, new_engine
 
+    if args.years < 1 or args.people < 1:
+        raise ValueError("--years and --people must be at least 1")
     out = Path(args.out)
-    if out.exists():
+    if out.exists():  # only ever delete a previous bench folder
+        manifest = out / "manifest.json"
+        is_bench = manifest.is_file() and json.loads(manifest.read_text(encoding="utf-8"))["meta"].get("bench") is True
+        if not (out.is_dir() and (is_bench or not any(out.iterdir()))):
+            raise FileExistsError(f"{out} exists and is not a previous bench run; choose another --out")
         shutil.rmtree(out)
     engine = new_engine(seed=1234, people_per_village=args.people)
     folder = RunFolder.create(out, {"bench": True})
@@ -189,8 +195,8 @@ def cmd_bench(args) -> int:
     seconds = time.perf_counter() - began
     run_mb = sum(f.stat().st_size for f in out.rglob("*") if f.is_file()) / 1e6
     try:
-        commit = subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True,
-                                check=True).stdout.strip()
+        commit = subprocess.run(["git", "describe", "--always", "--dirty"], capture_output=True, text=True,
+                                check=True, cwd=Path(__file__).parent).stdout.strip()
     except (OSError, subprocess.CalledProcessError):
         commit = "unknown"
     v = versions()
@@ -201,7 +207,12 @@ def cmd_bench(args) -> int:
            "run_mb": round(run_mb, 3)}
     history = Path(args.history)
     history.parent.mkdir(parents=True, exist_ok=True)
-    new_file = not history.exists()
+    new_file = not history.exists() or history.stat().st_size == 0
+    if not new_file:
+        with history.open(encoding="utf-8", newline="") as f:
+            header = next(csv.reader(f), [])
+        if header != BENCH_FIELDS:
+            raise ValueError(f"{history} has columns {header}, expected {BENCH_FIELDS}; start a new history file")
     with history.open("a", encoding="utf-8", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=BENCH_FIELDS)
         if new_file:
@@ -231,7 +242,8 @@ def main(argv=None) -> int:
     target = p.add_mutually_exclusive_group(required=True)
     target.add_argument("--event")
     target.add_argument("--entity")
-    p = sub.add_parser("bench", help="time the toy world and append to the benchmark history")
+    p = sub.add_parser("bench", help="time the toy world (simulation plus writing the run folder, "
+                                      "not world setup) and append to the benchmark history")
     p.add_argument("--years", type=int, default=300)
     p.add_argument("--people", type=int, default=100, help="people per village (6 villages)")
     p.add_argument("--history", default="bench/history.csv")
