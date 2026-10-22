@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import json
 import math
+from contextlib import contextmanager
 
 from renasci.core.calendar import Span
 from renasci.core.canon import canonical, digest
@@ -47,7 +48,10 @@ class Ctx:
         self.today = activation.date
         self.calendar = engine.calendar
         self.params = json.loads(canonical(engine.ruleset.params))  # a private copy
-        self._reads: dict[tuple[str, str], None] = {}
+        self._reads: dict[tuple[str, str], None] = {}  # unscoped: inform everything this activation does
+        self._scope: str | None = None
+        self._scoped: dict[str, dict[tuple[str, str], None]] = {}
+        self._events: dict[str | None, list[str]] = {None: []}
         self._event: str | None = None  # the event that writes are attributed to
         self._occurrences: dict[tuple[str, str], int] = {}  # per (actor, purpose), this activation only
         self.hinges: list[dict] = []  # buffered; the engine keeps them only if the activation completes
@@ -67,44 +71,81 @@ class Ctx:
             raise ValueError(f"{self.system.name} wrote {name!r} before emitting an event to explain it")
         return self._event
 
+    def _note(self, key: tuple[str, str]) -> None:
+        (self._reads if self._scope is None else self._scoped[self._scope])[key] = None
+
+    @contextmanager
+    def scope(self, key: str):
+        """Attribute the reads and events inside to `key` (one village, one valley...).
+
+        Batch systems handle many independent units in one activation. Scoping keeps a change in one
+        unit from tainting every other unit's events in divergence analysis.
+        """
+        if self._scope is not None:
+            raise ValueError("scopes do not nest")
+        if not isinstance(key, str) or not key:
+            raise ValueError("a scope needs a non-empty string key")
+        self._scope = key
+        self._scoped.setdefault(key, {})
+        self._events.setdefault(key, [])
+        try:
+            yield
+        finally:
+            self._scope = None
+
+    def read_rows(self) -> list[dict]:
+        """One row per scope (None = unscoped): what was read, and which events it informed."""
+        rows = []
+        if self._reads or self._events[None]:
+            rows.append({"activation": self.activation.id, "scope": None,
+                         "reads": [list(k) for k in sorted(self._reads)], "events": list(self._events[None])})
+        for key in sorted(self._scoped):
+            rows.append({"activation": self.activation.id, "scope": key,
+                         "reads": [list(k) for k in sorted(self._scoped[key])], "events": list(self._events[key])})
+        return rows
+
     def recorded_reads(self) -> list[list[str]]:
-        return [list(k) for k in sorted(self._reads)]
+        """All reads, scoped or not."""
+        keys = set(self._reads)
+        for scoped in self._scoped.values():
+            keys |= set(scoped)
+        return [list(k) for k in sorted(keys)]
 
     # ------------------------------------------------------------ reads
 
     def get(self, entity: str, field: str, default=None):
         self._may_read(field)
-        self._reads[(entity, field)] = None
+        self._note((entity, field))
         return self._engine.store.get(entity, field, default)
 
     def status(self, entity: str) -> str:
         self._may_read("status")
-        self._reads[(entity, "status")] = None
+        self._note((entity, "status"))
         return self._engine.store.status(entity)
 
     def exists(self, entity: str) -> bool:
         """Whether `entity` exists. Recorded as a read of its status (creation writes status)."""
-        self._reads[(entity, "status")] = None
+        self._note((entity, "status"))
         return self._engine.store.exists(entity)
 
     def kind(self, entity: str) -> str:
-        self._reads[(entity, "status")] = None
+        self._note((entity, "status"))
         return self._engine.store.kind(entity)
 
     def ids(self, kind: str, status: str | None = None) -> list[str]:
         self._may_read(f"ids:{kind}")
         store = self._engine.store
-        self._reads[(f"${kind}", "ids")] = None
+        self._note((f"${kind}", "ids"))
         if status is not None:
             for entity in store.ids(kind):  # filtering looked at every status
-                self._reads[(entity, "status")] = None
+                self._note((entity, "status"))
         return store.ids(kind, status)
 
     def read_column(self, name: str, ids):
         self._may_read(name)
         ids = list(ids)
         for i in ids:
-            self._reads[(i, name)] = None
+            self._note((i, name))
         return self._engine.store.read_column(name, ids)
 
     # ------------------------------------------------------------ writes
@@ -176,6 +217,7 @@ class Ctx:
                 store.create(kind, entity, fields, self.today, eid, self.activation.id)
         event = self._engine.record(event, created=[b[1] for b in births])
         self._event = event.id
+        self._events[self._scope].append(event.id)
         for row in self._guard_rows:
             row["event"] = event.id
         self._guard_rows = []
@@ -239,12 +281,12 @@ class Ctx:
             ripple = self._engine.protection(entity, self.today)
             if ripple is None:
                 return False
-            self._reads[(entity, f"ripple:{ripple.id}")] = None
+            self._note((entity, f"ripple:{ripple.id}"))
             self._pin_causes.append(Cause("ripple", ripple.id))
             self._guard_rows.append(self._engine.log_ripple(ripple, "guard", True, self.activation.id,
                                                             entity=entity))
             return True
-        self._reads[(entity, f"pin:{pin.id}")] = None
+        self._note((entity, f"pin:{pin.id}"))
         self._pin_causes.append(Cause("pin", pin.id))
         self._guard_rows.append(self._engine.director.log_guard(pin, entity, self.today, self.activation.id))
         return True
@@ -327,7 +369,8 @@ class Ctx:
         activation's own causes), so taint flows to it even when no event was emitted.
         """
         base = (Cause("event", self._event),) if self._event else self.activation.causes
-        causes = tuple(base) + (Cause("activation", self.activation.id),)
+        parent = self.activation.id if self._scope is None else f"{self.activation.id}#{self._scope}"
+        causes = tuple(base) + (Cause("activation", parent),)
         activation = Activation(
             self.calendar.add(self.today, after),
             self.system.priority if priority is None else priority,
