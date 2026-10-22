@@ -51,8 +51,9 @@ class _Run:
         for dlt in history.get("state_deltas", []):
             self.writer[(dlt["entity"], dlt["field"])] = dlt["event"]
         for b in history.get("bulk_deltas", []):
-            for i in b["ids"]:
-                self.writer[(i, b["component"])] = b["event"]
+            for component in b.get("components") or [b["component"]]:
+                for i in b["ids"]:
+                    self.writer[(i, component)] = b["event"]
         self.pin_history: dict[str, list] = {}
         for p in history.get("pins", []):
             self.pin_history.setdefault(p["pin"], []).append(p["status"])

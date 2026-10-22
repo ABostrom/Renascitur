@@ -91,6 +91,39 @@ class Stream:
         u = self._gen.random() * cumulative[-1]
         return min(int(np.searchsorted(cumulative, u, side="right")), w.size - 1)
 
+    # Counts for aggregates (S3): plain ints out, arguments checked so a bad rate fails loudly.
+
+    def binomial(self, n: int, p: float) -> int:
+        """Successes in `n` trials of probability `p`."""
+        _need_count("n", n)
+        if not (isinstance(p, (int, float)) and not isinstance(p, bool) and 0.0 <= p <= 1.0):
+            raise ValueError(f"p must be a probability, got {p!r}")
+        return int(self._gen.binomial(n, float(p)))
+
+    def multinomial(self, n: int, pvals) -> list[int]:
+        """`n` shared out over categories with probabilities `pvals` (which must sum to 1)."""
+        _need_count("n", n)
+        p = np.asarray(pvals, dtype=float)
+        if p.size == 0 or not np.isfinite(p).all() or (p < 0).any() or abs(p.sum() - 1.0) > 1e-9:
+            raise ValueError(f"pvals must be non-negative and sum to 1, got {pvals!r}")
+        return [int(x) for x in self._gen.multinomial(n, p / p.sum())]
+
+    def hypergeometric(self, colours, nsample: int) -> list[int]:
+        """`nsample` items taken without replacement from groups of sizes `colours`."""
+        counts = list(colours)
+        for c in counts:
+            _need_count("colour count", c)
+        _need_count("nsample", nsample)
+        if not counts or nsample > sum(counts):
+            raise ValueError(f"cannot take {nsample} from {counts}")
+        out = self._gen.multivariate_hypergeometric(np.asarray(counts, dtype=np.int64), nsample, method="marginals")
+        return [int(x) for x in out]
+
+
+def _need_count(label: str, value) -> None:
+    if isinstance(value, bool) or not isinstance(value, (int, np.integer)) or value < 0:
+        raise ValueError(f"{label} must be a non-negative int, got {value!r}")
+
 
 class KeyedRng:
     def __init__(self, seed: int, reshuffles: tuple[Reshuffle, ...] = ()):
