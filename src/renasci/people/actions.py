@@ -97,8 +97,8 @@ class Petition(Action):
     def odds(self, ctx, actor, target, scheme):
         return 0.5 + 0.3 * trait(ctx, actor, "charm")
 
-    def succeed(self, ctx, actor, target, scheme, event):
-        _favour(ctx, actor, 0.25)
+    def succeed(self, ctx, actor, target, scheme, event):  # heard, even if shamed before
+        ctx.set(actor, "favour", round(max(float(ctx.get(actor, "favour") or 0.0) + 0.25, HEARD), 2))
 
 
 class CourtFavour(Action):
@@ -110,8 +110,8 @@ class CourtFavour(Action):
     def odds(self, ctx, actor, target, scheme):
         return 0.3 + 0.4 * trait(ctx, actor, "charm")
 
-    def succeed(self, ctx, actor, target, scheme, event):
-        _favour(ctx, actor, 0.3)
+    def succeed(self, ctx, actor, target, scheme, event):  # favoured
+        ctx.set(actor, "favour", round(max(float(ctx.get(actor, "favour") or 0.0) + 0.3, FAVOURED), 2))
 
 
 class Court(Action):
@@ -119,8 +119,28 @@ class Court(Action):
 
     name, achieves, duration_days = "Court", "married", 120
 
-    def possible(self, ctx, actor, target, scheme):
-        return _alive(ctx, actor) and ctx.get(actor, "spouse") is None and _adult(ctx, actor)
+    def _free(self, ctx, actor):
+        """Unmarried, unrelated people of age and the other sex at home."""
+        races, _, _ = life.world(ctx)
+        home, sex = ctx.get(actor, "place"), ctx.get(actor, "sex")
+        lo, hi = races[ctx.get(actor, "race")].marriage
+        kin = families.ancestors(ctx, actor, 2)
+        return [p for p in ctx.get(home, "residents") if p != actor and ctx.get(p, "sex") != sex
+                and ctx.get(p, "spouse") is None and lo <= age_years(ctx.calendar, ctx.get(p, "born"), ctx.today) <= hi
+                and p not in kin and not (families.ancestors(ctx, p, 2) & kin) and actor not in families.ancestors(ctx, p, 2)]
+
+    def _masses_can(self, ctx, actor) -> bool:
+        if not ctx.params.get("aggregates"):
+            return False
+        races, _, _ = life.world(ctx)
+        lo, hi = races[ctx.get(actor, "race")].marriage
+        other = "f" if ctx.get(actor, "sex") == "m" else "m"
+        cols = [population.band_column(other, b) for b in range(lo // 5, min(hi // 5, 19) + 1)]
+        return any(int(v) > 0 for v in ctx.read_columns(ctx.get(actor, "place"), cols).values())
+
+    def possible(self, ctx, actor, target, scheme):  # only when someone could be won: success means married
+        return (_alive(ctx, actor) and ctx.get(actor, "spouse") is None and _adult(ctx, actor)
+                and (bool(self._free(ctx, actor)) or self._masses_can(ctx, actor)))
 
     def odds(self, ctx, actor, target, scheme):
         return 0.5 + 0.3 * trait(ctx, actor, "charm")
@@ -129,15 +149,10 @@ class Court(Action):
         races, _, _ = life.world(ctx)
         home, sex = ctx.get(actor, "place"), ctx.get(actor, "sex")
         lo, hi = races[ctx.get(actor, "race")].marriage
-        kin = families.ancestors(ctx, actor, 2)
-        free = [p for p in ctx.get(home, "residents") if p != actor and ctx.get(p, "sex") != sex
-                and ctx.get(p, "spouse") is None and lo <= age_years(ctx.calendar, ctx.get(p, "born"), ctx.today) <= hi
-                and p not in kin and not (families.ancestors(ctx, p, 2) & kin) and actor not in families.ancestors(ctx, p, 2)]
+        free = self._free(ctx, actor)
         partner = ctx.choose("court", free, owner=scheme or actor) if free else None
-        if partner is None and ctx.params.get("aggregates"):
-            partner = population.promote_person(ctx, home, "spouse", sex="f" if sex == "m" else "m", ages=(lo, hi))
         if partner is None:
-            return
+            partner = population.promote_person(ctx, home, "spouse", sex="f" if sex == "m" else "m", ages=(lo, hi))
         man, woman = (actor, partner) if sex == "m" else (partner, actor)
         families.Marriage._wed(ctx, man, woman, ctx.params.get("residence", "husband"), commoner=partner not in free)
 
@@ -198,12 +213,17 @@ class Duel(Action):
 class Shame(Action):
     name, requires, achieves, duration_days = "Shame", frozenset({"heard"}), "shamed:{target}", 90
 
+    def possible(self, ctx, actor, target, scheme):  # only the heard are listened to
+        return super().possible(ctx, actor, target, scheme) and target is not None \
+            and float(ctx.get(actor, "favour") or 0.0) >= HEARD
+
     def odds(self, ctx, actor, target, scheme):
         return 0.3 + 0.4 * trait(ctx, actor, "charm")
 
     def succeed(self, ctx, actor, target, scheme, event):
         _favour(ctx, target, -0.3)
-        ctx.set(target, "wound", {"kind": "shame", "event": event, "since": ctx.today.to_json()})
+        if ctx.get(target, "wound") is None:  # (wounds proper are #95's: an existing wound isn't overwritten)
+            ctx.set(target, "wound", {"kind": "shame", "event": event, "since": ctx.today.to_json()})
 
 
 class Flee(Action):
@@ -216,8 +236,9 @@ class Flee(Action):
         region = ctx.get(home, "region")
         return [s for s in ctx.ids("settlement") if s != home and ctx.get(s, "region") == region]
 
-    def possible(self, ctx, actor, target, scheme):
-        return _alive(ctx, actor) and bool(self._elsewhere(ctx, actor))
+    def possible(self, ctx, actor, target, scheme):  # not the married, nor those who hold office (S4: families travel)
+        return (_alive(ctx, actor) and ctx.get(actor, "spouse") is None and not ctx.get(actor, "offices")
+                and bool(self._elsewhere(ctx, actor)))
 
     def odds(self, ctx, actor, target, scheme):
         return 0.8
@@ -235,6 +256,9 @@ class Flee(Action):
 class Confess(Action):
     name, achieves, duration_days = "Confess", "absolved", 30
 
+    def possible(self, ctx, actor, target, scheme):
+        return _alive(ctx, actor) and (scheme is None or ctx.exists(scheme))
+
     def odds(self, ctx, actor, target, scheme):
         return 0.9
 
@@ -245,21 +269,26 @@ class Confess(Action):
 
 
 def library() -> dict[str, Action]:
-    """Every named Action subclass, by name (a new class joins by existing)."""
-    found, todo = {}, list(Action.__subclasses__())
+    """Every Action subclass that names itself, by name: a new class joins by existing. A subclass that
+    doesn't set its own `name` is a variant, not a new action. Two classes with one name are refused.
+    Simulation code uses the frozen `ACTIONS`, so classes defined later (in tests) never leak into a run."""
+    found: dict[str, type] = {}
+    todo = list(Action.__subclasses__())
     while todo:
         cls = todo.pop()
         todo.extend(cls.__subclasses__())
-        if cls.name:
-            found[cls.name] = cls()
-    return dict(sorted(found.items()))
+        if "name" in vars(cls) and cls.name:
+            if cls.name in found and found[cls.name] is not cls:
+                raise ValueError(f"two actions are named {cls.name!r}")
+            found[cls.name] = cls
+    return {n: found[n]() for n in sorted(found)}
 
 
 ACTIONS = library()
 
 READS = (life.DIE_READS | families.Marriage.reads | population.COLUMN_READS | frozenset({
     "favour", "wound", "place", "residents", "region", "accomplices", "state", "born", "traits", "race", "sex",
-    "spouse", "mother", "father", "ids:settlement"}))
+    "spouse", "mother", "father", "ids:settlement", "offices"}))
 WRITES = (life.DIE_WRITES | families.Marriage.writes | frozenset({"favour", "wound", "accomplices", "state"}))
 EVENT_TYPES = (ACTION,) + life.DIE_EVENTS + (families.MARRIAGE,) + population.LOD_TYPES
 
