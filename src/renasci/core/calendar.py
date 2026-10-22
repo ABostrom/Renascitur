@@ -204,7 +204,7 @@ class Calendar:
             return f"{head} m{m + 1} d{day_of_month + 1}"
         raise ValueError(f"unknown format style {style!r}")
 
-    _PATTERN = re.compile(r"^(\S+) (\d+)(?: m(\d+) d(\d+)| (.+))?$")
+    _PATTERN = re.compile(r"^(\S+) ([0-9]+)(?: m([0-9]+) d([0-9]+)| (.+))?$")  # ASCII digits, like the JS port
 
     def parse(self, text: str) -> Date:
         """Parse any `format` style. Year and season forms give the first day of that period."""

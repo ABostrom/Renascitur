@@ -6,6 +6,8 @@
  * - NodeSource (tests): the file system.
  */
 export interface RunSource {
+	/** File names directly inside `dir` (relative to the runs folder). */
+	list(dir: string): Promise<string[]>;
 	has(path: string): Promise<boolean>;
 	stream(path: string): Promise<ReadableStream<Uint8Array>>;
 	text(path: string): Promise<string>;
@@ -16,6 +18,11 @@ export class HttpSource implements RunSource {
 
 	private url(path: string): string {
 		return `${this.base}/${path.split('/').map(encodeURIComponent).join('/')}`;
+	}
+
+	async list(dir: string): Promise<string[]> {
+		const r = await fetch(this.url(dir) + '/');
+		return r.ok ? r.json() : [];
 	}
 
 	async has(path: string): Promise<boolean> {
@@ -49,6 +56,23 @@ export class PickerSource implements RunSource {
 			this.files.set(rel, f);
 		}
 		this.name = root;
+	}
+
+	async list(dir: string): Promise<string[]> {
+		const prefix = dir.replace(/\/$/, '') + '/';
+		return [...this.files.keys()]
+			.filter((k) => k.startsWith(prefix) && !k.slice(prefix.length).includes('/'))
+			.map((k) => k.slice(prefix.length))
+			.sort();
+	}
+
+	/** Runs inside the picked folder: itself if it is a run, else its run subfolders. */
+	runNames(): string[] {
+		if (this.files.has(`${this.name}/manifest.json`)) return [this.name];
+		return [...this.files.keys()]
+			.filter((k) => /^[^/]+\/[^/]+\/manifest\.json$/.test(k))
+			.map((k) => k.split('/').slice(0, 2).join('/'))
+			.sort();
 	}
 
 	async has(path: string): Promise<boolean> {

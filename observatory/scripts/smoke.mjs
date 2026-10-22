@@ -50,11 +50,30 @@ try {
 	await page.getByText('base', { exact: true }).waitFor({ timeout: 10000 });
 	await page.getByText('replay of base').waitFor({ timeout: 10000 });
 	await page.getByText('incomplete').first().waitFor({ timeout: 10000 });
-	// a deep link is served the app (SPA fallback), not a 404
-	const deep = await page.goto(`http://127.0.0.1:${port}/run/base/events`);
-	if (!deep || deep.status() !== 200) throw new Error(`deep link returned ${deep && deep.status()}`);
+	// the shipping data path, in Chrome: HTTP listing -> segment selection -> gzip -> JSON Lines
+	const counts = await page.evaluate(async () => {
+		const o = window.__observatory;
+		const source = new o.HttpSource();
+		const out = {};
+		for (const name of ['base', 'interrupted']) {
+			const run = await o.openRun(source, name);
+			let n = 0;
+			let last = null;
+			for await (const e of o.readTable(run, 'events')) {
+				n++;
+				last = e.id;
+			}
+			out[name] = { n, last };
+		}
+		return out;
+	});
+	if (!(counts.base.n > 100)) throw new Error(`read ${counts.base.n} events from base in the browser`);
+	if (counts.interrupted.last !== 'xopen1') throw new Error(`interrupted run ended at ${counts.interrupted.last}`);
+	// a deep link boots the app (SPA fallback), which then runs
+	await page.goto(`http://127.0.0.1:${port}/run/base/events`);
+	await page.waitForFunction(() => Boolean(window.__observatory), null, { timeout: 10000 });
 	if (errors.length) throw new Error(`page errors: ${errors.join('; ')}`);
-	console.log('smoke: ok');
+	console.log(`smoke: ok (browser read ${counts.base.n} events from base)`);
 } catch (e) {
 	failed = true;
 	console.error('smoke: FAILED', e);

@@ -104,10 +104,112 @@ def test_shared_calendar_vectors():
     from pathlib import Path
 
     data = json.loads((Path(__file__).parent / "fixtures" / "calendar_vectors.json").read_text(encoding="utf-8"))
-    cal = Calendar.from_json(data["calendar"])
-    for v in data["vectors"]:
-        d = Date.from_json(v["date"])
-        assert cal.format(d, "year") == v["year"]
-        assert cal.format(d, "season") == v["season"]
-        assert cal.format(d, "day") == v["day"]
-        assert cal.parse(v["day"]) == d
+    for case in data["cases"]:
+        cal = Calendar.from_json(case["calendar"])
+        for v in case["vectors"]:
+            d = Date.from_json(v["date"])
+            assert cal.format(d, "year") == v["year"]
+            assert cal.format(d, "season") == v["season"]
+            assert cal.format(d, "day") == v["day"]
+            assert cal.parse(v["day"]) == d
+        for text in case["invalid"]:
+            with pytest.raises(ValueError):
+                cal.parse(text)
+
+
+# ---------------------------------------------------------------- review fixes: security
+
+
+def raw_get(base, path, host=None):
+    """GET without urllib normalising the path, optionally with a forged Host header."""
+    import http.client
+    from urllib.parse import urlsplit
+
+    u = urlsplit(base)
+    conn = http.client.HTTPConnection(u.hostname, u.port, timeout=5)
+    conn.putrequest("GET", path, skip_host=host is not None)
+    if host is not None:
+        conn.putheader("Host", host)
+    conn.endheaders()
+    r = conn.getresponse()
+    body = r.read()
+    conn.close()
+    return r.status, body
+
+
+@pytest.mark.parametrize("path", [
+    "/runs/%5C%5Cattacker.example%5Cshare%5Cx",   # UNC: would make Windows open SMB
+    "/runs/C:%5CWindows%5Cwin.ini",               # drive letter
+    "/runs/tiny%5C..%5C..%5Cpyproject.toml",      # backslash traversal
+    "/runs/%2F%2Fattacker%2Fshare",               # encoded slashes to an absolute path
+    "/runs/tiny/%00manifest.json",                # NUL
+    "/%5C%5Cattacker.example%5Cshare%5Cx",        # same, through the app fallback
+    "/C:%5Cx",
+])
+def test_paths_that_could_leave_the_folders_are_refused_before_touching_the_disk(served, path):
+    base, _ = served
+    status, _ = raw_get(base, path)
+    assert status in (400, 403, 404)
+
+
+def test_requests_for_another_host_are_refused(served):
+    """DNS rebinding: evil.example resolving to 127.0.0.1 must not read the runs."""
+    base, _ = served
+    port = base.rsplit(":", 1)[1]
+    assert raw_get(base, "/runs/index.json", host="evil.example")[0] == 403
+    assert raw_get(base, "/runs/index.json", host=f"evil.example:{port}")[0] == 403
+    assert raw_get(base, "/runs/index.json", host=f"localhost:{port}")[0] == 200
+
+
+def test_directory_listings_are_json_file_names(served):
+    base, _ = served
+    status, kind, body = get(base + "/runs/tiny/events/")
+    names = json.loads(body)
+    assert status == 200 and kind.startswith("application/json")
+    assert "seg-00000.jsonl.gz" in names and all("/" not in n for n in names)
+
+
+def test_head_does_not_read_the_file(served, monkeypatch):
+    import pathlib
+
+    base, _ = served
+    calls = []
+    real = pathlib.Path.read_bytes
+    monkeypatch.setattr(pathlib.Path, "read_bytes", lambda self: calls.append(self) or real(self))
+    req = urllib.request.Request(base + "/runs/tiny/events/seg-00000.jsonl.gz", method="HEAD")
+    with urllib.request.urlopen(req) as r:
+        assert r.status == 200 and int(r.headers["Content-Length"]) > 0
+    assert calls == []
+
+
+@pytest.mark.parametrize("rel, ok", [
+    ("tiny/events/seg-00000.jsonl.gz", True),
+    ("index.html", True),
+    ("_app/x.js", True),
+    (r"\\attacker\share\x", False),
+    (r"C:\Windows\win.ini", False),
+    ("C:/Windows/win.ini", False),
+    ("/etc/passwd", False),
+    ("//attacker/share", False),
+    ("tiny/../../x", False),
+    (r"tiny\..\x", False),
+    ("tiny/\x00x", False),
+    ("tiny/con", True),  # an ordinary name; Windows device names are refused by is_file() later
+])
+def test_safe_relative_is_decided_without_the_file_system(rel, ok):
+    from renasci.observe import safe_relative
+
+    assert (safe_relative(rel) is not None) == ok
+
+
+def test_observe_defaults_to_the_committed_build(monkeypatch):
+    """`renasci observe` with no --app serves observatory/build from this checkout."""
+    import renasci.observe as observe
+    from renasci.cli import main as cli_main
+
+    seen = {}
+    monkeypatch.setattr(observe, "serve", lambda app, runs, port, open_browser: seen.update(app=app))
+    cli_main(["observe", "--no-browser"])
+    from pathlib import Path
+
+    assert (Path(seen["app"]) / "index.html").is_file()

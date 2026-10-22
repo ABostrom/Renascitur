@@ -7,7 +7,7 @@
 
 	let runs = $state<RunListing[] | null>(null);
 	let error = $state<string | null>(null);
-	let picked = $state<{ name: string; manifest: Manifest } | null>(null);
+	let picked = $state<{ name: string; manifest: Manifest }[] | null>(null);
 
 	onMount(async () => {
 		try {
@@ -26,11 +26,20 @@
 		const files = (event.target as HTMLInputElement).files;
 		if (!files || files.length === 0) return;
 		const source = new PickerSource(files);
+		const names = source.runNames(); // a run folder, or a folder of runs
+		if (names.length === 0) {
+			error = 'That folder has no run in it (no manifest.json).';
+			return;
+		}
 		try {
-			const run = await openRun(source, source.name);
-			picked = { name: run.name, manifest: run.manifest };
+			picked = await Promise.all(
+				names.map(async (n) => {
+					const run = await openRun(source, n);
+					return { name: n.split('/').at(-1) ?? n, manifest: run.manifest };
+				})
+			);
 		} catch (e) {
-			error = `That folder isn't a run folder: ${(e as Error).message}`;
+			error = `Couldn't open that run: ${(e as Error).message}`;
 		}
 	}
 </script>
@@ -87,7 +96,11 @@
 	<p>Without <code>renasci observe</code>, pick one run folder to view it in this browser. Bookmarks and diffs need the server.</p>
 	<input type="file" webkitdirectory onchange={pick} aria-label="Pick a run folder" />
 	{#if picked}
-		<p>Opened <strong>{picked.name}</strong> · {picked.manifest.segments} segments · {picked.manifest.meta.complete ? 'complete' : 'incomplete'}</p>
+		<ul>
+			{#each picked as p (p.name)}
+				<li><strong>{p.name}</strong> · {p.manifest.segments} segments · {p.manifest.meta.complete ? 'complete' : 'incomplete'}</li>
+			{/each}
+		</ul>
 	{/if}
 </section>
 

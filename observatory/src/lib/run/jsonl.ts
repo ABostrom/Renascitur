@@ -9,17 +9,25 @@ export async function* lines(stream: ReadableStream<Uint8Array>, gz: boolean): A
 	const bytes = gz ? stream.pipeThrough(new DecompressionStream('gzip') as unknown as TransformStream<Uint8Array, Uint8Array>) : stream;
 	const reader = bytes.pipeThrough(new TextDecoderStream() as unknown as TransformStream<Uint8Array, string>).getReader();
 	let buffer = '';
-	for (;;) {
-		const { value, done } = await reader.read();
-		if (done) break;
-		buffer += value;
-		let nl = buffer.indexOf('\n');
-		while (nl >= 0) {
-			const line = buffer.slice(0, nl);
-			if (line) yield line;
-			buffer = buffer.slice(nl + 1);
-			nl = buffer.indexOf('\n');
+	let finished = false;
+	try {
+		for (;;) {
+			const { value, done } = await reader.read();
+			if (done) {
+				finished = true;
+				break;
+			}
+			buffer += value;
+			let nl = buffer.indexOf('\n');
+			while (nl >= 0) {
+				const line = buffer.slice(0, nl);
+				if (line) yield line;
+				buffer = buffer.slice(nl + 1);
+				nl = buffer.indexOf('\n');
+			}
 		}
+	} finally {
+		if (!finished) await reader.cancel(); // the consumer stopped early: release the file or request
 	}
 	// whatever remains has no terminating newline: an in-progress write, dropped on purpose
 }

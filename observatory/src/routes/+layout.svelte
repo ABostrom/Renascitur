@@ -1,7 +1,16 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+
+	import { openRun, readTable } from '$lib/run/run';
+	import { HttpSource } from '$lib/run/source';
 	import '$lib/theme.css';
 
 	let { children } = $props();
+
+	// A read-only hook for scripted checks (the smoke test reads rows through the app's own code).
+	onMount(() => {
+		(window as unknown as Record<string, unknown>).__observatory = { HttpSource, openRun, readTable };
+	});
 </script>
 
 <header>

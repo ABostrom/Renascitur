@@ -48,13 +48,17 @@ describe('jsonl', () => {
 
 describe('calendar', () => {
 	const data = JSON.parse(readFileSync(VECTORS, 'utf-8'));
-	const cal = Calendar.fromJson(data.calendar);
-	it('formats and parses exactly like the Python calendar', () => {
-		for (const v of data.vectors) {
-			expect(cal.format(v.date, 'year')).toBe(v.year);
-			expect(cal.format(v.date, 'season')).toBe(v.season);
-			expect(cal.format(v.date, 'day')).toBe(v.day);
-			expect(cal.parse(v.day)).toEqual(v.date);
+	const cal = Calendar.fromJson(data.cases[0].calendar);
+	it('formats, parses and rejects exactly like the Python calendar', () => {
+		for (const c of data.cases) {
+			const k = Calendar.fromJson(c.calendar);
+			for (const v of c.vectors) {
+				expect(k.format(v.date, 'year')).toBe(v.year);
+				expect(k.format(v.date, 'season')).toBe(v.season);
+				expect(k.format(v.date, 'day')).toBe(v.day);
+				expect(k.parse(v.day)).toEqual(v.date);
+			}
+			for (const bad of c.invalid) expect(() => k.parse(bad), bad).toThrow();
 		}
 	});
 	it('parses year and season forms to their first day', () => {
@@ -94,6 +98,19 @@ describe('run folders', () => {
 		expect(ids).toContain('xopen1'); // the open segment, read raw
 		expect(ids).not.toContain('xnever'); // its stray .gz is ignored
 		expect(ids.at(-1)).toBe('xopen1'); // the partial last line is dropped
+	});
+
+	it('treats a just-finished close of the open segment as closed', async () => {
+		const run = await openRun(source, 'base');
+		const racing = { ...run, manifest: { ...run.manifest, segments: run.manifest.segments - 1 } };
+		const files = await segmentFiles(racing, 'events');
+		expect(files.at(-1)?.gz).toBe(true); // raw file already gone: the .gz is the segment
+		expect(files.length).toBe(run.manifest.segments);
+	});
+
+	it('stops reading cleanly when the consumer stops early', async () => {
+		const run = await openRun(source, 'base');
+		for await (const _ of readTable(run, 'events')) break;
 	});
 
 	it('reads the replay and its diff report', async () => {

@@ -1,162 +1,322 @@
 {
- "calendar": {
-  "ages": [
-   {
-    "index": 1,
-    "abbrev": "1X",
-    "name": "Toy Age",
-    "last_year": 400
-   }
-  ],
-  "months": [
-   [
-    "Month 1",
-    30
+ "cases": [
+  {
+   "calendar": {
+    "ages": [
+     {
+      "index": 1,
+      "abbrev": "1X",
+      "name": "Toy Age",
+      "last_year": 400
+     }
+    ],
+    "months": [
+     [
+      "Month 1",
+      30
+     ],
+     [
+      "Month 2",
+      30
+     ],
+     [
+      "Month 3",
+      30
+     ],
+     [
+      "Month 4",
+      30
+     ],
+     [
+      "Month 5",
+      30
+     ],
+     [
+      "Month 6",
+      30
+     ],
+     [
+      "Month 7",
+      30
+     ],
+     [
+      "Month 8",
+      30
+     ],
+     [
+      "Month 9",
+      30
+     ],
+     [
+      "Month 10",
+      30
+     ],
+     [
+      "Month 11",
+      30
+     ],
+     [
+      "Month 12",
+      30
+     ]
+    ],
+    "seasons": [
+     [
+      "Spring",
+      90
+     ],
+     [
+      "Summer",
+      90
+     ],
+     [
+      "Autumn",
+      90
+     ],
+     [
+      "Winter",
+      90
+     ]
+    ]
+   },
+   "vectors": [
+    {
+     "date": [
+      1,
+      1,
+      0
+     ],
+     "year": "1X 1",
+     "season": "1X 1 Spring",
+     "day": "1X 1 m1 d1"
+    },
+    {
+     "date": [
+      1,
+      37,
+      75
+     ],
+     "year": "1X 37",
+     "season": "1X 37 Spring",
+     "day": "1X 37 m3 d16"
+    },
+    {
+     "date": [
+      1,
+      37,
+      95
+     ],
+     "year": "1X 37",
+     "season": "1X 37 Summer",
+     "day": "1X 37 m4 d6"
+    },
+    {
+     "date": [
+      1,
+      120,
+      359
+     ],
+     "year": "1X 120",
+     "season": "1X 120 Winter",
+     "day": "1X 120 m12 d30"
+    },
+    {
+     "date": [
+      1,
+      400,
+      180
+     ],
+     "year": "1X 400",
+     "season": "1X 400 Autumn",
+     "day": "1X 400 m7 d1"
+    },
+    {
+     "date": [
+      1,
+      2,
+      30
+     ],
+     "year": "1X 2",
+     "season": "1X 2 Spring",
+     "day": "1X 2 m2 d1"
+    },
+    {
+     "date": [
+      1,
+      9,
+      269
+     ],
+     "year": "1X 9",
+     "season": "1X 9 Autumn",
+     "day": "1X 9 m9 d30"
+    },
+    {
+     "date": [
+      1,
+      9,
+      270
+     ],
+     "year": "1X 9",
+     "season": "1X 9 Winter",
+     "day": "1X 9 m10 d1"
+    }
    ],
-   [
-    "Month 2",
-    30
-   ],
-   [
-    "Month 3",
-    30
-   ],
-   [
-    "Month 4",
-    30
-   ],
-   [
-    "Month 5",
-    30
-   ],
-   [
-    "Month 6",
-    30
-   ],
-   [
-    "Month 7",
-    30
-   ],
-   [
-    "Month 8",
-    30
-   ],
-   [
-    "Month 9",
-    30
-   ],
-   [
-    "Month 10",
-    30
-   ],
-   [
-    "Month 11",
-    30
-   ],
-   [
-    "Month 12",
-    30
+   "invalid": [
+    "1X 0",
+    "1X 401",
+    "9Q 1",
+    "1X 3 m13 d1",
+    "1X 3 m1 d31",
+    "1X 3 Monsoon",
+    "1X ١٢"
    ]
-  ],
-  "seasons": [
-   [
-    "Spring",
-    90
+  },
+  {
+   "calendar": {
+    "ages": [
+     {
+      "index": 2,
+      "abbrev": "2A",
+      "name": "Second Age",
+      "last_year": 50
+     },
+     {
+      "index": 4,
+      "abbrev": "4A",
+      "name": "Fourth Age",
+      "last_year": null
+     }
+    ],
+    "months": [
+     [
+      "Thaw",
+      31
+     ],
+     [
+      "Bloom",
+      28
+     ],
+     [
+      "Sun",
+      61
+     ],
+     [
+      "Ember",
+      40
+     ],
+     [
+      "Frost",
+      120
+     ],
+     [
+      "Dark",
+      85
+     ]
+    ],
+    "seasons": [
+     [
+      "Spring",
+      59
+     ],
+     [
+      "Summer",
+      101
+     ],
+     [
+      "Winter",
+      205
+     ]
+    ]
+   },
+   "vectors": [
+    {
+     "date": [
+      2,
+      1,
+      0
+     ],
+     "year": "2A 1",
+     "season": "2A 1 Spring",
+     "day": "2A 1 m1 d1"
+    },
+    {
+     "date": [
+      2,
+      50,
+      364
+     ],
+     "year": "2A 50",
+     "season": "2A 50 Winter",
+     "day": "2A 50 m6 d85"
+    },
+    {
+     "date": [
+      2,
+      3,
+      30
+     ],
+     "year": "2A 3",
+     "season": "2A 3 Spring",
+     "day": "2A 3 m1 d31"
+    },
+    {
+     "date": [
+      2,
+      3,
+      31
+     ],
+     "year": "2A 3",
+     "season": "2A 3 Spring",
+     "day": "2A 3 m2 d1"
+    },
+    {
+     "date": [
+      2,
+      3,
+      59
+     ],
+     "year": "2A 3",
+     "season": "2A 3 Summer",
+     "day": "2A 3 m3 d1"
+    },
+    {
+     "date": [
+      2,
+      3,
+      58
+     ],
+     "year": "2A 3",
+     "season": "2A 3 Spring",
+     "day": "2A 3 m2 d28"
+    },
+    {
+     "date": [
+      4,
+      900,
+      160
+     ],
+     "year": "4A 900",
+     "season": "4A 900 Winter",
+     "day": "4A 900 m5 d1"
+    },
+    {
+     "date": [
+      4,
+      7,
+      159
+     ],
+     "year": "4A 7",
+     "season": "4A 7 Summer",
+     "day": "4A 7 m4 d40"
+    }
    ],
-   [
-    "Summer",
-    90
-   ],
-   [
-    "Autumn",
-    90
-   ],
-   [
-    "Winter",
-    90
+   "invalid": [
+    "2A 51",
+    "2A 0",
+    "2A 3 m2 d29",
+    "4A 7 m7 d1",
+    "4A 7 Autumn"
    ]
-  ]
- },
- "vectors": [
-  {
-   "date": [
-    1,
-    1,
-    0
-   ],
-   "year": "1X 1",
-   "season": "1X 1 Spring",
-   "day": "1X 1 m1 d1"
-  },
-  {
-   "date": [
-    1,
-    37,
-    75
-   ],
-   "year": "1X 37",
-   "season": "1X 37 Spring",
-   "day": "1X 37 m3 d16"
-  },
-  {
-   "date": [
-    1,
-    37,
-    95
-   ],
-   "year": "1X 37",
-   "season": "1X 37 Summer",
-   "day": "1X 37 m4 d6"
-  },
-  {
-   "date": [
-    1,
-    120,
-    359
-   ],
-   "year": "1X 120",
-   "season": "1X 120 Winter",
-   "day": "1X 120 m12 d30"
-  },
-  {
-   "date": [
-    1,
-    400,
-    180
-   ],
-   "year": "1X 400",
-   "season": "1X 400 Autumn",
-   "day": "1X 400 m7 d1"
-  },
-  {
-   "date": [
-    1,
-    2,
-    30
-   ],
-   "year": "1X 2",
-   "season": "1X 2 Spring",
-   "day": "1X 2 m2 d1"
-  },
-  {
-   "date": [
-    1,
-    9,
-    269
-   ],
-   "year": "1X 9",
-   "season": "1X 9 Autumn",
-   "day": "1X 9 m9 d30"
-  },
-  {
-   "date": [
-    1,
-    9,
-    270
-   ],
-   "year": "1X 9",
-   "season": "1X 9 Winter",
-   "day": "1X 9 m10 d1"
   }
  ]
 }

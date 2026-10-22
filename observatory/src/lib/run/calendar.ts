@@ -66,7 +66,7 @@ export class Calendar {
 	}
 
 	parse(text: string): DateTuple {
-		const m = /^(\S+) (\d+)(?: m(\d+) d(\d+)| (.+))?$/.exec(text.trim());
+		const m = /^(\S+) ([0-9]+)(?: m([0-9]+) d([0-9]+)| (.+))?$/.exec(text.trim());
 		if (!m) throw new Error(`cannot parse date ${JSON.stringify(text)}`);
 		const [, abbrev, year, month, day, season] = m;
 		const age = this.byAbbrev.get(abbrev);
@@ -84,11 +84,20 @@ export class Calendar {
 			}
 			doy = starts(this.json.months)[mi] + dom;
 		}
-		return [age.index, Number(year), doy];
+		return this.check([age.index, Number(year), doy]);
 	}
 
-	/** A sortable integer for a date (used by indexes and filters). */
-	ordinal(d: DateTuple): number {
+	/** Throw unless `d` is a real date in this calendar (as Python's Calendar.check). */
+	check(d: DateTuple): DateTuple {
+		const age = this.byIndex.get(d[0]);
+		if (!age) throw new Error(`unknown age ${d[0]}`);
+		if (d[1] < 1 || d[2] < 0 || d[2] >= this.daysPerYear) throw new Error(`date out of range: ${d}`);
+		if (age.last_year !== null && d[1] > age.last_year) throw new Error(`${d} is past the end of ${age.name}`);
+		return d;
+	}
+
+	/** A sortable integer for a date: not Python's `ordinal` (days since the age began). */
+	sortKey(d: DateTuple): number {
 		return d[0] * 1e7 + d[1] * this.daysPerYear + d[2];
 	}
 }
