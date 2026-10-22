@@ -28,7 +28,7 @@ def continuous():
 
 def test_the_mini_world_is_lively(continuous):
     types = [ev["type"] for ev in continuous["events"]]
-    for t in ("mini.birth", "mini.death", "mini.harvest", "mini.feast"):
+    for t in ("mini.birth", "mini.death", "mini.harvest", "mini.feast", "mini.marriage", "mini.election"):
         assert types.count(t) > 5, t
 
 
@@ -50,9 +50,9 @@ def test_checkpoint_needs_flushed_history_and_round_trips(tmp_path):
     e = new_engine()
     e.run_before(Date(1, 3, 0))
     with pytest.raises(ValueError):
-        e.checkpoint()
+        e.checkpoint(at=Date(1, 3, 0), segments=0)
     e.clear_pending()
-    cp = e.checkpoint()
+    cp = e.checkpoint(at=Date(1, 3, 0), segments=0)
     assert cp["header"]["date"] == [1, 3, 0] and cp["header"]["format"] == 1
     save_checkpoint(tmp_path / "c.json.gz", cp)
     assert load_checkpoint(tmp_path / "c.json.gz") == json.loads(json.dumps(cp))
@@ -64,7 +64,7 @@ def test_restore_refuses_a_different_recipe():
     e = new_engine()
     e.run_before(Date(1, 2, 0))
     e.clear_pending()
-    cp = e.checkpoint()
+    cp = e.checkpoint(at=Date(1, 2, 0), segments=0)
     with pytest.raises(ValueError):
         Engine.restore(cp, CAL, RULESETS, seed=SEED + 1)
     with pytest.raises(ValueError):
@@ -97,7 +97,7 @@ def test_replay_from_a_checkpoint_matches_the_continuous_run(at, continuous, tmp
     e.run_before(at)
     prefix = e.pending()
     e.clear_pending()
-    save_checkpoint(tmp_path / "c.json.gz", e.checkpoint())
+    save_checkpoint(tmp_path / "c.json.gz", e.checkpoint(at=at, segments=0))
     out = tmp_path / "out.json"
     subprocess.run([sys.executable, str(CHILD), str(tmp_path / "c.json.gz"), "1", str(END.year), str(END.day),
                     str(out)], check=True)
@@ -113,3 +113,126 @@ def test_villages_have_grain(continuous):
     e = new_engine()
     e.run(until=Date(1, 2, 0))
     assert all(x > 0 for x in e.store.read_column("grain", list(VILLAGES)))
+
+
+# ---------------------------------------------------------------- review fixes
+
+from mini_world import BIRTH, DEATH, START  # noqa: E402
+
+from renasci.core.calendar import Age, Calendar  # noqa: E402
+from renasci.core.systems import Ruleset, System  # noqa: E402
+
+
+def checkpoint_at(at):
+    e = new_engine()
+    e.run_before(at)
+    e.clear_pending()
+    return e, e.checkpoint(at=at, segments=3)
+
+
+def test_failed_birth_leaves_no_orphan_child():
+    class KillThenBirth(System):
+        name, cadence = "mini.bad", "yearly"
+        reads = frozenset({"village"})
+        writes = frozenset({"status", "new:person"})
+        event_types = (BIRTH, DEATH)
+
+        def run(self, ctx):
+            ctx.emit("mini.death", {"deceased": ("t:p00",)}, purpose="death", actor="t:p00")
+            ctx.set_status("t:p00", "dead")
+            ctx.emit("mini.birth", {"parent": ("t:p00",)}, purpose="birth", actor="t:p00",
+                     creates={"child": [("person", {"village": "t:Eastvale"})]})
+
+    e = Engine(CAL, seed=1, rulesets=[(START, Ruleset("bad", 1, (KillThenBirth(),)))])
+    e.cast("person", "t:p00", {})
+    with pytest.raises(ValueError):
+        e.run(until=START)
+    assert e.store.ids("person") == ["t:p00"]
+    assert [r["id"] for r in e.store.created] == ["t:p00"]
+
+
+def test_restore_detects_recipe_changes_beyond_names_and_versions():
+    _, cp = checkpoint_at(Date(1, 2, 0))
+    changed = [(d, Ruleset(rs.name, rs.version, rs.systems, params={"fertility": 2})) for d, rs in RULESETS]
+    with pytest.raises(ValueError):
+        Engine.restore(cp, CAL, changed, seed=SEED)
+    other_cal = Calendar(ages=(Age(1, "1X", "Toy Age", last_year=99),))
+    with pytest.raises(ValueError):
+        Engine.restore(cp, other_cal, RULESETS, seed=SEED)
+    with pytest.raises(ValueError):
+        Engine.restore(cp, CAL, RULESETS, seed=SEED, strict=False)
+
+
+def test_reshuffle_order_in_the_recipe_does_not_matter():
+    from renasci.core.rng import Reshuffle
+
+    r1, r2 = Reshuffle((1, 40, 0), "a"), Reshuffle((1, 50, 0), "b")
+    e = new_engine(reshuffles=(r1, r2))
+    e.run_before(Date(1, 1, 30))
+    e.clear_pending()
+    cp = e.checkpoint(at=Date(1, 1, 30), segments=0)
+    Engine.restore(cp, CAL, RULESETS, seed=SEED, reshuffles=(r2, r1))
+
+
+def test_checkpoint_refuses_odds_hooks_and_stateful_systems():
+    e = new_engine()
+    e.run_before(Date(1, 1, 30))
+    e.clear_pending()
+    e.odds_hooks.append(lambda ctx, p, purpose, owner: (p, None))
+    with pytest.raises(ValueError):
+        e.checkpoint(at=Date(1, 1, 30), segments=0)
+
+    class Stateful(System):
+        name, cadence = "mini.stateful", "yearly"
+
+        def run(self, ctx):
+            self.seen = True
+
+    s = Engine(CAL, seed=1, rulesets=[(START, Ruleset("s", 1, (Stateful(),)))])
+    s.run(until=START)
+    s.clear_pending()
+    with pytest.raises(ValueError):
+        s.checkpoint(at=Date(1, 1, 1), segments=0)
+
+
+def test_checkpoint_records_its_date_and_run_folder_mark():
+    _, cp = checkpoint_at(Date(1, 2, 45))
+    assert cp["header"]["date"] == [1, 2, 45] and cp["header"]["segments"] == 3
+
+
+def test_checkpoint_date_must_be_the_run_position():
+    e = new_engine()
+    e.run_before(Date(1, 2, 0))
+    e.clear_pending()
+    with pytest.raises(ValueError):
+        e.checkpoint(at=Date(1, 1, 200), segments=0)  # activations after 1-1-200 already ran
+    with pytest.raises(ValueError):
+        e.checkpoint(at=Date(1, 3, 0), segments=0)  # activations before 1-3-0 have not run
+
+
+def test_a_restored_engine_cannot_cast_and_knows_its_date():
+    e, cp = checkpoint_at(Date(1, 2, 0))
+    r = Engine.restore(cp, CAL, RULESETS, seed=SEED)
+    with pytest.raises(ValueError):
+        r.cast("person", "t:late", {})
+
+
+def test_checkpoint_holds_only_the_open_quarter_of_ordinals():
+    _, cp = checkpoint_at(Date(1, 2, 0))
+    assert all(row[3] >= [1, 2, 0] for row in cp["state"]["ordinals"])
+
+
+def test_replay_matches_every_table(continuous, tmp_path):
+    at = Date(1, 12, 100)
+    e = new_engine()
+    e.run_before(at)
+    prefix = e.pending()
+    e.clear_pending()
+    r = Engine.restore(e.checkpoint(at=at, segments=0), CAL, RULESETS, seed=SEED)
+    r.run(until=END)
+    rest = r.pending()
+    whole = new_engine()
+    whole.run(until=END)
+    full = whole.pending()
+    for table in full:
+        assert digest(prefix[table] + rest[table]) == digest(full[table]), table

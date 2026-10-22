@@ -65,17 +65,48 @@ class Feasts(System):
         ctx.emit("mini.feast", {"village": (v,)}, payload={"part": "end"}, purpose="feast_end", actor=v)
 
 
-EARLY = Ruleset("mini.early", 1, (Births(), Deaths(), Granary(), Feasts()))
+MARRIAGE = EventType("mini.marriage", 1, roles={"spouse": (2, 2)}, payload={})
+ELECTION = EventType("mini.election", 1, roles={"village": (1, 1), "headman": (1, 1)}, payload={})
+
+
+class Society(System):
+    """Yearly: a marriage market across the two villages, and each village elects a headman."""
+
+    name, cadence = "mini.society", "yearly"
+    reads = frozenset({"ids:person", "status", "village", "spouse"})
+    writes = frozenset({"spouse", "headman"})
+    event_types = (MARRIAGE, ELECTION)
+
+    def run(self, ctx):
+        single = [p for p in ctx.ids("person", status="active") if ctx.get(p, "spouse") is None]
+        east = [p for p in single if ctx.get(p, "village") == VILLAGES[0]]
+        west = [p for p in single if ctx.get(p, "village") == VILLAGES[1]]
+        if west:
+            pairs = ctx.match("marriage", {p: west for p in east}, owner="t:world")
+            for a, b in pairs.items():
+                ctx.emit("mini.marriage", {"spouse": (a, b)}, purpose="marriage", actor=a)
+                ctx.set(a, "spouse", b)
+                ctx.set(b, "spouse", a)
+        for v in VILLAGES:
+            people = [p for p in ctx.ids("person", status="active") if ctx.get(p, "village") == v]
+            head = ctx.choose("headman", people, owner=v, stakes=0.7, roles={"village": [v]})
+            if head:
+                ctx.emit("mini.election", {"village": (v,), "headman": (head,)}, purpose="election", actor=v)
+                ctx.set(v, "headman", head)
+
+
+EARLY = Ruleset("mini.early", 1, (Births(), Deaths(), Granary(), Feasts(), Society()))
 LATE = Ruleset("mini.late", 1, (Births(), Deaths(), Granary()))
 RULESETS = [(START, EARLY), (Date(1, 20, 0), LATE)]
 SEED = 7
 
 
-def new_engine() -> Engine:
-    e = Engine(CAL, seed=SEED, rulesets=RULESETS)
+def new_engine(reshuffles=()) -> Engine:
+    e = Engine(CAL, seed=SEED, rulesets=RULESETS, reshuffles=reshuffles)
     e.cast_column("grain", "float64", VILLAGES, [0.0] * len(VILLAGES))
     for v in VILLAGES:
         e.cast("place", v, {})
+    e.cast("place", "t:world", {})
     for i in range(30):
         e.cast("person", f"t:p{i:02d}", {"village": VILLAGES[i % 2]})
     return e

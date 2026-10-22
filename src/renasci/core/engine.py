@@ -200,10 +200,24 @@ class Engine:
 
     # ------------------------------------------------------------ checkpoints
 
-    def _recipe_header(self) -> dict:
-        return {"format": CHECKPOINT_FORMAT, "engine": __version__, "seed": self.seed,
-                "reshuffles": [r.to_json() for r in self.reshuffles], "hinge_margin": self.hinge_margin,
-                "rulesets": [[d.to_json(), rs.name, rs.version] for d, rs in self.rulesets]}
+    def recipe(self) -> dict:
+        """Everything that shapes history besides the state: checked on restore, hashed in full."""
+        def system(s):
+            return {"name": s.name, "class": type(s).__qualname__, "cadence": s.cadence, "priority": s.priority,
+                    "reads": sorted(s.reads), "writes": sorted(s.writes),
+                    "event_types": [{"name": t.name, "version": t.version, "roles": t.roles, "payload": t.payload,
+                                     "visibility": t.visibility, "dead_roles": list(t.dead_roles)}
+                                    for t in s.event_types]}
+
+        cal = self.calendar
+        return {
+            "engine": __version__, "seed": self.seed, "strict": self.strict, "hinge_margin": self.hinge_margin,
+            "reshuffles": sorted((r.to_json() for r in self.reshuffles), key=lambda r: (r["from"], r["salt"])),
+            "calendar": {"ages": [[a.index, a.abbrev, a.name, a.last_year] for a in cal.ages],
+                         "months": cal.months, "seasons": cal.seasons},
+            "rulesets": [{"start": d.to_json(), "name": rs.name, "version": rs.version, "params": rs.params,
+                          "systems": [system(s) for s in rs.systems]} for d, rs in self.rulesets],
+        }
 
     def _state(self) -> dict:
         return {"store": self.store.to_json(), "scheduler": self.scheduler.to_json(),
@@ -214,15 +228,29 @@ class Engine:
         """A hash of the world state (not of pending history)."""
         return digest(self._state(), size=16)
 
-    def checkpoint(self) -> dict:
-        """The full state, as JSON, taken before the next activation runs.
+    def checkpoint(self, at: Date, segments: int) -> dict:
+        """The full state as JSON, at the position "before any activation dated `at`".
 
-        Pending history must be written first (`cut`), so a checkpoint and its run folder agree.
+        `segments` is the run folder's closed-segment count (from `cut`): a replay truncates to it.
+        Pending history must be written first, so a checkpoint and its run folder agree.
         """
         if any(self.pending().values()):
             raise ValueError("flush pending history to the run folder before checkpointing")
-        nxt = self.scheduler.peek()
-        header = self._recipe_header() | {"date": nxt.date.to_json() if nxt else None}
+        if self.odds_hooks:
+            raise ValueError("odds hooks are not checkpointable yet (ripples and the director save state in #48/#49)")
+        for _, rs in self.rulesets:
+            for s in rs.systems:
+                if vars(s):
+                    raise ValueError(f"system {s.name} keeps instance state {sorted(vars(s))}; "
+                                     "systems must be stateless, with all state in the store")
+        nxt, now = self.scheduler.peek(), self.scheduler.now
+        if (nxt is not None and nxt.date < at) or (now is not None and now >= at):
+            raise ValueError(f"the engine is not positioned before {at}: last ran {now}, next is "
+                             f"{nxt.date if nxt else None}; use run_before({at})")
+        self.ordinals.close_before(self.calendar.canonical_tick(at))
+        recipe = self.recipe()
+        header = {"format": CHECKPOINT_FORMAT, "date": at.to_json(), "segments": int(segments),
+                  "recipe_hash": digest(recipe, size=16), "recipe": recipe}
         return {"header": header, "state": self._state()}
 
     @classmethod
@@ -230,14 +258,17 @@ class Engine:
                 seed: int, strict: bool = True, reshuffles: tuple[Reshuffle, ...] = (),
                 hinge_margin: float = 0.05) -> Engine:
         """Rebuild an engine from a checkpoint and the recipe that produced it."""
+        header = checkpoint["header"]
+        if header.get("format") != CHECKPOINT_FORMAT:
+            raise ValueError(f"checkpoint format {header.get('format')!r} is not {CHECKPOINT_FORMAT}; "
+                             "engine changed, replay from scenario")
         engine = cls(calendar, seed, rulesets, strict=strict, reshuffles=reshuffles, hinge_margin=hinge_margin)
-        header = dict(checkpoint["header"])
-        header.pop("date")
-        expected = engine._recipe_header()
-        for key in expected:
-            if header.get(key) != expected[key]:
-                raise ValueError(f"checkpoint {key} is {header.get(key)!r}, but the recipe has "
-                                 f"{expected[key]!r}; engine or recipe changed, replay from scenario")
+        recipe = engine.recipe()
+        if digest(recipe, size=16) != header["recipe_hash"]:
+            old = header.get("recipe", {})
+            changed = sorted(k for k in recipe if old.get(k) != json_plain(recipe[k]))
+            raise ValueError(f"the recipe differs from the checkpoint's ({', '.join(changed) or 'details'}); "
+                             "engine or recipe changed, replay from scenario")
         state = checkpoint["state"]
         engine.store = Store.from_json(state["store"])
         engine.scheduler = Scheduler.from_json(state["scheduler"])
@@ -245,4 +276,12 @@ class Engine:
         engine.causes = CauseIndex.from_json(state["causes"])
         engine.ruleset_index = state["ruleset_index"]
         engine.ruleset = rulesets[engine.ruleset_index][1] if engine.ruleset_index is not None else None
+        engine._date = engine.scheduler.now or Date.from_json(header["date"])  # restored engines are running
         return engine
+
+
+def json_plain(value):
+    import json
+
+    from renasci.core.canon import canonical
+    return json.loads(canonical(value))

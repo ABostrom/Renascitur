@@ -26,6 +26,19 @@ class UndeclaredAccess(Exception):
     """A system read or wrote something it did not declare."""
 
 
+class _WithNewborns:
+    """A read-only view of the store in which entities about to be created already exist."""
+
+    def __init__(self, store, newborns: set[str]):
+        self._store, self._new = store, newborns
+
+    def exists(self, entity: str) -> bool:
+        return entity in self._new or self._store.exists(entity)
+
+    def status(self, entity: str) -> str:
+        return "active" if entity in self._new else self._store.status(entity)
+
+
 class Ctx:
     def __init__(self, engine, system, activation: Activation):
         self._engine = engine
@@ -148,9 +161,16 @@ class Ctx:
         event = Event(eid, self.today, type, roles, place, all_causes, payload or {},
                       Source("system", self.system.name), visibility, activation=self.activation.id)
         if births:
-            self._engine.registry.validate(event, today=self.today)  # schema first, before any write
+            # Validate everything, with the newborns treated as existing, before any write.
+            store = self._engine.store
+            births = [(kind, entity, json.loads(canonical(fields))) for kind, entity, fields in births]
+            for _, entity, _ in births:
+                if store.exists(entity):
+                    raise ValueError(f"entity {entity!r} already exists")
+            self._engine.registry.validate(event, store=_WithNewborns(store, {b[1] for b in births}),
+                                           today=self.today)
             for kind, entity, fields in births:
-                self._engine.store.create(kind, entity, fields, self.today, eid, self.activation.id)
+                store.create(kind, entity, fields, self.today, eid, self.activation.id)
         event = self._engine.record(event)
         self._event = event.id
         for h in self.hinges:  # close calls decided before this event are what it turned on
