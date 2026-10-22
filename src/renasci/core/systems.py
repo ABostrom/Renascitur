@@ -27,6 +27,8 @@ class System:
     reads: frozenset[str] = frozenset()
     writes: frozenset[str] = frozenset()
     event_types: tuple[EventType, ...] = ()
+    coarse_ok: bool = False  # can integrate over a long (coarse) step; see core.lod
+    coarse_fallback = None  # or a summary-update callable used instead when coarse (M5)
 
     def run(self, ctx) -> None:
         """Called on each cadence date."""
@@ -47,6 +49,10 @@ class System:
             names = getattr(self, label)
             if not isinstance(names, frozenset) or not all(isinstance(n, str) and n for n in names):
                 raise ValueError(f"{self.name}: {label} must be a frozenset of names")
+        if type(self.coarse_ok) is not bool:
+            raise ValueError(f"{self.name}: coarse_ok must be True or False")
+        if self.coarse_fallback is not None and not callable(self.coarse_fallback):
+            raise ValueError(f"{self.name}: coarse_fallback must be callable or None")
         for t in self.event_types:
             if not isinstance(t, EventType):
                 raise ValueError(f"{self.name}: event_types must be EventType objects")
@@ -54,7 +60,7 @@ class System:
 
 class Ruleset:
     def __init__(self, name: str, version: int, systems: tuple[System, ...], params: dict | None = None,
-                 forcers: tuple = (), disguises: tuple = ()):
+                 forcers: tuple = (), disguises: tuple = (), conservation=None):
         if not isinstance(name, str) or not name or type(version) is not int:
             raise ValueError("a ruleset needs a name and an int version")
         by_name: dict[str, System] = {}
@@ -67,6 +73,9 @@ class Ruleset:
         self.systems = tuple(by_name[n] for n in sorted(by_name))  # stable order
         self.params = dict(params or {})
         self._by_name = by_name
+        if conservation is not None and not callable(conservation):
+            raise ValueError("conservation must be a callable(store) -> list of problems")
+        self.conservation = conservation
         self.forcers = tuple(sorted(forcers, key=lambda f: f.name))
         self._forcer_for = {}
         for f in self.forcers:

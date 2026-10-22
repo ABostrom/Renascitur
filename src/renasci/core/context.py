@@ -184,6 +184,49 @@ class Ctx:
                 h["event"] = event.id
         return event
 
+    # ------------------------------------------------------------ level of detail
+
+    def _check_writes(self, *names: str) -> None:
+        for name in names:
+            if name not in self.system.writes:
+                raise UndeclaredAccess(f"{self.system.name} wrote {name!r} without declaring it")
+
+    def promote(self, aggregate: str, kind: str, fields: dict, *, reason: str, column: str | None = None,
+                place: str | None = None, causes=()) -> str:
+        """Pull a named individual out of `aggregate`. With `column`, the aggregate's count drops by one.
+
+        The id is causal (the promote event, role, ordinal); `place` and `causes` say where and why.
+        Every declaration is checked before anything changes.
+        """
+        self._check_writes(f"new:{kind}", *([column] if column else []))
+        count = None
+        if column is not None:
+            count = self.read_column(column, [aggregate])[0]
+            if count <= 0:
+                raise ValueError(f"cannot promote from {aggregate}: {column} is {count}")
+        event = self.emit("lod.promote", {"aggregate": (aggregate,)}, purpose=f"promote:{reason}", actor=aggregate,
+                          place=place, payload={"reason": reason}, causes=causes,
+                          creates={"individual": [(kind, fields)]})
+        if column is not None:
+            self.write_column(column, [aggregate], [count - 1])
+        return event.roles["individual"][0]
+
+    def demote(self, entity: str, *, reason: str, column: str | None = None, aggregate: str | None = None,
+               causes=()) -> None:
+        """Fade an individual back into the mass: a dormant record that keeps its history."""
+        if (column is None) != (aggregate is None):
+            raise ValueError("demote needs column and aggregate together (or neither)")
+        self._check_writes("status", *([column] if column else []))
+        if self.status(entity) != "active":
+            raise ValueError(f"cannot demote {entity}: it is {self._engine.store.status(entity)}")
+        count = self.read_column(column, [aggregate])[0] if column else None
+        roles = {"individual": (entity,)} | ({"aggregate": (aggregate,)} if aggregate else {})
+        self.emit("lod.demote", roles, purpose=f"demote:{reason}", actor=entity, payload={"reason": reason},
+                  causes=causes)
+        self.set_status(entity, "dormant")
+        if column is not None:
+            self.write_column(column, [aggregate], [count + 1])
+
     # ------------------------------------------------------------ pins
 
     def guarded(self, entity: str) -> bool:
