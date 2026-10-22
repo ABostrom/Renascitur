@@ -3,6 +3,7 @@
 	import { page } from '$app/state';
 
 	import type { DateTuple } from '$lib/run/calendar';
+	import { divergentIds, loadDivergence } from '$lib/run/diff';
 	import { filterEvents, type EventIndex } from '$lib/run/index';
 	import { loadRun } from '$lib/runs';
 	import EventDetail from '$lib/ui/EventDetail.svelte';
@@ -30,7 +31,31 @@
 		entity: params.get('entity') || '',
 		from: params.get('from') || '',
 		to: params.get('to') || '',
-		q: params.get('q') || ''
+		q: params.get('q') || '',
+		diff: params.get('diff') || ''
+	});
+
+	// `diff=<variant>`: only the events that diverge in that diff (its report lives in the variant's folder).
+	let diffIds = $state<Set<string> | null>(null);
+	let diffError = $state<string | null>(null);
+	$effect(() => {
+		const v = filter.diff;
+		const run = index?.run;
+		diffIds = null;
+		diffError = null;
+		if (!v || !run) return;
+		let stale = false;
+		loadDivergence(run.source, v)
+			.then((d) => {
+				if (stale) return;
+				if (!d) diffError = `No diff report in ${v}.`;
+				else if (d.runs.variant !== run.name && d.runs.baseline !== run.name) diffError = `That diff doesn't involve ${run.name}.`;
+				else diffIds = divergentIds(d, d.runs.variant === run.name ? 'variant' : 'baseline');
+			})
+			.catch((e) => {
+				if (!stale) diffError = (e as Error).message;
+			});
+		return () => (stale = true);
 	});
 	const selected = $derived(params.get('e'));
 
@@ -63,8 +88,9 @@
 		!!index && ((!!filter.from && !parseDate(filter.from, false)) || (!!filter.to && !parseDate(filter.to, true)))
 	);
 	const matches = $derived(
-		index
+		index && (!filter.diff || diffIds)
 			? filterEvents(index, {
+					ids: diffIds ?? undefined,
 					type: filter.type || undefined,
 					place: filter.place || undefined,
 					entity: filter.entity || undefined,
@@ -100,7 +126,7 @@
 				{/each}
 			</select>
 		</label>
-		<label>Place
+		<label>Where
 			<select value={filter.place} onchange={(e) => setParam('place', e.currentTarget.value)}>
 				<option value="">anywhere</option>
 				{#each [...index.places].sort() as p (p)}<option value={p}>{p}</option>{/each}
@@ -110,13 +136,19 @@
 		<label>From <input placeholder="e.g. 1X 40" value={filter.from} onchange={(e) => setParam('from', e.currentTarget.value.trim())} /></label>
 		<label>To <input placeholder="e.g. 1X 60" value={filter.to} onchange={(e) => setParam('to', e.currentTarget.value.trim())} /></label>
 		<label class="grow">Text <input placeholder="search ids, roles, payloads" value={filter.q} oninput={(e) => setTextSoon(e.currentTarget.value)} /></label>
+		{#if filter.diff}
+			<span class="diffing">
+				{#if diffError}<span class="warn">{diffError}</span>{:else}divergent in the diff of <span class="mono">{filter.diff}</span>{/if}
+				<button class="clear" onclick={() => setParam('diff', null)}>show all</button>
+			</span>
+		{/if}
 		{#if badDates}<span class="warn">Dates look like “1X 40” or “1X 40 m3 d12”.</span>{/if}
 	</div>
 
 	<div class="layout" class:with-detail={!!selected}>
 		<div>
 			<p class="muted count">{matches.length.toLocaleString()} event{matches.length === 1 ? '' : 's'}</p>
-			<VirtualList count={matches.length} rowHeight={32} resetKey={JSON.stringify(filter)}>
+			<VirtualList count={matches.length} rowHeight={32} resetKey={JSON.stringify(filter) + (diffIds ? 'd' : '')}>
 				{#snippet row(k)}
 					{@const i = matches[k]}
 					{@const id = index!.ids[i]}
@@ -169,6 +201,22 @@
 		border: 1px solid var(--border);
 		border-radius: var(--radius);
 		padding: 0.3rem 0.5rem;
+	}
+	.diffing {
+		font-size: 0.85rem;
+		color: var(--divergent);
+		display: flex;
+		gap: 0.5rem;
+		align-items: center;
+	}
+	.clear {
+		font: inherit;
+		background: none;
+		border: none;
+		padding: 0;
+		color: var(--accent);
+		text-decoration: underline;
+		cursor: pointer;
 	}
 	.warn {
 		color: var(--unexplained);

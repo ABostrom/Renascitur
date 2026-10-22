@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 
 	import { Calendar } from '$lib/run/calendar';
+	import { defaultBaseline } from '$lib/run/diff';
 	import { listRuns, openRun, type Manifest, type RunListing } from '$lib/run/run';
 	import { PickerSource } from '$lib/run/source';
 
@@ -9,9 +10,22 @@
 	let error = $state<string | null>(null);
 	let picked = $state<{ name: string; manifest: Manifest }[] | null>(null);
 
+	// Compare: a variant and its baseline. A replay pre-selects the run it was replayed from.
+	let variant = $state('');
+	let baseline = $state('');
+	function pickVariant(name: string) {
+		variant = name;
+		const m = runs?.find((r) => r.name === name)?.manifest;
+		const parent = m ? defaultBaseline(m) : null;
+		if (parent && runs?.some((r) => r.name === parent)) baseline = parent;
+	}
+	const enc = encodeURIComponent;
+
 	onMount(async () => {
 		try {
 			runs = await listRuns();
+			const replay = runs.find((r) => r.manifest.meta.replayed_from);
+			if (replay) pickVariant(replay.name);
 		} catch (e) {
 			error = (e as Error).message;
 		}
@@ -75,6 +89,9 @@
 						{#if (m.meta.recipe?.ripple ?? []).length}
 							<span class="badge ripple">{m.meta.recipe?.ripple.length} ripple(s)</span>
 						{/if}
+						{#if defaultBaseline(m)}
+							<a class="diff-link" href={`/diff/${enc(defaultBaseline(m) ?? '')}/${enc(run.name)}`}>diff against {defaultBaseline(m)}</a>
+						{/if}
 					</div>
 					<dl>
 						<dt>world</dt><dd>{recipe.world ?? '—'}</dd>
@@ -88,6 +105,26 @@
 				</li>
 			{/each}
 		</ul>
+		{#if runs.length > 1}
+			<section class="card compare">
+				<h2>Compare two runs</h2>
+				<label>Baseline
+					<select bind:value={baseline}>
+						<option value="" disabled>pick a run</option>
+						{#each runs as r (r.name)}<option value={r.name}>{r.name}</option>{/each}
+					</select>
+				</label>
+				<label>Variant
+					<select value={variant} onchange={(e) => pickVariant(e.currentTarget.value)}>
+						<option value="" disabled>pick a run</option>
+						{#each runs as r (r.name)}<option value={r.name}>{r.name}</option>{/each}
+					</select>
+				</label>
+				{#if baseline && variant && baseline !== variant}
+					<a class="go" href={`/diff/${enc(baseline)}/${enc(variant)}`}>Show the diff</a>
+				{/if}
+			</section>
+		{/if}
 	{/if}
 {/if}
 
@@ -141,5 +178,38 @@
 	}
 	.picker {
 		margin-top: 2rem;
+	}
+	.diff-link {
+		margin-left: auto;
+		font-size: 0.9rem;
+	}
+	.compare {
+		margin-top: 1.2rem;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.6rem 1rem;
+		align-items: end;
+	}
+	.compare h2 {
+		width: 100%;
+		margin: 0;
+		font-size: 1.05rem;
+	}
+	.compare label {
+		display: flex;
+		flex-direction: column;
+		font-size: 0.8rem;
+		color: var(--muted);
+	}
+	.compare select {
+		font: inherit;
+		color: var(--text);
+		background: var(--bg);
+		border: 1px solid var(--border);
+		border-radius: var(--radius);
+		padding: 0.3rem 0.5rem;
+	}
+	.go {
+		padding: 0.35rem 0;
 	}
 </style>

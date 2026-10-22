@@ -54,6 +54,11 @@ def main_() -> None:
     assert main(["run", recipe("base"), "--out", str(OUT)]) == 0
     assert main(["replay", str(OUT / "base"), "--recipe", recipe("protected", RIPPLE), "--out", str(OUT)]) == 0
     main(["diff", str(OUT / "base"), str(OUT / "protected")])
+    # A negative control: a world with a planted coupling bug, so its diff has unexplained divergence.
+    assert main(["run", recipe("buggy", "buggy = true"), "--out", str(OUT)]) == 0
+    assert main(["replay", str(OUT / "buggy"), "--recipe", recipe("buggy-protected", "buggy = true\n" + RIPPLE),
+                 "--out", str(OUT)]) == 0
+    assert main(["diff", str(OUT / "buggy"), str(OUT / "buggy-protected")]) == 3, "the planted bug went unnoticed"
 
     # An interrupted folder: the open segment ends in a partial line, a stale .tmp is left behind, and a
     # close of the open segment was interrupted after gzipping one table but before the manifest.

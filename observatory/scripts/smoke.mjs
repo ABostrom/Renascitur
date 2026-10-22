@@ -47,7 +47,7 @@ try {
 	const errors = [];
 	page.on('pageerror', (e) => errors.push(e.message));
 	await page.goto(`http://127.0.0.1:${port}/`);
-	await page.getByText('base', { exact: true }).waitFor({ timeout: 10000 });
+	await page.getByRole('link', { name: 'base', exact: true }).waitFor({ timeout: 10000 });
 	await page.getByText('replay of base').waitFor({ timeout: 10000 });
 	await page.getByText('incomplete').first().waitFor({ timeout: 10000 });
 	// the shipping data path, in Chrome: HTTP listing -> segment selection -> gzip -> JSON Lines
@@ -86,7 +86,21 @@ try {
 	await page.goto(`http://127.0.0.1:${port}/run/base/entity/t%3AAshford`);
 	await page.getByRole('heading', { name: /State changes \(\d+\)/ }).waitFor({ timeout: 15000 });
 	if (errors.length) throw new Error(`page errors: ${errors.join('; ')}`);
-	console.log(`smoke: ok (browser read ${counts.base.n} events from base; ${shown} granary events listed; detail, cause chain and entity page shown)`);
+	// the diff: a clean wave, and a cell that opens its divergent events in the variant's browser
+	await page.goto(`http://127.0.0.1:${port}/diff/base/protected`);
+	await page.getByText(/0\s*unexplained/).first().waitFor({ timeout: 15000 });
+	const cells = await page.locator('a.cell').count();
+	if (cells === 0) throw new Error('the wave has no divergent cells');
+	await page.locator('a.cell').first().click();
+	await page.getByText(/divergent in the diff of/).waitFor({ timeout: 15000 });
+	const divergentShown = Number((await page.getByText(/^\d+ events?$/).textContent()).split(' ')[0]);
+	if (!(divergentShown > 0)) throw new Error('a wave cell showed no divergent events');
+	// the buggy world: unexplained, with its root events marked
+	await page.goto(`http://127.0.0.1:${port}/diff/buggy/buggy-protected`);
+	await page.getByRole('heading', { name: 'Unexplained' }).waitFor({ timeout: 15000 });
+	await page.locator('.badge.bad', { hasText: 'root' }).first().waitFor({ timeout: 10000 });
+	if ((await page.locator('a.cell.unexplained').count()) === 0) throw new Error('no unexplained wave cell outlined');
+	console.log(`smoke: ok (browser read ${counts.base.n} events from base; ${shown} granary events listed; detail, cause chain and entity page shown; diff wave of ${cells} cells, ${divergentShown} divergent events in one, buggy roots marked)`);
 } catch (e) {
 	failed = true;
 	console.error('smoke: FAILED', e);

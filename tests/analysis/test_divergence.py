@@ -164,3 +164,54 @@ def test_scope_is_not_part_of_event_identity_for_divergence():
         ev.pop("scope", None)
     report = analyse(older[0], base[0], older[1], base[1])
     assert report["divergent_events"] == 0
+
+
+# ---------------------------------------------------------------- #56: what the diff page needs
+
+
+def test_divergent_ids_are_listed_per_side(baseline, doomed):
+    person, died = doomed
+    ripple = Ripple("r1", "protect", Date(1, died[1] - 1, 0), person, {"until": [1, YEARS, 359]})
+    variant = run(ripples=[ripple])
+    report = analyse(baseline[0], variant[0], baseline[1], variant[1], ripples=["r1"])
+    ids_a = {e["id"] for e in baseline[0]["events"]}
+    ids_b = {e["id"] for e in variant[0]["events"]}
+    d = report["divergent"]
+    assert set(d["only_baseline"]) == ids_a - ids_b and set(d["only_variant"]) == ids_b - ids_a
+    assert not set(d["changed"]) - (ids_a & ids_b)
+    assert len(d["only_baseline"]) + len(d["only_variant"]) + len(d["changed"]) == report["divergent_events"]
+
+
+def test_wave_cells_name_their_age_and_count_unexplained(baseline, doomed):
+    person, died = doomed
+    ripple = Ripple("r1", "protect", Date(1, died[1] - 1, 0), person, {"until": [1, YEARS, 359]})
+    variant = run(ripples=[ripple])
+    report = analyse(baseline[0], variant[0], baseline[1], variant[1], ripples=["r1"])
+    assert all(w["age"] == 1 and w["unexplained"] == 0 for w in report["wave"])
+
+
+def test_every_unexplained_item_is_listed_with_its_side(doomed):
+    person, died = doomed
+    ripple = Ripple("r1", "protect", Date(1, died[1] - 1, 0), person, {"until": [1, YEARS, 359]})
+    base = run(buggy=True)
+    variant = run(buggy=True, ripples=[ripple])
+    report = analyse(base[0], variant[0], base[1], variant[1], ripples=["r1"])
+    u = report["unexplained"]
+    assert len(u["events"]) == report["unexplained_events"] > 0
+    assert len(u["entities"]) == report["unexplained_entities"] and len(u["cells"]) == report["unexplained_cells"]
+    ids_a = {e["id"] for e in base[0]["events"]}
+    for e in u["events"]:
+        assert e["side"] in ("baseline", "variant", "both")
+        assert (e["side"] == "variant") == (e["id"] not in ids_a)
+    assert all(c["side"] in ("baseline", "variant", "both") for c in u["entities"] + u["cells"])
+    assert sum(w["unexplained"] for w in report["wave"]) == report["unexplained_events"]
+
+
+def test_wave_places_events_without_a_place_by_their_scope(baseline):
+    """Granary and move events have no `place`; the wave puts them where they were decided."""
+    report = analyse(baseline[0], baseline[0], baseline[1], baseline[1])
+    placed = {w["place"] for w in report["wave"]}
+    assert "t:North" in placed or "t:South" in placed  # valley-scoped granary events
+    unplaced = sum(w["total"] for w in report["wave"] if w["place"] is None)
+    casts = sum(1 for e in baseline[0]["events"] if e["type"].startswith("engine."))
+    assert unplaced == casts
