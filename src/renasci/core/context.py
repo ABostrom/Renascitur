@@ -18,12 +18,25 @@ from renasci.core.calendar import Span
 from renasci.core.canon import canonical, digest
 from renasci.core.choice import match, scored
 from renasci.core.events import Cause, Event, Source
-from renasci.core.ids import event_id
+from renasci.core.ids import entity_id, event_id
 from renasci.core.scheduler import Activation
 
 
 class UndeclaredAccess(Exception):
     """A system read or wrote something it did not declare."""
+
+
+class _WithNewborns:
+    """A read-only view of the store in which entities about to be created already exist."""
+
+    def __init__(self, store, newborns: set[str]):
+        self._store, self._new = store, newborns
+
+    def exists(self, entity: str) -> bool:
+        return entity in self._new or self._store.exists(entity)
+
+    def status(self, entity: str) -> str:
+        return "active" if entity in self._new else self._store.status(entity)
 
 
 class Ctx:
@@ -113,13 +126,18 @@ class Ctx:
     # ------------------------------------------------------------ events
 
     def emit(self, type: str, roles: dict, *, purpose: str, actor: str, place: str | None = None,
-             payload: dict | None = None, causes=(), visibility: str | None = None) -> Event:
+             payload: dict | None = None, causes=(), visibility: str | None = None,
+             creates: dict | None = None) -> Event:
         """Record an event and make it the explanation for this activation's following writes.
 
         `actor` is the entity the event is about (the person who died, the village that harvested).
         The id comes from (system, actor, purpose, today, occurrence, activation), so the same
         cause gives the same id in another run, and skipping one event never renumbers others.
         The activation's own causes are inherited.
+
+        `creates` makes new entities that this event names, e.g. a birth's child:
+        `{"child": [("person", {"village": v})]}`. Their ids are causal, `entity_id(event, role, i)`,
+        and they are created by this event (each kind needs `new:<kind>` in `writes`).
         """
         if self._engine.strict and type not in {t.name for t in self.system.event_types}:
             raise UndeclaredAccess(f"{self.system.name} emitted {type!r} without declaring it")
@@ -128,8 +146,31 @@ class Ctx:
         self._occurrences[key] = occurrence + 1
         eid = event_id(self.system.name, actor, purpose, self.today, occurrence, self.activation.id)
         all_causes = tuple(sorted(set(causes) | set(self.activation.causes)))
+        roles = {r: tuple(m) for r, m in roles.items()}
+        births = []
+        for role, specs in sorted((creates or {}).items()):
+            if role in roles:
+                raise ValueError(f"role {role!r} is both given and created")
+            ids = []
+            for i, (kind, fields) in enumerate(specs):
+                if f"new:{kind}" not in self.system.writes:
+                    raise UndeclaredAccess(f"{self.system.name} created a {kind!r} without declaring new:{kind}")
+                ids.append(entity_id(eid, role, i))
+                births.append((kind, ids[-1], fields))
+            roles[role] = tuple(ids)
         event = Event(eid, self.today, type, roles, place, all_causes, payload or {},
                       Source("system", self.system.name), visibility, activation=self.activation.id)
+        if births:
+            # Validate everything, with the newborns treated as existing, before any write.
+            store = self._engine.store
+            births = [(kind, entity, json.loads(canonical(fields))) for kind, entity, fields in births]
+            for _, entity, _ in births:
+                if store.exists(entity):
+                    raise ValueError(f"entity {entity!r} already exists")
+            self._engine.registry.validate(event, store=_WithNewborns(store, {b[1] for b in births}),
+                                           today=self.today)
+            for kind, entity, fields in births:
+                store.create(kind, entity, fields, self.today, eid, self.activation.id)
         event = self._engine.record(event)
         self._event = event.id
         for h in self.hinges:  # close calls decided before this event are what it turned on
@@ -160,18 +201,19 @@ class Ctx:
                stakes: float | None = None, roles: dict | None = None) -> str | None:
         """Pick one candidate by rendezvous: a loser leaving never changes the winner.
 
-        With `stakes`, records a hinge: the winner, the runner-up and the score gap.
+        With `stakes`, a close race (score gap within `engine.hinge_margin`) records a hinge:
+        the winner, the runner-up and the gap.
         """
         key, n = self._draw_key(f"choose:{purpose}", owner)
         ranked = scored([key], candidates, weights)
         if not ranked:
             return None
         winner = ranked[0][1]
-        if stakes is not None:
-            runner = ranked[1] if len(ranked) > 1 else None
-            self._hinge("choice", purpose, owner, n, stakes, roles, winner=winner,
-                        runner_up=runner[1] if runner else None,
-                        margin=(runner[0] - ranked[0][0]) if runner else None)
+        if stakes is not None and len(ranked) > 1:
+            margin = ranked[1][0] - ranked[0][0]
+            if margin <= self._engine.hinge_margin:
+                self._hinge("choice", purpose, owner, n, stakes, roles, winner=winner,
+                            runner_up=ranked[1][1], margin=margin)
         return winner
 
     def match(self, purpose: str, seekers: dict, *, owner: str, accept: dict | None = None) -> dict[str, str]:
@@ -183,7 +225,8 @@ class Ctx:
                roles: dict | None = None) -> bool:
         """True with probability p, after any odds hooks (ripples, the pin director) adjust it.
 
-        With `stakes`, the draw is recorded as a hinge, a source for latch points.
+        With `stakes`, a close call (|u - p| within `engine.hinge_margin`) is recorded as a hinge,
+        a source for latch points.
         """
         p_base = p = float(p)
         if not (math.isfinite(p) and 0.0 <= p <= 1.0):
@@ -200,7 +243,7 @@ class Ctx:
         n = self._engine.ordinals.next(self.system.name, owner, purpose, tick)
         u = float(self._engine.rng.stream(self.system.name, owner, purpose, tick, n).random())
         outcome = u < p
-        if stakes is not None:
+        if stakes is not None and abs(u - p) <= self._engine.hinge_margin:
             self._hinge("chance", purpose, owner, n, stakes, roles, p_base=p_base, p=p,
                         adjusted_by=adjusted, u=u, margin=abs(u - p), outcome=outcome)
         return outcome

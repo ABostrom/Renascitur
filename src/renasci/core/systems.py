@@ -9,6 +9,8 @@ Declared names:
   kind) and `"new:<kind>"` (creating one).
 - `cadence`: daily, monthly, seasonal, yearly, or on_demand (runs only from scheduled follow-ups).
 
+Systems are stateless: everything they know lives in the store, so checkpoints capture it.
+
 A ruleset is the set of systems active in an age, plus parameters.
 """
 

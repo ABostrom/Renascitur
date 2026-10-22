@@ -10,7 +10,9 @@ anything else on that day. At a switch:
 
 from __future__ import annotations
 
+from renasci import __version__
 from renasci.core.calendar import Calendar, Date
+from renasci.core.canon import digest
 from renasci.core.context import Ctx, UndeclaredAccess
 from renasci.core.events import CauseIndex, Event, EventType, Registry, Source
 from renasci.core.ids import event_id
@@ -23,11 +25,13 @@ __all__ = ["Engine", "UndeclaredAccess"]
 
 SWITCH_PRIORITY = -(10**9)
 CAST = EventType("engine.cast", 1, roles={"subject": (1, 1)}, payload={"kind": "str"})
+CAST_COLUMN = EventType("engine.cast_column", 1, roles={}, payload={"column": "str"})
+CHECKPOINT_FORMAT = 1
 
 
 class Engine:
     def __init__(self, calendar: Calendar, seed: int, rulesets: list[tuple[Date, Ruleset]],
-                 strict: bool = True, reshuffles: tuple[Reshuffle, ...] = ()):
+                 strict: bool = True, reshuffles: tuple[Reshuffle, ...] = (), hinge_margin: float = 0.05):
         if not rulesets:
             raise ValueError("an engine needs at least one ruleset")
         dates = [d for d, _ in rulesets]
@@ -37,6 +41,7 @@ class Engine:
             calendar.check(d)
 
         self.calendar, self.strict = calendar, strict
+        self.seed, self.reshuffles = seed, tuple(reshuffles)
         self.rulesets = list(rulesets)
         self.start = dates[0]
         self.store = Store()
@@ -48,6 +53,7 @@ class Engine:
         self.events: list[Event] = []
         self.reads: list[dict] = []
         self.hinges: list[dict] = []  # close calls with stakes: the source data for latch points
+        self.hinge_margin = float(hinge_margin)  # a draw with stakes is a hinge only if it was this close
         self.odds_hooks: list = []  # (ctx, p, purpose, owner) -> (p, cause or None): ripples, director
         self.dropped: list[str] = []
         self.ruleset: Ruleset | None = None
@@ -55,6 +61,7 @@ class Engine:
         self._date: Date | None = None
 
         self._register(CAST)
+        self._register(CAST_COLUMN)
         for _, rs in rulesets:
             for t in rs.event_types():
                 self._register(t)
@@ -80,6 +87,16 @@ class Engine:
         self.store.create(kind, entity, fields, self.start, eid)
         return self.record(Event(eid, self.start, CAST.name, {"subject": (entity,)}, None, (),
                                  {"kind": kind}, Source("scenario", "cast")))
+
+    def cast_column(self, name: str, dtype: str, ids, values) -> Event:
+        """Create a numeric column (aggregate state) with starting values, before anything runs."""
+        if self._date is not None:
+            raise ValueError("casting happens before the run starts")
+        eid = event_id("engine", f"column:{name}", "cast", self.start, 0)
+        self.store.add_column(name, dtype)
+        self.store.write_column(name, ids, values, self.start, eid)
+        return self.record(Event(eid, self.start, CAST_COLUMN.name, {}, None, (), {"column": name},
+                                 Source("scenario", "cast")))
 
     # ------------------------------------------------------------ used by Ctx
 
@@ -124,7 +141,14 @@ class Engine:
 
     def run(self, until: Date) -> None:
         """Run every activation dated on or before `until`."""
-        while (nxt := self.scheduler.peek()) is not None and nxt.date <= until:
+        self._run(lambda d: d <= until)
+
+    def run_before(self, date: Date) -> None:
+        """Run every activation dated before `date`: the position a checkpoint at `date` is taken."""
+        self._run(lambda d: d < date)
+
+    def _run(self, due) -> None:
+        while (nxt := self.scheduler.peek()) is not None and due(nxt.date):
             activation = self.scheduler.pop()
             self._advance(activation.date)
             if activation.system == "engine":
@@ -173,3 +197,91 @@ class Engine:
         reads = ctx.recorded_reads()
         if reads:
             self.reads.append({"activation": activation.id, "reads": reads})
+
+    # ------------------------------------------------------------ checkpoints
+
+    def recipe(self) -> dict:
+        """Everything that shapes history besides the state: checked on restore, hashed in full."""
+        def system(s):
+            return {"name": s.name, "class": type(s).__qualname__, "cadence": s.cadence, "priority": s.priority,
+                    "reads": sorted(s.reads), "writes": sorted(s.writes),
+                    "event_types": [{"name": t.name, "version": t.version, "roles": t.roles, "payload": t.payload,
+                                     "visibility": t.visibility, "dead_roles": list(t.dead_roles)}
+                                    for t in s.event_types]}
+
+        cal = self.calendar
+        return {
+            "engine": __version__, "seed": self.seed, "strict": self.strict, "hinge_margin": self.hinge_margin,
+            "reshuffles": sorted((r.to_json() for r in self.reshuffles), key=lambda r: (r["from"], r["salt"])),
+            "calendar": {"ages": [[a.index, a.abbrev, a.name, a.last_year] for a in cal.ages],
+                         "months": cal.months, "seasons": cal.seasons},
+            "rulesets": [{"start": d.to_json(), "name": rs.name, "version": rs.version, "params": rs.params,
+                          "systems": [system(s) for s in rs.systems]} for d, rs in self.rulesets],
+        }
+
+    def _state(self) -> dict:
+        return {"store": self.store.to_json(), "scheduler": self.scheduler.to_json(),
+                "ordinals": self.ordinals.to_json(), "causes": self.causes.to_json(),
+                "ruleset_index": self.ruleset_index}
+
+    def state_hash(self) -> str:
+        """A hash of the world state (not of pending history)."""
+        return digest(self._state(), size=16)
+
+    def checkpoint(self, at: Date, segments: int) -> dict:
+        """The full state as JSON, at the position "before any activation dated `at`".
+
+        `segments` is the run folder's closed-segment count (from `cut`): a replay truncates to it.
+        Pending history must be written first, so a checkpoint and its run folder agree.
+        """
+        if any(self.pending().values()):
+            raise ValueError("flush pending history to the run folder before checkpointing")
+        if self.odds_hooks:
+            raise ValueError("odds hooks are not checkpointable yet (ripples and the director save state in #48/#49)")
+        for _, rs in self.rulesets:
+            for s in rs.systems:
+                if vars(s):
+                    raise ValueError(f"system {s.name} keeps instance state {sorted(vars(s))}; "
+                                     "systems must be stateless, with all state in the store")
+        nxt, now = self.scheduler.peek(), self.scheduler.now
+        if (nxt is not None and nxt.date < at) or (now is not None and now >= at):
+            raise ValueError(f"the engine is not positioned before {at}: last ran {now}, next is "
+                             f"{nxt.date if nxt else None}; use run_before({at})")
+        self.ordinals.close_before(self.calendar.canonical_tick(at))
+        recipe = self.recipe()
+        header = {"format": CHECKPOINT_FORMAT, "date": at.to_json(), "segments": int(segments),
+                  "recipe_hash": digest(recipe, size=16), "recipe": recipe}
+        return {"header": header, "state": self._state()}
+
+    @classmethod
+    def restore(cls, checkpoint: dict, calendar: Calendar, rulesets: list[tuple[Date, Ruleset]],
+                seed: int, strict: bool = True, reshuffles: tuple[Reshuffle, ...] = (),
+                hinge_margin: float = 0.05) -> Engine:
+        """Rebuild an engine from a checkpoint and the recipe that produced it."""
+        header = checkpoint["header"]
+        if header.get("format") != CHECKPOINT_FORMAT:
+            raise ValueError(f"checkpoint format {header.get('format')!r} is not {CHECKPOINT_FORMAT}; "
+                             "engine changed, replay from scenario")
+        engine = cls(calendar, seed, rulesets, strict=strict, reshuffles=reshuffles, hinge_margin=hinge_margin)
+        recipe = engine.recipe()
+        if digest(recipe, size=16) != header["recipe_hash"]:
+            old = header.get("recipe", {})
+            changed = sorted(k for k in recipe if old.get(k) != json_plain(recipe[k]))
+            raise ValueError(f"the recipe differs from the checkpoint's ({', '.join(changed) or 'details'}); "
+                             "engine or recipe changed, replay from scenario")
+        state = checkpoint["state"]
+        engine.store = Store.from_json(state["store"])
+        engine.scheduler = Scheduler.from_json(state["scheduler"])
+        engine.ordinals = OrdinalTable.from_json(state["ordinals"])
+        engine.causes = CauseIndex.from_json(state["causes"])
+        engine.ruleset_index = state["ruleset_index"]
+        engine.ruleset = rulesets[engine.ruleset_index][1] if engine.ruleset_index is not None else None
+        engine._date = engine.scheduler.now or Date.from_json(header["date"])  # restored engines are running
+        return engine
+
+
+def json_plain(value):
+    import json
+
+    from renasci.core.canon import canonical
+    return json.loads(canonical(value))

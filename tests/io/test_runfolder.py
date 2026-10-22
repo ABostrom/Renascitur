@@ -91,6 +91,7 @@ class Counter(System):
 def test_flush_moves_engine_history_into_tables(tmp_path):
     e = Engine(CAL, seed=1, rulesets=[(Date(1, 1, 0), Ruleset("c", 1, (Counter(),)))])
     e.cast("place", "t:world", {"count": 0})
+    e.hinge_margin = 1.0
     e.run(until=Date(1, 1, 359))
     n_events = len(e.events)
     rf = RunFolder.create(tmp_path / "r", {})
