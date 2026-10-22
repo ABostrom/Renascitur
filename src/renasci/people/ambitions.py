@@ -131,11 +131,18 @@ class Standing(Ambition):
 STARTER = (Marry(), Standing())
 
 
+LIBRARY: dict[str, Ambition] = {a.name: a for a in STARTER}
+
+
 def classes(ctx) -> dict[str, Ambition]:
-    """The ambition classes this world uses (all the starter set until the ruleset names others)."""
+    """The ambition classes this world uses (the ruleset param `ambitions`, or every known class)."""
     names = ctx.params.get("ambitions")
-    library = {a.name: a for a in STARTER}
-    return {n: library[n] for n in sorted(names)} if names else dict(sorted(library.items()))
+    if not names:
+        return dict(sorted(LIBRARY.items()))
+    unknown = sorted(set(names) - set(LIBRARY))
+    if unknown:
+        raise ValueError(f"unknown ambition classes {unknown}; known: {sorted(LIBRARY)}")
+    return {n: LIBRARY[n] for n in sorted(names)}
 
 
 def resolve(ctx, amb: str, status: str, causes=()) -> None:
@@ -149,15 +156,19 @@ def resolve(ctx, amb: str, status: str, causes=()) -> None:
     ctx.set(amb, "scheme", None)
     ctx.set(owner, "ambitions", [a for a in ctx.get(owner, "ambitions") or [] if a != amb])
     cls = ctx.get(amb, "class")
-    library = {a.name: a for a in STARTER}
-    cooldown = library[cls].cooldown_years if cls in library else 5
+    known = classes(ctx)
+    cooldown = known[cls].cooldown_years if cls in known else 5
     ctx.set(owner, "cooldowns", {**(ctx.get(owner, "cooldowns") or {}), cls: ctx.today.year + cooldown})
 
 
 def on_death(ctx, person: str, death_event: str) -> None:
-    """Every active ambition of the dead ends unfulfilled, caused by the death."""
+    """Every active ambition of the dead ends, caused by the death: unfulfilled, unless the world had
+    already met it before the yearly pass noticed (married, then died, the same day)."""
+    known = classes(ctx)
     for amb in list(ctx.get(person, "ambitions") or []):
-        resolve(ctx, amb, "died_unfulfilled", causes=(Cause("event", death_event),))
+        cls = known.get(ctx.get(amb, "class"))
+        won = cls is not None and cls.satisfied(ctx, amb)
+        resolve(ctx, amb, "fulfilled" if won else "died_unfulfilled", causes=(Cause("event", death_event),))
 
 
 READS = frozenset({"ambitions", "cooldowns", "owner", "class", "target", "status", "state", "scheme"})
@@ -167,7 +178,8 @@ WRITES = frozenset({"ambitions", "cooldowns", "state", "resolved", "scheme", "ne
 class Ambitions(System):
     name, cadence = "people.ambitions", "yearly"
     priority = 6  # after drives (5)
-    reads = READS | frozenset({"ids:settlement", "residents", "born", "formed"}).union(*(a.reads for a in STARTER))
+    reads = READS | frozenset({"ids:settlement", "residents", "born", "formed", "traits"}).union(
+        *(a.reads for a in STARTER))
     writes = WRITES
     event_types = EVENT_TYPES
 
@@ -186,8 +198,8 @@ class Ambitions(System):
         for amb in list(ctx.get(person, "ambitions") or []):
             cls = library.get(ctx.get(amb, "class"))
             if cls is None:
-                continue
-            if cls.satisfied(ctx, amb):
+                resolve(ctx, amb, "abandoned")  # its class is no longer part of this world
+            elif cls.satisfied(ctx, amb):
                 resolve(ctx, amb, "fulfilled")
             elif cls.moot(ctx, amb) or cls.eligible(ctx, person) is None:
                 resolve(ctx, amb, "abandoned")

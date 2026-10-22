@@ -55,7 +55,7 @@ S7 gives notables wants and the means to pursue them:
 | Field | Notes |
 |---|---|
 | `owner`, `class`, `target` | `target` is an entity or null. |
-| `formed`, `status`, `resolved` | `status`: `active`, `fulfilled`, `thwarted`, `abandoned`, `died_unfulfilled`. `resolved` is `[date, event]`. |
+| `formed`, `state`, `resolved` | `state`: `active`, `fulfilled`, `thwarted`, `abandoned`, `died_unfulfilled` (named `state` because `status` is the store's own field). `resolved` is `[date, event]`. |
 | `scheme` | The current scheme, cleared when any scheme ends. |
 | `born_of` | `["drive", name]`, `["event", id]` or `["wound", kind]`. |
 
@@ -290,7 +290,7 @@ Actions and urges read **traits by role** (`wits`, `temper`, `charm`), mapped to
 | `ctx.schedule(..., causes=())` adds causes to the follow-up | `core.context` | Step activations carry scheme and ambition (§1, §6). |
 | `life.die(ctx, person, settlement, cause, *, killer=None)`, plus a `DIE_READS`, `DIE_WRITES`, `DIE_EVENTS` bundle that every caller declares | S3 | Schemes can kill. The ambition hook (`died_unfulfilled`) and grievances (with `killer`) live there. |
 | `houses.vacate` follow-ups are handled by any system that calls `die`, through a shared `houses.handle_succession` | S3 | `ctx.schedule` schedules the caller. |
-| Lod spares the ambitious: it reads `ambitions` and skips owners, accomplices and targets of active schemes | S3 `Lod._quiet` | Master §5.10: the ambitious are never demoted. |
+| Lod spares the ambitious: it reads `ambitions` and skips owners, accomplices and targets of active schemes. A wish without a scheme isn't enough, or Lod would never demote anyone (#91 review). | S3 `Lod._quiet` | Master §5.10: the ambitious are never demoted. |
 | `favour` on persons; the `status` drive reads it | S3 drives | `CourtFavour`, `Shame`. |
 | `stories.json` and `latch.json` in `analysis/`, read by the Observatory | S1, S13 | §8, §9. |
 

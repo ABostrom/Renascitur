@@ -132,16 +132,13 @@ def test_cooldowns_hold(world):
                 assert ev.date.year - last[key].year >= 3  # every starter cooldown is at least three years
 
 
-def test_the_ambitious_are_never_demoted(world):
+def test_a_demotion_abandons_the_wish(world):
+    """A wish alone doesn't keep someone named (only an active scheme does, #94); fading abandons it."""
     demoted = {ev.roles["individual"][0]: ev.date for ev in events(world, "lod.demote")}
     for a in world.store.ids("ambition"):
         owner = world.store.get(a, "owner")
-        if owner in demoted:
-            formed = world.store.get(a, "formed")
-            resolved = world.store.get(a, "resolved")
-            when = demoted[owner]
-            assert not (tuple(formed) <= tuple(when.to_json()) and (resolved is None or
-                                                                      tuple(resolved[0]) > tuple(when.to_json())))
+        if owner in demoted and world.store.get(owner, "status") == "dormant":
+            assert world.store.get(a, "state") != "active"
 
 
 def test_traits_default_to_average_when_the_world_lacks_them():
@@ -176,3 +173,41 @@ def test_doomed_world_ambitions_all_die_with_their_owners():
     e.run(until=Date(1, 2, 359))
     for a in e.store.ids("ambition"):
         assert e.store.get(a, "state") != "active"
+
+
+# ---------------------------------------------------------------- review fixes
+
+
+def test_quiet_commoners_who_merely_wish_still_fade(world):
+    assert events(world, "lod.demote"), "a wish alone (no active scheme) must not keep everyone named"
+
+
+def test_traits_are_read_from_the_person_under_strict_declarations():
+    import copy
+
+    from renasci.kin import SCENARIO
+
+    sc = copy.deepcopy(SCENARIO)
+    sc["params"]["traits"] = {"charm": "constitution", "wits": "stature"}
+    e = new_engine(scenario=sc)
+    e.run(until=Date(1, 3, 359))  # strict mode: an undeclared read would raise
+    assert events(e, "people.ambition_formed")
+
+
+def test_unknown_ambition_classes_are_refused():
+    from renasci.people.ambitions import classes
+
+    class Ctx:
+        params = {"ambitions": ["Marry", "Conquer"]}
+
+    with pytest.raises(ValueError, match="Conquer"):
+        classes(Ctx())
+
+
+def test_the_death_flow_is_explained_by_the_death(world):
+    deaths = {ev.id for ev in events(world, "people.death")}
+    for d in world.pending()["bulk_deltas"]:
+        if "flow:died" in (d.get("components") or [d.get("component")]):
+            ev = next(e for e in world.events if e.id == d["event"])
+            assert ev.type in ("people.death", "people.population", "engine.cast_column"), ev.type
+    assert deaths
