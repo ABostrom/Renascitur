@@ -35,6 +35,7 @@ from dataclasses import dataclass, field
 
 from renasci.core.calendar import Date
 from renasci.core.canon import canonical
+from renasci.core.ids import CAST_STARTS
 from renasci.core.systems import System
 
 KINDS = ("existence", "event", "ordering", "lineage", "succession", "goal")
@@ -67,7 +68,7 @@ class Pin:
             if (self.kind != "event" or not isinstance(bind, dict) or not isinstance(bind.get("role"), str)
                     or not isinstance(bind.get("subject"), str) or not isinstance(bind.get("fields", {}), dict)):
                 raise ValueError(f"pin {self.id}: bind is an event pin's {{role, subject, fields?}}")
-            if not bind["subject"].startswith(("v:", "t:")):
+            if not bind["subject"].startswith(CAST_STARTS):
                 raise ValueError(f"pin {self.id}: bind.subject must be a canon id (v: or t:), got {bind['subject']!r}")
             if bind["role"] in self.payload.get("roles", {}):
                 raise ValueError(f"pin {self.id}: the bound role {bind['role']!r} can't also be a required role")
@@ -107,7 +108,7 @@ def feasibility(pins, start: Date, end: Date) -> dict[str, str]:
     for p in sorted(pins, key=lambda p: p.id):
         if p.kind not in SUPPORTED:
             result[p.id] = "unsupported"
-        elif p.kind == "existence" and not p.subject.startswith(("v:", "t:")) and p.window is None:
+        elif p.kind == "existence" and not p.subject.startswith(CAST_STARTS) and p.window is None:
             result[p.id] = "infeasible"  # a born entity's pin needs a window to be checked against
         elif p.window and p.window[0] > p.window[1]:
             result[p.id] = "infeasible"

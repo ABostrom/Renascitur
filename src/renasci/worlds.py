@@ -34,11 +34,13 @@ def _toy() -> World:
 def _kin() -> World:
     from renasci import kin
 
-    def rulesets(people_per_settlement=None, races=None, catalogue=None, residence="husband", masses=None):
-        return [(kin.START, kin.ruleset(races, catalogue, residence))]
+    def rulesets(people_per_settlement=None, races=None, catalogue=None, residence=None, masses=None,
+                 scenario=None):
+        sc = kin.scenario(people_per_settlement, races, catalogue, residence, masses, base=scenario)
+        return [(kin.START, kin.ruleset(sc=sc))]
 
     return World("kin", kin.CAL, kin.new_engine, rulesets,
-                 frozenset({"people_per_settlement", "races", "catalogue", "residence", "masses"}))
+                 frozenset({"people_per_settlement", "races", "catalogue", "residence", "masses", "scenario"}))
 
 
 WORLDS: dict[str, Callable[[], World]] = {"toy": _toy, "kin": _kin}

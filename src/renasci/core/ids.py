@@ -9,7 +9,8 @@ from __future__ import annotations
 from renasci.core.calendar import Date
 from renasci.core.canon import digest
 
-CAST_PREFIXES = ("v", "t")  # v: vault canon, t: toy/test fixtures
+CAST_PREFIXES = ("v", "t", "s")  # v: vault canon, t: toy/test fixtures, s: synthesised by a scenario
+CAST_STARTS = tuple(f"{p}:" for p in CAST_PREFIXES)  # what a cast id starts with
 
 
 def _name(label: str, value) -> str:
