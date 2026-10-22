@@ -143,8 +143,6 @@ def raw_get(base, path, host=None):
     "/runs/tiny%5C..%5C..%5Cpyproject.toml",      # backslash traversal
     "/runs/%2F%2Fattacker%2Fshare",               # encoded slashes to an absolute path
     "/runs/tiny/%00manifest.json",                # NUL
-    "/%5C%5Cattacker.example%5Cshare%5Cx",        # same, through the app fallback
-    "/C:%5Cx",
 ])
 def test_paths_that_could_leave_the_folders_are_refused_before_touching_the_disk(served, path):
     base, _ = served
@@ -213,3 +211,17 @@ def test_observe_defaults_to_the_committed_build(monkeypatch):
     from pathlib import Path
 
     assert (Path(seen["app"]) / "index.html").is_file()
+
+
+@pytest.mark.parametrize("path", ["/run/base/entity/t%3AAshford", "/%5C%5Cattacker.example%5Cshare%5Cx", "/C:%5Cx"])
+def test_unsafe_looking_app_routes_get_the_app_without_touching_the_disk(served, path, monkeypatch):
+    """Entity ids contain colons; UNC-looking paths must not reach the file system: both get index.html."""
+    import pathlib
+
+    base, _ = served
+    touched = []
+    real = pathlib.Path.resolve
+    monkeypatch.setattr(pathlib.Path, "resolve", lambda self, *a, **k: touched.append(str(self)) or real(self, *a, **k))
+    status, body = raw_get(base, path)
+    assert status == 200 and b"Observatory" in body
+    assert not any("attacker" in t or t.startswith("C:\\x") for t in touched)

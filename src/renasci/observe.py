@@ -117,9 +117,9 @@ class Handler(BaseHTTPRequestHandler):
             if not target.is_file():
                 return self._send(HTTPStatus.NOT_FOUND, b"not found", "text/plain", head_only)
             return self._file(target, head_only)
+        # App routes can contain anything (entity ids like "t:Ashford"). A path that isn't a safe file
+        # path is never looked up on disk: it is an app route, so it gets index.html.
         rel = safe_relative(path.lstrip("/")) if path != "/" else None
-        if path != "/" and rel is None:
-            return self._send(HTTPStatus.FORBIDDEN, b"forbidden", "text/plain", head_only)
         target = self._inside(self.app, rel) if rel else None
         if target is None or not target.is_file():
             target = self.app / "index.html"
