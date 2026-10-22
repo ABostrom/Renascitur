@@ -330,7 +330,7 @@ S8–S11 each depend on S3, S4 and S7 (and S6 where beliefs are involved). Each 
 
 **M0: Foundation** (S1, S13 v0)
 - **Engine:** S1 in full. The toy ruleset includes matching and a shared resource, so that locality is actually tested.
-- **Observatory v0:** the SvelteKit shell; open a run folder; an event browser; the cause-chain explorer; run diff with the causal wave; launch run/replay via `renasci serve`. Benchmarks are reported by the CLI.
+- **Observatory v0:** the SvelteKit shell, served read-only by `renasci observe`; the runs list; an event browser; the cause-chain explorer; run diff with the causal wave. Launching runs from the Observatory (`renasci serve`) moved to M1. Benchmarks are reported by the CLI. Detail: `notes/specs/2026-10-22-s13-observatory.md`.
 - **Demo:** a toy run of a few hundred years. Add a ripple, replay from a checkpoint, and see the causal wave with zero unexplained divergences.
 - **Exit:** determinism, replay equivalence (many checkpoint positions), the locality tests, and a recorded benchmark baseline.
 
