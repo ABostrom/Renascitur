@@ -94,7 +94,8 @@ def analyse(baseline: dict, variant: dict, baseline_state: dict, variant_state: 
     a, b = _Run(baseline), _Run(variant)
 
     differing_pins = {p for p in set(a.pin_history) | set(b.pin_history) if a.pin_history.get(p) != b.pin_history.get(p)}
-    tainted_scopes = {k for k in sorted(set(a.seen) & set(b.seen)) if _differs(a.seen[k], b.seen[k])}
+    shared = sorted(set(a.seen) & set(b.seen), key=lambda k: (k[0], k[1] or ""))  # None: the unscoped row
+    tainted_scopes = {k for k in shared if _differs(a.seen[k], b.seen[k])}
     tainted_events: set[str] = set()
     explained_acts: set[str] = set()  # activations (or "a#scope") that exist in one run for an explained reason
 

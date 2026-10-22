@@ -157,6 +157,9 @@ class Engine:
                 continue
             if pin.kind == "existence" and pin.subject in self.director.born:
                 pass  # born during the run: met when its birth pin binds it, never cast up front
+            elif pin.kind == "existence" and self.store.exists(pin.subject):
+                self.director.status[pin.id] = "satisfied"  # the scenario already placed it
+                self.director.met[pin.id] = self.start
             elif pin.kind == "existence" and pin.subject.startswith(("v:", "t:")):
                 if cast:
                     self.cast(pin.payload.get("kind", "person"), pin.subject, pin.payload.get("fields", {}))

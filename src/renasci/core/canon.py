@@ -40,6 +40,8 @@ def plain(value):
 
 
 def canonical(value) -> str:
+    if value is None or type(value) in (str, int, bool):  # the common case, same text, less work
+        return json.dumps(value, ensure_ascii=False)
     return json.dumps(plain(value), sort_keys=True, separators=(",", ":"), ensure_ascii=False, allow_nan=False)
 
 

@@ -31,7 +31,16 @@ def _toy() -> World:
     return World("toy", toy.CAL, toy.new_engine, rulesets, frozenset({"people_per_village", "buggy"}))
 
 
-WORLDS: dict[str, Callable[[], World]] = {"toy": _toy}
+def _kin() -> World:
+    from renasci import kin
+
+    def rulesets(people_per_settlement=None, races=None, catalogue=None):
+        return [(kin.START, kin.ruleset(races, catalogue))]
+
+    return World("kin", kin.CAL, kin.new_engine, rulesets, frozenset({"people_per_settlement", "races", "catalogue"}))
+
+
+WORLDS: dict[str, Callable[[], World]] = {"toy": _toy, "kin": _kin}
 
 
 def get_world(name: str) -> World:
