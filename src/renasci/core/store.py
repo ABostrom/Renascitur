@@ -191,6 +191,8 @@ class Store:
 
     def get(self, entity: str, field: str, default=None):
         value = self._entity(entity).fields.get(field, default)
+        if value is None or type(value) in (str, int, bool):
+            return value  # immutable and already canonical: no copy needed (the hot path of every read)
         return _json_copy(value)
 
     def set(self, entity: str, field: str, value, date: Date, event: str, activation: str = "") -> None:

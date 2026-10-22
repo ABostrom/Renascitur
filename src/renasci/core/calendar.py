@@ -86,10 +86,11 @@ class Calendar:
             raise ValueError("month and season lengths must fill the same year")
         object.__setattr__(self, "_by_index", {a.index: a for a in self.ages})
         object.__setattr__(self, "_by_abbrev", {a.abbrev: a for a in self.ages})
+        object.__setattr__(self, "_days_per_year", sum(n for _, n in self.months))  # read on every date sum
 
     @property
     def days_per_year(self) -> int:
-        return sum(n for _, n in self.months)
+        return self._days_per_year
 
     # ------------------------------------------------------------ JSON (run manifests, the Observatory)
 
