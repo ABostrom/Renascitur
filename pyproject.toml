@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "The Renascitur History Engine: a deterministic world-history simulator."
 requires-python = ">=3.12,<3.13"
 dependencies = [
-    "numpy>=2.1",
+    "numpy>=2.5,<2.6",  # draws are part of the engine version; golden tests guard upgrades
 ]
 
 [project.scripts]
