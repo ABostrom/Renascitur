@@ -193,7 +193,14 @@ class Ctx:
         """
         pin = self._engine.director.guard_pin(entity, self.today)
         if pin is None:
-            return False
+            ripple = self._engine.protection(entity, self.today)
+            if ripple is None:
+                return False
+            self._reads[(entity, f"ripple:{ripple.id}")] = None
+            self._pin_causes.append(Cause("ripple", ripple.id))
+            self._guard_rows.append(self._engine.log_ripple(ripple, "guard", True, self.activation.id,
+                                                            entity=entity))
+            return True
         self._reads[(entity, f"pin:{pin.id}")] = None
         self._pin_causes.append(Cause("pin", pin.id))
         self._guard_rows.append(self._engine.director.log_guard(pin, entity, self.today, self.activation.id))
