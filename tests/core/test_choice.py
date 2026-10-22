@@ -117,6 +117,7 @@ class Duels(System):
 
 def make(seed=1):
     e = Engine(CAL, seed=seed, rulesets=[(Date(1, 1, 0), Ruleset("d", 1, (Duels(),)))])
+    e.hinge_margin = 1.0  # record every draw with stakes
     for p in ("t:world", "t:a", "t:b", "t:c"):
         e.cast("person", p, {})
     return e
@@ -221,6 +222,7 @@ class Roller(System):
 
 def roller_engine(**kw):
     e = Engine(CAL, seed=1, rulesets=[(Date(1, 1, 0), Ruleset("r", 1, (Roller(),)))], **kw)
+    e.hinge_margin = 10.0  # record every draw and race with stakes
     for p in ("t:a", "t:b", "t:c"):
         e.cast("person", p, {})
     return e
@@ -266,3 +268,22 @@ def test_hinges_from_a_failed_activation_are_discarded():
     with pytest.raises(RuntimeError):
         e.run(until=Date(1, 1, 0))
     assert e.hinges == []
+
+
+def test_only_close_calls_become_hinges():
+    class Many(System):
+        name, cadence = "toy.many", "monthly"
+
+        def run(self, ctx):
+            for i in range(50):
+                ctx.chance(0.5, "flip", owner=f"t:p{i}", stakes=1.0)
+
+    e = Engine(CAL, seed=1, rulesets=[(Date(1, 1, 0), Ruleset("m", 1, (Many(),)))])
+    e.run(until=Date(1, 1, 359))
+    assert e.hinge_margin == 0.05
+    assert 0 < len(e.hinges) < 600 * 0.2  # ~10% of 600 draws land within 0.05 of p=0.5
+    assert all(h["margin"] <= 0.05 for h in e.hinges)
+    e2 = Engine(CAL, seed=1, rulesets=[(Date(1, 1, 0), Ruleset("m", 1, (Many(),)))])
+    e2.hinge_margin = 1.0
+    e2.run(until=Date(1, 1, 359))
+    assert len(e2.hinges) == 600

@@ -10,7 +10,9 @@ anything else on that day. At a switch:
 
 from __future__ import annotations
 
+from renasci import __version__
 from renasci.core.calendar import Calendar, Date
+from renasci.core.canon import digest
 from renasci.core.context import Ctx, UndeclaredAccess
 from renasci.core.events import CauseIndex, Event, EventType, Registry, Source
 from renasci.core.ids import event_id
@@ -23,11 +25,13 @@ __all__ = ["Engine", "UndeclaredAccess"]
 
 SWITCH_PRIORITY = -(10**9)
 CAST = EventType("engine.cast", 1, roles={"subject": (1, 1)}, payload={"kind": "str"})
+CAST_COLUMN = EventType("engine.cast_column", 1, roles={}, payload={"column": "str"})
+CHECKPOINT_FORMAT = 1
 
 
 class Engine:
     def __init__(self, calendar: Calendar, seed: int, rulesets: list[tuple[Date, Ruleset]],
-                 strict: bool = True, reshuffles: tuple[Reshuffle, ...] = ()):
+                 strict: bool = True, reshuffles: tuple[Reshuffle, ...] = (), hinge_margin: float = 0.05):
         if not rulesets:
             raise ValueError("an engine needs at least one ruleset")
         dates = [d for d, _ in rulesets]
@@ -37,6 +41,7 @@ class Engine:
             calendar.check(d)
 
         self.calendar, self.strict = calendar, strict
+        self.seed, self.reshuffles = seed, tuple(reshuffles)
         self.rulesets = list(rulesets)
         self.start = dates[0]
         self.store = Store()
@@ -48,6 +53,7 @@ class Engine:
         self.events: list[Event] = []
         self.reads: list[dict] = []
         self.hinges: list[dict] = []  # close calls with stakes: the source data for latch points
+        self.hinge_margin = float(hinge_margin)  # a draw with stakes is a hinge only if it was this close
         self.odds_hooks: list = []  # (ctx, p, purpose, owner) -> (p, cause or None): ripples, director
         self.dropped: list[str] = []
         self.ruleset: Ruleset | None = None
@@ -55,6 +61,7 @@ class Engine:
         self._date: Date | None = None
 
         self._register(CAST)
+        self._register(CAST_COLUMN)
         for _, rs in rulesets:
             for t in rs.event_types():
                 self._register(t)
@@ -80,6 +87,16 @@ class Engine:
         self.store.create(kind, entity, fields, self.start, eid)
         return self.record(Event(eid, self.start, CAST.name, {"subject": (entity,)}, None, (),
                                  {"kind": kind}, Source("scenario", "cast")))
+
+    def cast_column(self, name: str, dtype: str, ids, values) -> Event:
+        """Create a numeric column (aggregate state) with starting values, before anything runs."""
+        if self._date is not None:
+            raise ValueError("casting happens before the run starts")
+        eid = event_id("engine", f"column:{name}", "cast", self.start, 0)
+        self.store.add_column(name, dtype)
+        self.store.write_column(name, ids, values, self.start, eid)
+        return self.record(Event(eid, self.start, CAST_COLUMN.name, {}, None, (), {"column": name},
+                                 Source("scenario", "cast")))
 
     # ------------------------------------------------------------ used by Ctx
 
@@ -124,7 +141,14 @@ class Engine:
 
     def run(self, until: Date) -> None:
         """Run every activation dated on or before `until`."""
-        while (nxt := self.scheduler.peek()) is not None and nxt.date <= until:
+        self._run(lambda d: d <= until)
+
+    def run_before(self, date: Date) -> None:
+        """Run every activation dated before `date`: the position a checkpoint at `date` is taken."""
+        self._run(lambda d: d < date)
+
+    def _run(self, due) -> None:
+        while (nxt := self.scheduler.peek()) is not None and due(nxt.date):
             activation = self.scheduler.pop()
             self._advance(activation.date)
             if activation.system == "engine":
@@ -173,3 +197,52 @@ class Engine:
         reads = ctx.recorded_reads()
         if reads:
             self.reads.append({"activation": activation.id, "reads": reads})
+
+    # ------------------------------------------------------------ checkpoints
+
+    def _recipe_header(self) -> dict:
+        return {"format": CHECKPOINT_FORMAT, "engine": __version__, "seed": self.seed,
+                "reshuffles": [r.to_json() for r in self.reshuffles], "hinge_margin": self.hinge_margin,
+                "rulesets": [[d.to_json(), rs.name, rs.version] for d, rs in self.rulesets]}
+
+    def _state(self) -> dict:
+        return {"store": self.store.to_json(), "scheduler": self.scheduler.to_json(),
+                "ordinals": self.ordinals.to_json(), "causes": self.causes.to_json(),
+                "ruleset_index": self.ruleset_index}
+
+    def state_hash(self) -> str:
+        """A hash of the world state (not of pending history)."""
+        return digest(self._state(), size=16)
+
+    def checkpoint(self) -> dict:
+        """The full state, as JSON, taken before the next activation runs.
+
+        Pending history must be written first (`cut`), so a checkpoint and its run folder agree.
+        """
+        if any(self.pending().values()):
+            raise ValueError("flush pending history to the run folder before checkpointing")
+        nxt = self.scheduler.peek()
+        header = self._recipe_header() | {"date": nxt.date.to_json() if nxt else None}
+        return {"header": header, "state": self._state()}
+
+    @classmethod
+    def restore(cls, checkpoint: dict, calendar: Calendar, rulesets: list[tuple[Date, Ruleset]],
+                seed: int, strict: bool = True, reshuffles: tuple[Reshuffle, ...] = (),
+                hinge_margin: float = 0.05) -> Engine:
+        """Rebuild an engine from a checkpoint and the recipe that produced it."""
+        engine = cls(calendar, seed, rulesets, strict=strict, reshuffles=reshuffles, hinge_margin=hinge_margin)
+        header = dict(checkpoint["header"])
+        header.pop("date")
+        expected = engine._recipe_header()
+        for key in expected:
+            if header.get(key) != expected[key]:
+                raise ValueError(f"checkpoint {key} is {header.get(key)!r}, but the recipe has "
+                                 f"{expected[key]!r}; engine or recipe changed, replay from scenario")
+        state = checkpoint["state"]
+        engine.store = Store.from_json(state["store"])
+        engine.scheduler = Scheduler.from_json(state["scheduler"])
+        engine.ordinals = OrdinalTable.from_json(state["ordinals"])
+        engine.causes = CauseIndex.from_json(state["causes"])
+        engine.ruleset_index = state["ruleset_index"]
+        engine.ruleset = rulesets[engine.ruleset_index][1] if engine.ruleset_index is not None else None
+        return engine
