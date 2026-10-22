@@ -1,0 +1,162 @@
+{
+ "calendar": {
+  "ages": [
+   {
+    "index": 1,
+    "abbrev": "1X",
+    "name": "Toy Age",
+    "last_year": 400
+   }
+  ],
+  "months": [
+   [
+    "Month 1",
+    30
+   ],
+   [
+    "Month 2",
+    30
+   ],
+   [
+    "Month 3",
+    30
+   ],
+   [
+    "Month 4",
+    30
+   ],
+   [
+    "Month 5",
+    30
+   ],
+   [
+    "Month 6",
+    30
+   ],
+   [
+    "Month 7",
+    30
+   ],
+   [
+    "Month 8",
+    30
+   ],
+   [
+    "Month 9",
+    30
+   ],
+   [
+    "Month 10",
+    30
+   ],
+   [
+    "Month 11",
+    30
+   ],
+   [
+    "Month 12",
+    30
+   ]
+  ],
+  "seasons": [
+   [
+    "Spring",
+    90
+   ],
+   [
+    "Summer",
+    90
+   ],
+   [
+    "Autumn",
+    90
+   ],
+   [
+    "Winter",
+    90
+   ]
+  ]
+ },
+ "vectors": [
+  {
+   "date": [
+    1,
+    1,
+    0
+   ],
+   "year": "1X 1",
+   "season": "1X 1 Spring",
+   "day": "1X 1 m1 d1"
+  },
+  {
+   "date": [
+    1,
+    37,
+    75
+   ],
+   "year": "1X 37",
+   "season": "1X 37 Spring",
+   "day": "1X 37 m3 d16"
+  },
+  {
+   "date": [
+    1,
+    37,
+    95
+   ],
+   "year": "1X 37",
+   "season": "1X 37 Summer",
+   "day": "1X 37 m4 d6"
+  },
+  {
+   "date": [
+    1,
+    120,
+    359
+   ],
+   "year": "1X 120",
+   "season": "1X 120 Winter",
+   "day": "1X 120 m12 d30"
+  },
+  {
+   "date": [
+    1,
+    400,
+    180
+   ],
+   "year": "1X 400",
+   "season": "1X 400 Autumn",
+   "day": "1X 400 m7 d1"
+  },
+  {
+   "date": [
+    1,
+    2,
+    30
+   ],
+   "year": "1X 2",
+   "season": "1X 2 Spring",
+   "day": "1X 2 m2 d1"
+  },
+  {
+   "date": [
+    1,
+    9,
+    269
+   ],
+   "year": "1X 9",
+   "season": "1X 9 Autumn",
+   "day": "1X 9 m9 d30"
+  },
+  {
+   "date": [
+    1,
+    9,
+    270
+   ],
+   "year": "1X 9",
+   "season": "1X 9 Winter",
+   "day": "1X 9 m10 d1"
+  }
+ ]
+}

@@ -91,6 +91,18 @@ class Calendar:
     def days_per_year(self) -> int:
         return sum(n for _, n in self.months)
 
+    # ------------------------------------------------------------ JSON (run manifests, the Observatory)
+
+    def to_json(self) -> dict:
+        return {"ages": [{"index": a.index, "abbrev": a.abbrev, "name": a.name, "last_year": a.last_year}
+                         for a in self.ages],
+                "months": [[n, d] for n, d in self.months], "seasons": [[n, d] for n, d in self.seasons]}
+
+    @classmethod
+    def from_json(cls, data: dict) -> "Calendar":
+        return cls(ages=tuple(Age(a["index"], a["abbrev"], a["name"], a["last_year"]) for a in data["ages"]),
+                   months=tuple((n, d) for n, d in data["months"]), seasons=tuple((n, d) for n, d in data["seasons"]))
+
     # ------------------------------------------------------------ validation
 
     def check(self, d: Date) -> Date:
