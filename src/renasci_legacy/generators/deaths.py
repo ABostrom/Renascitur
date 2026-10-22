@@ -1,11 +1,11 @@
 from __future__ import annotations
 import random
 from typing import Iterator
-from renasci.generators.base import CoreEventGenerator
-from renasci.events.person_events import DeathEvent
+from renasci_legacy.generators.base import CoreEventGenerator
+from renasci_legacy.events.person_events import DeathEvent
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from renasci.world import World
+    from renasci_legacy.world import World
 
 class DeathGenerator(CoreEventGenerator):
     def generate(self, world: World) -> Iterator[DeathEvent]:

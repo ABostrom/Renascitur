@@ -1,8 +1,8 @@
 from __future__ import annotations
-from renasci.events.base import Event
-from renasci.events.house_events import GrumblingEvent
-from renasci.generators.base import StatThresholdGenerator
-from renasci.house import House
+from renasci_legacy.events.base import Event
+from renasci_legacy.events.house_events import GrumblingEvent
+from renasci_legacy.generators.base import StatThresholdGenerator
+from renasci_legacy.house import House
 
 class GrumblingGenerator(StatThresholdGenerator):
     stat = "unrest"

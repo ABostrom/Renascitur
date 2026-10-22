@@ -4,3 +4,13 @@
 # history engine PoC outputs (regenerable)
 poc/out/
 __pycache__/
+
+# python / engine
+*.py[cod]
+.venv/
+*.egg-info/
+.pytest_cache/
+.hypothesis/
+build/
+dist/
+runs/

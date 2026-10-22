@@ -1,16 +1,16 @@
 from dataclasses import dataclass, field
 
-from renasci.context import WorldContext
-from renasci.events.base import Event, EventBus
-from renasci.events.person_events import SuccessionEvent, WidowEvent
-from renasci.generators.base import CoreEventGenerator, EventGenerator, StatThresholdGenerator
-from renasci.generators.births import BirthGenerator
-from renasci.generators.deaths import DeathGenerator
-from renasci.generators.marriages import MarriageGenerator
-from renasci.generators.stats import GrumblingGenerator
-from renasci.house import House
-from renasci.person import Person
-from renasci.stats import StatBlock
+from renasci_legacy.context import WorldContext
+from renasci_legacy.events.base import Event, EventBus
+from renasci_legacy.events.person_events import SuccessionEvent, WidowEvent
+from renasci_legacy.generators.base import CoreEventGenerator, EventGenerator, StatThresholdGenerator
+from renasci_legacy.generators.births import BirthGenerator
+from renasci_legacy.generators.deaths import DeathGenerator
+from renasci_legacy.generators.marriages import MarriageGenerator
+from renasci_legacy.generators.stats import GrumblingGenerator
+from renasci_legacy.house import House
+from renasci_legacy.person import Person
+from renasci_legacy.stats import StatBlock
 
 
 DEFAULT_WORLD_STATS = {

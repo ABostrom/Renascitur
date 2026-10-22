@@ -2,18 +2,18 @@ from __future__ import annotations
 from dataclasses import dataclass
 import random
 
-from renasci.events.base import Event
-from renasci.events.house_events import HouseChangeEvent
-from renasci.family import Family, Marriage, determine_dominant_house, find_relationship
+from renasci_legacy.events.base import Event
+from renasci_legacy.events.house_events import HouseChangeEvent
+from renasci_legacy.family import Family, Marriage, determine_dominant_house, find_relationship
 
 from typing import TYPE_CHECKING
 
-from renasci.person import Life
-from renasci.utils.helpers import create_person
+from renasci_legacy.person import Life
+from renasci_legacy.utils.helpers import create_person
 if TYPE_CHECKING:
-    from renasci.person import Person
-    from renasci.house import House
-    from renasci.world import World
+    from renasci_legacy.person import Person
+    from renasci_legacy.house import House
+    from renasci_legacy.world import World
 
 
 @dataclass

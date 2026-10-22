@@ -1,11 +1,11 @@
 from __future__ import annotations
 from dataclasses import dataclass, field
-from renasci.stats import StatBlock
+from renasci_legacy.stats import StatBlock
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from renasci.person import Person
-    from renasci.world import World
+    from renasci_legacy.person import Person
+    from renasci_legacy.world import World
 
 
 DEFAULT_HOUSE_STATS = {

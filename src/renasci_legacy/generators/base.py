@@ -1,10 +1,10 @@
 from __future__ import annotations
 from typing import Iterator, Literal
-from renasci.events.base import Event
+from renasci_legacy.events.base import Event
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from renasci.world import World
+    from renasci_legacy.world import World
 
 class EventGenerator():
     def generate(self, world: World) -> Iterator[Event]:

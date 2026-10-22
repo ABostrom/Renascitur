@@ -2,17 +2,17 @@ from __future__ import annotations
 from dataclasses import dataclass
 import random
 import uuid
-from renasci.events.base import Event
-from renasci.family import Marriage
-from renasci.house import House
-from renasci.person import Life, Person
-from renasci.race import Race
-from renasci.utils.helpers import create_person, create_house
+from renasci_legacy.events.base import Event
+from renasci_legacy.family import Marriage
+from renasci_legacy.house import House
+from renasci_legacy.person import Life, Person
+from renasci_legacy.race import Race
+from renasci_legacy.utils.helpers import create_person, create_house
 
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from renasci.world import World
+    from renasci_legacy.world import World
 
 @dataclass
 class HouseChangeEvent(Event):

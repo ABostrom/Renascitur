@@ -1,14 +1,14 @@
 from __future__ import annotations
 import random
 import uuid
-from renasci.family import Family
-from renasci.house import House
-from renasci.person import Gender, Life, Person, Sexuality
-from renasci.race import Race
+from renasci_legacy.family import Family
+from renasci_legacy.house import House
+from renasci_legacy.person import Gender, Life, Person, Sexuality
+from renasci_legacy.race import Race
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from renasci.world import World
+    from renasci_legacy.world import World
 
 
 def create_person(world : World, race: Race, life: Life, house: House | None = None, first_name: str | None = None, gender: Gender | None = None, is_mainline: bool = False, is_head: bool = False, sexuality: Sexuality | None = None, family : Family | None = None) -> Person:

@@ -1,0 +1,29 @@
+[project]
+name = "renasci"
+version = "0.1.0"
+description = "The Renascitur History Engine: a deterministic world-history simulator."
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "numpy>=2.1",
+    "pyarrow>=17",
+]
+
+[project.scripts]
+renasci = "renasci.cli:main"
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+    "hypothesis>=6.100",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/renasci", "src/renasci_legacy"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

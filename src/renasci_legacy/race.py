@@ -3,7 +3,7 @@ from dataclasses import dataclass, field
 import random
 from typing import Literal
 
-from renasci.orientation import Gender
+from renasci_legacy.orientation import Gender
 
 
 @dataclass

@@ -2,13 +2,13 @@ from __future__ import annotations
 import random
 from itertools import combinations
 from typing import Iterator
-from renasci.generators.base import CoreEventGenerator
-from renasci.events.person_events import MarriageEvent
-from renasci.family import Marriage, determine_dominant_house
-from renasci.person import Person
+from renasci_legacy.generators.base import CoreEventGenerator
+from renasci_legacy.events.person_events import MarriageEvent
+from renasci_legacy.family import Marriage, determine_dominant_house
+from renasci_legacy.person import Person
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from renasci.world import World
+    from renasci_legacy.world import World
 
 
 
