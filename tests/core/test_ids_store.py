@@ -208,3 +208,107 @@ def test_columns_serialise_as_plain_json_lists():
     s.write_column("grain", ["v1"], [np.float64(2.5)], D, "x1")
     col = s.to_json()["columns"]["grain"]
     assert col == {"dtype": "float64", "ids": ["v1"], "data": [2.5]}
+
+
+# ---------------------------------------------------------------- review fixes
+
+
+@pytest.mark.parametrize(
+    "ids, values",
+    [(["a"], [float("nan")]), (["a"], [float("inf")]), (["b"], [[1.0, 2.0]]), (["c"], ["x"])],
+)
+def test_failed_column_write_changes_nothing(ids, values):
+    s = Store()
+    s.add_column("pop", "float64")
+    with pytest.raises((ValueError, TypeError)):
+        s.write_column("pop", ids, values, D, "x1")
+    assert s.to_json()["columns"]["pop"] == {"dtype": "float64", "ids": [], "data": []}
+    assert s.bulk_deltas == []
+
+
+@pytest.mark.parametrize("dtype", ["object", "U8", "complex128"])
+def test_only_numeric_column_dtypes(dtype):
+    with pytest.raises(ValueError):
+        Store().add_column("c", dtype)
+
+
+def test_lossy_int_column_writes_are_rejected():
+    s = Store()
+    s.add_column("n", "int64")
+    with pytest.raises(ValueError):
+        s.write_column("n", ["a"], [1.7], D, "x1")
+    s.write_column("n", ["a"], [2.0], D, "x1")
+    assert s.read_column("n", ["a"]).tolist() == [2]
+
+
+def test_negative_zero_is_normalised_on_write():
+    s = Store()
+    s.add_column("g", "float64")
+    s.write_column("g", ["a"], [-0.0], D, "x1")
+    assert not np.signbit(s.read_column("g", ["a"])[0])
+
+
+def test_status_is_a_reserved_field_name():
+    s = Store()
+    with pytest.raises(ValueError):
+        s.create("person", "e1", {"status": "noble"}, D, "x1")
+    s.create("person", "e1", {}, D, "x1")
+    with pytest.raises(ValueError):
+        s.set("e1", "status", "noble", D, "x1")
+
+
+def test_snapshot_is_detached_from_the_store():
+    s = make_store()
+    snap = s.to_json()
+    s.set("e1", "name", "Changed", D, "x2")
+    assert snap["entities"][0]["fields"]["name"] == "Ada"
+    snap["entities"][0]["fields"]["name"] = "Hacked"
+    assert s.get("e1", "name") == "Changed"
+
+
+@pytest.mark.parametrize(
+    "call",
+    [
+        lambda s: s.set("e1", 3, "v", D, "x1"),
+        lambda s: s.set("e1", "", "v", D, "x1"),
+        lambda s: s.set("e1", "k", "v", (4, 1, 0), "x1"),
+        lambda s: s.create(3, "e9", {}, D, "x1"),
+        lambda s: s.create("person", "e9", {}, "4A 1", "x1"),
+    ],
+)
+def test_bad_write_arguments_fail_immediately(call):
+    with pytest.raises((TypeError, ValueError)):
+        call(make_store())
+
+
+@pytest.mark.parametrize(
+    "call",
+    [
+        lambda: event_id("s", "e1", "p", D, 1.0),
+        lambda: event_id("s", "e1", "p", D, True),
+        lambda: event_id("s", "e1", "p", D, -1),
+        lambda: event_id("s", None, "p", D, 0),
+        lambda: event_id("s", "e1", "p", (4, 37, 10), 0),
+        lambda: entity_id("x1234", "child", 1.0),
+        lambda: entity_id("e1234", "child", 0),
+        lambda: entity_id("x1234", "", 0),
+    ],
+)
+def test_id_inputs_are_strict(call):
+    with pytest.raises((TypeError, ValueError)):
+        call()
+
+
+def test_bulk_delta_records_its_activation():
+    s = Store()
+    s.add_column("g", "float64")
+    s.write_column("g", ["a"], [1.0], D, "x1", activation="a1")
+    assert s.bulk_deltas[-1].to_json()["activation"] == "a1"
+
+
+def test_building_a_large_column_in_one_write():
+    s = Store()
+    s.add_column("g", "float64")
+    ids = [f"p{i:05d}" for i in range(20000)][::-1]
+    s.write_column("g", ids, [float(i) for i in range(20000)], D, "x1")
+    assert s.read_column("g", ["p00000", "p19999"]).tolist() == [19999.0, 0.0]
