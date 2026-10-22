@@ -71,8 +71,11 @@ class Ctx:
             raise ValueError(f"{self.system.name} wrote {name!r} before emitting an event to explain it")
         return self._event
 
-    def _note(self, key: tuple[str, str]) -> None:
-        (self._reads if self._scope is None else self._scoped[self._scope])[key] = None
+    def _note(self, key: tuple[str, str], value) -> None:
+        """Record a read and a digest of the value seen (the first time, i.e. before own writes)."""
+        target = self._reads if self._scope is None else self._scoped[self._scope]
+        if key not in target:
+            target[key] = digest(value)
 
     @contextmanager
     def scope(self, key: str):
@@ -88,20 +91,24 @@ class Ctx:
         self._scope = key
         self._scoped.setdefault(key, {})
         self._events.setdefault(key, [])
+        self._event, self._pin_causes, self._guard_rows = None, [], []  # nothing carries across scopes
         try:
             yield
         finally:
             self._scope = None
+            self._event, self._pin_causes, self._guard_rows = None, [], []
 
     def read_rows(self) -> list[dict]:
-        """One row per scope (None = unscoped): what was read, and which events it informed."""
+        """One row per scope (None = unscoped): what was read (with a digest of the value seen),
+        and which events it informed."""
         rows = []
         if self._reads or self._events[None]:
             rows.append({"activation": self.activation.id, "scope": None,
-                         "reads": [list(k) for k in sorted(self._reads)], "events": list(self._events[None])})
+                         "reads": [[*k, v] for k, v in sorted(self._reads.items())], "events": list(self._events[None])})
         for key in sorted(self._scoped):
             rows.append({"activation": self.activation.id, "scope": key,
-                         "reads": [list(k) for k in sorted(self._scoped[key])], "events": list(self._events[key])})
+                         "reads": [[*k, v] for k, v in sorted(self._scoped[key].items())],
+                         "events": list(self._events[key])})
         return rows
 
     def recorded_reads(self) -> list[list[str]]:
@@ -115,38 +122,43 @@ class Ctx:
 
     def get(self, entity: str, field: str, default=None):
         self._may_read(field)
-        self._note((entity, field))
-        return self._engine.store.get(entity, field, default)
+        value = self._engine.store.get(entity, field, default)
+        self._note((entity, field), value)
+        return value
 
     def status(self, entity: str) -> str:
         self._may_read("status")
-        self._note((entity, "status"))
-        return self._engine.store.status(entity)
+        value = self._engine.store.status(entity)
+        self._note((entity, "status"), value)
+        return value
 
     def exists(self, entity: str) -> bool:
         """Whether `entity` exists. Recorded as a read of its status (creation writes status)."""
-        self._note((entity, "status"))
-        return self._engine.store.exists(entity)
+        store = self._engine.store
+        self._note((entity, "status"), store.status(entity) if store.exists(entity) else None)
+        return store.exists(entity)
 
     def kind(self, entity: str) -> str:
-        self._note((entity, "status"))
+        self._note((entity, "status"), self._engine.store.status(entity))
         return self._engine.store.kind(entity)
 
     def ids(self, kind: str, status: str | None = None) -> list[str]:
         self._may_read(f"ids:{kind}")
         store = self._engine.store
-        self._note((f"${kind}", "ids"))
+        everyone = store.ids(kind)
+        self._note((f"${kind}", "ids"), everyone)
         if status is not None:
-            for entity in store.ids(kind):  # filtering looked at every status
-                self._note((entity, "status"))
+            for entity in everyone:  # filtering looked at every status
+                self._note((entity, "status"), store.status(entity))
         return store.ids(kind, status)
 
     def read_column(self, name: str, ids):
         self._may_read(name)
         ids = list(ids)
-        for i in ids:
-            self._note((i, name))
-        return self._engine.store.read_column(name, ids)
+        values = self._engine.store.read_column(name, ids)
+        for i, v in zip(ids, values):
+            self._note((i, name), v)
+        return values
 
     # ------------------------------------------------------------ writes
 
@@ -274,19 +286,21 @@ class Ctx:
     def guarded(self, entity: str) -> bool:
         """Ask before a fatal outcome: True means canon needs `entity` alive, so write a near miss.
 
-        Recorded as a read of `(entity, "pin:<id>")`; the next event emitted here is caused by the pin.
+        Always recorded as a read of `(entity, "guard")` whose value names the protecting pin or
+        ripple (or none), so a run with a protect ripple and a run without one differ in that value.
+        The next event emitted here is caused by the protector.
         """
         pin = self._engine.director.guard_pin(entity, self.today)
         if pin is None:
             ripple = self._engine.protection(entity, self.today)
+            self._note((entity, "guard"), f"ripple:{ripple.id}" if ripple else None)
             if ripple is None:
                 return False
-            self._note((entity, f"ripple:{ripple.id}"))
             self._pin_causes.append(Cause("ripple", ripple.id))
             self._guard_rows.append(self._engine.log_ripple(ripple, "guard", True, self.activation.id,
                                                             entity=entity))
             return True
-        self._note((entity, f"pin:{pin.id}"))
+        self._note((entity, "guard"), f"pin:{pin.id}")
         self._pin_causes.append(Cause("pin", pin.id))
         self._guard_rows.append(self._engine.director.log_guard(pin, entity, self.today, self.activation.id))
         return True

@@ -142,7 +142,9 @@ def test_a_guarded_near_miss_is_caused_by_the_pin_and_recorded_as_a_read():
     e.run(until=Date(1, 5, 0))
     near = next(ev for ev in e.events if ev.type == "mini.near_miss")
     assert Cause("pin", "p_ada") in near.causes
-    assert any(["t:Ada", "pin:p_ada"] in r["reads"] for r in e.reads)
+    from renasci.core.canon import digest
+
+    assert any(["t:Ada", "guard", digest("pin:p_ada")] in r["reads"] for r in e.reads)
     assert e.director.strain[0]["event"] == near.id
 
 

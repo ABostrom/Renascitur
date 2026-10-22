@@ -106,3 +106,49 @@ def test_analysis_from_run_folders_matches_memory(baseline, doomed, tmp_path):
     from_disk = analyse(folders[0], folders[1], baseline[1], variant[1], ripples=["r1"])
     in_memory = analyse(baseline[0], variant[0], baseline[1], variant[1], ripples=["r1"])
     assert from_disk == in_memory
+
+
+def test_a_within_valley_coupling_bug_is_caught():
+    """Per-valley module-global grief: deaths it adds in scopes whose inputs still match are unexplained."""
+    base = run(buggy="life")
+    person, died = next((ev["roles"]["deceased"][0], ev["date"]) for ev in base[0]["events"]
+                        if ev["type"] == "toy.death" and ev["place"] in VALLEYS["t:North"] and ev["date"][1] >= 2)
+    ripple = Ripple("r1", "protect", Date(1, died[1] - 1, 0), person, {"until": [1, YEARS, 359]})
+    variant = run(buggy="life", ripples=[ripple])
+    report = analyse(base[0], variant[0], base[1], variant[1], ripples=["r1"])
+    assert report["unexplained_events"] > 0, report
+
+
+def test_shared_granary_does_not_explain_by_itself(baseline, doomed):
+    """Value-aware: a granary write that is equal in both runs taints nothing."""
+    person, died = doomed
+    ripple = Ripple("r1", "protect", Date(1, died[1] - 1, 0), person, {"until": [1, YEARS, 359]})
+    variant = run(ripples=[ripple])
+    report = analyse(baseline[0], variant[0], baseline[1], variant[1], ripples=["r1"])
+    assert report["tainted_scopes"] > 0
+    assert not set(report["tainted_scope_names"]) & SOUTH  # equal granary writes in the South taint nothing
+
+
+def test_toy_pins_are_honoured_and_ripples_stay_explained():
+    """The spec's toy pins: Ada exists (cast by canon), and a fire happens in Brook in years 8-10."""
+    from renasci.core.pins import Pin
+
+    pins = [Pin("p_ada", "existence", subject="t:Ada", window=(Date(1, 1, 0), Date(1, YEARS, 0)),
+                payload={"kind": "person", "fields": {"sex": "f", "born": -20, "village": "t:Ashford", "spouse": None}}),
+            Pin("p_fire", "event", window=(Date(1, 8, 0), Date(1, 10, 0)),
+                payload={"type": "toy.fire", "roles": {"village": ["t:Brook"]}})]
+    base_engine = new_engine(people_per_village=16, pins=pins)
+    base_engine.run(until=END)
+    base = (base_engine.pending(), base_engine.store.to_json())
+    assert base_engine.director.status == {"p_ada": "satisfied", "p_fire": "forced"}
+    assert [s["action"] for s in base[0]["strain"]] == ["force"]
+
+    target = next(ev["roles"]["deceased"][0] for ev in base[0]["events"]
+                  if ev["type"] == "toy.death" and ev["place"] == "t:Cairn" and ev["date"][1] >= 3)
+    variant_engine = new_engine(people_per_village=16, pins=pins,
+                                ripples=[Ripple("r1", "doom", Date(1, 2, 0), target)])
+    variant_engine.run(until=END)
+    variant = (variant_engine.pending(), variant_engine.store.to_json())
+    report = analyse(base[0], variant[0], base[1], variant[1], ripples=["r1"])
+    assert report["divergent_events"] > 0
+    assert report["unexplained_events"] == 0 and report["unexplained_entities"] == 0, report["unexplained"]

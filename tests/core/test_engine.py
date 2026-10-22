@@ -139,7 +139,7 @@ def test_actual_reads_are_recorded_per_activation():
     e.run(until=Date(1, 1, 0))
     rows = e.reads
     assert rows and all(set(r) == {"activation", "scope", "reads", "events"} for r in rows)
-    counter = next(r for r in rows if ["t:world", "count"] in r["reads"])
+    counter = next(r for r in rows if ["t:world", "count"] in [k[:2] for k in r["reads"]])
     assert counter["activation"].startswith("a")
 
 
@@ -260,7 +260,7 @@ def test_listing_ids_records_every_status_it_looked_at():
     e.cast("person", "t:a", {})
     e.cast("person", "t:b", {})
     e.run(until=Date(1, 1, 0))
-    reads = e.reads[0]["reads"]
+    reads = [k[:2] for k in e.reads[0]["reads"]]
     assert ["t:a", "status"] in reads and ["t:b", "status"] in reads and ["$person", "ids"] in reads
 
 
@@ -347,7 +347,7 @@ def test_exists_and_kind_are_recorded_reads():
 
     e = make([(Date(1, 1, 0), Ruleset("p", 1, (Prober(),)))])
     e.run(until=Date(1, 1, 0))
-    reads = e.reads[0]["reads"]
+    reads = [k[:2] for k in e.reads[0]["reads"]]
     assert ["t:world", "status"] in reads and ["t:nowhere", "status"] in reads
 
 
@@ -382,10 +382,14 @@ def test_reads_are_recorded_per_scope_with_the_events_they_informed():
     e.cast("place", "t:b", {"count": 0})
     e.run(until=Date(1, 1, 0))
     rows = {r["scope"]: r for r in e.reads}
-    assert rows[None]["reads"] == [["t:world", "count"]] and rows[None]["events"] == []
+    keys = lambda row: [k[:2] for k in row["reads"]]  # noqa: E731
+    assert keys(rows[None]) == [["t:world", "count"]] and rows[None]["events"] == []
     a_tick = next(ev.id for ev in e.events if ev.type == "toy.tick" and ev.roles["subject"] == ("t:a",))
-    assert rows["t:a"]["reads"] == [["t:a", "count"]] and rows["t:a"]["events"] == [a_tick]
-    assert rows["t:b"]["reads"] == [["t:b", "count"]]
+    assert keys(rows["t:a"]) == [["t:a", "count"]] and rows["t:a"]["events"] == [a_tick]
+    assert keys(rows["t:b"]) == [["t:b", "count"]]
+    from renasci.core.canon import digest
+
+    assert rows["t:a"]["reads"][0][2] == digest(0)  # the value seen is recorded too
 
 
 def test_scopes_do_not_nest():

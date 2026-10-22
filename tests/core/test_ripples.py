@@ -190,7 +190,7 @@ def test_pin_status_changes_are_recorded_and_forcers_read_them():
     e.apply_pins([Pin("p", "event", window=(Date(1, 3, 0), Date(1, 6, 0)), payload={"type": "mini.comet"})])
     e.run(until=Date(1, 8, 0))
     forced = next(ev for ev in e.events if ev.type == "mini.comet")
-    assert any(["pin:p", "status"] in r["reads"] for r in e.reads)
+    assert any(["pin:p", "status"] in [k[:2] for k in r["reads"]] for r in e.reads)
     rows = e.pending()["pins"]
     assert {"pin": "p", "status": "forced", "event": forced.id, "date": [1, 6, 0]} in rows
 

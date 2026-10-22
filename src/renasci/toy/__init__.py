@@ -204,6 +204,34 @@ class BuggyMigration(Migration):
                             ctx.set(p, "village", dest)
 
 
+class _ValleyDeaths:
+    count: dict = {}
+
+
+class BuggyLife(Life):
+    """A second negative control: deaths in a valley raise everyone's risk there through a module global.
+
+    The tally is never read through the engine, so no recorded read explains the extra deaths.
+    """
+
+    def run(self, ctx):
+        for v in VILLAGES:
+            with ctx.scope(v):
+                famine = ctx.get(VALLEY_OF[v], "famine")
+                grief = _ValleyDeaths.count.get(VALLEY_OF[v], 0) * 0.02  # the bug
+                for p in ctx.get(v, "residents"):
+                    age = _age(ctx, p)
+                    hazard = 0.0008 + grief + (0.004 if age < 2 else 0) + (0.006 if age > 55 else 0) + (0.012 if age > 70 else 0)
+                    hazard += 0.01 if famine else 0
+                    if ctx.chance(min(hazard, 1.0), "death", owner=p, stakes=0.6, roles={"person": [p]}):
+                        if ctx.guarded(p):
+                            ctx.emit("toy.near_miss", {"survivor": (p,)}, purpose="near_miss", actor=p, place=v,
+                                     payload={"cause": "illness"})
+                        else:
+                            _die(ctx, p, v, "illness")
+                            _ValleyDeaths.count[VALLEY_OF[v]] = _ValleyDeaths.count.get(VALLEY_OF[v], 0) + 1
+
+
 class Illness(Disguise):
     """doom, disguised: a sudden illness."""
 
@@ -240,15 +268,19 @@ class FireForcer(Forcer):
         return True
 
 
-def ruleset(buggy: bool = False) -> Ruleset:
-    migration = BuggyMigration() if buggy else Migration()
-    return Ruleset("toy", 1, (Life(), Marriage(), Births(), Granary(), migration),
+def ruleset(buggy: bool | str = False) -> Ruleset:
+    """The toy ruleset. buggy= plants a coupling bug for negative controls: True or "migration"
+    (a world-wide counter), or "life" (a per-valley module global)."""
+    migration = BuggyMigration() if buggy in (True, "migration") else Migration()
+    life = BuggyLife() if buggy == "life" else Life()
+    return Ruleset("toy", 1, (life, Marriage(), Births(), Granary(), migration),
                    forcers=(FireForcer(),), disguises=(Illness(), FireDisguise()))
 
 
-def new_engine(seed: int = 1234, ripples=(), pins=(), buggy: bool = False, people_per_village: int = 24) -> Engine:
+def new_engine(seed: int = 1234, ripples=(), pins=(), buggy: bool | str = False, people_per_village: int = 100) -> Engine:
     """A fresh toy world at 1X 1, before anything runs."""
     _Counter.n = 0
+    _ValleyDeaths.count = {}
     e = Engine(CAL, seed=seed, rulesets=[(START, ruleset(buggy))])
     e.cast_column("stock", "float64", list(VALLEYS), [60.0] * len(VALLEYS))
     for valley in VALLEYS:

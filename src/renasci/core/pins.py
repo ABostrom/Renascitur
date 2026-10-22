@@ -219,7 +219,7 @@ class Director:
         forced, ctx = False, None
         if forcer is not None:
             ctx = ctx_factory(forcer, pin)
-            ctx._note((f"pin:{pin.id}", "status"))  # forcing depends on the pin being unmet
+            ctx._note((f"pin:{pin.id}", "status"), self.status.get(pin.id))  # forcing depends on it being unmet
             self._forcing = pin.id
             try:
                 forced = bool(forcer.force(ctx, pin)) and self.status.get(pin.id) == "forced"

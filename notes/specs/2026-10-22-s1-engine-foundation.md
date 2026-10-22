@@ -398,26 +398,29 @@ CLI commands:
 
 ### 3.15 Divergence analysis (part of #51)
 
-This ports the PoC's taint tracking.
+As built (r4). Earlier drafts propagated taint along recorded reads; review showed that version was
+timeless and value-blind, so a whole valley would look explained and real coupling bugs passed.
 
-- **Seeds:** the ripple events and the entities they touch.
-- **Propagation runs in both runs A and B,** in emission order. Events that exist only in A (such as the
-  death the ripple prevented) need A-side taint. An event or activation is tainted if any of these hold:
-  - a cause is tainted
-  - a participant is tainted *as of its date*
-  - one of its **recorded actual reads** (§3.6) hit an `(entity, field)` or a component row whose
-    latest write before the read was tainted
-
-  The entities and rows a tainted activation writes become tainted from that date on.
-- **State comparison:** the final per-entity canonical state is compared as well. An entity whose state
-  differs but is untainted is *unexplained*, even if all its events match.
-- **Comparison:** events present in only one run, or with the same id but a different canonical
-  form, are *divergent*. Divergent and untainted means *unexplained*.
-- **Report:**
-  - the counts
-  - the first 20 unexplained events with their keys
-  - the causal wave (the share of events divergent per place per year), which is written to
-    `runs/<b>/analysis/wave.json` for the Observatory
+- **What is recorded:** for every activation, and every `ctx.scope(key)` inside it (one village, one
+  valley), each field read *and a digest of the value seen*, plus the events emitted there.
+  `ctx.guarded(entity)` always records a `(entity, "guard")` read whose value names the protecting
+  pin or ripple, or none. An ordered `activations` table lists every activation run.
+- **A scope is tainted** when a read made in both runs saw different values. Deterministic code
+  diverges first at a shared read whose value differs, so reads made in only one run are ignored:
+  they follow a decision that already differed.
+- **An event is explained** if its scope (or its activation's unscoped reads) is tainted, its source is
+  a ripple, or a cause is tainted: a tainted event, an activation or scope that is tainted or exists in
+  only one run for a tainted reason, a ripple, or a pin whose status history differs.
+- **A final difference** in an entity's field or a column cell is explained if the event that last
+  wrote it, in either run, is tainted.
+- **Unexplained** means the code depended on something it did not read through the engine (a module
+  global, `hash()`, a shared counter). The report lists the first unexplained items, which point at
+  the root coupling, and the causal wave (divergent events per place per year).
+- **Limitation:** the scope is the unit of explanation. A coupling *inside* a scope whose inputs
+  already differ is indistinguishable from a legitimate consequence. Use scopes as fine as decisions.
+- **Proven by the tests:** a protect ripple and a doom ripple give zero unexplained divergence and an
+  untouched other valley. Two planted bugs (a world-wide counter and a per-valley module global) are
+  each flagged at their first hidden coupling.
 
 ### 3.16 Toy ruleset (#51)
 
