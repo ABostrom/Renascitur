@@ -22,6 +22,9 @@ from __future__ import annotations
 
 from renasci.core.canon import canonical
 
+# Unexplained events described in full (roots first). Counts and the divergent id lists are never cut.
+DETAIL_LIMIT = 1000
+
 
 class _Run:
     """One run's history, indexed for the comparison."""
@@ -29,6 +32,8 @@ class _Run:
     def __init__(self, history: dict):
         # `scope` says where an event was emitted (metadata added in #54); it is not part of what happened.
         self.events = {e["id"]: {k: v for k, v in e.items() if k != "scope"} for e in history["events"]}
+        # Where an event happened, for the wave: its place, else the scope that decided it.
+        self.where = {e["id"]: e.get("place") or e.get("scope") for e in history["events"]}
         self.order = [a["activation"] for a in history.get("activations", [])]
         self.activations = {a["activation"]: a for a in history.get("activations", [])}
         self.scope_of: dict[str, tuple[str, str | None]] = {}
@@ -61,8 +66,9 @@ def _differs(seen_a: dict, seen_b: dict) -> bool:
 def analyse(baseline: dict, variant: dict, baseline_state: dict, variant_state: dict, ripples=()) -> dict:
     """Compare two runs (history tables and final store snapshots) and explain their differences.
 
-    `ripples` are the ripple ids that separate the runs. Returns counts, the unexplained items, and
-    the causal wave (divergent events per place per year).
+    `ripples` are the ripple ids that separate the runs. Returns counts, the divergent event ids per
+    side, every unexplained item with the side it is on ("baseline", "variant" or "both"), and the
+    causal wave (divergent, unexplained and total events per age-year per place).
     """
     ripples = set(ripples)
     a, b = _Run(baseline), _Run(variant)
@@ -114,6 +120,9 @@ def analyse(baseline: dict, variant: dict, baseline_state: dict, variant_state: 
                        if i not in ev_a or i not in ev_b or canonical(ev_a[i]) != canonical(ev_b[i]))
     unexplained_events = [i for i in divergent if i not in tainted_events]
 
+    def side(i, in_a, in_b) -> str:
+        return "both" if i in in_a and i in in_b else "baseline" if i in in_a else "variant"
+
     def explained_write(key) -> bool:
         return a.writer.get(key) in tainted_events or b.writer.get(key) in tainted_events
 
@@ -138,16 +147,25 @@ def analyse(baseline: dict, variant: dict, baseline_state: dict, variant_state: 
     divergent_cells = sorted(k for k in set(ca) | set(cb) if ca.get(k) != cb.get(k))
     unexplained_cells = [list(k) for k in divergent_cells if not explained_write(k)]
 
-    wave: dict[tuple[int, str], list[int]] = {}
-    div = set(divergent)
+    wave: dict[tuple[int, int, str], list[int]] = {}
+    div, unexpl = set(divergent), set(unexplained_events)
     for i in sorted(set(ev_a) | set(ev_b)):
         e = ev_b.get(i) or ev_a[i]
-        cell = wave.setdefault((e["date"][1], e["place"] or ""), [0, 0])
-        cell[1] += 1
+        cell = wave.setdefault((e["date"][0], e["date"][1], b.where.get(i) or a.where.get(i) or ""), [0, 0, 0, 0])
         cell[0] += i in div
+        cell[1] += i in unexpl
+        cell[2] += 1
+        cell[3] += i in div and i not in ev_b
+
+    def is_root(i):
+        e = ev_b.get(i) or ev_a[i]
+        return not any(k == "event" and r in unexpl for k, r in e["causes"])
+
+    detailed = sorted(unexplained_events, key=lambda i: not is_root(i))[:DETAIL_LIMIT]
 
     def describe(i):
-        return {k: (ev_b.get(i) or ev_a[i])[k] for k in ("id", "date", "type", "roles", "activation")}
+        return {**{k: (ev_b.get(i) or ev_a[i])[k] for k in ("id", "date", "type", "place", "roles", "causes", "activation")},
+                "side": side(i, ev_a, ev_b)}
 
     return {
         "events": len(set(ev_a) | set(ev_b)),
@@ -159,7 +177,13 @@ def analyse(baseline: dict, variant: dict, baseline_state: dict, variant_state: 
         "unexplained_cells": len(unexplained_cells),
         "tainted_scopes": len(tainted_scopes),
         "tainted_scope_names": sorted({s for _, s in tainted_scopes if s is not None}),
-        "unexplained": {"events": [describe(i) for i in unexplained_events[:20]],
-                        "entities": unexplained_entities[:20], "cells": unexplained_cells[:20]},
-        "wave": [{"year": y, "place": p or None, "divergent": d, "total": n} for (y, p), (d, n) in sorted(wave.items())],
+        "divergent": {"only_baseline": [i for i in divergent if i not in ev_b],
+                      "only_variant": [i for i in divergent if i not in ev_a],
+                      "changed": [i for i in divergent if i in ev_a and i in ev_b]},
+        "unexplained": {"events": [describe(i) for i in detailed],
+                        "entities": [{"id": i, "side": side(i, ents_a, ents_b)} for i in unexplained_entities],
+                        "cells": [{"id": i, "column": c, "side": side((i, c), ca, cb)} for i, c in unexplained_cells]},
+        "wave": [{"age": g, "year": y, "place": p or None, "divergent": d, "unexplained": u, "total": n,
+                  "only_baseline": ob}
+                 for (g, y, p), (d, u, n, ob) in sorted(wave.items())],
     }

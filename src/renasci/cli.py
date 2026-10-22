@@ -124,9 +124,9 @@ def cmd_diff(args) -> int:
     a, sa, ra = _load(a_path)
     b, sb, rb = _load(b_path)
     ripples = sorted({i for i in set(ra) | set(rb) if ra.get(i) != rb.get(i)})
-    report = analyse(a, b, sa, sb, ripples=ripples)
+    report = {"runs": {"baseline": a_path.name, "variant": b_path.name}, **analyse(a, b, sa, sb, ripples=ripples)}
     (b_path / "analysis").mkdir(exist_ok=True)
-    (b_path / "analysis" / "divergence.json").write_text(json.dumps(report, indent=1), encoding="utf-8")
+    (b_path / "analysis" / "divergence.json").write_text(json.dumps(report, separators=(",", ":")), encoding="utf-8")
     print(f"{report['divergent_events']} of {report['events']} events diverge; "
           f"{report['unexplained_events']} unexplained events, {report['unexplained_entities']} unexplained "
           f"entities, {report['unexplained_cells']} unexplained cells")

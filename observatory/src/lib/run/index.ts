@@ -20,7 +20,7 @@ export interface EventIndex {
 	typeOf: Uint16Array;
 	types: string[];
 	typeCounts: Map<string, number>;
-	placeOf: Int32Array; // -1: no place
+	placeOf: Int32Array; // where it happened: its place, else the scope that decided it (-1: neither)
 	places: string[];
 	byEntity: Map<string, Int32Array>; // events each entity took part in, in order
 	segmentOf: Uint16Array; // the segment each event was read from (so detail never guesses by date)
@@ -60,11 +60,12 @@ export async function buildIndex(run: Run, onProgress?: (n: number) => void): Pr
 			typeOf.push(t);
 			typeCounts.set(e.type, (typeCounts.get(e.type) ?? 0) + 1);
 			let p = -1;
-			if (e.place) {
-				p = placeId.get(e.place) ?? -1;
+			const where: string | null = e.place || e.scope || null;
+			if (where) {
+				p = placeId.get(where) ?? -1;
 				if (p < 0) {
-					p = places.push(e.place) - 1;
-					placeId.set(e.place, p);
+					p = places.push(where) - 1;
+					placeId.set(where, p);
 				}
 			}
 			placeOf.push(p);
@@ -103,19 +104,20 @@ export async function buildIndex(run: Run, onProgress?: (n: number) => void): Pr
 
 export interface EventFilter {
 	type?: string;
-	place?: string;
+	place?: string; // "-": nowhere (neither place nor scope)
 	entity?: string;
 	from?: DateTuple;
 	to?: DateTuple;
 	text?: string;
+	ids?: Set<string>; // only these events (a diff's divergent ids)
 }
 
 /** Indices of the events matching every given filter, in order. */
 export function filterEvents(index: EventIndex, f: EventFilter): Int32Array {
 	const cal = index.run.calendar;
 	const type = f.type ? index.types.indexOf(f.type) : null;
-	const place = f.place ? index.places.indexOf(f.place) : null;
-	if ((f.type && type === -1) || (f.place && place === -1)) return new Int32Array(0);
+	const place = f.place === '-' ? -1 : f.place ? index.places.indexOf(f.place) : null;
+	if ((f.type && type === -1) || (f.place && f.place !== '-' && place === -1)) return new Int32Array(0);
 	const from = f.from ? cal.sortKey(f.from) : -Infinity;
 	const to = f.to ? cal.sortKey(f.to) : Infinity;
 	const text = f.text?.trim().toLowerCase() || null;
@@ -127,6 +129,7 @@ export function filterEvents(index: EventIndex, f: EventFilter): Int32Array {
 		const i = f.entity ? candidates[c] : c;
 		if (type !== null && index.typeOf[i] !== type) continue;
 		if (place !== null && index.placeOf[i] !== place) continue;
+		if (f.ids && !f.ids.has(index.ids[i])) continue;
 		const k = index.keys[i];
 		if (k < from || k > to) continue;
 		if (text && !(index.lower ??= index.lines.map((l) => l.toLowerCase()))[i].includes(text)) continue;

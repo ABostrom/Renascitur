@@ -85,6 +85,7 @@ def test_replay_with_a_new_ripple_forks_from_the_right_checkpoint_and_diffs_clea
     assert main(["diff", str(out / "base"), str(out / "protected")]) == 0
     report = json.loads((out / "protected" / "analysis" / "divergence.json").read_text(encoding="utf-8"))
     assert report["unexplained_events"] == 0 and report["unexplained_entities"] == 0
+    assert report["runs"] == {"baseline": "base", "variant": "protected"}  # the diff page links into both
     assert "unexplained" in capsys.readouterr().out
 
 
