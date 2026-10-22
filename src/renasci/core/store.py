@@ -64,10 +64,12 @@ class StateDelta:
     old: object
     new: object
     event: str
+    activation: str = ""  # the activation that made the write ("" for casting)
 
     def to_json(self) -> dict:
         return {"date": self.date.to_json(), "entity": self.entity, "field": self.field,
-                "old": plain(self.old), "new": plain(self.new), "event": self.event}
+                "old": plain(self.old), "new": plain(self.new), "event": self.event,
+                "activation": self.activation}
 
 
 @dataclass(frozen=True)
@@ -148,7 +150,7 @@ class Store:
 
     # ------------------------------------------------------------ records
 
-    def create(self, kind: str, entity: str, fields: dict, date: Date, event: str) -> None:
+    def create(self, kind: str, entity: str, fields: dict, date: Date, event: str, activation: str = "") -> None:
         _need_name("kind", kind)
         _need_name("entity", entity)
         _need_date(date)
@@ -159,9 +161,9 @@ class Store:
         for name in fields:
             _need_field(name)
         self._entities[entity] = _Entity(kind, "active", fields)
-        self.deltas.append(StateDelta(date, entity, "status", None, "active", event))
+        self.deltas.append(StateDelta(date, entity, "status", None, "active", event, activation))
         for name in sorted(fields):
-            self.deltas.append(StateDelta(date, entity, name, None, fields[name], event))
+            self.deltas.append(StateDelta(date, entity, name, None, fields[name], event, activation))
 
     def _entity(self, entity: str) -> _Entity:
         try:
@@ -186,7 +188,7 @@ class Store:
         value = self._entity(entity).fields.get(field, default)
         return _json_copy(value)
 
-    def set(self, entity: str, field: str, value, date: Date, event: str) -> None:
+    def set(self, entity: str, field: str, value, date: Date, event: str, activation: str = "") -> None:
         _need_field(field)
         _need_date(date)
         _need_event(event)
@@ -194,16 +196,16 @@ class Store:
         value = _json_copy(value)
         old = record.fields.get(field)
         record.fields[field] = value
-        self.deltas.append(StateDelta(date, entity, field, old, value, event))
+        self.deltas.append(StateDelta(date, entity, field, old, value, event, activation))
 
-    def set_status(self, entity: str, status: str, date: Date, event: str) -> None:
+    def set_status(self, entity: str, status: str, date: Date, event: str, activation: str = "") -> None:
         _need_date(date)
         _need_event(event)
         if status not in STATUSES:
             raise ValueError(f"status must be one of {STATUSES}, got {status!r}")
         record = self._entity(entity)
         old, record.status = record.status, status
-        self.deltas.append(StateDelta(date, entity, "status", old, status, event))
+        self.deltas.append(StateDelta(date, entity, "status", old, status, event, activation))
 
     # ------------------------------------------------------------ columns
 

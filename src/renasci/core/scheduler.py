@@ -116,6 +116,21 @@ class Scheduler:
         self._keys[key] = None
         heapq.heappush(self._heap, (key, activation))
 
+    def pending(self, predicate) -> list[Activation]:
+        """Queued activations matching `predicate`, in order."""
+        return [a for _, a in sorted(self._heap, key=lambda item: item[0]) if predicate(a)]
+
+    def remove_where(self, predicate) -> list[Activation]:
+        """Remove queued activations matching `predicate`; return them in order."""
+        removed = self.pending(predicate)
+        if removed:
+            gone = {a.key() for a in removed}
+            self._heap = [item for item in self._heap if item[0] not in gone]
+            heapq.heapify(self._heap)
+            for k in gone:
+                del self._keys[k]
+        return removed
+
     def peek(self) -> Activation | None:
         return self._heap[0][1] if self._heap else None
 

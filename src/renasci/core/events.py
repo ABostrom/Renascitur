@@ -15,7 +15,7 @@ from dataclasses import dataclass, replace
 from renasci.core.calendar import Date
 from renasci.core.canon import canonical
 
-CAUSE_KINDS = ("event", "pin", "ripple", "state", "ambition", "belief", "drive")
+CAUSE_KINDS = ("event", "activation", "pin", "ripple", "state", "ambition", "belief", "drive")
 SOURCE_KINDS = ("system", "action", "pin", "ripple", "lod", "scenario")
 VISIBILITIES = ("public", "secret")
 PAYLOAD_TYPES = ("str", "int", "float", "bool", "id", "ids", "json")
@@ -92,6 +92,7 @@ class Event:
     source: Source
     visibility: str | None = None  # None: take the type's default at validation
     version: int | None = None  # the event type's schema version, filled in at validation
+    activation: str | None = None  # the activation that emitted it (None for casting and scenario)
 
     def __post_init__(self):
         # One canonical form: roles sorted by name with empty roles dropped, members sorted;
@@ -113,6 +114,7 @@ class Event:
             "roles": {r: list(m) for r, m in self.roles.items()}, "place": self.place,
             "causes": [c.to_json() for c in self.causes], "payload": self.payload,
             "source": self.source.to_json(), "visibility": self.visibility, "version": self.version,
+            "activation": self.activation,
         }
 
     @classmethod
@@ -122,6 +124,7 @@ class Event:
             roles={r: tuple(m) for r, m in d["roles"].items()}, place=d["place"],
             causes=tuple(Cause(*c) for c in d["causes"]), payload=d["payload"],
             source=Source(*d["source"]), visibility=d["visibility"], version=d["version"],
+            activation=d.get("activation"),
         )
 
 

@@ -97,8 +97,8 @@ def test_set_records_a_delta_with_old_and_new():
     s.set("e1", "spouse", None, Date(4, 40, 0), "x6")
     assert s.get("e1", "spouse") is None
     assert [d.to_json() for d in s.deltas] [-2:] == [
-        {"date": [4, 37, 10], "entity": "e1", "field": "spouse", "old": None, "new": "e2", "event": "x5"},
-        {"date": [4, 40, 0], "entity": "e1", "field": "spouse", "old": "e2", "new": None, "event": "x6"},
+        {"date": [4, 37, 10], "entity": "e1", "field": "spouse", "old": None, "new": "e2", "event": "x5", "activation": ""},
+        {"date": [4, 40, 0], "entity": "e1", "field": "spouse", "old": "e2", "new": None, "event": "x6", "activation": ""},
     ]
 
 

@@ -24,14 +24,20 @@ def _count(label: str, value) -> int:
     return value
 
 
-def event_id(system: str, actor: str, purpose: str, date: Date, occurrence: int) -> str:
-    """`occurrence` is the n-th event for this (system, actor, purpose, date)."""
+def event_id(system: str, actor: str, purpose: str, date: Date, occurrence: int, activation: str = "") -> str:
+    """`occurrence` is the n-th event for this (system, actor, purpose) within one activation.
+
+    Counting per activation (and keying by it) means skipping one event never shifts the ids of
+    the others: one person's fate can't renumber everyone else's.
+    """
     for label, value in (("system", system), ("actor", actor), ("purpose", purpose)):
         _name(label, value)
     if not isinstance(date, Date):
         raise TypeError(f"date must be a Date, got {date!r}")
     _count("occurrence", occurrence)
-    return "x" + digest(["event", system, actor, purpose, date, occurrence])
+    if not isinstance(activation, str):
+        raise TypeError(f"activation must be a string, got {activation!r}")
+    return "x" + digest(["event", system, actor, purpose, date, occurrence, activation])
 
 
 def entity_id(creator_event: str, role: str, ordinal: int) -> str:
