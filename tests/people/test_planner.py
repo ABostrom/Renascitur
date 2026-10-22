@@ -46,6 +46,7 @@ def test_every_starter_subgoal_is_reachable():
 def test_favour_takes_a_petition_first():
     p = run([frozenset({"favoured"})])
     assert [s["action"] for s in p.steps] == ["Petition", "CourtFavour"]
+    assert all(s["target"] is None for s in p.steps)  # (no target: None, not "")
 
 
 def test_facts_already_true_are_not_planned_for():
@@ -87,7 +88,7 @@ def test_plans_are_json():
 
 # ---------------------------------------------------------------- properties over generated libraries
 
-TAGS = ["a", "b", "c", "d", "e"]
+TAGS = ["a", "b", "c", "d"]  # few tags, so several actions share one (alternative routes)
 
 
 @dataclass(frozen=True)
@@ -103,7 +104,7 @@ class Gen:
 @st.composite
 def libraries(draw):
     classes = []
-    for i in range(draw(st.integers(1, 6))):
+    for i in range(draw(st.integers(1, 7))):
         achieves = draw(st.sampled_from(TAGS))
         requires = frozenset(draw(st.lists(st.sampled_from([t for t in TAGS if t != achieves]), max_size=2)))
         classes.append(Gen(f"Gen{i}", achieves, requires, draw(st.sampled_from([0.0, 0.3]))))
@@ -154,3 +155,42 @@ def test_plans_are_valid_bounded_deterministic_and_cheapest(case, depth):
         have.add(a.achieves)
     assert goal <= have
     assert abs(cost(p, actions, lambda a, t: odds[a.name]) - best) < 1e-9
+
+
+# ---------------------------------------------------------------- review regressions
+
+
+def _lib(*specs):
+    return {n: Gen(n, ach, frozenset(req), 0.0) for n, ach, req in specs}
+
+
+def test_a_dearer_prerequisite_that_serves_another_goal_is_found():
+    actions = _lib(("Aa", "a", {"p"}), ("Ab", "b", {"q"}), ("P1", "p", ()), ("P2", "p", {"q"}), ("Q", "q", ()))
+    odds = {"Aa": 0.9, "Ab": 0.9, "P1": 0.5, "P2": 0.9, "Q": 0.2}
+    w = World(odds=odds, ties=())
+    p = run([frozenset({"a", "b"})], w, actions=actions, depth=6)
+    assert abs(cost(p, actions, lambda a, t: odds[a.name]) - brute_force(actions, odds, set(), frozenset({"a", "b"}), 6)) < 1e-9
+
+
+def test_a_short_plan_is_found_when_the_cheapest_prerequisite_is_too_long():
+    actions = _lib(("Aa", "a", {"p"}), ("Ab", "b", ()), ("P1", "p", ()), ("P2", "p", {"q"}), ("Q", "q", ()))
+    odds = {"Aa": 0.9, "Ab": 0.9, "P1": 0.2, "P2": 0.9, "Q": 0.9}
+    w = World(odds=odds, ties=())
+    assert run([frozenset({"a", "b"})], w, actions=actions, depth=3) is not None
+
+
+def test_impossible_odds_are_not_planned():
+    w = World(odds={"Duel": 0.0, "Poison": 0.0, "Assassinate": 0.0}, ties=("t:friend",))
+    assert run([frozenset({"dead:t:rival"})], w) is None
+
+
+@settings(max_examples=400, deadline=None)
+@given(libraries(), st.integers(0, 5))
+def test_cheapest_over_more_libraries(case, depth):
+    actions, odds, facts, goal = case
+    w = World(facts=facts, odds=odds, ties=())
+    p = run([goal], w, actions=actions, depth=depth)
+    best = brute_force(actions, odds, facts, goal, depth)
+    assert (p is None) == (best is None)
+    if p is not None:
+        assert abs(cost(p, actions, lambda a, t: odds[a.name]) - best) < 1e-9
