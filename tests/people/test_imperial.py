@@ -80,25 +80,60 @@ def test_strain_is_reported(run):
     assert all(s["pin"].startswith(("born-", "reign-")) for s in forced)
 
 
-def test_a_forced_reign_is_an_abdication(run):
-    for ev in run.events:
-        if ev.type == "people.succession" and ev.payload["abdication"]:
-            assert any(c.kind == "pin" for c in ev.causes)
-            (pred,) = ev.roles["predecessor"]
-            assert run.store.status(pred) in ("active", "dead", "dormant")  # an abdicated ruler lives on
+def test_a_forced_reign_is_an_abdication_by_a_living_ruler(run):
+    deaths = {ev.roles["deceased"][0]: ev.date for ev in run.events if ev.type == "people.death"}
+    abdications = [ev for ev in run.events if ev.type == "people.succession" and ev.payload["abdication"]]
+    for ev in abdications:
+        assert any(c.kind == "pin" for c in ev.causes)
+        (pred,) = ev.roles["predecessor"]
+        assert pred not in deaths or deaths[pred] > ev.date  # alive when abdicating
+    forced = {s["pin"] for s in run.director.strain if s["action"] == "force" and s["pin"].startswith("reign-")}
+    caused = {c.ref for ev in run.events if ev.type == "people.succession" and ev.payload["office"] == THRONE
+              for c in ev.causes if c.kind == "pin"}
+    assert forced <= caused
 
 
-def test_a_birth_pin_with_no_wife_marries_first():
-    e = new_engine(seed=3)
-    bachelor = next(p for s in e.store.ids("settlement") for p in e.store.get(s, "residents")
-                    if e.store.get(p, "sex") == "m" and e.store.get(p, "spouse") is None and 20 <= e.store.get(p, "born")[1] + 40)
-    e = new_engine(seed=3, pins=[Pin("heir", "event", window=(Date(1, 1, 0), Date(1, 1, 10)),
-                                     payload={"type": "people.birth", "roles": {"father": [bachelor]},
-                                              "bind": {"role": "child", "subject": "v:Heir"}})])
-    e.run(until=Date(1, 2, 0))
-    child = e.director.bindings.get("v:Heir")
-    if child is None:
-        pytest.skip("the bachelor was too young or too old to father a child")
-    assert e.store.get(child, "father") == bachelor
-    assert e.director.status["heir"] == "forced"
-    assert any(ev.type == "people.marriage" and bachelor in ev.roles["spouse"] for ev in e.events)
+def quiet_kin(seed):
+    """Kin with no marriage markets, so a bachelor stays one until a pin needs him wed."""
+    import copy
+
+    from renasci.kin import SCENARIO
+
+    sc = copy.deepcopy(SCENARIO)
+    sc["params"]["market_rate"] = 0.0
+    sc["params"]["commoner_rate"] = 0.0
+    return sc
+
+
+def test_a_pinned_bachelor_is_married_first():
+    from renasci.core.calendar import Date as D
+    from renasci.people.races import age_years
+
+    sc = quiet_kin(3)
+    probe = new_engine(seed=3, scenario=sc)
+    bachelor = next(p for s in probe.store.ids("settlement") for p in probe.store.get(s, "residents")
+                    if probe.store.get(p, "sex") == "m" and probe.store.get(p, "spouse") is None
+                    and 20 <= age_years(probe.calendar, probe.store.get(p, "born"), D(1, 1, 0)) <= 40)
+    e = new_engine(seed=3, scenario=sc, pins=[Pin("heir", "event", window=(D(1, 1, 0), D(1, 1, 10)),
+                                                  payload={"type": "people.birth", "roles": {"father": [bachelor]},
+                                                           "bind": {"role": "child", "subject": "v:Heir"}})])
+    e.run(until=D(1, 2, 0))
+    child = e.director.bindings["v:Heir"]
+    assert e.director.status["heir"] == "forced" and e.store.get(child, "father") == bachelor
+    wedding = next(ev for ev in e.events if ev.type == "people.marriage" and bachelor in ev.roles["spouse"])
+    assert ("pin", "heir") in [(c.kind, c.ref) for c in wedding.causes]
+    assert e.store.get(e.store.get(child, "mother"), "spouse") == bachelor
+
+
+def test_a_child_is_not_made_a_father():
+    from renasci.core.calendar import Date as D
+    from renasci.people.races import age_years
+
+    probe = new_engine(seed=3)
+    boy = next(p for s in probe.store.ids("settlement") for p in probe.store.get(s, "residents")
+               if probe.store.get(p, "sex") == "m" and age_years(probe.calendar, probe.store.get(p, "born"), D(1, 1, 0)) < 10)
+    e = new_engine(seed=3, pins=[Pin("too-soon", "event", window=(D(1, 1, 0), D(1, 1, 10)),
+                                     payload={"type": "people.birth", "roles": {"father": [boy]},
+                                              "bind": {"role": "child", "subject": "v:Nobody"}})])
+    e.run(until=D(1, 2, 0))
+    assert e.director.status["too-soon"] == "violated" and "v:Nobody" not in e.director.bindings
