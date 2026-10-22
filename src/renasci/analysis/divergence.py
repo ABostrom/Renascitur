@@ -21,6 +21,7 @@ explained, including a list-order coupling *within* that scope. Use scopes as fi
 from __future__ import annotations
 
 from renasci.core.canon import canonical
+from renasci.core.context import reads_digest
 
 # Unexplained events described in full (roots first). Counts and the divergent id lists are never cut.
 DETAIL_LIMIT = 1000
@@ -37,10 +38,14 @@ class _Run:
         self.order = [a["activation"] for a in history.get("activations", [])]
         self.activations = {a["activation"]: a for a in history.get("activations", [])}
         self.scope_of: dict[str, tuple[str, str | None]] = {}
-        self.seen: dict[tuple[str, str | None], dict] = {}
+        # Per scope: (reads by key, or None when only a digest was kept; the digest of them all).
+        self.seen: dict[tuple[str, str | None], tuple[dict | None, str]] = {}
         for row in history.get("reads", []):
             key = (row["activation"], row["scope"])
-            self.seen[key] = {(r[0], r[1]): r[2] for r in row["reads"]}
+            if "reads" in row:
+                self.seen[key] = ({(r[0], r[1]): r[2] for r in row["reads"]}, reads_digest(row["reads"]))
+            else:
+                self.seen[key] = (None, row["digest"])
             for eid in row["events"]:
                 self.scope_of[eid] = key
         for eid, e in self.events.items():  # events recorded outside a ctx belong to their activation
@@ -56,11 +61,18 @@ class _Run:
             self.pin_history.setdefault(p["pin"], []).append(p["status"])
 
 
-def _differs(seen_a: dict, seen_b: dict) -> bool:
-    """Did the scope see different inputs? Only reads made in both runs count: deterministic code
-    diverges first at a shared read whose value differs. A read made in only one run follows a
-    decision that already differed."""
-    return any(seen_a[k] != seen_b[k] for k in seen_a.keys() & seen_b.keys())
+def _differs(seen_a: tuple, seen_b: tuple) -> bool:
+    """Did the scope see different inputs?
+
+    With full reads on both sides, only reads made in both runs count: deterministic code diverges
+    first at a shared read whose value differs, and a read made in only one run follows a decision
+    that already differed. With a digest on either side (#151) the test is coarser: any difference
+    in what the scope read taints it. That can hide a bug that changes only *which* fields a scope
+    reads, so the exit test runs with full reads."""
+    (a, digest_a), (b, digest_b) = seen_a, seen_b
+    if a is not None and b is not None:
+        return any(a[k] != b[k] for k in a.keys() & b.keys())
+    return digest_a != digest_b
 
 
 def analyse(baseline: dict, variant: dict, baseline_state: dict, variant_state: dict, ripples=()) -> dict:

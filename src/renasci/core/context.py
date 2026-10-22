@@ -23,6 +23,12 @@ from renasci.core.ids import entity_id, event_id
 from renasci.core.scheduler import Activation
 
 
+def reads_digest(reads: list) -> str:
+    """One digest of a scope's sorted [entity, field, value digest] reads. A full row and a
+    digest-only row of the same reads give the same value, so the two forms compare."""
+    return digest(reads, size=16)
+
+
 class UndeclaredAccess(Exception):
     """A system read or wrote something it did not declare."""
 
@@ -98,17 +104,23 @@ class Ctx:
             self._scope = None
             self._event, self._pin_causes, self._guard_rows = None, [], []
 
-    def read_rows(self) -> list[dict]:
-        """One row per scope (None = unscoped): what was read (with a digest of the value seen),
-        and which events it informed."""
+    def read_rows(self, full: bool = True) -> list[dict]:
+        """One row per scope (None = unscoped): what was read, and which events it informed.
+
+        `full` keeps every read (entity, field, digest of the value seen). Otherwise a row keeps one
+        digest of them all (`reads_digest`) and their count, which is enough to tell whether a scope
+        saw different inputs, at a fraction of the size (#151)."""
         rows = []
-        if self._reads or self._events[None]:
-            rows.append({"activation": self.activation.id, "scope": None,
-                         "reads": [[*k, v] for k, v in sorted(self._reads.items())], "events": list(self._events[None])})
-        for key in sorted(self._scoped):
-            rows.append({"activation": self.activation.id, "scope": key,
-                         "reads": [[*k, v] for k, v in sorted(self._scoped[key].items())],
-                         "events": list(self._events[key])})
+        sources = ([(None, self._reads)] if (self._reads or self._events[None]) else []) + \
+            [(key, self._scoped[key]) for key in sorted(self._scoped)]
+        for key, seen in sources:
+            reads = [[*k, v] for k, v in sorted(seen.items())]
+            row = {"activation": self.activation.id, "scope": key, "events": list(self._events[key])}
+            if full:
+                row["reads"] = reads
+            else:
+                row["digest"], row["n"] = reads_digest(reads), len(reads)
+            rows.append(row)
         return rows
 
     def recorded_reads(self) -> list[list[str]]:

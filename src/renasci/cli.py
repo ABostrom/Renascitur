@@ -67,6 +67,7 @@ def cmd_run(args) -> int:
     recipe = load_recipe(args.recipe)
     world = get_world(recipe.world)
     engine = world.new_engine(recipe.seed, ripples=recipe.ripples, **recipe.params)
+    engine.full_reads = recipe.full_reads
     folder = RunFolder.create(Path(args.out) / recipe.name, {"recipe": recipe.raw, "complete": False,
                                                              "calendar": world.calendar.to_json()})
     _finish(engine, folder, recipe)
@@ -103,6 +104,7 @@ def cmd_replay(args) -> int:
     at = Date.from_json(mark["before"])
     cp = load_checkpoint(base.path / "checkpoints" / f"{at.age}-{at.year}-{at.day}.json.gz")
     engine = world.restore(cp, new.seed, ripples=new.ripples, **new.params)
+    engine.full_reads = new.full_reads
     folder = RunFolder.fork(base.path, Path(args.out) / new.name, keep=mark["segment"] + 1,
                             meta={"recipe": new.raw, "complete": False, "calendar": world.calendar.to_json(),
                                   "replayed_from": {"run": base.path.name, "at": mark["before"]}})
@@ -182,6 +184,7 @@ def cmd_bench(args) -> int:
             raise FileExistsError(f"{out} exists and is not a previous bench run; choose another --out")
         shutil.rmtree(out)
     engine = new_engine(seed=1234, people_per_village=args.people)
+    engine.full_reads = args.full_reads  # off by default, as in recipe runs (#151)
     folder = RunFolder.create(out, {"bench": True})
     people_start = peak = len(engine.store.ids("person", "active"))
     events = 0
@@ -203,7 +206,7 @@ def cmd_bench(args) -> int:
         commit = "unknown"
     v = versions()
     row = {"date": datetime.date.today().isoformat(), "commit": commit, "engine": v["engine"], "python": v["python"],
-           "numpy": v["numpy"], "world": f"toy x{args.people}", "years": args.years, "people_start": people_start,
+           "numpy": v["numpy"], "world": f"toy x{args.people}" + (" full reads" if args.full_reads else ""), "years": args.years, "people_start": people_start,
            "people_peak": peak, "events": events, "seconds": round(seconds, 2),
            "years_per_s": round(args.years / seconds, 3), "events_per_s": round(events / seconds, 1),
            "run_mb": round(run_mb, 3)}
@@ -261,6 +264,7 @@ def main(argv=None) -> int:
     p.add_argument("--years", type=int, default=300)
     p.add_argument("--people", type=int, default=100, help="people per village (6 villages)")
     p.add_argument("--history", default="bench/history.csv")
+    p.add_argument("--full-reads", action="store_true", help="keep every read row, as an analysis run would")
     p.add_argument("--out", default="runs/_bench")
     args = parser.parse_args(argv)
     try:
