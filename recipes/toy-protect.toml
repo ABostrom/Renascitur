@@ -1,0 +1,20 @@
+# A what-if on the baseline: protect one Ashford villager from 1X 20 to 1X 60.
+#   uv run renasci replay runs/toy-baseline --recipe recipes/toy-protect.toml
+#   uv run renasci diff runs/toy-baseline runs/toy-protect
+[run]
+name = "toy-protect"
+engine = "0.1.0"
+seed = 1234
+world = "toy"
+end = "1X 300"
+checkpoint_every_years = 10
+
+[world]
+people_per_village = 100
+
+[[ripple]]
+id = "r1"
+kind = "protect"
+date = "1X 20"
+target = "t:Ashford-00"
+params = { until = [1, 60, 359] }
