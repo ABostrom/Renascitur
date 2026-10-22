@@ -171,7 +171,7 @@ recipe (engine version, seed, vault commit, ripples, reshuffles)
 
 - **Entity store:** stable ids, columnar NumPy components for bulk data (aggregates, genomes), and records for notables. **Dormant records are never deleted.**
 - **Run folder** (the unit the Observatory reads):
-  - **Contents:** a `manifest.json` (recipe, engine and schema versions, vault commit, checks) plus JSON Lines tables (one `.jsonl` per table per segment): `events`, `causes`, `participants`, `people`, `ambitions`, `schemes`, `beliefs` (provenance), `state_deltas` (dated changes for "as of" views), `timeseries`, `hinges`, `stories`.
+  - **Contents:** a `manifest.json` (recipe, engine and schema versions, vault commit, checks) plus JSON Lines tables (one `.jsonl` per table per segment): `events`, `causes`, `participants`, `people` (S3 serves people from `entities` + `state_deltas` + the final state instead; see the S3 spec §10), `ambitions`, `schemes`, `beliefs` (provenance), `state_deltas` (dated changes for "as of" views), `timeseries`, `hinges`, `stories`.
   - **Partitioning:** files are partitioned by age or segment.
   - **Forks** share the prefix before the fork point by reference.
   - **Aggregates** are logged as timeseries, not events. Belief provenance is sampled in aggregates and complete for notables.
