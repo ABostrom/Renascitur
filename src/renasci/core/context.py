@@ -12,9 +12,11 @@ whenever an entity of that kind is created.
 from __future__ import annotations
 
 import json
+import math
 
 from renasci.core.calendar import Span
-from renasci.core.canon import canonical
+from renasci.core.canon import canonical, digest
+from renasci.core.choice import match, scored
 from renasci.core.events import Cause, Event, Source
 from renasci.core.ids import event_id
 from renasci.core.scheduler import Activation
@@ -35,6 +37,7 @@ class Ctx:
         self._reads: dict[tuple[str, str], None] = {}
         self._event: str | None = None  # the event that writes are attributed to
         self._occurrences: dict[tuple[str, str], int] = {}  # per (actor, purpose), this activation only
+        self.hinges: list[dict] = []  # buffered; the engine keeps them only if the activation completes
 
     # ------------------------------------------------------------ declarations
 
@@ -129,6 +132,9 @@ class Ctx:
                       Source("system", self.system.name), visibility, activation=self.activation.id)
         event = self._engine.record(event)
         self._event = event.id
+        for h in self.hinges:  # close calls decided before this event are what it turned on
+            if h["event"] is None:
+                h["event"] = event.id
         return event
 
     # ------------------------------------------------------------ randomness and follow-ups
@@ -137,6 +143,67 @@ class Ctx:
         """A stream owned by `entity` (a person, place or aggregate). Every stream has an owner."""
         tick = self.calendar.canonical_tick(self.today)
         return self._engine.rng.open(self._engine.ordinals, self.system.name, entity, purpose, tick)
+
+    def _draw_key(self, purpose: str, owner: str) -> tuple[int, int]:
+        tick = self.calendar.canonical_tick(self.today)
+        n = self._engine.ordinals.next(self.system.name, owner, purpose, tick)
+        return self._engine.rng.key(self.system.name, owner, purpose, tick, n), n
+
+    def _hinge(self, kind: str, purpose: str, owner: str, occurrence: int, stakes, roles, **fields) -> None:
+        h = {"id": "h" + digest([self.activation.id, kind, owner, purpose, occurrence]), "kind": kind,
+             "activation": self.activation.id, "date": self.today, "system": self.system.name,
+             "owner": owner, "purpose": purpose, "occurrence": occurrence, "stakes": float(stakes),
+             "roles": roles or {}, "event": None, **fields}
+        self.hinges.append(json.loads(canonical(h)))
+
+    def choose(self, purpose: str, candidates, *, owner: str, weights=None,
+               stakes: float | None = None, roles: dict | None = None) -> str | None:
+        """Pick one candidate by rendezvous: a loser leaving never changes the winner.
+
+        With `stakes`, records a hinge: the winner, the runner-up and the score gap.
+        """
+        key, n = self._draw_key(f"choose:{purpose}", owner)
+        ranked = scored([key], candidates, weights)
+        if not ranked:
+            return None
+        winner = ranked[0][1]
+        if stakes is not None:
+            runner = ranked[1] if len(ranked) > 1 else None
+            self._hinge("choice", purpose, owner, n, stakes, roles, winner=winner,
+                        runner_up=runner[1] if runner else None,
+                        margin=(runner[0] - ranked[0][0]) if runner else None)
+        return winner
+
+    def match(self, purpose: str, seekers: dict, *, owner: str, accept: dict | None = None) -> dict[str, str]:
+        """Pair seekers with targets (e.g. a marriage market) without list-order coupling."""
+        key, _ = self._draw_key(f"match:{purpose}", owner)
+        return match([key], seekers, accept)
+
+    def chance(self, p: float, purpose: str, *, owner: str, stakes: float | None = None,
+               roles: dict | None = None) -> bool:
+        """True with probability p, after any odds hooks (ripples, the pin director) adjust it.
+
+        With `stakes`, the draw is recorded as a hinge, a source for latch points.
+        """
+        p_base = p = float(p)
+        if not (math.isfinite(p) and 0.0 <= p <= 1.0):
+            raise ValueError(f"probability must be in [0, 1], got {p!r}")
+        adjusted = []
+        for hook in self._engine.odds_hooks:
+            p, cause = hook(self, p, purpose, owner)
+            p = float(p)
+            if not (math.isfinite(p) and 0.0 <= p <= 1.0):
+                raise ValueError(f"odds hook returned an invalid probability {p!r}")
+            if cause:
+                adjusted.append(cause)
+        tick = self.calendar.canonical_tick(self.today)
+        n = self._engine.ordinals.next(self.system.name, owner, purpose, tick)
+        u = float(self._engine.rng.stream(self.system.name, owner, purpose, tick, n).random())
+        outcome = u < p
+        if stakes is not None:
+            self._hinge("chance", purpose, owner, n, stakes, roles, p_base=p_base, p=p,
+                        adjusted_by=adjusted, u=u, margin=abs(u - p), outcome=outcome)
+        return outcome
 
     def schedule(self, after: Span, purpose: str, *, entity: str | None = None, payload: dict | None = None,
                  priority: int | None = None) -> Activation:
