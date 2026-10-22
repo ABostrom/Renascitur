@@ -191,3 +191,18 @@ def test_inspect_needs_exactly_one_target_and_shows_field_changes(runs, capsys):
     capsys.readouterr()
     assert main(["inspect", str(out / "base"), "--entity", "t:Ashford-01"]) == 0
     assert "state changes:" in capsys.readouterr().out
+
+
+def test_bench_appends_a_row(tmp_path, capsys):
+    import csv
+
+    history = tmp_path / "history.csv"
+    assert main(["bench", "--years", "3", "--people", "8", "--history", str(history), "--out", str(tmp_path / "b")]) == 0
+    assert main(["bench", "--years", "3", "--people", "8", "--history", str(history), "--out", str(tmp_path / "b")]) == 0
+    rows = list(csv.DictReader(history.open(encoding="utf-8")))
+    assert len(rows) == 2
+    assert set(rows[0]) == {"date", "commit", "engine", "python", "numpy", "world", "years", "people_start",
+                            "people_peak", "events", "seconds", "years_per_s", "events_per_s", "run_mb"}
+    assert int(rows[0]["events"]) > 0 and float(rows[0]["years_per_s"]) > 0 and float(rows[0]["run_mb"]) > 0
+    assert rows[0]["events"] == rows[1]["events"]  # deterministic
+    assert "years/s" in capsys.readouterr().out
