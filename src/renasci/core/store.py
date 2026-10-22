@@ -147,6 +147,7 @@ class Store:
         self._columns: dict[str, _Column] = {}
         self.deltas: list[StateDelta] = []
         self.bulk_deltas: list[BulkDelta] = []
+        self.created: list[dict] = []  # pending: one row per entity created (id, kind, date, event, activation)
 
     # ------------------------------------------------------------ records
 
@@ -161,6 +162,8 @@ class Store:
         for name in fields:
             _need_field(name)
         self._entities[entity] = _Entity(kind, "active", fields)
+        self.created.append({"id": entity, "kind": kind, "date": date.to_json(), "event": event,
+                             "activation": activation})
         self.deltas.append(StateDelta(date, entity, "status", None, "active", event, activation))
         for name in sorted(fields):
             self.deltas.append(StateDelta(date, entity, name, None, fields[name], event, activation))
@@ -240,7 +243,7 @@ class Store:
     def drain(self) -> tuple[list[StateDelta], list[BulkDelta]]:
         """Hand pending deltas to the run-folder writer and forget them."""
         out = (self.deltas, self.bulk_deltas)
-        self.deltas, self.bulk_deltas = [], []
+        self.deltas, self.bulk_deltas, self.created = [], [], []
         return out
 
     # ------------------------------------------------------------ JSON (checkpoint state)

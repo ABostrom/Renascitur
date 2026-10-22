@@ -99,6 +99,27 @@ class Engine:
         self.scheduler.push(activation)
         return activation
 
+    def pending(self) -> dict[str, list[dict]]:
+        """Pending history as run-folder rows. Call `clear_pending` once they are safely written."""
+        events = self.events
+        return {
+            "events": [ev.to_json() for ev in events],
+            "causes": [{"event": ev.id, "kind": c.kind, "ref": c.ref} for ev in events for c in ev.causes],
+            "participants": [{"event": ev.id, "role": role, "entity": entity}
+                             for ev in events for role, members in ev.roles.items() for entity in members],
+            "entities": [dict(row) for row in self.store.created],
+            "state_deltas": [d.to_json() for d in self.store.deltas],
+            "bulk_deltas": [d.to_json() for d in self.store.bulk_deltas],
+            "reads": list(self.reads),
+            "hinges": list(self.hinges),
+            "dropped": [{"activation": a} for a in self.dropped],
+        }
+
+    def clear_pending(self) -> None:
+        """Forget history already written. State (store, cause index, queue) stays."""
+        self.events, self.reads, self.hinges, self.dropped = [], [], [], []
+        self.store.drain()
+
     # ------------------------------------------------------------ running
 
     def run(self, until: Date) -> None:
