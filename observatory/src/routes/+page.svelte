@@ -79,6 +79,10 @@
 					<div class="head">
 						<a class="name" href={`/run/${encodeURIComponent(run.name)}/events`}>{run.name}</a>
 						<a class="diff-link" href={`/run/${enc(run.name)}/stories`}>stories</a>
+						<a class="diff-link" href={`/run/${enc(run.name)}/latch`}>latch points</a>
+						{#if m.meta.latch_of}
+							<a class="diff-link" href={`/compare/${enc(String((m.meta.latch_of as { run: string }).run))}/${enc(run.name)}`}>compare with {(m.meta.latch_of as { run: string }).run}</a>
+						{/if}
 						{#if m.meta.complete}
 							<span class="badge ok">complete</span>
 						{:else}

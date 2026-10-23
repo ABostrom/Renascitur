@@ -89,3 +89,21 @@ def test_a_doom_on_someone_protected_is_foiled_not_a_crash():
     e.run(until=Date(1, 5, 0))
     assert e.store.status(target) == "active"
     assert any(ev.type == "people.near_miss" and ev.roles["survivor"] == (target,) for ev in e.events)
+
+
+def test_a_launch_can_adjust_the_ripple_and_names_a_fresh_folder(run):
+    """The Observatory's launcher adjusts the suggestion: kind, date, until. A second launch of a point
+    gets its own folder; the what-if records which point it tried and has its own stories."""
+    n = next(p["rank"] for p in points(run) if p["kind"] == "near_miss")
+    point = next(p for p in points(run) if p["rank"] == n)
+    year = point["date"][1]
+    out = run.parent
+    args = ["latch", str(run), "--launch", str(n), "--out", str(out), "--kind", "protect", "--date", f"1K {year}",
+            "--until", f"1K {year + 2}"]
+    assert main(args) == 0
+    assert main(args) == 0
+    second = out / f"kin-base-latch{n}-2"
+    manifest = json.loads((second / "manifest.json").read_text(encoding="utf-8"))
+    ripple = manifest["meta"]["recipe"]["ripple"][0]
+    assert ripple["kind"] == "protect" and ripple["params"]["until"][1] == year + 2
+    assert manifest["meta"]["latch_of"] == {"run": "kin-base", "rank": n, "kind": "near_miss", "person": point["person"]}

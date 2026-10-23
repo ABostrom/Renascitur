@@ -97,6 +97,7 @@ def main_() -> None:
     assert main(["run", str(kin), "--out", str(OUT)]) == 0
     assert main(["stories", str(OUT / "kin")]) == 0
     assert main(["latch", str(OUT / "kin")]) == 0
+    assert main(["latch", str(OUT / "kin"), "--launch", "1", "--out", str(OUT)]) == 0  # a what-if: kin-latch1
     for f in (OUT.parent).glob("*.toml"):
         f.unlink()
     print(f"fixtures written to {OUT}")
