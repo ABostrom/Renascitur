@@ -40,6 +40,14 @@ masses holding each claim) move each season a step (`MASSES_FOLLOW`) toward its 
 (secrets aside), are scaled down within a topic so they never sum past 1, dropped under `SHARE_FLOOR`,
 and capped at `SHARE_CAP` (`shares_step`, pure).
 
+**News by road** (§7, #79): a traveller arriving tells residents what they believe (`on_arrival`). A
+claim whose share in a settlement reaches `NEWS_THRESHOLD` goes out once along each open route
+(`news_sent`), arriving after the route's days: it raises the destination's share by `NEWS_WEIGHT` and
+one resident there hears it (`belief.heard`). News goes settlement to settlement: through a tavern or a
+landmark on the way to the next settlement (`neighbour_settlements`), over the summed days; it is the
+Vialux's official line (no drift, more trust) only if every leg was Vialux; wild roads drift twice as
+often (`news_drift`, `news_trust`).
+
 All of this runs only in a world whose params say `beliefs: true` (`enabled`): elsewhere history is as
 it was. Systems that may perceive declare `PERCEIVE_READS`, `PERCEIVE_WRITES` and `EVENT_TYPES`.
 """
@@ -48,7 +56,7 @@ from __future__ import annotations
 
 import math
 
-from renasci.core.calendar import Date
+from renasci.core.calendar import Date, Span
 from renasci.core.canon import digest
 from renasci.core.events import Cause, EventType
 from renasci.core.systems import System
@@ -58,6 +66,7 @@ PARTICIPANT_CONF, BYSTANDER_CONF, CORRECTION_CONF = 0.9, 0.5, 0.85
 TELL_CAP, SETTLEMENT_TELLS, DRIFT_RATE = 2, 40, 0.08
 LEAK_ACTOR, LEAK_ACCOMPLICE = 0.02, 0.08  # a season's chance that a secret slips out (S6 §5)
 MASSES_FOLLOW, SHARE_CAP, SHARE_FLOOR = 0.25, 12, 0.01  # belief shares among the masses (S6 §9)
+NEWS_THRESHOLD, NEWS_WEIGHT, STRANGER_TRUST, VIALUX_TRUST = 0.3, 0.15, 0.4, 0.1  # news by road (S6 §7)
 DECAY_YEARS, DECAY_STEP, FORGET_BELOW = 10, 0.1, 0.1
 TRUST = {"mentor": 0.8, "friend": 0.7, "lover": 0.7, "rival": 0.3, "enemy": 0.1, "kin": 0.8}
 CLOSENESS_KIN = 0.5  # (household: spouse, parents and children living together)
@@ -71,7 +80,17 @@ CORRECTED = EventType("belief.corrected", 1, roles={"holder": (1, 1)},
 FADED = EventType("belief.faded", 1, roles={"settlement": (1, 1)}, payload={"faded": "int"})
 REINFORCED = EventType("belief.reinforced", 1, roles={"settlement": (1, 1)}, payload={"people": "int"})
 SHARES = EventType("belief.shares", 1, roles={"settlement": (1, 1)}, payload={"claims": "int"})
-EVENT_TYPES = (PERCEIVED, TOLD, CORRECTED, FADED, REINFORCED, SHARES)
+HEARD = EventType("belief.heard", 1, roles={"holder": (1, 1)},
+                  payload={"claim": "json", "key": "str", "conf": "float"})  # (news from the road)
+NEWS = EventType("belief.news", 1, roles={"settlement": (1, 1)},
+                 payload={"claim": "json", "key": "str", "to": "str", "route": "str", "vialux": "bool"})
+NEWS_ARRIVED = EventType("belief.news_arrived", 1, roles={"settlement": (1, 1)},
+                         payload={"claim": "json", "key": "str", "from": "str", "drifted_from": "str"})
+EVENT_TYPES = (PERCEIVED, TOLD, CORRECTED, FADED, REINFORCED, SHARES, NEWS, NEWS_ARRIVED, HEARD)
+# What telling a newcomer's tale touches (travel.arrive declares these for the systems that handle arrivals).
+ARRIVAL_READS = frozenset({"beliefs", "residents", "status", "journey", "ties", "a", "b", "kind", "strength",
+                           "ended", "spouse", "mother", "father", "children"})
+ARRIVAL_WRITES = frozenset({"beliefs"})
 PERCEIVE_READS = frozenset({"beliefs", "residents", "status"})
 PERCEIVE_WRITES = frozenset({"beliefs"})
 
@@ -350,8 +369,9 @@ class Gossip(System):
     name, cadence = "beliefs.gossip", "seasonal"
     priority = 9  # after minds (8)
     reads = frozenset({"ids:settlement", "residents", "beliefs", "journey", "status", "ties", "a", "b", "kind",
-                       "strength", "ended", "spouse", "mother", "father", "children", "traits", "house", "shares"})
-    writes = frozenset({"beliefs", "shares"})
+                       "strength", "ended", "spouse", "mother", "father", "children", "traits", "house", "shares",
+                       "news_sent", "ids:route", "ends", "days", "vialux", "open"})
+    writes = frozenset({"beliefs", "shares", "news_sent"})
     event_types = EVENT_TYPES
 
     def run(self, ctx):
@@ -428,6 +448,60 @@ class Gossip(System):
             ctx.emit("belief.shares", {"settlement": (settlement,)}, purpose="shares", actor=settlement,
                      payload={"claims": len(after)})
             ctx.set(settlement, "shares", after)
+        self._send_news(ctx, settlement, ctx.get(settlement, "shares") or {})
+
+    def _send_news(self, ctx, settlement: str, shares: dict) -> None:
+        """A widely held claim goes out once to each neighbouring settlement by road, through any taverns
+        or landmarks on the way (§7). `news_sent` remembers where each claim went (claims no longer in the
+        shares are forgotten, so a claim that comes back can travel again)."""
+        before = ctx.get(settlement, "news_sent") or {}
+        sent = {k: list(v) for k, v in before.items() if k in shares}
+        neighbours = neighbour_settlements(ctx, settlement) if any(
+            s["share"] >= NEWS_THRESHOLD for s in shares.values()) else []
+        out = []
+        for k in sorted(shares):
+            if shares[k]["share"] < NEWS_THRESHOLD:
+                continue
+            for to, days, vialux in neighbours:
+                if to not in sent.get(k, []):
+                    out.append((k, to, days, vialux))
+                    sent[k] = sorted([*sent.get(k, []), to])
+        if not out and sent == before:
+            return
+        for k, to, days, vialux in out:
+            ctx.emit("belief.news", {"settlement": (settlement,)}, purpose=f"news:{k}:{to}", actor=settlement,
+                     payload={"claim": shares[k]["claim"], "key": k, "to": to, "route": f"{settlement}>{to}",
+                              "vialux": vialux})
+            ctx.schedule(Span(days=days), "news", entity=to,
+                         payload={"claim": shares[k]["claim"], "key": k, "from": settlement,
+                                  "route": f"{settlement}>{to}", "vialux": vialux})
+        if not out:  # (only forgetting: still needs an event to explain the write)
+            ctx.emit("belief.news", {"settlement": (settlement,)}, purpose="news:forget", actor=settlement,
+                     payload={"claim": {}, "key": "", "to": "", "route": "", "vialux": False})
+        ctx.set(settlement, "news_sent", dict(sorted(sent.items())))
+
+    def handle(self, ctx, activation):
+        if activation.purpose != "news":
+            raise ValueError(f"{self.name} has no follow-up {activation.purpose!r}")
+        p = activation.payload
+        to = activation.entity
+        with ctx.scope(to):
+            said, came_from = p["claim"], ""
+            if ctx.chance(news_drift(p["vialux"]), "news_drift", owner=f"{p['from']}|{to}|{p['key']}"):
+                mutated = drift(ctx, said)
+                if mutated:
+                    said, came_from = mutated, p["key"]
+            k = key(said)
+            arrived = ctx.emit("belief.news_arrived", {"settlement": (to,)}, purpose=f"news_in:{k}", actor=to,
+                               payload={"claim": said, "key": k, "from": p["from"], "drifted_from": came_from})
+            shares = dict(ctx.get(to, "shares") or {})
+            boosted = dict(shares)
+            boosted[k] = {"claim": said, "share": (shares.get(k) or {}).get("share", 0.0) + NEWS_WEIGHT}
+            ctx.set(to, "shares", _normalised(boosted))
+            here = sorted(r for r in ctx.get(to, "residents") if ctx.status(r) == "active" and not ctx.get(r, "journey"))
+            hearer = ctx.choose("news_hearer", here, owner=f"{p['from']}|{to}|{k}") if here else None
+            if hearer:  # (a stranger's news, as far as it's trusted)
+                hold(ctx, hearer, said, news_trust(p["vialux"]), arrived.id, kind="heard")
 
     def _reinforce(self, ctx, settlement: str, again: dict) -> None:
         today = ctx.today.to_json()
@@ -531,3 +605,84 @@ def shares_changed(before: dict, after: dict) -> bool:
     if set(before) != set(after):
         return True
     return any(abs(after[k]["share"] - before[k]["share"]) >= SHARE_STEP for k in after)
+
+
+
+def news_drift(vialux: bool) -> float:
+    """The chance news drifts on the road: never on the Vialux (the official line), twice the usual off it."""
+    return 0.0 if vialux else 2 * DRIFT_RATE
+
+
+def news_trust(vialux: bool) -> float:
+    """How far a stranger's news is trusted: more when it came by the Vialux."""
+    return STRANGER_TRUST + (VIALUX_TRUST if vialux else 0.0)
+
+
+def _normalised(shares: dict) -> dict:
+    """Shares scaled within each topic to sum to at most 1 (rounded down) and capped, as `shares_step` does."""
+    by_topic: dict[str, list[str]] = {}
+    for k, s in shares.items():
+        by_topic.setdefault(topic(s["claim"]), []).append(k)
+    out = {}
+    for ks in by_topic.values():
+        total = sum(shares[k]["share"] for k in ks)
+        for k in ks:
+            v = shares[k]["share"] / total if total > 1 else shares[k]["share"]
+            out[k] = {"claim": shares[k]["claim"], "share": math.floor(min(1.0, max(0.0, v)) * 1e4) / 1e4}
+    out = {k: s for k, s in out.items() if s["share"] > 0}
+    top = sorted(out, key=lambda k: (-out[k]["share"], k))[:SHARE_CAP]  # (news can be crowded out at once)
+    return {k: out[k] for k in sorted(top)}
+
+
+def on_arrival(ctx, person: str, settlement: str) -> None:
+    """A traveller arriving tells residents what they believe (§7): their `TELL_CAP` most salient open
+    beliefs, to those they know there first and then to strangers, up to `TELL_CAP` hearers."""
+    if not enabled(ctx):
+        return
+    mine = {k: b for k, b in (ctx.get(person, "beliefs") or {}).items() if not b.get("secret")}
+    if not mine:
+        return
+    here = sorted(r for r in ctx.get(settlement, "residents")
+                  if r != person and ctx.status(r) == "active" and not ctx.get(r, "journey"))
+    known = sorted(_listeners(ctx, person, set(here)), key=lambda x: (-x[1], -x[2], x[0]))  # (closest first)
+    hearers = [(h, tr) for h, _, tr in known][:TELL_CAP]
+    strangers = [r for r in here if r not in {h for h, _ in hearers}]
+    while len(hearers) < TELL_CAP and strangers:
+        s = ctx.choose(f"stranger:{len(hearers)}", strangers, owner=f"arrive|{person}")
+        strangers.remove(s)
+        hearers.append((s, STRANGER_TRUST))
+    top = sorted(mine, key=lambda k: (-salience(mine[k]["claim"]) * mine[k]["conf"], k))[:TELL_CAP]
+    for k in top:
+        for h, trust in hearers:
+            tell(ctx, person, h, mine[k]["claim"], trust, conf=mine[k]["conf"], cause=mine[k]["from"], place=settlement)
+
+
+def neighbour_settlements(ctx, settlement: str) -> list[tuple[str, int, bool]]:
+    """The settlements next to `settlement` by road: [(settlement, days, all on the Vialux)], each by its
+    quickest way over open routes, passing through places that aren't settlements (taverns, landmarks)
+    but stopping at the first settlement reached. Ties go to the smaller path of place ids."""
+    import heapq
+
+    towns = set(ctx.ids("settlement"))
+    edges: dict[str, list[tuple[str, int, bool]]] = {}
+    for r in ctx.ids("route"):
+        if not ctx.get(r, "open"):
+            continue
+        a, b = ctx.get(r, "ends")
+        days, vialux = int(ctx.get(r, "days")), bool(ctx.get(r, "vialux"))
+        edges.setdefault(a, []).append((b, days, vialux))
+        edges.setdefault(b, []).append((a, days, vialux))
+    best: dict[str, tuple[int, list[str], bool]] = {}
+    heap = [(0, [settlement], True)]
+    while heap:
+        days, path, vialux = heapq.heappop(heap)
+        at = path[-1]
+        if at in best:
+            continue
+        best[at] = (days, path, vialux)
+        if at != settlement and at in towns:
+            continue  # (news stops at the first settlement: it travels on from there with its own share)
+        for nxt, d, v in edges.get(at, ()):
+            if nxt not in best:
+                heapq.heappush(heap, (days + d, [*path, nxt], vialux and v))
+    return [(s, best[s][0], best[s][2]) for s in sorted(best) if s != settlement and s in towns]
