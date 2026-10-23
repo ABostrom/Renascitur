@@ -98,9 +98,11 @@ def test_unresolved_and_ambiguous_links_are_findings(vault):
 
 def test_line_endings_and_a_bom_do_not_change_a_hash(tmp_path):
     shutil.copytree(FIXTURE, tmp_path / "v")
-    a = load(tmp_path / "v")
     p = tmp_path / "v" / "Lion's Rest.md"
-    p.write_bytes(b"\xef\xbb\xbf" + p.read_bytes().replace(b"\n", b"\r\n"))
+    lf = p.read_bytes().replace(b"\r\n", b"\n")  # (git may check the fixture out either way)
+    p.write_bytes(lf)
+    a = load(tmp_path / "v")
+    p.write_bytes(b"\xef\xbb\xbf" + lf.replace(b"\n", b"\r\n"))
     b = load(tmp_path / "v")
     assert a.notes["Lion's Rest"].hash == b.notes["Lion's Rest"].hash and a.digest == b.digest
 
@@ -179,7 +181,7 @@ def test_a_leading_horizontal_rule_is_not_frontmatter():
 
 
 def test_links_in_code_local_headings_and_escaped_pipes(tmp_path):
-    root = write(tmp_path, {"A.md": "x `[[Ghost]]` y\n```\n[[Ghost2]]\n```\n[[#Heading]] and | [[B\|shown]] |\n",
+    root = write(tmp_path, {"A.md": "x `[[Ghost]]` y\n```\n[[Ghost2]]\n```\n[[#Heading]] and | [[B\\|shown]] |\n",
                             "B.md": "b"})
     v = load(root)
     assert v.notes["A"].body_links == ["A", "B"] and not v.findings
