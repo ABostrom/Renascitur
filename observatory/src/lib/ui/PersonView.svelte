@@ -2,6 +2,7 @@
 	import type { Calendar, DateTuple } from '$lib/run/calendar';
 	import type { EntityChange } from '$lib/run/entity';
 	import { asOf, moments, personView, raceName, type StateIndex, type Who } from '$lib/run/person';
+	import { beliefsOf, motives, type Lookup, type Step } from '$lib/run/provenance';
 
 	import PromotePanel from './PromotePanel.svelte';
 
@@ -11,8 +12,9 @@
 		run,
 		cal,
 		changes,
-		end
-	}: { ix: StateIndex; id: string; run: string; cal: Calendar; changes: EntityChange[]; end: DateTuple } = $props();
+		end,
+		lookup
+	}: { ix: StateIndex; id: string; run: string; cal: Calendar; changes: EntityChange[]; end: DateTuple; lookup: Lookup } = $props();
 
 	const me = $derived(ix.get(id)!);
 	const view = $derived(personView(ix, id));
@@ -33,7 +35,45 @@
 		(then.grievances as { against: string; event: string; kind: string; answered?: string }[] | null) ?? []
 	);
 	const race = $derived(raceName(me.fields.race));
+	const beliefs = $derived(beliefsOf(then.beliefs as Record<string, any> | null, ix, lookup));
+	const moves = $derived(motives(id, ix, me.fields.beliefs, lookup).filter((m) => m.trace.length));
+	const atEnd = $derived(at < 0 || at === steps.length - 1);
+	const STEP: Record<string, string> = {
+		'belief.perceived': 'saw it',
+		'belief.told': 'was told it',
+		'belief.corrected': 'learned the truth',
+		'belief.heard': 'heard it as news from the road'
+	};
+	function stepText(s: Step): string {
+		const e = s.event;
+		const holder = e.roles?.holder?.[0];
+		const teller = e.roles?.teller?.[0];
+		if (e.type === 'belief.told') {
+			const how = s.lie ? 'was lied to' : e.payload?.intent === 'leak' ? 'had it let slip' : 'was told it';
+			return `${whoIs(holder).name} ${how} by ${whoIs(teller).name}`;
+		}
+		if (e.type === 'belief.news_arrived') return `news came by road from ${whoIs(e.payload?.from).name}`;
+		if (STEP[e.type]) return `${holder ? whoIs(holder).name + ' ' : ''}${STEP[e.type]}`;
+		const what = String(e.type).replace(/[._]/g, ' ');
+		return e.payload?.action ? `${e.payload.action} (${what})` : `the ${what}`;
+	}
 </script>
+
+{#snippet walk(trace: Step[])}
+	{#if trace.length}
+		<ol class="trace">
+			{#each trace as s, i (s.event.id)}
+				<li class:lie={s.lie}>
+					<a href={eventHref(s.event.id)} aria-label={`${date(s.event.date)}: ${stepText(s)} (the event)`}>{date(s.event.date)}</a> {stepText(s)}
+					{#if s.lie}<span class="badge warn">lie</span>{:else if i && trace[i - 1].lie}<span class="badge ripple">behind the lie</span>{:else if s.origin}<span class="badge pin">where it began</span>{/if}
+					{#if s.more}<span class="muted small">…and further back</span>{/if}
+				</li>
+			{/each}
+		</ol>
+	{:else}
+		<p class="muted small">No record of where it came from.</p>
+	{/if}
+{/snippet}
 
 {#snippet person(p: Who, role = '')}
 	<a class="who" class:dead={p.status === 'dead'} class:dormant={p.status === 'dormant'} href={href(p.id)}
@@ -99,6 +139,36 @@
 		<dd>{#if then.place}<a href={href(String(then.place))}>{ix.get(String(then.place))?.fields.name ?? then.place}</a>{:else}—{/if}</dd>
 	</dl>
 
+	{#if beliefs.length}
+		<h3>Beliefs ({beliefs.length})</h3>
+		<p class="muted small">What they hold to be so, firmest first, and where each came from.</p>
+		<ul class="beliefs">
+			{#each beliefs as b (b.key)}
+				<li>
+					<details>
+						<summary>
+							{b.text} <span class="muted small">({Math.round(b.conf * 100)}% sure{b.secret ? ', kept secret' : ''})</span>
+							{#if b.lie}<span class="badge warn">a lie in its past</span>{/if}
+						</summary>
+						{@render walk(b.trace)}
+					</details>
+				</li>
+			{/each}
+		</ul>
+	{/if}
+	{#if moves.length && atEnd}
+		<h3>What moves them</h3>
+		<ul class="beliefs">
+			{#each moves as m (m.ambition)}
+				<li>
+					<a href={href(m.ambition)}>{m.class}</a>{#if m.target} against {@render person(whoIs(m.target))}{/if}, because
+					{#if m.belief && me.fields.beliefs?.[m.belief]}they believe {beliefs.find((b) => b.key === m.belief)?.text ?? m.belief}{:else}of what happened{/if}:
+					{@render walk(m.trace)}
+				</li>
+			{/each}
+		</ul>
+	{/if}
+
 	<h3>Ambitions ({view.ambitions.length}, over the whole run)</h3>
 	{#if view.ambitions.length}
 		<div class="scroll">
@@ -159,6 +229,20 @@
 </section>
 
 <style>
+	.beliefs {
+		list-style: none;
+		padding: 0;
+	}
+	.beliefs > li {
+		margin: 0.35rem 0;
+	}
+	.trace {
+		margin: 0.3rem 0 0.5rem 1.2rem;
+		font-size: 0.9rem;
+	}
+	.trace li.lie {
+		color: var(--unexplained);
+	}
 	.person h3 {
 		margin: 1.25rem 0 0.5rem;
 		font-size: 1rem;
