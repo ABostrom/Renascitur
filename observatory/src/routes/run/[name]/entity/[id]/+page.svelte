@@ -1,15 +1,30 @@
 <script lang="ts">
 	import { page } from '$app/state';
 
-	import { entityDetail, type EntityDetailData } from '$lib/run/entity';
+	import { entityDetail, finalState, type EntityDetailData } from '$lib/run/entity';
 	import type { EventIndex } from '$lib/run/index';
+	import { stateIndexOf, type StateIndex } from '$lib/run/person';
+	import type { DateTuple } from '$lib/run/calendar';
 	import { loadRun } from '$lib/runs';
+	import PersonView from '$lib/ui/PersonView.svelte';
 
 	const name = $derived(page.params.name ?? '');
 	const id = $derived(page.params.id ?? '');
 	let index = $state<EventIndex | null>(null);
 	let detail = $state<EntityDetailData | null>(null);
 	let error = $state<string | null>(null);
+	let everyone = $state<StateIndex | null>(null);
+
+	const stateIndex = (ix: EventIndex) => stateIndexOf(ix.run, () => finalState(ix.run));
+
+	// The run's end (its recipe's), for the person view's "as of" control; else its last event.
+	function endOf(ix: EventIndex): DateTuple {
+		try {
+			return ix.run.calendar.parse(String(ix.run.manifest.meta.recipe?.run?.end));
+		} catch {
+			return ix.count ? ix.row(ix.count - 1).date : [1, 1, 0];
+		}
+	}
 
 	$effect(() => {
 		const n = name;
@@ -22,9 +37,12 @@
 		loadRun(n)
 			.then(async ({ index: ix }) => {
 				const d = await entityDetail(ix.run, ix, e);
+				// A person gets the person view, which reads the whole final state (indexed once per run).
+				const people = d.record?.kind === 'person' ? await stateIndex(ix) : null;
 				if (!stale) {
 					index = ix;
 					detail = d;
+					everyone = people;
 				}
 			})
 			.catch((err) => {
@@ -52,6 +70,9 @@
 	<p class="muted">Loading…</p>
 {:else}
 	<h1 class="mono">{id}</h1>
+	{#if everyone && detail.record?.kind === 'person'}
+		<PersonView ix={everyone} {id} run={name} {cal} changes={detail.changes} end={endOf(index)} />
+	{/if}
 	<div class="grid">
 		<section class="card">
 			<h2>At the end of the run</h2>
