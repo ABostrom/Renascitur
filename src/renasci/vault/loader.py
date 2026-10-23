@@ -28,7 +28,7 @@ import unicodedata
 from dataclasses import asdict, dataclass, field
 from pathlib import Path, PurePosixPath
 
-from renasci.vault.config import Config
+from renasci.vault.config import ID, Config
 from renasci.vault.frontmatter import parse
 from renasci.vault.loader_types import TYPES
 
@@ -66,6 +66,8 @@ class Note:
     aliases: list = field(default_factory=list)
     line_of: dict = field(default_factory=dict)
     hash: str = ""
+    path: str = ""  # the file, as found (its name may not be NFC)
+    frontmatter_state: str = "none"  # none | present | unclosed
 
 
 @dataclass
@@ -74,6 +76,8 @@ class Vault:
     notes: dict  # key -> Note, sorted by key
     findings: list
     digest: str
+    config: Config = field(default_factory=Config)
+    bad_ids: frozenset = frozenset()  # notes whose `id:` is malformed or shared (their pins are blocked)
 
     def to_json(self) -> dict:
         return {"notes": [asdict(n) for n in self.notes.values()], "findings": self.findings, "digest": self.digest}
@@ -193,6 +197,8 @@ def load(root, config: Config | None = None) -> Vault:
         if not utf8:
             finding("not_utf8", key, 1, "not UTF-8: undecodable bytes were replaced")
         fm, problems, line_of, body_start = parse(text)
+        state = ("present" if body_start > 0 else
+                 "unclosed" if any("never closes" in p["message"] for p in problems) else "none")
         for p in problems:
             finding("frontmatter_subset", key, p["line"], (f"{p['field']}: " if p["field"] else "") + p["message"])
         declared = fm.get("type")
@@ -207,7 +213,8 @@ def load(root, config: Config | None = None) -> Vault:
         status = ("proposed" if fm.get("canon") == "proposed" else "draft" if fm.get("status") == "draft" else "canon")
         notes[key] = Note(key, PurePosixPath(key).name, fm.get("id") if isinstance(fm.get("id"), str) else None,
                           kind, kind_from, status, fm, aliases=_aliases(fm.get("aliases")), line_of=line_of,
-                          hash=hashlib.sha256(text.encode("utf-8")).hexdigest())
+                          hash=hashlib.sha256(text.encode("utf-8")).hexdigest(), path=str(path),
+                          frontmatter_state=state)
         texts[key] = (text, body_start)
 
     resolver = Resolver(notes)
@@ -232,8 +239,21 @@ def load(root, config: Config | None = None) -> Vault:
             for t in WIKILINK.findall(line):
                 take(t, n, None, note.body_links)
 
+    by_id: dict[str, list[str]] = {}
+    bad = set()
+    for key, note in notes.items():
+        if "id" in note.frontmatter and (note.id is None or not ID.fullmatch(note.id)):
+            finding("bad_id", key, note.line_of.get("id", 1), f"id {note.frontmatter['id']!r} is not like v:house-medani")
+            bad.add(key)
+        elif note.id:
+            by_id.setdefault(note.id, []).append(key)
+    for vid, keys in by_id.items():
+        if len(keys) > 1:
+            for key in keys:
+                finding("duplicate_id", key, notes[key].line_of.get("id", 1), f"{vid} is also on {', '.join(k for k in keys if k != key)}")
+                bad.add(key)
     findings.sort(key=lambda f: (f["key"], f["line"], f["kind"], f["message"]))
     config_hash = hashlib.sha256(config.digest_text.encode("utf-8")).hexdigest()
     digest = hashlib.sha256(json.dumps({"notes": sorted([k, n.hash] for k, n in notes.items()), "config": config_hash},
                                        separators=(",", ":")).encode("utf-8")).hexdigest()
-    return Vault(str(root), dict(sorted(notes.items())), findings, digest)
+    return Vault(str(root), dict(sorted(notes.items())), findings, digest, config, frozenset(bad))

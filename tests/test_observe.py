@@ -303,6 +303,10 @@ def test_a_launch_body_must_say_its_length_and_be_small(launcher):
         conn.putrequest("POST", "/api/launch")
         for k, v in {**launch_headers(launcher), "Host": host, "Content-Length": length}.items():
             conn.putheader(k, v)
-        conn.endheaders(big)
-        assert conn.getresponse().status in (411, 413)
-        conn.close()
+        try:
+            conn.endheaders(big)
+            assert conn.getresponse().status in (411, 413)
+        except (ConnectionError, http.client.RemoteDisconnected):
+            pass  # the server refused and closed first (it may, under load): refused all the same
+        finally:
+            conn.close()

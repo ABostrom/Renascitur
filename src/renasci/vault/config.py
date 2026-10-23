@@ -26,6 +26,8 @@ from pathlib import Path
 
 from renasci.vault.loader_types import TYPES
 
+ID = re.compile(r"v:[a-z0-9]+(?:-[a-z0-9]+)*")  # what an id looks like (S2 §4)
+
 
 @lru_cache(maxsize=4096)
 def _segment(pattern: str) -> re.Pattern:
@@ -66,6 +68,7 @@ class Config:
     ignore: list = field(default_factory=list)
     type_aliases: dict = field(default_factory=dict)
     rules: list = field(default_factory=list)
+    ids: dict = field(default_factory=dict)  # note key -> a preferred id (S2 §4)
     digest_text: str = ""  # the file's normalised text, for the vault digest ("" when there is none)
 
     @classmethod
@@ -75,7 +78,7 @@ class Config:
             return cls()
         text = path.read_bytes().decode("utf-8").removeprefix(chr(0xFEFF)).replace("\r\n", "\n")
         raw = tomllib.loads(text)
-        unknown = set(raw) - {"ignore", "type_aliases", "types"}
+        unknown = set(raw) - {"ignore", "type_aliases", "types", "ids"}
         if unknown:
             raise ValueError(f"vault.toml: unknown settings {sorted(unknown)}")
         ignore = _strings(raw.get("ignore", []), "ignore")
@@ -98,7 +101,11 @@ class Config:
             if r["type"] not in TYPES:
                 raise ValueError(f"vault.toml: rule {r['match']!r} gives type {r['type']!r}, not one of the 22")
             rules.append(Rule(r["match"], r["type"], r.get("when")))
-        return cls(ignore, dict(aliases), rules, text)
+        ids = raw.get("ids", {})
+        if not isinstance(ids, dict) or not all(isinstance(k, str) and isinstance(v, str) and ID.fullmatch(v)
+                                                 for k, v in ids.items()):
+            raise ValueError("vault.toml: [ids] maps note keys to ids like \"v:house-medani\"")
+        return cls(ignore, dict(aliases), rules, dict(ids), text)
 
     def ignored(self, key: str) -> bool:
         return any(glob_match(p, key) for p in self.ignore)
