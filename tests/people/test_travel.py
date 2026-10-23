@@ -39,7 +39,7 @@ class Probe(System):
     name, cadence, priority = "toy.probe", "yearly", 99
     reads = travel.READS | A.READS | life.DIE_READS | frozenset(
         {"ids:settlement", "ids:person", "residents", "place", "spouse", "offices", "born", "sex", "race", "status",
-         "region", "capacity"}).union(*(a.reads for a in A.ACTIONS.values()))
+         "region", "capacity", "vialux"}).union(*(a.reads for a in A.ACTIONS.values()))
     writes = travel.WRITES | life.DIE_WRITES | A.WRITES
     event_types = tuple({t.name: t for t in travel.EVENT_TYPES + life.DIE_EVENTS + A.EVENT_TYPES}.values())
 

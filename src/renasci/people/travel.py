@@ -24,16 +24,16 @@ from renasci import geo
 from renasci.core.calendar import Date, Span
 from renasci.core.events import EventType
 from renasci.core.systems import System
-from renasci.people import population
+from renasci.people import beliefs, population
 from renasci.people.races import age_years
 
 DEPART = EventType("people.depart", 1, roles={"traveller": (1, 1), "origin": (1, 1), "destination": (1, 1)},
                    payload={"days": "int", "why": "str"})
 ARRIVE = EventType("people.arrive", 1, roles={"traveller": (1, 1), "origin": (1, 1), "destination": (1, 1)},
                    payload={"why": "str"})
-EVENT_TYPES = (DEPART, ARRIVE)
-READS = geo.READS | frozenset({"journey", "place", "residents", "status", "flow:*"})
-WRITES = frozenset({"journey", "place", "residents", "flow:*"})
+EVENT_TYPES = (DEPART, ARRIVE) + beliefs.EVENT_TYPES  # (an arrival may tell what the traveller believes)
+READS = geo.READS | frozenset({"journey", "place", "residents", "status", "flow:*"}) | beliefs.ARRIVAL_READS
+WRITES = frozenset({"journey", "place", "residents", "flow:*"}) | beliefs.ARRIVAL_WRITES
 FLEE_DAYS, MIGRATION_RATE, ADULT = 30, 0.01, 16
 
 
@@ -75,6 +75,7 @@ def _move(ctx, person: str, journey: dict) -> None:
     ctx.set(person, "journey", None)
     population.bump(ctx, old, out=1)
     population.bump(ctx, new, **{"in": 1})
+    beliefs.on_arrival(ctx, person, new)  # (S6: a newcomer tells what they believe)
 
 
 def arrive(ctx, activation) -> None:
