@@ -49,9 +49,21 @@ def _parse(text: str):
     return races, Catalogue.from_json(data["catalogue"]), house_from
 
 
+_WORLDS: dict[int, tuple[dict, tuple]] = {}  # id(params) -> (params, parsed): params kept, so ids stay unique
+
+
 def world(ctx) -> tuple[dict[str, Race], Catalogue, str]:
-    """The world's races, genome catalogue and house rule, from the ruleset params (parsed once)."""
-    return _parse(canonical({k: ctx.params[k] for k in WORLD_PARAMS if k in ctx.params}))
+    """The world's races, genome catalogue and house rule, from the ruleset params. Each activation
+    gets its own copy of the params, so this saves the work within one (where it is called per person);
+    across activations, `_parse`'s cache on the params' text does."""
+    hit = _WORLDS.get(id(ctx.params))
+    if hit is not None and hit[0] is ctx.params:
+        return hit[1]
+    parsed = _parse(canonical({k: ctx.params[k] for k in WORLD_PARAMS if k in ctx.params}))
+    if len(_WORLDS) > 64:
+        _WORLDS.clear()
+    _WORLDS[id(ctx.params)] = (ctx.params, parsed)
+    return parsed
 
 
 def world_params(races: list, catalogue: dict, house_from: str = "father", kin_degree: int = 2,

@@ -224,3 +224,37 @@ def test_bench_refuses_a_history_with_other_columns(tmp_path):
     history.write_text("date,something\n", encoding="utf-8")
     assert main(["bench", "--years", "1", "--people", "4", "--out", str(tmp_path / "b"),
                  "--history", str(history)]) == 1
+
+
+def test_bench_times_the_fourth_age_at_a_scale(tmp_path):
+    import csv
+
+    from renasci.cli import main
+
+    history = tmp_path / "h.csv"
+    assert main(["bench", "--world", "fourth_age", "--scale", "2", "--years", "2", "--history", str(history),
+                 "--out", str(tmp_path / "b")]) == 0
+    row = list(csv.DictReader(history.open(encoding="utf-8")))[-1]
+    assert row["world"] == "fourth_age x2 digest reads" and row["years"] == "2"
+    assert int(row["people_start"]) > 400  # about twice the draft's 261 notables
+
+
+def test_the_fourth_age_scales_its_settlements():
+    from renasci import renascita
+
+    base, big = renascita._scenario(None), renascita._scenario(None, scale=3)
+    for a, b in zip(base["settlements"], big["settlements"]):
+        for k in ("masses", "commoners", "capacity", "notable_target"):
+            assert b[k] == a[k] * 3
+    assert big["houses"] == base["houses"]  # houses are canon-shaped, not population: unscaled
+    import pytest
+    with pytest.raises(ValueError):
+        renascita._scenario(None, scale=0)
+
+
+def test_bench_refuses_years_past_the_end_of_the_age(tmp_path, capsys):
+    from renasci.cli import main
+
+    assert main(["bench", "--world", "fourth_age", "--years", "300", "--history", str(tmp_path / "h.csv"),
+                 "--out", str(tmp_path / "b")]) == 1
+    assert "256" in capsys.readouterr().err

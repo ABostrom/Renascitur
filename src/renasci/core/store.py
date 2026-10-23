@@ -89,10 +89,11 @@ class BulkDelta:
 
 
 class _Entity:
-    __slots__ = ("kind", "status", "fields")
+    __slots__ = ("kind", "status", "fields", "texts")
 
     def __init__(self, kind: str, status: str, fields: dict):
         self.kind, self.status, self.fields = kind, status, fields
+        self.texts: dict[str, str] = {}  # canonical JSON of non-scalar fields, made on first read (#75)
 
 
 class _Column:
@@ -193,10 +194,25 @@ class Store:
                       if e.kind == kind and (status is None or e.status == status))
 
     def get(self, entity: str, field: str, default=None):
-        value = self._entity(entity).fields.get(field, default)
+        return self.read(entity, field, default)[0]
+
+    def read(self, entity: str, field: str, default=None) -> tuple[object, str | None]:
+        """The value (an independent copy) and its canonical text, None for a plain scalar.
+
+        A field's text is made once and kept until the field is written, so a read costs one
+        `json.loads`, and the context digests the same text instead of serialising the value again.
+        """
+        record = self._entity(entity)
+        value = record.fields.get(field, default)
         if value is None or type(value) in (str, int, bool):
-            return value  # immutable and already canonical: no copy needed (the hot path of every read)
-        return _json_copy(value)
+            return value, None  # immutable and already canonical: no copy needed (the hot path of every read)
+        if field not in record.fields:
+            text = canonical(value)  # (a default: not the record's, so not kept)
+        else:
+            text = record.texts.get(field)
+            if text is None:
+                text = record.texts[field] = canonical(value)
+        return json.loads(text), text
 
     def set(self, entity: str, field: str, value, date: Date, event: str, activation: str = "") -> None:
         _need_field(field)
@@ -206,6 +222,7 @@ class Store:
         value = _json_copy(value)
         old = record.fields.get(field)
         record.fields[field] = value
+        record.texts.pop(field, None)
         self.deltas.append(StateDelta(date, entity, field, old, value, event, activation))
 
     def set_status(self, entity: str, status: str, date: Date, event: str, activation: str = "") -> None:

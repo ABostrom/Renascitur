@@ -27,8 +27,22 @@ SCENARIO: dict = geo.attach(json.loads((Path(__file__).parent / "fourth_age.json
 START = Date.from_json(SCENARIO["start"])
 
 
-def _scenario(scenario: dict | None) -> dict:
-    return geo.attach(copy.deepcopy(SCENARIO if scenario is None else scenario), Path(__file__).parent)
+# Population, not canon: the houses stay as they are, while the named commoners (and the notable target
+# that keeps their number up) grow with the masses, so a scaled world has about `scale` times the notables.
+SCALED = ("masses", "commoners", "capacity", "notable_target")
+
+
+def _scenario(scenario: dict | None, scale: int = 1) -> dict:
+    """The scenario (the draft unless given), with every settlement's population times `scale` (#75: M1
+    scale is about ten times the draft)."""
+    if type(scale) is not int or scale < 1:
+        raise ValueError(f"scale must be a positive int, got {scale!r}")
+    sc = geo.attach(copy.deepcopy(SCENARIO if scenario is None else scenario), Path(__file__).parent)
+    for s in sc["settlements"]:
+        for k in SCALED:
+            if s.get(k) is not None:
+                s[k] = s[k] * scale
+    return sc
 
 
 def start_of(scenario: dict) -> Date:
@@ -39,16 +53,16 @@ def ruleset(scenario: dict | None = None):
     return people_ruleset("fourth_age", _scenario(scenario))
 
 
-def rulesets(scenario: dict | None = None):
-    sc = _scenario(scenario)
+def rulesets(scenario: dict | None = None, scale: int = 1):
+    sc = _scenario(scenario, scale)
     return [(start_of(sc), people_ruleset("fourth_age", sc))]
 
 
 def new_engine(seed: int = 1234, ripples=(), pins=(), scenario: dict | None = None, canon: dict | None = None,
-               end=None) -> Engine:
+               end=None, scale: int = 1) -> Engine:
     """The Fourth Age at the scenario's start, synthesised from the (draft) scenario with any canon placed
     (`renasci.people.casting`), before anything runs."""
-    sc = _scenario(scenario)
+    sc = _scenario(scenario, scale)
     e = Engine(CAL, seed=seed, rulesets=rulesets(sc))
     synthesise(e, sc, seed, canon)
     e.apply_pins(pins, end=end)  # (pins past the run's `end` are out of scope)

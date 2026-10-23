@@ -312,3 +312,18 @@ def test_building_a_large_column_in_one_write():
     ids = [f"p{i:05d}" for i in range(20000)][::-1]
     s.write_column("g", ids, [float(i) for i in range(20000)], D, "x1")
     assert s.read_column("g", ["p00000", "p19999"]).tolist() == [19999.0, 0.0]
+
+
+def test_read_gives_an_independent_copy_and_the_canonical_text_it_was_read_from():
+    """`read` is `get` plus the value's canonical text (one serialisation per read, #75), kept current
+    across writes: the text always matches what `get` returns now."""
+    s = make_store()
+    s.set("e1", "kids", [{"name": "Cy", "age": 3}], D, "x5")
+    value, text = s.read("e1", "kids")
+    assert value == [{"name": "Cy", "age": 3}] and text == canonical(value)
+    value.append("tampered")
+    assert s.get("e1", "kids") == [{"name": "Cy", "age": 3}]
+    s.set("e1", "kids", [], D, "x6")
+    assert s.read("e1", "kids") == ([], "[]")
+    assert s.read("e1", "name") == ("Ada", None)  # a plain scalar needs no text
+    assert s.read("e1", "nothing", default=[1]) == ([1], "[1]")
