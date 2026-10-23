@@ -5,6 +5,7 @@
 	import { defaultBaseline } from '$lib/run/diff';
 	import { listRuns, openRun, type Manifest, type RunListing } from '$lib/run/run';
 	import { PickerSource } from '$lib/run/source';
+	import LaunchPanel from '$lib/ui/LaunchPanel.svelte';
 
 	let runs = $state<RunListing[] | null>(null);
 	let error = $state<string | null>(null);
@@ -131,6 +132,7 @@
 			</section>
 		{/if}
 	{/if}
+	<LaunchPanel runs={runs.map((r) => r.name)} onfinished={async () => (runs = await listRuns())} />
 {/if}
 
 <section class="card picker">

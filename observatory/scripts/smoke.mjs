@@ -1,7 +1,8 @@
 // Smoke test of the shipping model: the committed build, served by `renasci observe`, in a real browser.
 //   npm run build && npm run smoke
 import { execSync, spawn } from 'node:child_process';
-import { existsSync } from 'node:fs';
+import { existsSync, mkdtempSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -38,6 +39,37 @@ async function waitForServer() {
 }
 
 let failed = false;
+let launched = '';
+let launchServer = null;
+const scratch = mkdtempSync(resolve(tmpdir(), 'renasci-smoke-'));
+
+/** A second server, with the launcher on, over an empty runs folder and one tiny toy recipe. */
+async function launchAndOpen(browser, errors) {
+	const lport = port + 1;
+	const recipes = resolve(scratch, 'recipes');
+	const runs = resolve(scratch, 'runs');
+	mkdirSync(recipes, { recursive: true });
+	mkdirSync(runs, { recursive: true });
+	writeFileSync(resolve(recipes, 'tiny.toml'),
+		'[run]\nname = "tiny"\nengine = "0.1.0"\nseed = 7\nworld = "toy"\nend = "1X 2"\n\n[world]\npeople_per_village = 4\n');
+	launchServer = spawn(`uv run renasci observe "${runs}" --app "${resolve(app, 'build')}" --port ${lport} --no-browser --allow-launch --recipes "${recipes}"`,
+		{ cwd: repo, stdio: 'ignore', shell: true });
+	for (let i = 0; i < 100; i++) {
+		try {
+			if ((await fetch(`http://127.0.0.1:${lport}/api/capabilities`)).ok) break;
+		} catch {}
+		await new Promise((r) => setTimeout(r, 200));
+	}
+	const page = await browser.newPage();
+	page.on('pageerror', (e) => errors.push(e.message));
+	await page.goto(`http://127.0.0.1:${lport}/`);
+	await page.getByRole('heading', { name: 'Launch' }).waitFor({ timeout: 15000 });
+	await page.getByRole('button', { name: 'Run' }).first().click();
+	await page.getByRole('link', { name: 'open tiny' }).click({ timeout: 60000 });
+	await page.waitForURL(/\/run\/tiny\/events/, { timeout: 15000 });
+	await page.locator('.filters').waitFor({ timeout: 20000 }); // (indexed: the launched run's events are there)
+	return 'a run launched from a recipe and opened';
+}
 const browser = await (async () => {
 	await waitForServer();
 	return chromium.launch({ executablePath: chrome, headless: true });
@@ -154,18 +186,29 @@ try {
 	if ((await page.locator('svg[aria-label^="Map of"] line.route.vialux').count()) === 0) throw new Error('no Vialux on the map');
 	await page.goto(`http://127.0.0.1:${port}/run/base/map`);
 	await page.getByText(/has no geography/).waitFor({ timeout: 15000 });
+	// read-only without the launcher: the runs page offers no launch
+	await page.goto(`http://127.0.0.1:${port}/`);
+	await page.getByRole('heading', { name: 'Runs', exact: true, level: 1 }).waitFor({ timeout: 15000 });
+	if ((await page.getByRole('heading', { name: 'Launch' }).count()) !== 0) throw new Error('a read-only server offered to launch');
+	// with --allow-launch: a run launched from a recipe and opened from the UI (a scratch runs folder)
+	launched = await launchAndOpen(browser, errors);
 	if (errors.length) throw new Error(`page errors: ${errors.join('; ')}`);
-	console.log(`smoke: ok (browser read ${counts.base.n} events from base; ${shown} granary events listed; detail, cause chain and entity page shown; diff wave of ${cells} cells, ${divergentShown} divergent events in one, buggy roots marked; story river of ${bars} bars, ${barsIn} in a decade, saga to arc to event; latch points and a what-if beside its baseline; a person's page; houses and ${popLines} population lines; canon strain to its event; the Pyrosia map with ${towns} settlements)`);
+	console.log(`smoke: ok (browser read ${counts.base.n} events from base; ${shown} granary events listed; detail, cause chain and entity page shown; diff wave of ${cells} cells, ${divergentShown} divergent events in one, buggy roots marked; story river of ${bars} bars, ${barsIn} in a decade, saga to arc to event; latch points and a what-if beside its baseline; a person's page; houses and ${popLines} population lines; canon strain to its event; the Pyrosia map with ${towns} settlements; ${launched})`);
 } catch (e) {
 	failed = true;
 	console.error('smoke: FAILED', e);
 } finally {
 	await browser.close();
-	// stop the server and everything it started (uv, python)
-	if (process.platform === 'win32') {
-		try {
-			execSync(`taskkill /pid ${server.pid} /T /F`, { stdio: 'ignore' });
-		} catch {}
-	} else server.kill();
+	// stop the servers and everything they started (uv, python)
+	for (const s of [server, launchServer].filter(Boolean)) {
+		if (process.platform === 'win32') {
+			try {
+				execSync(`taskkill /pid ${s.pid} /T /F`, { stdio: 'ignore' });
+			} catch {}
+		} else s.kill();
+	}
+	try {
+		rmSync(scratch, { recursive: true, force: true });
+	} catch {}
 }
 process.exit(failed ? 1 : 0);

@@ -45,3 +45,37 @@ describe('latch points', async () => {
 		for (const [a, b] of c.changed) expect(a.ambition).toBe(b.ambition);
 	});
 });
+
+describe('the launcher: runs and replays (#57)', () => {
+	it('posts a recipe to run, and a run plus recipe to replay, as the server expects', async () => {
+		const { launcher } = await import('./latch');
+		const sent: { url: string; init: RequestInit }[] = [];
+		const real = globalThis.fetch;
+		globalThis.fetch = (async (url: string, init: RequestInit) => {
+			sent.push({ url, init });
+			return new Response(JSON.stringify({ id: 1, state: 'running' }), { status: 202 });
+		}) as unknown as typeof fetch;
+		try {
+			await launcher.run('fresh.toml');
+			await launcher.replay('base', 'what-if.toml');
+		} finally {
+			globalThis.fetch = real;
+		}
+		expect(sent.map((s) => [s.url, JSON.parse(String(s.init.body))])).toEqual([
+			['/api/run', { recipe: 'fresh.toml' }],
+			['/api/replay', { run: 'base', recipe: 'what-if.toml' }]
+		]);
+		for (const s of sent) expect((s.init.headers as Record<string, string>)['X-Renasci-Launch']).toBe('1');
+	});
+
+	it('says why a launch was refused', async () => {
+		const { launcher } = await import('./latch');
+		const real = globalThis.fetch;
+		globalThis.fetch = (async () => new Response('no recipe', { status: 400 })) as unknown as typeof fetch;
+		try {
+			await expect(launcher.run('x.toml')).rejects.toThrow('no recipe');
+		} finally {
+			globalThis.fetch = real;
+		}
+	});
+});
