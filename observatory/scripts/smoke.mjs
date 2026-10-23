@@ -125,8 +125,16 @@ try {
 	await page.getByText(/In kin-latch1: (lives on|dies)/).waitFor({ timeout: 30000 });
 	const rivers = await page.locator('svg[aria-label^="Ambitions by house"]').count();
 	if (rivers !== 2) throw new Error(`the comparison shows ${rivers} rivers`);
+	// the map: a Fourth Age run's places and routes, the Vialux drawn as itself; a world without one says so
+	await page.goto(`http://127.0.0.1:${port}/run/pyrosia/map`);
+	await page.getByRole('heading', { name: 'Map' }).waitFor({ timeout: 20000 });
+	const towns = await page.locator('svg[aria-label^="Map of"] circle.settlement').count();
+	if (towns < 6) throw new Error(`the map shows ${towns} settlements`);
+	if ((await page.locator('svg[aria-label^="Map of"] line.route.vialux').count()) === 0) throw new Error('no Vialux on the map');
+	await page.goto(`http://127.0.0.1:${port}/run/base/map`);
+	await page.getByText(/has no geography/).waitFor({ timeout: 15000 });
 	if (errors.length) throw new Error(`page errors: ${errors.join('; ')}`);
-	console.log(`smoke: ok (browser read ${counts.base.n} events from base; ${shown} granary events listed; detail, cause chain and entity page shown; diff wave of ${cells} cells, ${divergentShown} divergent events in one, buggy roots marked; story river of ${bars} bars, ${barsIn} in a decade, saga to arc to event; latch points and a what-if beside its baseline)`);
+	console.log(`smoke: ok (browser read ${counts.base.n} events from base; ${shown} granary events listed; detail, cause chain and entity page shown; diff wave of ${cells} cells, ${divergentShown} divergent events in one, buggy roots marked; story river of ${bars} bars, ${barsIn} in a decade, saga to arc to event; latch points and a what-if beside its baseline; the Pyrosia map with ${towns} settlements)`);
 } catch (e) {
 	failed = true;
 	console.error('smoke: FAILED', e);

@@ -41,6 +41,15 @@ date = "1X 4"
 target = "t:Brook-02"
 """
 
+PYROSIA = """
+[run]
+name = "pyrosia"
+engine = "0.1.0"
+seed = 11
+world = "fourth_age"
+end = "4A 6"
+"""
+
 KIN = """
 [run]
 name = "kin"
@@ -98,6 +107,10 @@ def main_() -> None:
     assert main(["stories", str(OUT / "kin")]) == 0
     assert main(["latch", str(OUT / "kin")]) == 0
     assert main(["latch", str(OUT / "kin"), "--launch", "1", "--out", str(OUT)]) == 0  # a what-if: kin-latch1
+    # A Fourth Age run on the Pyrosia draft (the Map page): it keeps geography.json.
+    pyrosia = OUT.parent / "pyrosia.toml"
+    pyrosia.write_text(PYROSIA, encoding="utf-8", newline="\n")
+    assert main(["run", str(pyrosia), "--out", str(OUT)]) == 0
     for f in (OUT.parent).glob("*.toml"):
         f.unlink()
     print(f"fixtures written to {OUT}")
