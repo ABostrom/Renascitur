@@ -44,13 +44,14 @@ def rulesets(scenario: dict | None = None):
     return [(start_of(sc), people_ruleset("fourth_age", sc))]
 
 
-def new_engine(seed: int = 1234, ripples=(), pins=(), scenario: dict | None = None, canon: dict | None = None) -> Engine:
+def new_engine(seed: int = 1234, ripples=(), pins=(), scenario: dict | None = None, canon: dict | None = None,
+               end=None) -> Engine:
     """The Fourth Age at the scenario's start, synthesised from the (draft) scenario with any canon placed
     (`renasci.people.casting`), before anything runs."""
     sc = _scenario(scenario)
     e = Engine(CAL, seed=seed, rulesets=rulesets(sc))
     synthesise(e, sc, seed, canon)
-    e.apply_pins(pins)
+    e.apply_pins(pins, end=end)  # (pins past the run's `end` are out of scope)
     e.apply_ripples(ripples)
     return e
 

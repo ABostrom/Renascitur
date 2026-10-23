@@ -121,7 +121,8 @@ def _run(recipe, out: Path, meta: dict | None = None, canon_doc: dict | None = N
         canon_doc = _cast(recipe, world)
     extra = {}
     if canon_doc is not None:
-        extra = {"pins": [Pin.from_json(p) for p in canon_doc["pins"]], "canon": canon_doc["canon"]}
+        extra = {"pins": [Pin.from_json(p) for p in canon_doc["pins"]], "canon": canon_doc["canon"],
+                 "end": recipe.end}  # pins past the run's end are out of scope, not guarded
     engine = world.new_engine(recipe.seed, ripples=recipe.ripples, **extra, **recipe.params)
     engine.full_reads = recipe.full_reads
     folder = RunFolder.create(out / recipe.name, {"recipe": recipe.raw, "complete": False,
