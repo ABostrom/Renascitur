@@ -51,7 +51,7 @@ M2 ships three: `caused(event, by)` (agency), `fault(event, party)` (blame witho
 
 ### 2.2 belief (#86, #87)
 
-On a notable's person record, `beliefs: {claim key: {"claim": value, "conf": 0..1, "since": date, "from": event id, "heard": date}}`. It is capped at `belief_cap` (default 16), dropping the lowest salience × confidence. `from` is the event that last *changed* it (a perception, a telling, a correction). `heard` is the last reinforcement, which decay reads. Nothing about truth or lies is stored on it.
+On a notable's person record, `beliefs: {claim key: {"claim": value, "conf": 0..1, "since": date, "from": event id, "heard": date, "secret"?: true}}`. `secret` (present only when true, #89) marks a belief its holder came by in a secret event: how they know it, not whether it's true. It is capped at `belief_cap` (default 16), dropping the lowest salience × confidence. `from` is the event that last *changed* it (a perception, a telling, a correction). `heard` is the last reinforcement, which decay reads. Nothing about truth or lies is stored on it.
 
 ### 2.3 belief shares (#88)
 
