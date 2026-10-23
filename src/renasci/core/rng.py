@@ -137,7 +137,7 @@ class KeyedRng:
         """Every reshuffle at or before `tick`, chained, so each one re-rolls again."""
         return "|".join(r.salt for r in self.reshuffles if r.from_tick <= tick)
 
-    def key(self, system: str, entity: str, purpose: str, tick: Tick, occurrence: int) -> int:
+    def key(self, system: str, entity: str, purpose: str, tick: Tick, occurrence: int, extra: str = "") -> int:
         _check_name("system", system)
         _check_name("entity", entity)  # every stream has an owner; no entity=None streams
         _check_name("purpose", purpose)
@@ -146,17 +146,19 @@ class KeyedRng:
             raise TypeError(f"occurrence must be a non-negative int, got {occurrence!r}")
         # JSON list encoding keeps the parts unambiguous ("ab","c" never equals "a","bc").
         parts = [self.seed, system, entity, purpose, list(tick), occurrence, self.salt_for(tick)]
+        if extra:  # (a luck ripple: the owner's draws re-rolled; absent, every key is as it always was)
+            parts.append(extra)
         blob = json.dumps(parts, separators=(",", ":"), ensure_ascii=False).encode()
         return int.from_bytes(hashlib.blake2b(blob, digest_size=16).digest(), "big")
 
-    def stream(self, system: str, entity: str, purpose: str, tick: Tick, occurrence: int) -> Stream:
+    def stream(self, system: str, entity: str, purpose: str, tick: Tick, occurrence: int, extra: str = "") -> Stream:
         """A stream for an explicit occurrence. Systems should use `open` instead."""
-        return Stream(self.key(system, entity, purpose, tick, occurrence))
+        return Stream(self.key(system, entity, purpose, tick, occurrence, extra))
 
-    def open(self, table: OrdinalTable, system: str, entity: str, purpose: str, tick: Tick) -> Stream:
+    def open(self, table: OrdinalTable, system: str, entity: str, purpose: str, tick: Tick, extra: str = "") -> Stream:
         """Count the next occurrence and return its stream: the one entry point for systems."""
         occurrence = table.next(system, entity, purpose, tick)
-        return self.stream(system, entity, purpose, tick, occurrence)
+        return self.stream(system, entity, purpose, tick, occurrence, extra)
 
 
 class OrdinalTable:

@@ -24,7 +24,7 @@ from renasci.core.lod import ResolutionPolicy
 from renasci.core.pins import Director, Pin, feasibility
 from renasci.core.ripples import EVENT_TYPES as RIPPLE_TYPES
 from renasci.core.ripples import KINDS as ALL_RIPPLE_KINDS
-from renasci.core.ripples import NEEDS_DISGUISE, SUPPORTED as RIPPLE_KINDS, Ripple
+from renasci.core.ripples import NEEDS_DISGUISE, SPANS, SUPPORTED as RIPPLE_KINDS, Ripple
 from renasci.core.rng import KeyedRng, OrdinalTable, Reshuffle
 from renasci.core.scheduler import Activation, Scheduler, next_due
 from renasci.core.store import Store
@@ -37,7 +37,7 @@ DEADLINE_PRIORITY = 10**9  # pin deadlines run after everything else that day
 RIPPLE_PRIORITY = SWITCH_PRIORITY + 1  # ripples apply right after a ruleset switch, before systems
 CAST = EventType("engine.cast", 1, roles={"subject": (1, 1)}, payload={"kind": "str"}, dead_roles=("subject",))
 CAST_COLUMN = EventType("engine.cast_column", 1, roles={}, payload={"column": "str"})
-CHECKPOINT_FORMAT = 2  # 2: recipe includes major.minor versions
+CHECKPOINT_FORMAT = 3  # 2: recipe includes major.minor versions; 3: reshuffles in the header, not the recipe
 
 
 class Engine:
@@ -279,19 +279,48 @@ class Engine:
             raise ValueError("ripple ids must be unique")
         for r in ripples:
             if r.kind not in RIPPLE_KINDS:
-                raise ValueError(f"ripple {r.id}: {r.kind!r} is not supported yet (S1: {RIPPLE_KINDS})")
+                raise ValueError(f"ripple {r.id}: {r.kind!r} is not supported ({RIPPLE_KINDS})")
             self.calendar.check(r.date)
             if r.date < self.start:
                 raise ValueError(f"ripple {r.id} is dated before the run starts")
-            if r.kind == "protect" and (r.until is None or r.until < r.date):
-                raise ValueError(f"protect ripple {r.id} needs params.until on or after its date")
-            if r.kind in NEEDS_DISGUISE and self._ruleset_at(r.date).disguise(r.kind) is None:
-                raise ValueError(f"ripple {r.id}: the ruleset active on {r.date} has no {r.kind!r} disguise")
+            r.check()
+            if r.kind in NEEDS_DISGUISE:
+                disguise = self._ruleset_at(r.date).disguise(r.kind)
+                if disguise is None:
+                    raise ValueError(f"ripple {r.id}: the ruleset active on {r.date} has no {r.kind!r} disguise")
+                check = getattr(disguise, "check_ripple", None)
+                if check is not None:
+                    check(r)  # (a disguise refuses params it can't apply now, not mid-run)
         return ripples
+
+    def reshuffle(self, reshuffles) -> None:
+        """Re-roll everything from each reshuffle's tick on (a recipe's [[reshuffle]]), set before the run
+        starts and after casting: a reshuffle must start after the run's first quarter."""
+        if self._date is not None:
+            raise ValueError("reshuffles are set before the run starts")
+        first = self.calendar.canonical_tick(self.start)
+        for r in reshuffles:
+            if tuple(r.from_tick) <= first:
+                raise ValueError(f"reshuffle {r.salt!r} starts at {r.from_tick}, not after the run's first quarter {first}")
+        self.reshuffles = tuple(reshuffles)
+        self.rng = KeyedRng(self.seed, self.reshuffles)
 
     def protection(self, entity: str, date: Date) -> Ripple | None:
         for r in self.ripples:
             if r.kind == "protect" and r.target == entity and r.date <= date <= r.until:
+                return r
+        return None
+
+    def fortune(self, kind: str, owner: str, date: Date) -> Ripple | None:
+        """The favour or luck ripple active for a draw owned by `owner` today, if any. Luck is the
+        target's own draws; favour also the draws of their schemes and ambitions (owned by them)."""
+        for r in self.ripples:
+            if r.kind != kind or not r.date <= date <= r.until:
+                continue
+            if owner == r.target:
+                return r
+            if kind == "favour" and self.store.exists(owner) and self.store.kind(owner) in ("scheme", "ambition") \
+                    and self.store.get(owner, "owner") == r.target:
                 return r
         return None
 
@@ -310,7 +339,7 @@ class Engine:
         secret = self.record(Event(event_id("engine", r.target, f"ripple:{r.id}", r.date, 0, activation.id),
                                    r.date, f"ripple.{r.kind}", roles, None, (), {"target": r.target, "params": r.params},
                                    Source("ripple", r.id), activation=activation.id))
-        if r.kind == "protect":
+        if r.kind in SPANS:  # (protect, favour, luck: they act on what happens while they last)
             self.log_ripple(r, "apply", True, activation.id, event=secret.id)
             return
         disguise = self.ruleset.disguise(r.kind)
@@ -397,7 +426,6 @@ class Engine:
         cal = self.calendar
         return {
             "engine": __version__, "versions": versions(), "seed": self.seed, "strict": self.strict, "hinge_margin": self.hinge_margin,
-            "reshuffles": sorted((r.to_json() for r in self.reshuffles), key=lambda r: (r["from"], r["salt"])),
             "calendar": {"ages": [[a.index, a.abbrev, a.name, a.last_year] for a in cal.ages],
                          "months": cal.months, "seasons": cal.seasons},
             "rulesets": [{"start": d.to_json(), "name": rs.name, "version": rs.version, "params": rs.params,
@@ -441,6 +469,7 @@ class Engine:
         recipe = self.recipe()
         header = {"format": CHECKPOINT_FORMAT, "date": at.to_json(), "segments": int(segments),
                   "ripples": [r.to_json() for r in self.ripples],
+                  "reshuffles": sorted((r.to_json() for r in self.reshuffles), key=lambda r: (r["from"], r["salt"])),
                   "recipe_hash": digest(recipe, size=16), "recipe": recipe}
         return {"header": header, "state": self._state()}
 
@@ -479,6 +508,16 @@ class Engine:
         before_then = [r for r in header["ripples"] if Date.from_json(r["date"]) < at]
         if before_now != before_then:
             raise ValueError(f"ripples dated before {at} must match the checkpointed run; "
+                             "replay from an earlier checkpoint to change them")
+        # (A reshuffle is like a ripple: those already in force at the checkpoint are its history; later ones are free.)
+        def begun(tick) -> bool:  # (its quarter started before the checkpoint: draws in it may have been made)
+            age, year, q = tick
+            return Date(age, year, -(-q * calendar.days_per_year // 4)) < at
+
+        now = sorted((r.to_json() for r in reshuffles if begun(r.from_tick)), key=lambda r: (r["from"], r["salt"]))
+        then = [r for r in header.get("reshuffles", []) if begun(r["from"])]
+        if now != then:
+            raise ValueError(f"reshuffles from before {at} must match the checkpointed run; "
                              "replay from an earlier checkpoint to change them")
         engine.ripples = engine._validate_ripples(given)
         engine.scheduler.remove_where(lambda a: a.system == "engine" and a.purpose == "ripple")

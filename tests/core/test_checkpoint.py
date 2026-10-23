@@ -53,7 +53,7 @@ def test_checkpoint_needs_flushed_history_and_round_trips(tmp_path):
         e.checkpoint(at=Date(1, 3, 0), segments=0)
     e.clear_pending()
     cp = e.checkpoint(at=Date(1, 3, 0), segments=0)
-    assert cp["header"]["date"] == [1, 3, 0] and cp["header"]["format"] == 2
+    assert cp["header"]["date"] == [1, 3, 0] and cp["header"]["format"] == 3
     save_checkpoint(tmp_path / "c.json.gz", cp)
     assert load_checkpoint(tmp_path / "c.json.gz") == json.loads(json.dumps(cp))
     restored = Engine.restore(cp, CAL, RULESETS, seed=SEED)
@@ -236,3 +236,15 @@ def test_replay_matches_every_table(continuous, tmp_path):
     full = whole.pending()
     for table in full:
         assert digest(prefix[table] + rest[table]) == digest(full[table]), table
+
+
+def test_a_reshuffle_after_the_checkpoint_may_be_added_on_restore_but_not_one_before():
+    from renasci.core.rng import Reshuffle
+
+    e = new_engine()
+    e.run_before(Date(1, 2, 0))
+    e.clear_pending()
+    cp = e.checkpoint(at=Date(1, 2, 0), segments=0)
+    Engine.restore(cp, CAL, RULESETS, seed=SEED, reshuffles=(Reshuffle((1, 5, 0), "later"),))
+    with pytest.raises(ValueError, match="reshuffle"):
+        Engine.restore(cp, CAL, RULESETS, seed=SEED, reshuffles=(Reshuffle((1, 1, 0), "earlier"),))

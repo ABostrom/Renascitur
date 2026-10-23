@@ -43,7 +43,8 @@ def check_run_name(name) -> str:
     if not isinstance(name, str) or not RUN_NAME.fullmatch(name) or name.endswith(".") or RESERVED.fullmatch(name):
         raise ValueError(f"[run] name must be a plain folder name (letters, digits, . _ -; at most 64), got {name!r}")
     return name
-SECTIONS = {"run", "world", "ripple", "vault"}
+SECTIONS = {"run", "world", "ripple", "vault", "reshuffle"}
+RESHUFFLE_KEYS = {"from", "salt"}
 VAULT_KEYS = {"path"}
 RIPPLE_KEYS = {"id", "kind", "date", "target", "params"}
 
@@ -60,6 +61,12 @@ class Recipe:
     raw: dict
     full_reads: bool = False  # keep every read row (analysis runs); otherwise one digest per scope
     vault: dict | None = None  # {"path": ...}: cast the vault's canon into the run (S2 §7)
+    reshuffles: tuple = ()  # ((from: Date, salt), ...): re-roll everything from the start of `from`'s quarter
+
+    def rng_reshuffles(self, calendar) -> tuple:
+        from renasci.core.rng import Reshuffle
+
+        return tuple(Reshuffle(calendar.canonical_tick(d), salt) for d, salt in self.reshuffles)
 
 
 def parse_recipe(raw: dict) -> Recipe:
@@ -91,6 +98,14 @@ def parse_recipe(raw: dict) -> Recipe:
         if missing:
             raise ValueError(f"ripple {r.get('id', '?')} is missing {sorted(missing)}")
         ripples.append(Ripple(r["id"], r["kind"], cal.parse(r["date"]), r["target"], r.get("params", {})))
+    reshuffles = []
+    for r in raw.get("reshuffle", []):
+        if not isinstance(r, dict) or set(r) != RESHUFFLE_KEYS or not isinstance(r["salt"], str) or not r["salt"]:
+            raise ValueError('a [[reshuffle]] is from = "<date>" and salt = "<any text>"')
+        d = cal.parse(r["from"])
+        q = cal.canonical_tick(d)[2]
+        start = Date(d.age, d.year, -(-q * cal.days_per_year // 4))  # (the start of its quarter: what's re-rolled)
+        reshuffles.append((start, r["salt"]))
     every = run.get("checkpoint_every_years", 10)
     if type(every) is not int or every < 1:
         raise ValueError("checkpoint_every_years must be a positive int")
@@ -103,7 +118,7 @@ def parse_recipe(raw: dict) -> Recipe:
     if vault is not None and world.scenario is None:
         raise ValueError(f"the {world.name} world has no people to cast canon into")
     return Recipe(run["name"], run["seed"], run["world"], end, every, dict(raw.get("world", {})),
-                  tuple(ripples), raw, full_reads, dict(vault) if vault else None)
+                  tuple(ripples), raw, full_reads, dict(vault) if vault else None, tuple(reshuffles))
 
 
 def load_recipe(path) -> Recipe:

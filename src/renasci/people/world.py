@@ -33,6 +33,15 @@ def people_ruleset(name: str, scenario: dict, version: int = 1) -> Ruleset:
             systems += (geo.map_history()(),)
     if scenario.get("params", {}).get("beliefs"):  # gossip needs minds that hold beliefs (S6 §6)
         systems += (Gossip(),)
+    disguises = (Illness(),)
+    if scenario.get("geography"):  # a structural ripple changes the map (#114)
+        from renasci import geo
+
+        disguises += (geo.upheaval()(),)
+    if scenario.get("params", {}).get("beliefs"):  # a planted rumour needs a town's talk (#114)
+        from renasci.people.beliefs import PlantRumour
+
+        disguises += (PlantRumour(),)
     return Ruleset(name, version, systems,
-                   params=params, forcers=FORCERS, disguises=(Illness(),),
+                   params=params, forcers=FORCERS, disguises=disguises,
                    conservation=conservation(Catalogue.from_json(scenario["catalogue"])))

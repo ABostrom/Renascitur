@@ -124,6 +124,8 @@ def _run(recipe, out: Path, meta: dict | None = None, canon_doc: dict | None = N
         extra = {"pins": [Pin.from_json(p) for p in canon_doc["pins"]], "canon": canon_doc["canon"],
                  "end": recipe.end}  # pins past the run's end are out of scope, not guarded
     engine = world.new_engine(recipe.seed, ripples=recipe.ripples, **extra, **recipe.params)
+    if recipe.reshuffles:
+        engine.reshuffle(recipe.rng_reshuffles(world.calendar))
     engine.full_reads = recipe.full_reads
     folder = RunFolder.create(out / recipe.name, {"recipe": recipe.raw, "complete": False,
                                                   "calendar": world.calendar.to_json(), **(meta or {})})
@@ -149,10 +151,10 @@ def _replay(run: Path, new, out: Path, from_: str | None = None, rerun: bool = F
 
     def without_name_and_ripples(raw):  # full_reads only changes what is recorded, not what happens
         return {k: ({kk: vv for kk, vv in v.items() if kk not in ("name", "full_reads")} if k == "run" else v)
-                for k, v in raw.items() if k != "ripple"}
+                for k, v in raw.items() if k not in ("ripple", "reshuffle")}
 
     if without_name_and_ripples(old.raw) != without_name_and_ripples(new.raw):
-        raise ValueError("a replay may only change ripples, the run name and full_reads; "
+        raise ValueError("a replay may only change ripples, reshuffles, the run name and full_reads; "
                          "for anything else, `renasci run`")
     if from_:
         target = world.calendar.parse(from_)
@@ -163,6 +165,7 @@ def _replay(run: Path, new, out: Path, from_: str | None = None, rerun: bool = F
         before, after = {key(r) for r in old.ripples}, {key(r) for r in new.ripples}
         changed = [r.date for r in new.ripples if key(r) not in before]  # added or changed: new date
         changed += [r.date for r in old.ripples if key(r) not in after]  # removed or changed: old date
+        changed += [d for d, _ in set(old.reshuffles) ^ set(new.reshuffles)]  # a reshuffle added or removed
         target = min(changed) if changed else new.end
     marks = [m for m in base.manifest["marks"] if Date.from_json(m["before"]) <= target]
     canon_doc = json.loads((base.path / "canon.json").read_text(encoding="utf-8")) \
@@ -189,7 +192,8 @@ def _replay(run: Path, new, out: Path, from_: str | None = None, rerun: bool = F
             if changed:
                 print(f"note: the vault has changed since {base.path.name} was cast; the replay uses the canon it was "
                       "cast from (canon.json)")
-    engine = world.restore(cp, new.seed, ripples=new.ripples, pins=pins, **new.params)
+    engine = world.restore(cp, new.seed, ripples=new.ripples, pins=pins,
+                           reshuffles=new.rng_reshuffles(world.calendar), **new.params)
     engine.full_reads = new.full_reads
     folder = RunFolder.fork(base.path, out / new.name, keep=mark["segment"] + 1,
                             meta={"recipe": new.raw, "complete": False, "calendar": world.calendar.to_json(),
@@ -215,11 +219,24 @@ def cmd_diff(args) -> int:
     return _diff(Path(args.a), Path(args.b))
 
 
+def _reshuffled_since(a_path: Path, b_path: Path) -> list | None:
+    """The earliest date from which one run's draws are re-rolled and the other's aren't (a reshuffle in
+    one recipe but not the other): everything from then on differs on purpose."""
+    raws = [_open_complete(p).manifest["meta"]["recipe"] for p in (a_path, b_path)]
+    if not any(r.get("reshuffle") for r in raws):
+        return None  # (no reshuffles: nothing to parse, so runs from older engines still compare)
+    a, b = (parse_recipe(r) for r in raws)
+    differ = set(a.reshuffles) ^ set(b.reshuffles)
+    return min(d for d, _ in differ).to_json() if differ else None
+
+
 def _diff(a_path: Path, b_path: Path) -> int:
     a, sa, ra = _load(a_path)
     b, sb, rb = _load(b_path)
     ripples = sorted({i for i in set(ra) | set(rb) if ra.get(i) != rb.get(i)})
-    report = {"runs": {"baseline": a_path.name, "variant": b_path.name}, **analyse(a, b, sa, sb, ripples=ripples)}
+    since = _reshuffled_since(a_path, b_path)
+    report = {"runs": {"baseline": a_path.name, "variant": b_path.name},
+              **analyse(a, b, sa, sb, ripples=ripples, since=since)}
     (b_path / "analysis").mkdir(exist_ok=True)
     (b_path / "analysis" / "divergence.json").write_text(json.dumps(report, separators=(",", ":")), encoding="utf-8")
     print(f"{report['divergent_events']} of {report['events']} events diverge; "

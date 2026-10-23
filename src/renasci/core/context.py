@@ -73,6 +73,7 @@ class Ctx:
         self._series: list[dict] = []  # buffered likewise
         self._pin_causes: list = []  # pins that guarded someone here; the next event is caused by them
         self._guard_rows: list[dict] = []
+        self._lucky: set = set()  # (kind, owner, ripple) logged in this scope: one row each, with its next event
 
     # ------------------------------------------------------------ declarations
 
@@ -108,12 +109,12 @@ class Ctx:
         self._scope = key
         self._scoped.setdefault(key, {})
         self._events.setdefault(key, [])
-        self._event, self._pin_causes, self._guard_rows = None, [], []  # nothing carries across scopes
+        self._event, self._pin_causes, self._guard_rows, self._lucky = None, [], [], set()  # nothing carries across scopes
         try:
             yield
         finally:
             self._scope = None
-            self._event, self._pin_causes, self._guard_rows = None, [], []
+            self._event, self._pin_causes, self._guard_rows, self._lucky = None, [], [], set()
 
     def read_rows(self, full: bool = True) -> list[dict]:
         """One row per scope (None = unscoped): what was read, and which events it informed.
@@ -397,12 +398,29 @@ class Ctx:
     def rng(self, purpose: str, entity: str):
         """A stream owned by `entity` (a person, place or aggregate). Every stream has an owner."""
         tick = self.calendar.canonical_tick(self.today)
-        return self._engine.rng.open(self._engine.ordinals, self.system.name, entity, purpose, tick)
+        return self._engine.rng.open(self._engine.ordinals, self.system.name, entity, purpose, tick,
+                                     extra=self._luck(entity))
+
+    def _luck(self, owner: str) -> str:
+        """A luck ripple's salt for `owner`'s draws today ("" if none). When one applies it is recorded as a
+        read of `(owner, "luck")`, and the next event here is caused by it."""
+        if not self._engine.ripples:
+            return ""
+        r = self._engine.fortune("luck", owner, self.today)
+        if r is None:
+            return ""
+        self._note((owner, "luck"), f"ripple:{r.id}")
+        if Cause("ripple", r.id) not in self._pin_causes:
+            self._pin_causes.append(Cause("ripple", r.id))
+        if ("luck", owner, r.id) not in self._lucky:
+            self._lucky.add(("luck", owner, r.id))
+            self._guard_rows.append(self._engine.log_ripple(r, "luck", True, self.activation.id, entity=owner))
+        return f"luck:{r.id}"
 
     def _draw_key(self, purpose: str, owner: str) -> tuple[int, int]:
         tick = self.calendar.canonical_tick(self.today)
         n = self._engine.ordinals.next(self.system.name, owner, purpose, tick)
-        return self._engine.rng.key(self.system.name, owner, purpose, tick, n), n
+        return self._engine.rng.key(self.system.name, owner, purpose, tick, n, extra=self._luck(owner)), n
 
     def _hinge(self, kind: str, purpose: str, owner: str, occurrence: int, stakes, roles, **fields) -> None:
         h = {"id": "h" + digest([self.activation.id, kind, owner, purpose, occurrence]), "kind": kind,
@@ -453,9 +471,23 @@ class Ctx:
                 raise ValueError(f"odds hook returned an invalid probability {p!r}")
             if cause:
                 adjusted.append(cause)
+        if self._engine.ripples and (purpose.startswith("act:") or purpose.startswith("expose:")):
+            r = self._engine.fortune("favour", owner, self.today)
+            if r is not None:
+                by = float(r.params["by"])
+                p = min(1.0, p + by) if purpose.startswith("act:") else max(0.0, p - by)
+                self._note((owner, "favour"), f"ripple:{r.id}")
+                adjusted.append(f"ripple:{r.id}")
+                if Cause("ripple", r.id) not in self._pin_causes:
+                    self._pin_causes.append(Cause("ripple", r.id))
+                if ("favour", owner, r.id) not in self._lucky:
+                    self._lucky.add(("favour", owner, r.id))
+                    self._guard_rows.append(self._engine.log_ripple(r, "favour", True, self.activation.id,
+                                                                    entity=owner, purpose=purpose))
         tick = self.calendar.canonical_tick(self.today)
         n = self._engine.ordinals.next(self.system.name, owner, purpose, tick)
-        u = float(self._engine.rng.stream(self.system.name, owner, purpose, tick, n).random())
+        u = float(self._engine.rng.stream(self.system.name, owner, purpose, tick, n,
+                                          extra=self._luck(owner)).random())
         outcome = u < p
         if stakes is not None and abs(u - p) <= self._engine.hinge_margin:
             self._hinge("chance", purpose, owner, n, stakes, roles, p_base=p_base, p=p,

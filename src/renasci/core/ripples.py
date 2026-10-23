@@ -6,13 +6,22 @@ A ripple is a recorded, replayable intervention. When it fires, the engine recor
 Everything the ripple touches descends from it in the cause graph, so the Observatory can show the
 author's hand while prose never does.
 
-S1 supports:
+The kinds:
 - **protect** `{"until": [age, year, day]}`: while active, `ctx.guarded(target)` says yes, so a
   system writes a near miss instead of a death (the near miss is caused by the ripple);
 - **doom**: the target's `doom` disguise applies at the ripple date;
-- **inject**: the `inject` disguise adds an event at the ripple date.
+- **inject**: the `inject` disguise adds an event at the ripple date;
+- **favour** `{"by": (0, 1], "until"}` (#114): while active, a chance drawn for the target (owned by
+  them, or by a scheme or ambition of theirs) whose purpose is `act:...` is `by` likelier, and one whose
+  purpose is `expose:...` is `by` less likely: their schemes go better;
+- **luck** `{"until"}` (#114): while active, the target's own draws are re-rolled (their keys salted
+  with the ripple): a change of fortune, not a bias (the engine can't know which outcome is lucky);
+- **plant** and **structural** (#114): through the ruleset's disguise for the kind (a rumour planted in
+  a town's talk; the world changing shape: a pass closes).
 
-favour, luck, plant and structural arrive with #114 (M3).
+favour and luck need no disguise: they change the odds of things that happen anyway, and every draw
+they touch is recorded as a read of the ripple (`(owner, "favour")`, `(owner, "luck")`), and the next
+event is caused by it, so divergence analysis traces what follows to the ripple.
 """
 
 from __future__ import annotations
@@ -26,8 +35,9 @@ from renasci.core.events import EventType
 from renasci.core.systems import System
 
 KINDS = ("protect", "doom", "favour", "luck", "inject", "plant", "structural")
-SUPPORTED = ("protect", "doom", "inject")
-NEEDS_DISGUISE = ("doom", "inject")
+SUPPORTED = KINDS
+NEEDS_DISGUISE = ("doom", "inject", "plant", "structural")
+SPANS = ("protect", "favour", "luck")  # kinds active from their date until params.until
 EVENT_TYPES = {k: EventType(f"ripple.{k}", 1, roles={"target": (0, 1)}, payload={"target": "str", "params": "json"},
                             visibility="secret", dead_roles=("target",)) for k in KINDS}
 
@@ -49,6 +59,28 @@ class Ripple:
         if not isinstance(self.date, Date):
             raise ValueError(f"ripple date must be a Date, got {self.date!r}")
         object.__setattr__(self, "params", json.loads(canonical(self.params)))
+
+    def check(self) -> None:
+        """What each kind needs in its params (a disguise checks the rest of its own)."""
+        if self.kind in SPANS and (self.until is None or self.until < self.date):
+            raise ValueError(f"{self.kind} ripple {self.id} needs params.until on or after its date")
+        if self.kind == "favour":
+            by = self.params.get("by")
+            if isinstance(by, bool) or not isinstance(by, (int, float)) or not 0 < by <= 1:
+                raise ValueError(f"favour ripple {self.id} needs params.by in (0, 1], got {by!r}")
+        if self.kind == "plant" and not isinstance(self.params.get("claim"), dict):
+            raise ValueError(f"plant ripple {self.id} needs params.claim")
+        share = self.params.get("share", 0.2)
+        if self.kind == "plant" and (isinstance(share, bool) or not isinstance(share, (int, float)) or not 0 < share <= 1):
+            raise ValueError(f"plant ripple {self.id}: share must be in (0, 1], got {share!r}")
+        if self.kind == "structural":
+            if "open" in self.params and not isinstance(self.params["open"], bool):
+                raise ValueError(f"structural ripple {self.id}: open must be true or false")
+            days = self.params.get("days", 1)
+            if isinstance(days, bool) or not isinstance(days, int) or days < 1:
+                raise ValueError(f"structural ripple {self.id}: days must be a positive whole number")
+        if self.kind == "structural" and not ({"open", "days", "region"} & set(self.params)):
+            raise ValueError(f"structural ripple {self.id} needs params.open, days or region")
 
     @property
     def until(self) -> Date | None:
