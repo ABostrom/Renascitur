@@ -1,7 +1,7 @@
 // Smoke test of the shipping model: the committed build, served by `renasci observe`, in a real browser.
 //   npm run build && npm run smoke
 import { execSync, spawn } from 'node:child_process';
-import { existsSync, mkdtempSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdtempSync, mkdirSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -48,11 +48,14 @@ async function launchAndOpen(browser, errors) {
 	const lport = port + 1;
 	const recipes = resolve(scratch, 'recipes');
 	const runs = resolve(scratch, 'runs');
+	const vault = resolve(scratch, 'vault');
 	mkdirSync(recipes, { recursive: true });
 	mkdirSync(runs, { recursive: true });
+	cpSync(resolve(repo, 'tests', 'fixtures', 'vault_people'), vault, { recursive: true });
+	cpSync(resolve(app, 'fixtures', 'runs', 'canon'), resolve(runs, 'canon'), { recursive: true });
 	writeFileSync(resolve(recipes, 'tiny.toml'),
 		'[run]\nname = "tiny"\nengine = "0.1.0"\nseed = 7\nworld = "toy"\nend = "1X 2"\n\n[world]\npeople_per_village = 4\n');
-	launchServer = spawn(`uv run renasci observe "${runs}" --app "${resolve(app, 'build')}" --port ${lport} --no-browser --allow-launch --recipes "${recipes}"`,
+	launchServer = spawn(`uv run renasci observe "${runs}" --app "${resolve(app, 'build')}" --port ${lport} --no-browser --allow-launch --recipes "${recipes}" --vault "${vault}"`,
 		{ cwd: repo, stdio: 'ignore', shell: true });
 	for (let i = 0; i < 100; i++) {
 		try {
@@ -68,7 +71,17 @@ async function launchAndOpen(browser, errors) {
 	await page.getByRole('link', { name: 'open tiny' }).click({ timeout: 60000 });
 	await page.waitForURL(/\/run\/tiny\/events/, { timeout: 15000 });
 	await page.locator('.filters').waitFor({ timeout: 20000 }); // (indexed: the launched run's events are there)
-	return 'a run launched from a recipe and opened';
+	// promote: the canon run's near miss, with the pin that caused it kept, written to the vault
+	await page.goto(`http://127.0.0.1:${lport}/run/canon/strain`);
+	await page.getByRole('heading', { name: /^Strain, in order/ }).waitFor({ timeout: 20000 });
+	await page.locator('table a[href*="/events?e="]').first().click();
+	await page.getByRole('heading', { name: 'Propose to the vault' }).waitFor({ timeout: 20000 });
+	await page.getByRole('checkbox').first().check();
+	await page.getByRole('button', { name: 'Propose' }).click();
+	await page.getByText(/wrote _proposed\/event\//).waitFor({ timeout: 60000 });
+	const written = readdirSync(resolve(vault, '_proposed', 'event'));
+	if (written.length !== 1) throw new Error(`the vault has ${written.length} proposed events`);
+	return 'a run launched from a recipe and opened; an event proposed to the vault with its cause';
 }
 const browser = await (async () => {
 	await waitForServer();

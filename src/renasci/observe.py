@@ -5,7 +5,9 @@ is started with `--allow-launch`: then the Observatory may launch, each in a chi
 a new run folder:
 - latch-point what-ifs (#101): `renasci latch <run> --launch N`;
 - runs and replays from the recipes folder (`--recipes`, default `recipes`; #57): `renasci run <recipe>`
-  and `renasci replay <run> --recipe <recipe>`. Only `.toml` files directly in that folder, by name.
+  and `renasci replay <run> --recipe <recipe>`. Only `.toml` files directly in that folder, by name;
+- proposals, only with an explicit `--vault` (#105): `renasci vault propose <run> <entity> <vault> --write
+  [--cause kind:ref...]`, a `canon: proposed` note in the vault's `_proposed/`, never over an edit.
 
 - `/runs/index.json`  the run folders, each with its manifest
 - `/runs/<dir>/`      a directory inside the runs folder, as a JSON list of file names
@@ -19,7 +21,8 @@ Safety, because any web page in the browser can send requests to localhost:
 - **Host check:** only requests addressed to `127.0.0.1:<port>` or `localhost:<port>` are answered,
   so a DNS-rebinding page can't read runs.
 - It binds to 127.0.0.1 and answers only GET and HEAD.
-- **The launcher** (off by default) answers three POSTs, `/api/launch`, `/api/run` and `/api/replay`,
+- **The launcher** (off by default) answers four POSTs, `/api/launch`, `/api/run`, `/api/replay` and
+  `/api/propose`,
   and only from the Observatory
   itself: the `Origin` must be this server, the body JSON, and a custom `X-Renasci-Launch` header
   present (a cross-site page can't send one without a preflight, which this server never answers). The
@@ -33,6 +36,7 @@ from __future__ import annotations
 import itertools
 import json
 import mimetypes
+import os
 import re
 import shutil
 import subprocess
@@ -80,7 +84,10 @@ JOB_SECONDS = 3600  # a what-if that takes longer than an hour is stopped
 
 
 # What each kind of job prints when it has made its run folder (the folder's name in group 1).
-MADE = {"latch": r"^latch: launched (\S+)$", "run": r"^run (\S+): ", "replay": r"^replayed (\S+) from "}
+MADE = {"latch": r"^latch: launched (\S+)$", "run": r"^run (\S+): ", "replay": r"^replayed (\S+) from ",
+        "propose": r"^wrote (.+?) \(canon: proposed"}
+ENTITY = re.compile(r"[A-Za-z0-9][A-Za-z0-9:_.-]{0,127}")  # a run's entity or event id
+CAUSE = re.compile(r"[a-z]+:[A-Za-z0-9:_.-]{1,160}")  # kind:ref, as an event records it
 
 
 def list_recipes(folder: Path | None) -> list[dict]:
@@ -128,7 +135,7 @@ class Jobs:
     def _run(self, job: dict, argv: list[str]) -> None:
         try:
             done = subprocess.run(argv, capture_output=True, text=True, encoding="utf-8", errors="replace",
-                                  timeout=JOB_SECONDS)
+                                  timeout=JOB_SECONDS, env={**os.environ, "PYTHONIOENCODING": "utf-8"})
             out, code = (done.stdout + done.stderr)[-4000:], done.returncode
         except subprocess.TimeoutExpired:
             out, code = f"stopped after {JOB_SECONDS} s", -1
@@ -150,7 +157,9 @@ class Handler(BaseHTTPRequestHandler):
     server_version = "renasci-observe"
     protocol_version = "HTTP/1.1"  # keep-alive: the Observatory asks for many small files
 
-    def __init__(self, *args, app: Path, runs: Path, jobs: Jobs | None = None, recipes: Path | None = None, **kw):
+    def __init__(self, *args, app: Path, runs: Path, jobs: Jobs | None = None, recipes: Path | None = None,
+                 vault: Path | None = None, **kw):
+        self.vault = vault.resolve() if vault is not None and vault.is_dir() else None
         self.recipes = recipes.resolve() if recipes is not None else None
         self.app, self.runs, self.jobs = app.resolve(), runs.resolve(), jobs
         super().__init__(*args, **kw)
@@ -193,7 +202,8 @@ class Handler(BaseHTTPRequestHandler):
             return self._send(HTTPStatus.FORBIDDEN, b"wrong host", "text/plain", head_only)
         path = unquote(urlsplit(self.path).path)
         if path == "/api/capabilities":
-            body = json.dumps({"launch": self.jobs is not None}).encode("utf-8")
+            body = json.dumps({"launch": self.jobs is not None,
+                               "propose": self.jobs is not None and self.vault is not None}).encode("utf-8")
             return self._send(HTTPStatus.OK, body, "application/json", head_only)
         if path == "/api/recipes":
             if self.jobs is None:
@@ -242,7 +252,8 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_POST(self):  # noqa: N802
         route = unquote(urlsplit(self.path).path)
-        builders = {"/api/launch": self._launch_argv, "/api/run": self._run_argv, "/api/replay": self._replay_argv}
+        builders = {"/api/launch": self._launch_argv, "/api/run": self._run_argv, "/api/replay": self._replay_argv,
+                    "/api/propose": self._propose_argv}
         if self.jobs is None or route not in builders:
             return self._refuse()
         port = self.server.server_address[1]
@@ -321,6 +332,26 @@ class Handler(BaseHTTPRequestHandler):
         return ([sys.executable, "-m", "renasci.cli", "run", str(recipe), "--out", str(self.runs)],
                 {"job": "run", "recipe": recipe.name})
 
+    def _propose_argv(self, body) -> tuple[list[str], dict]:
+        """`renasci vault propose <run> <entity> <vault> --write [--cause ...]`: a proposed note."""
+        if not isinstance(body, dict) or not {"run", "entity"} <= set(body) or set(body) - {"run", "entity", "causes"}:
+            raise ValueError(f"a proposal is {{run, entity}} and optionally causes; got {body!r}")
+        if self.vault is None:
+            raise ValueError("this server has no vault to write to (start it with --vault)")
+        folder = self._run_folder(body["run"])
+        entity, causes = body["entity"], body.get("causes", [])
+        if isinstance(causes, list):
+            causes = list(dict.fromkeys(causes)) if all(isinstance(c, str) for c in causes) else causes
+        if not isinstance(entity, str) or not ENTITY.fullmatch(entity):
+            raise ValueError("entity must be a run's entity or event id")
+        if not isinstance(causes, list) or len(causes) > 20 \
+                or not all(isinstance(c, str) and CAUSE.fullmatch(c) for c in causes):
+            raise ValueError("causes must be at most 20 of the event's own causes, each kind:ref")
+        argv = [sys.executable, "-m", "renasci.cli", "vault", "propose", str(folder), entity, str(self.vault), "--write"]
+        for c in causes:
+            argv += ["--cause", c]
+        return argv, {"job": "propose", "run": body["run"], "entity": entity, "causes": causes}
+
     def _replay_argv(self, body) -> tuple[list[str], dict]:
         """`renasci replay <run> --recipe <recipe>` into the runs folder (the recipe changes only ripples)."""
         if not isinstance(body, dict) or set(body) != {"run", "recipe"}:
@@ -330,15 +361,19 @@ class Handler(BaseHTTPRequestHandler):
                  str(self.runs)], {"job": "replay", "run": body["run"], "recipe": recipe.name})
 
 
-def make_server(app, runs, port: int = 8765, launch: bool = False, recipes=None) -> ThreadingHTTPServer:
+def make_server(app, runs, port: int = 8765, launch: bool = False, recipes=None, vault=None) -> ThreadingHTTPServer:
     handler = partial(Handler, app=Path(app), runs=Path(runs), jobs=Jobs() if launch else None,
-                      recipes=Path(recipes) if recipes is not None else None)
+                      recipes=Path(recipes) if recipes is not None else None,
+                      vault=Path(vault) if vault is not None else None)
     return ThreadingHTTPServer(("127.0.0.1", port), handler)
 
 
-def serve(app, runs, port: int = 8765, open_browser: bool = True, launch: bool = False, recipes=None) -> None:
-    server = make_server(app, runs, port, launch=launch, recipes=recipes)
+def serve(app, runs, port: int = 8765, open_browser: bool = True, launch: bool = False, recipes=None,
+          vault=None) -> None:
+    server = make_server(app, runs, port, launch=launch, recipes=recipes, vault=vault)
     url = f"http://127.0.0.1:{server.server_address[1]}/"
+    if launch and vault is not None:
+        print(f"Proposed notes may be written into {Path(vault).resolve()}/_proposed (never over an edit)")
     print(f"Observatory at {url}  (runs from {Path(runs).resolve()}"
           f"{'; runs, replays and what-ifs can be launched from it' if launch else ''}; Ctrl+C to stop)")
     if open_browser:

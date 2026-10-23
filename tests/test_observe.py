@@ -1,6 +1,7 @@
 """`renasci observe`: a read-only static server for the Observatory and the runs folder."""
 
 import json
+from pathlib import Path
 import threading
 import urllib.error
 import urllib.request
@@ -206,11 +207,13 @@ def test_observe_defaults_to_the_committed_build(monkeypatch):
     from renasci.cli import main as cli_main
 
     seen = {}
-    monkeypatch.setattr(observe, "serve", lambda app, runs, port, open_browser, launch, recipes=None: seen.update(app=app, launch=launch))
+    monkeypatch.setattr(observe, "serve", lambda app, runs, port, open_browser, launch, recipes=None, vault=None:
+                        seen.update(app=app, launch=launch, vault=vault))
     cli_main(["observe", "--no-browser"])
     from pathlib import Path
 
     assert (Path(seen["app"]) / "index.html").is_file() and seen["launch"] is False
+    assert seen["vault"] is None  # writing to the lore notes is never a default: it needs --vault
 
 
 @pytest.mark.parametrize("path", ["/run/base/entity/t%3AAshford", "/%5C%5Cattacker.example%5Cshare%5Cx", "/C:%5Cx"])
@@ -247,7 +250,7 @@ def launch_headers(base):
 
 def test_the_launcher_is_off_unless_asked_for(served):
     base, _ = served
-    assert call(base, "/api/capabilities") == (200, {"launch": False})
+    assert call(base, "/api/capabilities") == (200, {"launch": False, "propose": False})
     assert call(base, "/api/launch", {"run": "tiny", "rank": 1}, launch_headers(base))[0] == 405
 
 
@@ -264,7 +267,7 @@ def launcher(tmp_path_factory, served):
 
 def test_a_launch_must_come_from_the_observatory_itself(launcher):
     base = launcher
-    assert call(base, "/api/capabilities") == (200, {"launch": True})
+    assert call(base, "/api/capabilities") == (200, {"launch": True, "propose": False})
     body = {"run": "tiny", "rank": 1}
     assert call(base, "/api/launch", body, {**launch_headers(base), "Origin": "http://evil.example"})[0] == 403
     no_header = {k: v for k, v in launch_headers(base).items() if k != "X-Renasci-Launch"}
@@ -440,3 +443,74 @@ def test_recipes_listed_never_reach_outside_the_folder(tmp_path):
     except OSError:
         pytest.skip("this system can't make symlinks")
     assert list_recipes(folder) == []
+
+
+# ---------------------------------------------------------------- promoting to the vault (#105)
+
+
+@pytest.fixture(scope="module")
+def promoter(tmp_path_factory):
+    """A Fourth Age run cast from a copy of the test vault, served with the launcher and that vault."""
+    import gzip
+    import shutil
+
+    tmp = tmp_path_factory.mktemp("promote")
+    vault = tmp / "vault"
+    shutil.copytree(Path(__file__).parent / "fixtures" / "vault_people", vault)
+    runs = tmp / "runs"
+    recipe = tmp / "canon.toml"
+    recipe.write_text(f'[run]\nname = "canon"\nengine = "0.1.0"\nseed = 1234\nworld = "fourth_age"\nend = "4A 21"\n\n'
+                      f'[vault]\npath = "{vault.as_posix()}"\n', encoding="utf-8")
+    assert main(["run", str(recipe), "--out", str(runs)]) == 0
+    strain = [json.loads(line) for p in sorted((runs / "canon" / "strain").glob("*.gz"))
+              for line in gzip.decompress(p.read_bytes()).decode("utf-8").splitlines() if line]
+    near_miss = next(s["event"] for s in strain if s["action"] == "guard")
+    app = tmp / "app"
+    app.mkdir()
+    (app / "index.html").write_text("<!doctype html>", encoding="utf-8")
+    server = make_server(app, runs, port=0, launch=True, vault=vault)
+    threading.Thread(target=server.serve_forever, daemon=True).start()
+    yield f"http://127.0.0.1:{server.server_address[1]}", vault, near_miss
+    server.shutdown()
+
+
+def test_capabilities_say_whether_promoting_is_possible(promoter, served):
+    base, _, _ = promoter
+    assert call(base, "/api/capabilities") == (200, {"launch": True, "propose": True})
+    assert call(served[0], "/api/capabilities") == (200, {"launch": False, "propose": False})
+
+
+def test_an_event_is_promoted_with_the_causes_ticked_and_the_note_appears_in_the_vault(promoter):
+    base, vault, near_miss = promoter
+    body = {"run": "canon", "entity": near_miss, "causes": ["pin:v:bryn-ardent:born"]}
+    status, job = call(base, "/api/propose", body, launch_headers(base))
+    assert status == 202 and job["job"] == "propose"
+    done = wait_for(base, job)
+    assert done["state"] == "done", done["output"]
+    note = vault / done["variant"]
+    assert note.is_file() and done["variant"].startswith("_proposed/event/")
+    text = note.read_text(encoding="utf-8")
+    assert "canon: proposed" in text and "causes: [pin:v:bryn-ardent:born]" in text
+
+
+@pytest.mark.parametrize("body", [
+    {"run": "canon", "entity": "x 1"}, {"run": "canon", "entity": "../x"}, {"run": "nope", "entity": "x1"},
+    {"run": "canon", "entity": "x1", "causes": "pin:a"}, {"run": "canon", "entity": "x1", "causes": ["pin a"]},
+    {"run": "canon", "entity": "x1", "causes": ["x"] * 30}, {"run": "canon", "entity": "x1", "extra": 1},
+])
+def test_a_promotion_request_is_validated(promoter, body):
+    base, _, _ = promoter
+    assert call(base, "/api/propose", body, launch_headers(base))[0] == 400
+
+
+def test_no_promotion_without_a_vault(recipes_launcher):
+    base, _ = recipes_launcher
+    assert call(base, "/api/propose", {"run": "tiny", "entity": "x1"}, launch_headers(base))[0] == 400
+
+
+def test_a_cause_ticked_twice_is_kept_once(promoter):
+    base, vault, near_miss = promoter
+    body = {"run": "canon", "entity": near_miss, "causes": ["pin:v:bryn-ardent:born", "pin:v:bryn-ardent:born"]}
+    status, job = call(base, "/api/propose", body, launch_headers(base))
+    assert status == 202 and job["causes"] == ["pin:v:bryn-ardent:born"]
+    wait_for(base, job)

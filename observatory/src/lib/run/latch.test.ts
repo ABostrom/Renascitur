@@ -58,12 +58,14 @@ describe('the launcher: runs and replays (#57)', () => {
 		try {
 			await launcher.run('fresh.toml');
 			await launcher.replay('base', 'what-if.toml');
+			await launcher.propose('canon', 'xnear', ['pin:v:x']);
 		} finally {
 			globalThis.fetch = real;
 		}
 		expect(sent.map((s) => [s.url, JSON.parse(String(s.init.body))])).toEqual([
 			['/api/run', { recipe: 'fresh.toml' }],
-			['/api/replay', { run: 'base', recipe: 'what-if.toml' }]
+			['/api/replay', { run: 'base', recipe: 'what-if.toml' }],
+			['/api/propose', { run: 'canon', entity: 'xnear', causes: ['pin:v:x'] }]
 		]);
 		for (const s of sent) expect((s.init.headers as Record<string, string>)['X-Renasci-Launch']).toBe('1');
 	});

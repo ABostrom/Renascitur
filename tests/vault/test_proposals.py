@@ -206,3 +206,41 @@ def test_the_name_is_kept_in_the_frontmatter_whatever_the_filename(world):
     from renasci.vault.frontmatter import parse
     assert parse(text)[0]["name"] == 'Al "the: Bold" / ?*.'
     assert not rel.removesuffix(".md").endswith((".", " ")) and "?" not in rel
+
+
+# ---------------------------------------------------------------- keeping causes (#105)
+
+NEAR_MISS = {"id": "xnear", "type": "people.near_miss", "date": [4, 1, 270], "roles": {"survivor": ["v:old-ardent"]},
+             "payload": {"would_have": "infancy"}, "causes": [["pin", "v:bryn-ardent:born"], ["event", "xold"]]}
+
+
+def test_an_event_proposal_keeps_the_causes_ticked(world):
+    _, _, vault = world
+    rel, text, _ = propose({"entities": []}, [NEAR_MISS], "xnear", vault, CAL, source={"run": "r"},
+                           causes=["pin:v:bryn-ardent:born"])
+    assert "  causes: [pin:v:bryn-ardent:born]\n" in text
+    assert "- because of the pin v:bryn-ardent:born" in text and "xold" not in text
+    loaded = load_text(world, rel, text)
+    assert loaded.frontmatter["source"]["causes"] == ["pin:v:bryn-ardent:born"]
+
+
+def test_only_the_events_own_causes_can_be_kept(world):
+    _, _, vault = world
+    with pytest.raises(ValueError, match="not a cause"):
+        propose({"entities": []}, [NEAR_MISS], "xnear", vault, CAL, source={"run": "r"}, causes=["event:xnope"])
+
+
+def test_a_person_proposal_keeps_no_causes(world):
+    root, e, vault = world
+    with pytest.raises(ValueError, match="causes"):
+        propose(e.store.to_json(), e.pending()["events"], CHILD, vault, CAL, source={"run": "r"}, causes=["pin:x"])
+
+
+def load_text(world, rel, text):
+    import tempfile
+
+    root = Path(tempfile.mkdtemp()) / "v"
+    shutil.copytree(world[0], root)
+    (root / rel).parent.mkdir(parents=True, exist_ok=True)
+    (root / rel).write_text(text.replace("canon: proposed", "canon: true"), encoding="utf-8")
+    return load(root).notes[rel.removesuffix(".md")]

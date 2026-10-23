@@ -69,8 +69,12 @@ def _proposed_ids(root: Path) -> set[str]:
 
 
 def propose(state: dict, events: list[dict], entity: str, vault, calendar, source: dict,
-            bindings: dict | None = None) -> tuple[str, str, list[str]]:
-    """(the note's path under the vault, its text, notes for Aaron) for a run's person or event."""
+            bindings: dict | None = None, causes: list[str] | None = None) -> tuple[str, str, list[str]]:
+    """(the note's path under the vault, its text, notes for Aaron) for a run's person or event.
+
+    `causes` (an event's only, #105): which of its own causes (`kind:ref`, as the run records them) to
+    keep with it, in its `source` and listed in its body; the rest of its history stays in the run."""
+    causes = list(causes or [])
     ids = assign(vault)
     key_of = {v: k for k, v in ids.items()}
     canon_of = {ent: cid for cid, ent in (bindings or {}).items()}  # a run entity born as a canon id
@@ -92,6 +96,8 @@ def propose(state: dict, events: list[dict], entity: str, vault, calendar, sourc
     taken = set(ids.values()) | _proposed_ids(Path(vault.root))
     notes: list[str] = []
     if entity in ents and ents[entity]["kind"] == "person":
+        if causes:
+            raise ValueError("a person's proposal keeps no causes: those belong to events")
         f = ents[entity]["fields"]
         name = nfc(f.get("name") or entity)
         title = name if name.lower() not in stems else f"{name} ({entity[-6:]})"
@@ -129,8 +135,17 @@ def propose(state: dict, events: list[dict], entity: str, vault, calendar, sourc
         fm = [("type", "event"), ("engine", ev["type"]), ("date", when(ev["date"])),
               ("participants", "{" + ", ".join(f"{r}: {v[0] if len(v) == 1 else '[' + ', '.join(v) + ']'}"
                                                for r, v in roles.items()) + "}")]
+        own = [f"{k}:{r}" for k, r in ev.get("causes") or []]
+        for c in causes:
+            if c not in own:
+                raise ValueError(f"{c} is not a cause of {entity} (its causes: {own or 'none'})")
         kind, source_key = "event", "event"
         body = f"A {ev['type']} of the run, {when(ev['date'])}."
+        by_id = {e["id"]: e for e in events}
+        for c in causes:
+            ck, ref = c.split(":", 1)
+            seen = by_id.get(ref) if ck == "event" else None
+            body += f"\n- because of the {ck} {ref}" + (f" (a {seen['type']}, {when(seen['date'])})" if seen else "")
     base = slug(title) or "proposal"
     vid, n = f"v:{base}", 2
     while vid in taken:
@@ -138,6 +153,7 @@ def propose(state: dict, events: list[dict], entity: str, vault, calendar, sourc
     lines = ["---", f"id: {vid}", *(f"{k}: {v}" for k, v in fm), "canon: proposed", "source:",
              f"  run: {source['run']}", f"  run_path: {source.get('run_path', '')}", f"  {source_key}: {entity}",
              f"  state_hash: {source.get('state_hash', '')}", f"  vault_digest: {vault.digest}",
+             *([f"  causes: [{', '.join(causes)}]"] if causes else []),
              "generated_hash: PENDING", "---",
              f"*Proposed from the run {source['run']}: generated, not canon until promoted (S2 §9).*", "", body, ""]
     text = nfc("\n".join(lines))

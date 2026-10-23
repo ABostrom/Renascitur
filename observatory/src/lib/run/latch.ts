@@ -86,7 +86,7 @@ export function compareArcs(base: Stories, variant: Stories) {
 export interface Job {
 	id: number;
 	state: 'running' | 'done' | 'failed';
-	job?: 'latch' | 'run' | 'replay'; // what kind of job (a latch what-if, a run or a replay from a recipe)
+	job?: 'latch' | 'run' | 'replay' | 'propose'; // a latch what-if, a run or replay from a recipe, a proposed note
 	recipe?: string;
 	run: string;
 	rank: number;
@@ -128,6 +128,19 @@ export const launcher = {
 	},
 	replay(run: string, recipe: string): Promise<Job> {
 		return post('/api/replay', { run, recipe });
+	},
+	/** Whether this server can write proposed notes to a vault (the launcher is on and it has one). */
+	async canPropose(): Promise<boolean> {
+		try {
+			const r = await fetch('/api/capabilities');
+			return r.ok && (await r.json()).propose === true;
+		} catch {
+			return false;
+		}
+	},
+	/** Propose a run's person or event as a `canon: proposed` note, keeping the causes ticked (#105). */
+	propose(run: string, entity: string, causes: string[] = []): Promise<Job> {
+		return post('/api/propose', { run, entity, causes });
 	}
 };
 
