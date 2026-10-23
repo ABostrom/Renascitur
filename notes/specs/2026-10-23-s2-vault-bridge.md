@@ -187,9 +187,11 @@ An **office** is either a house's headship (`office: [[House Medani]]`) or an or
 office`. Siblings have no field: "younger brother of X" is written by giving both the same `father`
 (a placeholder note or a canon one).
 
-**Today's notes keep facts in the body.** `renasci vault suggest` proposes frontmatter from a fixed set of
-labelled bullets only (`**House**:`, `**Race**:`, `**Spouse**:`, `**Current Head**:`), never from prose,
-as a diff (`--write` applies, sharing the id migration's writer). Dates are mostly absent from the Fourth
+**Today's notes keep facts in the body.** `renasci vault suggest` proposes frontmatter from a fixed table,
+by note type, never from prose: a character's `**House**:` (or `## House Affiliation` section), `**Race**:`
+(or `## Race` section) and `**Spouse**:`; a house's `**Current Head**:` and `**Primary Seat**:`. Only links
+that resolve are suggested (the rest are reported). A diff (`--write` applies, sharing the id migration's
+writer). *(As built, #153.)* Dates are mostly absent from the Fourth
 Age notes; filling them is lore work (#17, #18).
 
 ## 6. Pins (#61)

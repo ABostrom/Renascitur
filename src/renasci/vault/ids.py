@@ -121,14 +121,20 @@ def migrate(vault, write: bool = False) -> list[dict]:
 
 
 def _add_line(path: Path, line: str, has_frontmatter: bool) -> None:
+    add_lines(path, [line], has_frontmatter)
+
+
+def add_lines(path: Path, lines: list[str], has_frontmatter: bool) -> None:
+    """Add frontmatter lines after the opening `---` (or in a new block), touching nothing else: the
+    file's BOM and line endings are kept. Shared by the id migration and `vault suggest`."""
     raw = path.read_bytes()
     bom = raw.startswith(b"\xef\xbb\xbf")
     body = raw[3:] if bom else raw
     nl = b"\r\n" if b"\r\n" in body else b"\n"
-    add = line.encode("utf-8")
+    add = b"".join(line.encode("utf-8") + nl for line in lines)
     if has_frontmatter:
         first, sep, rest = body.partition(b"\n")  # the opening --- (with its \r, if any)
-        out = first + sep + add + nl + rest
+        out = first + sep + add + rest
     else:
-        out = b"---" + nl + add + nl + b"---" + nl + body
+        out = b"---" + nl + add + b"---" + nl + body
     path.write_bytes((b"\xef\xbb\xbf" if bom else b"") + out)
