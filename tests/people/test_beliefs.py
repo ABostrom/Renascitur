@@ -47,7 +47,7 @@ PLAN: dict = {}
 
 class Probe(System):
     name, cadence, priority = "toy.probe", "yearly", 99
-    reads = B.PERCEIVE_READS | A.READS | life.DIE_READS | frozenset({"ids:settlement", "residents", "place", "status"}).union(
+    reads = B.PERCEIVE_READS | A.READS | life.DIE_READS | frozenset({"ids:settlement", "ids:person", "residents", "place", "status", "house"}).union(
         *(a.reads for a in A.ACTIONS.values()))
     writes = B.PERCEIVE_WRITES | A.WRITES | life.DIE_WRITES
     event_types = tuple({t.name: t for t in B.EVENT_TYPES + A.EVENT_TYPES + life.DIE_EVENTS}.values())

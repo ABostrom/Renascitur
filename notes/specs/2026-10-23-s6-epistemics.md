@@ -83,15 +83,15 @@ When a **salient** world event happens, the system that emits it calls `beliefs.
 
 ## 6. Telling, trust, drift and correction (#87)
 
-`beliefs.gossip` (seasonal, after minds). For each settlement, each **resident notable who isn't travelling** may tell, in **their own scope** (`ctx.scope(teller)`), so one teller's change taints only their own tellings:
-- **Budget:** at most `tell_cap` (default 2) of the teller's most salient beliefs, to residents of the same settlement who aren't travelling: tie partners first, then household. There are at most `settlement_tells` (default 40) tellings per settlement-season, the most salient first.
-- **Chance:** `p = closeness × salience × (0.5 + 0.5 × charm)`, where closeness is the tie's strength, or 0.2 for household with no tie.
-- **Trust:** acceptance confidence is `teller_conf × trust`, with trust by tie kind (kin 0.8, friend 0.7, mentor 0.8, rival 0.3, enemy 0.1, household 0.4).
-- **Competition:** if the hearer holds a claim in the **same topic** with a higher confidence than the acceptance, the telling is rejected and emits nothing. Otherwise the hearer holds it (emitting `belief.told`) and same-topic rivals are halved. A claim the hearer already holds is **reinforced** (confidence moves toward the acceptance, `heard` is updated) and emits nothing.
+`beliefs.gossip` (seasonal, after minds). For each settlement, in **one scope per settlement** (its tellings share one budget, so each depends on the others: the diff must see them together; built per teller first, the review found the shared budget leaked between scopes), each **resident notable who isn't travelling** may tell:
+- **Budget:** at most `tell_cap` (default 2) of the teller's most salient beliefs, to residents of the same settlement who aren't travelling: tie partners, then household (spouse, parents, children). There are at most `settlement_tells` (default 40) tellings per settlement-season, the settlement's most salient first.
+- **Chance:** `p = closeness × salience × (0.5 + 0.5 × charm)`, where closeness is the tie's strength, or 0.5 for household with no tie.
+- **Trust:** acceptance confidence is `teller_conf × trust`, with trust by tie kind (mentor 0.8, friend 0.7, lover 0.7, rival 0.3, enemy 0.1) and 0.8 for household.
+- **Competition:** if the hearer holds a claim in the **same topic** with a higher confidence than the acceptance, the telling is rejected and emits nothing. Otherwise the hearer holds it (emitting `belief.told`) and same-topic rivals are halved. A claim the hearer already holds at least as firmly is **reinforced**: its `heard` is refreshed, under one `belief.reinforced` event per settlement-season (not one per hearing).
 - **Drift:** with `drift_rate` (default 0.08) the teller tells the predicate's `drift` instead: a new claim, and the event's payload carries `drifted_from`. That payload is the lineage.
 - **Lies:** a teller with a reason (a scheme step, §8, or the injection's guild master) tells a claim they don't hold. The payload records `intent: "lie"`. The hearer doesn't know, and their belief record doesn't say.
 - **Correction:** public evidence comes from perceiving an exposure, a `BearWitness` testimony or an injection's evidence event. It carries **authority** (a confidence of at least 0.85) and **bypasses competition**: it sets the claim and drops same-topic rivals below it, emitting `belief.corrected`. This is how "the truth spreads" can beat a firm lie.
-- **Decay:** a belief not reinforced for `decay_years` (default 10) loses 0.1 confidence a year, and is dropped below 0.1 (a write; no event).
+- **Decay:** once a year, a belief not heard or seen again for more than `decay_years` (default 10) loses 0.1 confidence, and is dropped below 0.1, under one `belief.faded` event per settlement.
 - **Provenance:** `belief.told` is caused by the teller's belief's `from` event, so "every belief traces to its origin" is a walk of causes to a perception, a correction or the injection.
 
 ## 7. News along routes (#79)
