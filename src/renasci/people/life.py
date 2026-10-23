@@ -22,6 +22,7 @@ import json
 
 from renasci.core.canon import canonical
 from renasci.core.events import EventType
+from renasci.core.ripples import Disguise
 from renasci.core.systems import System
 from renasci.people import houses, population, ties
 from renasci.people.genome import Catalogue, inherit, keyed, phenotype
@@ -109,8 +110,16 @@ def add_grievance(ctx, holder: str, against: str, event: str, kind: str) -> None
     ctx.set(holder, "grievances", grievances)
 
 
-def die(ctx, person: str, settlement: str, cause: str, *, killer: str | None = None, causes=()) -> None:
-    """A death and what it undoes: the record, the settlement's roster, the spouse's marriage."""
+def die(ctx, person: str, settlement: str, cause: str, *, killer: str | None = None, causes=()) -> bool:
+    """A death and what it undoes: the record, the settlement's roster, the spouse's marriage.
+
+    Someone guarded (a protect ripple, a pin) survives instead: a near miss, and terror (S7 §7).
+    Returns whether they died."""
+    if ctx.guarded(person):
+        miss = ctx.emit("people.near_miss", {"survivor": (person,)}, purpose="near_miss", actor=person,
+                        place=settlement, causes=causes, payload={"would_have": cause})
+        minds.wound(ctx, person, "terror", miss.id)
+        return False
     death = ctx.emit("people.death", {"deceased": (person,), "killer": (killer,) if killer else ()}, purpose="death",
                      actor=person, place=settlement, causes=causes,
                      payload={"age": age_years(ctx.calendar, ctx.get(person, "born"), ctx.today), "cause": cause})
@@ -130,6 +139,7 @@ def die(ctx, person: str, settlement: str, cause: str, *, killer: str | None = N
     from renasci.people import ambitions
 
     ambitions.on_death(ctx, person, death.id)
+    return True
 
 
 def crowding(people: int, capacity) -> float:
@@ -149,7 +159,7 @@ _crowding = crowding  # (the name tests used first)
 _AMBITION_READS = frozenset({"ambitions", "cooldowns", "owner", "class", "state", "scheme", "spouse", "favour",
                              "target", "house", "headship", "holder"})  # (and whatever any `satisfied` reads)
 _AMBITION_WRITES = frozenset({"ambitions", "cooldowns", "state", "resolved", "scheme"})
-DIE_EVENTS = (DEATH, _RESOLVED) + houses.EVENT_TYPES + (ties.TIE_ENDED,)
+DIE_EVENTS = (DEATH, NEAR_MISS, _RESOLVED) + houses.EVENT_TYPES + (ties.TIE_ENDED,)
 DIE_READS = (frozenset({"born", "residents", "spouse", "status", "flow:*", "mother", "father", "children", "grievances",
                          "need"})
              | houses.READS | ties.READS | _AMBITION_READS)
@@ -160,7 +170,7 @@ class Life(System):
     name, cadence = "people.life", "seasonal"
     reads = frozenset({"ids:settlement", "residents", "born", "sex", "race"}) | DIE_READS
     writes = DIE_WRITES
-    event_types = (NEAR_MISS,) + DIE_EVENTS
+    event_types = DIE_EVENTS
 
     def handle(self, ctx, activation):
         houses.handle_succession(ctx, activation)
@@ -173,15 +183,28 @@ class Life(System):
                     race = races[ctx.get(person, "race")]
                     age = age_years(ctx.calendar, ctx.get(person, "born"), ctx.today)
                     q = quarterly(race.mortality[ctx.get(person, "sex")][band(age)])
-                    if not ctx.chance(q, "death", owner=person, stakes=1.0, roles={"deceased": [person]}):
+                    stakes = 1.0 + len(ctx.get(person, "ambitions") or [])  # a life with plans in it (S7 §8)
+                    if not ctx.chance(q, "death", owner=person, stakes=stakes, roles={"deceased": [person]}):
                         continue
-                    cause = "old age" if age >= 60 else "infancy" if age < 5 else "illness"
-                    if ctx.guarded(person):
-                        miss = ctx.emit("people.near_miss", {"survivor": (person,)}, purpose="near_miss",
-                                        actor=person, place=settlement, payload={"would_have": cause})
-                        minds.wound(ctx, person, "terror", miss.id)
-                    else:
-                        die(ctx, person, settlement, cause)
+                    die(ctx, person, settlement, "old age" if age >= 60 else "infancy" if age < 5 else "illness")
+
+
+class Illness(Disguise):
+    """doom, disguised: a sudden illness (the means a latch point suggests for a near miss)."""
+
+    name, handles = "people.illness", "doom"
+    reads = DIE_READS | frozenset({"place"})
+    writes = DIE_WRITES
+    event_types = DIE_EVENTS
+
+    def apply(self, ctx, ripple):
+        if not ctx.exists(ripple.target) or ctx.status(ripple.target) != "active":
+            return False
+        die(ctx, ripple.target, ctx.get(ripple.target, "place"), "a sudden illness")
+        return True  # (a guarded target survives it: a near miss is still the doom's outcome)
+
+    def handle(self, ctx, activation):
+        houses.handle_succession(ctx, activation)
 
 
 class Births(System):

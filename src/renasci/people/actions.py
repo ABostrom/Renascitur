@@ -12,7 +12,8 @@ its `odds`, and what happens on success or failure. The library is every subclas
    exposed, a public `people.action` event says so and nothing else happens -> "exposed" (what exposure
    costs the schemer is the scheme's business, #94);
 3. the **odds** draw (a hinge with the action's stakes) -> a `people.action` event (secret for a secret
-   action) and `succeed` or `fail` -> "success" / "failure".
+   action) and `succeed` or `fail` -> "success" / "failure"; "foiled" when the attempt succeeded but the
+   world wouldn't have it (a guarded target survives: a near miss follows).
 
 Draws are owned by the scheme when there is one, else by the actor (S7 §1). Effects that follow an
 attempt (a death, a marriage, a move) are caused by its `people.action` event.
@@ -66,8 +67,8 @@ class Action:
     def odds(self, ctx, actor, target, scheme) -> float:
         return 0.5
 
-    def succeed(self, ctx, actor, target, scheme, event) -> None:
-        pass
+    def succeed(self, ctx, actor, target, scheme, event) -> bool | None:
+        """Do what success does; return False if the world foiled it (a guarded target survived)."""
 
     def fail(self, ctx, actor, target, scheme, event) -> None:
         pass
@@ -168,8 +169,8 @@ class Poison(Action):
         return "a wasting illness"
 
     def succeed(self, ctx, actor, target, scheme, event):
-        life.die(ctx, target, ctx.get(target, "place"), self.cover(ctx, actor, target, scheme),
-                 causes=(Cause("event", event),))
+        return life.die(ctx, target, ctx.get(target, "place"), self.cover(ctx, actor, target, scheme),
+                        causes=(Cause("event", event),))
 
 
 class Assassinate(Action):
@@ -183,8 +184,8 @@ class Assassinate(Action):
         return "found dead"
 
     def succeed(self, ctx, actor, target, scheme, event):
-        life.die(ctx, target, ctx.get(target, "place"), self.cover(ctx, actor, target, scheme),
-                 causes=(Cause("event", event),))
+        return life.die(ctx, target, ctx.get(target, "place"), self.cover(ctx, actor, target, scheme),
+                        causes=(Cause("event", event),))
 
 
 class Duel(Action):
@@ -201,7 +202,8 @@ class Duel(Action):
         return 1.0 / (1.0 + math.exp(-3.0 * edge))
 
     def succeed(self, ctx, actor, target, scheme, event):
-        life.die(ctx, target, ctx.get(target, "place"), "fell in a duel", killer=actor, causes=(Cause("event", event),))
+        return life.die(ctx, target, ctx.get(target, "place"), "fell in a duel", killer=actor,
+                        causes=(Cause("event", event),))
 
     def fail(self, ctx, actor, target, scheme, event):
         if ctx.chance(0.5, "duel_loss", owner=scheme or actor):
@@ -288,7 +290,7 @@ ACTIONS = library()
 
 READS = (life.DIE_READS | families.Marriage.reads | population.COLUMN_READS | frozenset({
     "favour", "wound", "place", "residents", "region", "accomplices", "state", "born", "traits", "race", "sex",
-    "spouse", "mother", "father", "ids:settlement", "offices"}))
+    "spouse", "mother", "father", "ids:settlement", "offices", "plan", "step"}))
 WRITES = (life.DIE_WRITES | families.Marriage.writes | frozenset({"favour", "wound", "need", "accomplices", "state"}))
 EVENT_TYPES = (ACTION,) + life.DIE_EVENTS + (families.MARRIAGE,) + population.LOD_TYPES
 
@@ -302,7 +304,9 @@ def perform(ctx, action: Action, actor: str, target: str | None, scheme: str | N
     roles = {"actor": (actor,), "target": (target,) if target else ()}
     if action.secrecy:
         p = min(1.0, action.secrecy * float(ctx.params.get("exposure_base", 0.15)) * (1.5 - trait(ctx, actor, "wits")))
-        if ctx.chance(p, f"expose:{action.name}", owner=owner, stakes=1.0, roles={"actor": [actor]}):
+        plan = ctx.get(scheme, "plan") if scheme else None
+        stakes = 1.0 + (ctx.get(scheme, "step") / len(plan) if plan else 0.0)  # the further along, the more to lose
+        if ctx.chance(p, f"expose:{action.name}", owner=owner, stakes=stakes, roles={"actor": [actor]}):
             ctx.emit("people.action", roles, purpose=f"exposed:{action.name}", actor=actor,
                      payload={"action": action.name, "outcome": "exposed"})
             return "exposed"
@@ -312,5 +316,9 @@ def perform(ctx, action: Action, actor: str, target: str | None, scheme: str | N
     event = ctx.emit("people.action", roles, purpose=f"act:{action.name}", actor=actor,
                      payload={"action": action.name, "outcome": "success" if won else "failure"},
                      visibility="secret" if action.secrecy else None)
-    (action.succeed if won else action.fail)(ctx, actor, target, scheme, event.id)
-    return "success" if won else "failure"
+    if not won:
+        action.fail(ctx, actor, target, scheme, event.id)
+        return "failure"
+    if action.succeed(ctx, actor, target, scheme, event.id) is False:
+        return "foiled"  # the blow landed and the target lived (a near miss follows the action event)
+    return "success"

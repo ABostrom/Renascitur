@@ -207,3 +207,15 @@ def test_a_name_belongs_to_one_class_only():
         duration_days = 999
 
     assert A.library()["Poison"].duration_days != 999
+
+
+def test_a_killing_aimed_at_someone_protected_is_foiled():
+    from renasci.core.ripples import Ripple
+
+    probe = new_engine()
+    poisoner, victim = adults(probe)[0], adults(probe)[5]
+    guarded = new_engine(ripples=[Ripple("p", "protect", Date(1, 1, 0), victim, {"until": [1, 9, 359]})])
+    e, outcome = act("Poison", poisoner, victim, engine=guarded)
+    assert outcome == "foiled"
+    assert e.store.status(victim) == "active"
+    assert any(ev.type == "people.near_miss" and ev.roles["survivor"] == (victim,) for ev in e.events)
