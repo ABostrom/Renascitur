@@ -1,0 +1,4 @@
+---
+type: organisation
+kind: office
+---

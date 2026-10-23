@@ -198,6 +198,9 @@ class Director:
             wanted = pin.payload.get("roles", {})
             if not all({self.resolve(x) for x in m} <= set(event.roles.get(r, ())) for r, m in wanted.items()):
                 continue
+            extra = {k: v for k, v in pin.payload.items() if k not in ("type", "roles", "bind")}
+            if any(getattr(event, "payload", {}).get(k) != v for k, v in extra.items()):
+                continue  # e.g. a reign of House A isn't met by a succession to House B
             bound = None
             bind = pin.payload.get("bind")
             if bind:

@@ -78,6 +78,15 @@ class Vault:
     digest: str
     config: Config = field(default_factory=Config)
     bad_ids: frozenset = frozenset()  # notes whose `id:` is malformed or shared (their pins are blocked)
+    resolver: Resolver | None = None
+
+    def resolve(self, text: str, expects: set[str] | None = None) -> str | None:
+        """The note key a link text names (`[[X]]` or `X`), or None when it names none or several."""
+        if self.resolver is None:
+            self.resolver = Resolver(self.notes)
+        m = WIKILINK.search(text)
+        outcome, key = self.resolver.resolve(m.group(1) if m else text, expects)
+        return key if outcome == "note" else None
 
     def to_json(self) -> dict:
         return {"notes": [asdict(n) for n in self.notes.values()], "findings": self.findings, "digest": self.digest}
@@ -256,4 +265,4 @@ def load(root, config: Config | None = None) -> Vault:
     config_hash = hashlib.sha256(config.digest_text.encode("utf-8")).hexdigest()
     digest = hashlib.sha256(json.dumps({"notes": sorted([k, n.hash] for k, n in notes.items()), "config": config_hash},
                                        separators=(",", ":")).encode("utf-8")).hexdigest()
-    return Vault(str(root), dict(sorted(notes.items())), findings, digest, config, frozenset(bad))
+    return Vault(str(root), dict(sorted(notes.items())), findings, digest, config, frozenset(bad), resolver)

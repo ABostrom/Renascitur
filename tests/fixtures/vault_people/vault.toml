@@ -1,0 +1,12 @@
+[ages]
+"4A" = 12001
+
+[[types]]
+match = "Houses/*"
+type = "house"
+[[types]]
+match = "People/*"
+type = "character"
+[[types]]
+match = "Events/*"
+type = "event"
