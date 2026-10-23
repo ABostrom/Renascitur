@@ -247,7 +247,7 @@ An analysis pass (`renasci.analysis.stories`, `renasci stories <run>`) writes `a
 
   Long cause chains don't count, because causal spread reaches nearly everyone within a century (master §5.2).
   - Components are taken over edges of weight 2 or more.
-  - **Splitting:** a component above the size limit (§11 Q5) drops its lowest-weight edges, and then edges between arcs more than a generation apart, until every part fits.
+  - **Splitting:** a component above the size limit (§11 Q5) drops its lowest-weight edges one at a time until every part fits; among equally weak edges, the one between arcs furthest apart in years goes first (a generation apart before a decade apart), then the one that splits most evenly. *(As built, #97.)*
 - **"No saga swallows a house"**, as a test: for every house with 4 or more arcs, no saga contains arcs owned by more than half of that house's notables alive during the saga's span.
 - **Titles** come from per-class templates (data), such as "The poisoning of Arn of House Cannith" or "Vadalis' long revenge". A saga takes the title of its most salient arc.
 - **Period queries:** arcs and sagas are indexed by their active years (S13 #99).
