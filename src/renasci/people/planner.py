@@ -149,7 +149,7 @@ def plan_for(ctx, owner: str, goals, scheme: str | None = None) -> Plan | None:
         return [p for p in _people_of(ctx, owner) if p not in exclude and ctx.status(p) == "active"]
 
     def possible(action, target) -> bool:
-        return action.possible(ctx, owner, target, scheme)
+        return action.feasible(ctx, owner, target, scheme)
 
     depth = 2 + round(3 * trait(ctx, owner, "wits"))
     return plan(goals, depth=depth, fact=fact, odds=odds, candidates=candidates, possible=possible)

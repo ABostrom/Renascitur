@@ -37,7 +37,7 @@ from renasci.core.calendar import Span
 from renasci.core.events import Cause, EventType
 from renasci.core.systems import System
 from renasci.people import actions as A
-from renasci.people import ambitions, houses, minds, ties
+from renasci.people import ambitions, houses, minds, ties, travel
 from renasci.people.ambitions import ADULT, classes, resolve
 from renasci.people.life import add_grievance, grieving
 from renasci.people.planner import holds, plan_for
@@ -105,7 +105,8 @@ def begin(ctx, amb: str, owner: str) -> str | None:
 def _next(ctx, scheme: str) -> None:
     """Schedule the current step, after its action's duration."""
     step = ctx.get(scheme, "plan")[ctx.get(scheme, "step")]
-    ctx.schedule(Span(days=A.ACTIONS[step["action"]].duration_days), "step", entity=scheme,
+    days = A.ACTIONS[step["action"]].duration(ctx, ctx.get(scheme, "owner"), step["target"])
+    ctx.schedule(Span(days=days), "step", entity=scheme,
                  payload={"scheme": scheme},
                  causes=(Cause("scheme", scheme), Cause("ambition", ctx.get(scheme, "ambition"))))
 
@@ -263,6 +264,9 @@ class Schemes(System):
     def handle(self, ctx, activation):
         if activation.purpose == "succession":
             houses.handle_succession(ctx, activation)
+            return
+        if activation.purpose == "arrive":  # a Flee's journey (S4 §5)
+            travel.arrive(ctx, activation)
             return
         if activation.purpose != "step":
             raise ValueError(f"{self.name} has no follow-up {activation.purpose!r}")

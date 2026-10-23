@@ -49,7 +49,7 @@ def ancestors(ctx, person: str, depth: int) -> set[str]:
 class Marriage(System):
     name, cadence = "people.marriage", "yearly"
     reads = frozenset({"ids:settlement", "region", "residents", "sex", "race", "born", "spouse", "mother",
-                       "father", "place", "status"}) | population.COLUMN_READS
+                       "father", "place", "status", "journey"}) | population.COLUMN_READS
     writes = frozenset({"spouse", "residents", "place", "new:person", "pop:*", "allele:*", "flow:*"})
     event_types = (MARRIAGE,) + LOD_TYPES
 
@@ -71,8 +71,8 @@ class Marriage(System):
         men, women = [], []
         for s in settlements:
             for p in ctx.get(s, "residents"):
-                if ctx.status(p) != "active" or ctx.get(p, "spouse") is not None:
-                    continue
+                if ctx.status(p) != "active" or ctx.get(p, "spouse") is not None or ctx.get(p, "journey"):
+                    continue  # (a traveller is on the road, not at market)
                 lo, hi = races[ctx.get(p, "race")].marriage
                 if lo <= age_years(ctx.calendar, ctx.get(p, "born"), ctx.today) <= hi:
                     (men if ctx.get(p, "sex") == "m" else women).append(p)
