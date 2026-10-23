@@ -385,3 +385,12 @@ def test_an_event_pin_matches_its_other_payload_fields_too():
     d.observe(SimpleNamespace(id="x1", type="people.succession", date=Date(4, 30, 5), roles={"successor": ("v:k",)},
                               payload={"office": "v:b-head", "abdication": False}))
     assert d.status == {a.id: "open", b.id: "satisfied"}
+
+
+def test_a_run_with_an_existence_pin_met_at_the_start_can_be_checkpointed():
+    """apply_pins kept a bare date for pins met at the start; the director keeps (date, sequence) (#63)."""
+    from renasci import toy
+
+    e = toy.new_engine(pins=[Pin("here", "existence", subject="t:Ashford-00",
+                                 window=(Date(1, 1, 0), Date(1, 3, 359)))])
+    assert e.director.to_json()["met"]["here"] == [[1, 1, 0], 0]  # (it raised: a bare date can't be unpacked)

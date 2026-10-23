@@ -33,7 +33,8 @@ from renasci.core.ripples import Ripple
 from renasci.worlds import get_world
 
 RUN_KEYS = {"name", "engine", "seed", "world", "end", "checkpoint_every_years", "full_reads"}
-SECTIONS = {"run", "world", "ripple"}
+SECTIONS = {"run", "world", "ripple", "vault"}
+VAULT_KEYS = {"path"}
 RIPPLE_KEYS = {"id", "kind", "date", "target", "params"}
 
 
@@ -48,6 +49,7 @@ class Recipe:
     ripples: tuple[Ripple, ...]
     raw: dict
     full_reads: bool = False  # keep every read row (analysis runs); otherwise one digest per scope
+    vault: dict | None = None  # {"path": ...}: cast the vault's canon into the run (S2 §7)
 
 
 def parse_recipe(raw: dict) -> Recipe:
@@ -84,10 +86,20 @@ def parse_recipe(raw: dict) -> Recipe:
     full_reads = run.get("full_reads", False)
     if type(full_reads) is not bool:
         raise ValueError("full_reads must be true or false")
+    vault = raw.get("vault")
+    if vault is not None and (not isinstance(vault, dict) or set(vault) != VAULT_KEYS or not isinstance(vault["path"], str)):
+        raise ValueError('[vault] is path = "<the vault folder>"')
+    if vault is not None and world.scenario is None:
+        raise ValueError(f"the {world.name} world has no people to cast canon into")
     return Recipe(run["name"], run["seed"], run["world"], end, every, dict(raw.get("world", {})),
-                  tuple(ripples), raw, full_reads)
+                  tuple(ripples), raw, full_reads, dict(vault) if vault else None)
 
 
 def load_recipe(path) -> Recipe:
+    """A recipe file; a relative [vault] path is relative to the recipe, not to where it's run from."""
     with Path(path).open("rb") as f:
-        return parse_recipe(tomllib.load(f))
+        recipe = parse_recipe(tomllib.load(f))
+    if recipe.vault and not Path(recipe.vault["path"]).is_absolute():
+        resolved = {"path": str((Path(path).parent / recipe.vault["path"]).resolve())}
+        object.__setattr__(recipe, "vault", resolved)
+    return recipe

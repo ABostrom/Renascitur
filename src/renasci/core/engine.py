@@ -169,13 +169,13 @@ class Engine:
                     self.director.status[pin.id] = "violated"  # placed, but not alive to be needed
                     continue
                 self.director.status[pin.id] = "satisfied"  # the scenario already placed it
-                self.director.met[pin.id] = self.start
+                self.director.met[pin.id] = (self.start, 0)  # (date, event sequence), as the director keeps it
                 self.director.held.add(pin.id)
             elif pin.kind == "existence" and pin.subject.startswith(CAST_STARTS):
                 if cast:
                     self.cast(pin.payload.get("kind", "person"), pin.subject, pin.payload.get("fields", {}))
                 self.director.status[pin.id] = "satisfied"
-                self.director.met[pin.id] = self.start
+                self.director.met[pin.id] = (self.start, 0)  # (date, event sequence), as the director keeps it
             elif pin.kind in ("event", "existence") and pin.window and cast:
                 self.scheduler.push(Activation(pin.window[1], DEADLINE_PRIORITY, "engine", "pin_deadline",
                                                "engine", {"pin": pin.id}, ()))

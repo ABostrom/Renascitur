@@ -17,6 +17,8 @@ class World:
     new_engine: Callable[..., Engine]  # (seed, ripples, pins, **params) -> Engine, cast and ready
     rulesets: Callable[..., list[tuple[Date, object]]]  # (**params) -> [(start, Ruleset)]
     params: frozenset[str] = frozenset()  # the [world] keys a recipe may set
+    start: Callable[..., Date] | None = None  # (**params) -> the first day (for casting canon, S2 §7)
+    scenario: Callable[..., dict] | None = None  # (**params) -> the people scenario canon is cast into
 
     def restore(self, checkpoint: dict, seed: int, ripples=(), pins=(), **params) -> Engine:
         return Engine.restore(checkpoint, self.calendar, self.rulesets(**params), seed=seed, ripples=ripples, pins=pins)
@@ -39,8 +41,13 @@ def _kin() -> World:
         sc = kin.scenario(people_per_settlement, races, catalogue, residence, masses, base=scenario, traits=traits)
         return [(kin.START, kin.ruleset(sc=sc))]
 
+    def scenario(people_per_settlement=None, races=None, catalogue=None, residence=None, masses=None,
+                 scenario=None, traits=None):
+        return kin.scenario(people_per_settlement, races, catalogue, residence, masses, base=scenario, traits=traits)
+
     return World("kin", kin.CAL, kin.new_engine, rulesets,
-                 frozenset({"people_per_settlement", "races", "catalogue", "residence", "masses", "scenario", "traits"}))
+                 frozenset({"people_per_settlement", "races", "catalogue", "residence", "masses", "scenario", "traits"}),
+                 start=lambda **_: kin.START, scenario=scenario)
 
 
 def _fourth_age() -> World:
@@ -49,7 +56,11 @@ def _fourth_age() -> World:
     def rulesets(scenario=None):
         return renascita.rulesets(scenario)
 
-    return World("fourth_age", renascita.CAL, renascita.new_engine, rulesets, frozenset({"scenario"}))
+    def scenario(scenario=None):
+        return renascita._scenario(scenario)
+
+    return World("fourth_age", renascita.CAL, renascita.new_engine, rulesets, frozenset({"scenario"}),
+                 start=lambda scenario=None: renascita.start_of(renascita._scenario(scenario)), scenario=scenario)
 
 
 WORLDS: dict[str, Callable[[], World]] = {"toy": _toy, "kin": _kin, "fourth_age": _fourth_age}

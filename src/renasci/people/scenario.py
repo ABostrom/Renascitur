@@ -25,6 +25,13 @@ synthesised `s:` person); S2's casting (#63) will place canon *into* the synthes
    house living there. The head holds the headship; the yearly heir pass names the heir.
 
 Synthesised ids start `s:` (cast, not born): `s:<house>:<n>`, `s:<settlement>:<n>`.
+
+**Canon** (S2 §7, `canon=`): people the vault places at the start, cast with their canon ids (`v:`).
+A house whose head is canon is built around them: the canon head takes the synthesised head's place (and
+the headship), with the family's ages fitted to theirs, and a canon father takes the founder's. Other canon
+people are added to their house (or as commoners at their home), with their canon parents; canon parents
+who died before the start are cast as dead records, so lineages hold. Placed canon count as residents
+before the masses are cast, so conservation holds as it does for synthesised notables.
 """
 
 from __future__ import annotations
@@ -47,8 +54,9 @@ def _person(name, sex, born, race, place, genome, catalogue, house=None, mother=
 
 
 class _Builder:
-    def __init__(self, engine, scenario: dict, seed: int):
+    def __init__(self, engine, scenario: dict, seed: int, canon=None):
         self.e, self.sc = engine, scenario
+        self.canon = canon or {"people": {}, "heads": {}}
         self.cal, self.today = engine.calendar, engine.start
         self.races = {r["id"]: Race.from_json(r) for r in scenario["races"]}
         self.cat = Catalogue.from_json(scenario["catalogue"])
@@ -77,6 +85,34 @@ class _Builder:
 
     def marry(self, a: str, b: str) -> None:
         self.people[a]["spouse"], self.people[b]["spouse"] = b, a
+
+    def rename(self, old: str, new: str) -> None:
+        """Give a synthesised person a canon id, everywhere they are named."""
+        self.people[new] = self.people.pop(old)
+        for person in self.people.values():
+            for k in ("mother", "father", "spouse"):
+                if person[k] == old:
+                    person[k] = new
+            person["children"] = [new if c == old else c for c in person["children"]]
+        if old in self.dead:
+            self.dead.discard(old)
+            self.dead.add(new)
+
+    def canon_age(self, cid: str) -> int | None:
+        born = self.canon["people"].get(cid, {}).get("born")
+        return age_years(self.cal, born, self.today) if born else None
+
+    def apply_canon(self, pid: str, cid: str) -> None:
+        """A synthesised person becomes the canon one: their id, and what the vault says of them."""
+        self.rename(pid, cid)
+        c, person = self.canon["people"][cid], self.people[cid]
+        for k in ("name", "sex", "born", "race"):
+            if c.get(k):
+                person[k] = c[k]
+        if c.get("status") == "dead":
+            self.dead.add(cid)
+        else:
+            self.dead.discard(cid)
 
     # ------------------------------------------------------------ commoners
 
@@ -136,6 +172,20 @@ class _Builder:
         # Whole years between a mother's births: her spacing, plus a year so birth days can't close the gap.
         gap = -(-race.spacing_days // self.cal.days_per_year) + 1
         head_age = 30 + int(rng.integers(0, 26))
+        canon_head = self.canon["heads"].get(house)
+        head_sex = "m"
+        father_age = father_dead_for = None
+        if canon_head:
+            if self.canon_age(canon_head) is not None:
+                head_age = self.canon_age(canon_head)
+            head_sex = self.canon["people"][canon_head].get("sex") or "m"
+            father = self.canon["people"].get(self.canon["people"][canon_head].get("father") or "", {})
+            if father.get("born"):
+                father_age = age_years(self.cal, father["born"], self.today)
+                if self.canon_age(canon_head) is None:  # a drawn head: young enough to be the father's child
+                    head_age = max(1, min(head_age, father_age - race.marriage[0]))
+            if father.get("died"):
+                father_dead_for = age_years(self.cal, father["died"], self.today)
         founder_id = founder_person("m", head_age + race.marriage[0] + int(rng.integers(0, 11)), True)
         self.dead.add(founder_id)
         ages = [head_age]  # the head is the eldest son; his brothers and sisters are younger
@@ -144,8 +194,17 @@ class _Builder:
             if nxt < 1:
                 break
             ages.append(nxt)
-        siblings = [child_of(None, founder_id, a, True, sex="m" if i == 0 else None) for i, a in enumerate(ages)]
+        if father_dead_for is not None:  # nobody is the canon father's child who was born after he died
+            ages = [ages[0]] + [a for a in ages[1:] if a >= father_dead_for]
+        siblings = [child_of(None, founder_id, a, True, sex=head_sex if i == 0 else None) for i, a in enumerate(ages)]
         head = siblings[0]
+        if canon_head:
+            self.apply_canon(head, canon_head)
+            siblings[0] = head = canon_head
+            father = self.canon["people"][canon_head].get("father")
+            if father and father in self.canon["people"] and father not in self.people:
+                self.apply_canon(founder_id, father)  # the canon father is the founder
+                founder_id = father
         for p, age in zip(siblings, ages):
             if self.people[p]["sex"] != "m" or age < race.marriage[0]:
                 continue  # sisters and the young stay unmarried in the house
@@ -166,6 +225,77 @@ class _Builder:
                 self.people[wife]["last_birth"] = self.people[kids[-1]]["born"]
         return head, siblings
 
+    def canon_rest(self, settlements: dict, houses: dict) -> None:
+        """Canon people not already cast as a head or a head's father: added where the vault puts them.
+        Parents first (by the order of their births), so a child's canon parents exist when it is cast."""
+        canon = self.canon["people"]
+        order: list[str] = []
+
+        def visit(cid, seen=()):
+            if cid in order or cid in seen or cid not in canon:
+                return
+            for k in ("father", "mother"):
+                visit(canon[cid].get(k), (*seen, cid))
+            order.append(cid)
+
+        for cid in sorted(canon):
+            visit(cid)
+        for cid in order:
+            if cid in self.people:
+                continue
+            c = canon[cid]
+            home = c.get("home") if c.get("home") in settlements else (
+                houses[c["house"]]["seat"] if c.get("house") in houses else self.sc["settlements"][0]["id"])
+            spec = settlements[home]
+            race = self.races[c.get("race") or spec["race"]]
+            rng = self.stream("canon", cid)
+            sex = c.get("sex") or ("m" if rng.random() < race.male else "f")
+            born = c.get("born")
+            kids = sorted(k["born"] for k in canon.values() if cid in (k.get("father"), k.get("mother")) and k.get("born"))
+            if born is None and kids:  # a parent: old enough at their first child's birth
+                lo = race.fertile[0] if sex == "f" else race.marriage[0]
+                hi = race.fertile[1] if sex == "f" else race.marriage[0] + 25
+                at = lo + int(rng.integers(0, max(1, min(hi, lo + 15) - lo + 1)))
+                born = [kids[0][0], kids[0][1] - at, int(rng.integers(0, self.cal.days_per_year))]
+            elif born is None:
+                age = self.age_from_life_table(race, sex, rng, lo=race.marriage[0])
+                born = _born(self.today, age, int(rng.integers(0, self.cal.days_per_year)))
+            father = c.get("father") if c.get("father") in self.people else None
+            mother = c.get("mother") if c.get("mother") in self.people else None
+            group = spec["genome_group"]
+            if father or mother:
+                known = [self.people[x]["genome"] for x in (mother, father) if x]
+                mg, fg = (known[0], known[1]) if len(known) == 2 else (None, known[0])
+                unknown = None if mg else ({lo.id: self.cat.groups[group][lo.id] for lo in self.cat.loci}, f"f:{group}")
+                genome, _ = inherit(self.cat, mg, fg, self.genome_streams(cid), f"f:{group}", unknown=unknown)
+            else:
+                genome = founder(self.cat, group, self.genome_streams(cid), f"f:{group}")
+            self.people[cid] = _person(c.get("name") or cid, sex, born, race.id, home, genome, self.cat,
+                                       house=c.get("house") if c.get("house") in houses else None,
+                                       mother=mother, father=father)
+            for parent in (mother, father):
+                if parent:
+                    self.people[parent]["children"].append(cid)
+            if c.get("status") == "dead":
+                self.dead.add(cid)
+
+    def link_canon(self) -> None:
+        """Canon parents, linked whatever order people were cast in (a head built as a synthesised
+        founder's son, a child cast before its parent)."""
+        for cid, c in sorted(self.canon["people"].items()):
+            if cid not in self.people:
+                continue
+            person = self.people[cid]
+            for k in ("father", "mother"):
+                parent = c.get(k)
+                if not parent or parent not in self.people or person[k] == parent:
+                    continue
+                old = person[k]
+                if old in self.people:
+                    self.people[old]["children"] = [x for x in self.people[old]["children"] if x != cid]
+                person[k] = parent
+                self.people[parent]["children"].append(cid)
+
     # ------------------------------------------------------------ cast it all
 
     def build(self) -> None:
@@ -175,6 +305,8 @@ class _Builder:
         heads = {}
         for spec in self.sc["houses"]:
             heads[spec["id"]] = self.house(spec, settlements[spec["seat"]])[0]
+        self.canon_rest(settlements, {h["id"]: h for h in self.sc["houses"]})
+        self.link_canon()
         residents = {s: [] for s in settlements}
         for pid, person in self.people.items():
             if pid not in self.dead:
@@ -206,6 +338,8 @@ class _Builder:
                                                     "house": house})
 
 
-def synthesise(engine, scenario: dict, seed: int) -> None:
-    """Cast a scenario's starting world into `engine` (before it runs, after canon is placed)."""
-    _Builder(engine, scenario, seed).build()
+def synthesise(engine, scenario: dict, seed: int, canon: dict | None = None) -> None:
+    """Cast a scenario's starting world into `engine` (before pins are applied), with canon placed in it:
+    `canon = {"people": {id: {name, sex, born, race, house, home, father, mother, status}}, "heads": {house: id}}`
+    (`renasci.people.casting.canon_from` builds it from the vault)."""
+    _Builder(engine, scenario, seed, canon).build()
