@@ -10,7 +10,8 @@
   "house_from": "father",
   "residence": "husband",
   "kin_degree": 2,
-  "market_rate": 0.35
+  "market_rate": 0.35,
+  "traits": {"wits": "wits", "charm": "charm", "temper": "temper"}
  },
  "races": [
   {
