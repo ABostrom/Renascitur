@@ -16,6 +16,7 @@ from renasci.people.schemes import Schemes
 from renasci.people.population import Lod, Population, conservation
 from renasci.people.ties import Ties
 from renasci.people.travel import Migration
+from renasci.people.beliefs import Gossip
 
 
 def people_ruleset(name: str, scenario: dict, version: int = 1) -> Ruleset:
@@ -25,6 +26,8 @@ def people_ruleset(name: str, scenario: dict, version: int = 1) -> Ruleset:
                Minds())
     if scenario.get("geography"):  # journeys need routes (S4 §5)
         systems += (Migration(),)
+    if scenario.get("params", {}).get("beliefs"):  # gossip needs minds that hold beliefs (S6 §6)
+        systems += (Gossip(),)
     return Ruleset(name, version, systems,
                    params=params, forcers=FORCERS, disguises=(Illness(),),
                    conservation=conservation(Catalogue.from_json(scenario["catalogue"])))
