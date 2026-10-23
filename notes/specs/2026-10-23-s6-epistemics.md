@@ -132,7 +132,7 @@ A **scripted injection**: ripple kind `inject` (already in `ripples.SUPPORTED`),
 - **The witness** is the spared leader. They saw the sabotage, and their `BearWitness` (an ambition the injection gives them) is public evidence that corrects.
 - **Golden test** (judged with §3's offline truth):
   - with no spared leader, the lie, or a claim drifted from it, holds the largest share along the Vialux after five years;
-  - with `spare: "leader"`, the true claim spreads and a grievance against the rival house forms;
+  - with `spare: "leader"`, the true claim spreads (a grievance against the rival house forming waits for §8's grievances-follow-belief; as built, #90 checks the beliefs);
   - in both runs, every belief walks back to a perception, a correction or the injection;
   - the diff explains every divergent belief.
 - The script's details are a draft of the vault's ward-failure story, chosen from the world each run, not canon. Aaron may pin it later.

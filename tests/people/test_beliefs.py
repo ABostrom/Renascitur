@@ -310,3 +310,10 @@ def test_a_belief_the_cap_would_drop_at_once_is_not_taken_on():
     e = engine([(Span(days=1), go)])
     e.run(until=CAL.add(START, Span(days=3)))
     assert SEEN == {"took": False, "emitted": 0}
+
+
+def test_blaming_the_agents_house_is_half_true():
+    houses = {"v:vane": "v:house-vane"}
+    assert truth.judge(B.claim("caused", event="xfail", by="v:house-vane"), EVENTS, houses=houses)[0] == "half"
+    assert truth.judge(B.claim("caused", event="xfail", by="v:house-vane"), EVENTS)[0] == "false"  # (no houses: can't say)
+    assert truth.judge(B.claim("caused", event="xfail", by="v:vane"), EVENTS, houses=houses)[0] == "true"

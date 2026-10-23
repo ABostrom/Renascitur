@@ -50,12 +50,21 @@ def start_of(scenario: dict) -> Date:
 
 
 def ruleset(scenario: dict | None = None):
-    return people_ruleset("fourth_age", _scenario(scenario))
+    return _with_scripts(people_ruleset("fourth_age", _scenario(scenario)))
 
 
 def rulesets(scenario: dict | None = None, scale: int = 1):
     sc = _scenario(scenario, scale)
-    return [(start_of(sc), people_ruleset("fourth_age", sc))]
+    return [(start_of(sc), _with_scripts(people_ruleset("fourth_age", sc)))]
+
+
+def _with_scripts(rs):
+    """The Fourth Age's scripted injections (the ward failure, #90) as disguises of its people ruleset."""
+    from renasci.core.systems import Ruleset
+    from renasci.renascita.ward import WardFailure
+
+    return Ruleset(rs.name, rs.version, rs.systems, params=rs.params, forcers=rs.forcers,
+                   disguises=(*rs.disguises, WardFailure()), conservation=rs.conservation)
 
 
 def new_engine(seed: int = 1234, ripples=(), pins=(), scenario: dict | None = None, canon: dict | None = None,
