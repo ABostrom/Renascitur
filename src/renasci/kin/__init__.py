@@ -57,11 +57,11 @@ def ruleset(races=None, catalogue=None, residence=None, sc=None) -> Ruleset:
 
 def new_engine(seed: int = 1234, ripples=(), pins=(), people_per_settlement: int | None = None, races=None,
                catalogue=None, residence: str | None = None, masses: int | None = None,
-               scenario: dict | None = None, traits: dict | None = None) -> Engine:
-    """A fresh kin world at 1K 1, before anything runs."""
+               scenario: dict | None = None, traits: dict | None = None, canon: dict | None = None) -> Engine:
+    """A fresh kin world at 1K 1 (with any canon placed), before anything runs."""
     sc = globals()["scenario"](people_per_settlement, races, catalogue, residence, masses, base=scenario, traits=traits)
     e = Engine(CAL, seed=seed, rulesets=[(START, ruleset(sc=sc))])
-    synthesise(e, sc, seed)
+    synthesise(e, sc, seed, canon)
     e.apply_pins(pins)
     e.apply_ripples(ripples)
     return e

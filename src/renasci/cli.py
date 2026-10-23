@@ -76,12 +76,49 @@ def cmd_run(args) -> int:
     return 0
 
 
-def _run(recipe, out: Path, meta: dict | None = None) -> Path:
+def _cast(recipe, world) -> dict:
+    """The canon a run is cast from (S2 §7): the vault's pins for the run's window, checked, with the casting
+    input and log. Kept in the run folder as canon.json, so a replay uses exactly this."""
+    from renasci.people.casting import canon_from, castable
+    from renasci.people.races import Race
+    from renasci.people.vault import people_hook
+    from renasci.vault.feasibility import check, feasible
+    from renasci.vault.loader import load
+    from renasci.vault.pins import extract
+
+    vault = load(recipe.vault["path"])
+    scenario = world.scenario(**recipe.params)
+    start, end = world.start(**recipe.params), recipe.end
+    races = {r["id"]: Race.from_json(r) for r in scenario["races"]}
+    found = extract(vault, world.calendar, start, end, hooks=[people_hook])
+    report = check(found, vault, start, end, hooks=[people_hook], races=races, calendar=world.calendar)
+    canon, log = canon_from(found, vault, scenario)
+    pins, dropped = castable(feasible(found, report), scenario)
+    return {"vault": recipe.vault["path"], "digest": vault.digest, "window": [start.to_json(), end.to_json()],
+            "pins": [p.to_json() for p in pins], "dropped": dropped, "canon": canon, "casting": log,
+            "feasibility": report, "findings": found.findings, "expectations": found.expectations}
+
+
+def _write_canon(folder: Path, doc: dict) -> None:
+    (folder / "canon.json").write_text(json.dumps(doc, indent=1, default=str), encoding="utf-8")
+    (folder / "casting.json").write_text(json.dumps(doc["casting"], indent=1), encoding="utf-8")
+
+
+def _run(recipe, out: Path, meta: dict | None = None, canon_doc: dict | None = None) -> Path:
+    from renasci.core.pins import Pin
+
     world = get_world(recipe.world)
-    engine = world.new_engine(recipe.seed, ripples=recipe.ripples, **recipe.params)
+    if recipe.vault and canon_doc is None:
+        canon_doc = _cast(recipe, world)
+    extra = {}
+    if canon_doc is not None:
+        extra = {"pins": [Pin.from_json(p) for p in canon_doc["pins"]], "canon": canon_doc["canon"]}
+    engine = world.new_engine(recipe.seed, ripples=recipe.ripples, **extra, **recipe.params)
     engine.full_reads = recipe.full_reads
     folder = RunFolder.create(out / recipe.name, {"recipe": recipe.raw, "complete": False,
                                                   "calendar": world.calendar.to_json(), **(meta or {})})
+    if canon_doc is not None:
+        _write_canon(folder.path, canon_doc)
     _finish(engine, folder, recipe)
     print(f"run {recipe.name}: {folder.manifest['segments']} segments, state {folder.manifest['meta']['state_hash']}")
     return folder.path
@@ -117,18 +154,37 @@ def _replay(run: Path, new, out: Path, from_: str | None = None, rerun: bool = F
         changed += [r.date for r in old.ripples if key(r) not in after]  # removed or changed: old date
         target = min(changed) if changed else new.end
     marks = [m for m in base.manifest["marks"] if Date.from_json(m["before"]) <= target]
+    canon_doc = json.loads((base.path / "canon.json").read_text(encoding="utf-8")) \
+        if (base.path / "canon.json").exists() else None
     if not marks and rerun:
-        return _run(new, out, meta=meta)
+        return _run(new, out, meta=meta, canon_doc=canon_doc)
     if not marks:
         raise ValueError(f"no checkpoint at or before {world.calendar.format(target)}; use `renasci run`")
     mark = marks[-1]
     at = Date.from_json(mark["before"])
     cp = load_checkpoint(base.path / "checkpoints" / f"{at.age}-{at.year}-{at.day}.json.gz")
-    engine = world.restore(cp, new.seed, ripples=new.ripples, **new.params)
+    pins = []
+    if canon_doc is not None:
+        from renasci.core.pins import Pin
+
+        pins = [Pin.from_json(p) for p in canon_doc["pins"]]
+        if new.vault:
+            from renasci.vault.loader import load
+
+            try:
+                changed = load(new.vault["path"]).digest != canon_doc["digest"]
+            except FileNotFoundError:
+                changed = False  # (the vault moved: canon.json is all a replay needs)
+            if changed:
+                print(f"note: the vault has changed since {base.path.name} was cast; the replay uses the canon it was "
+                      "cast from (canon.json)")
+    engine = world.restore(cp, new.seed, ripples=new.ripples, pins=pins, **new.params)
     engine.full_reads = new.full_reads
     folder = RunFolder.fork(base.path, out / new.name, keep=mark["segment"] + 1,
                             meta={"recipe": new.raw, "complete": False, "calendar": world.calendar.to_json(),
                                   "replayed_from": {"run": base.path.name, "at": mark["before"]}, **(meta or {})})
+    if canon_doc is not None:
+        _write_canon(folder.path, canon_doc)
     _finish(engine, folder, new, after=at)
     print(f"replayed {new.name} from {base.path.name} at {world.calendar.format(at)}")
     return folder.path
