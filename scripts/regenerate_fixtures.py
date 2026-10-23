@@ -76,6 +76,42 @@ people_per_settlement = 10
 traits = { wits = "stature", charm = "stature", temper = "stature" }
 """
 
+WARD = """
+[run]
+name = "ward"
+engine = "0.1.0"
+seed = 1
+world = "fourth_age"
+end = "4A 6"
+
+[world]
+scenario = {scenario}
+
+[[ripple]]
+id = "ward"
+kind = "inject"
+date = "4A 2"
+target = "v:lux-oescus"
+params = {{ script = "ward_failure" }}
+"""
+
+
+def toml_value(v):
+    """A JSON value as an inline TOML value (the ward recipe's whole scenario)."""
+    if isinstance(v, bool):
+        return "true" if v else "false"
+    if isinstance(v, float) and v != v or v in (float("inf"), float("-inf")):
+        raise ValueError(f"no TOML for {v}")
+    if isinstance(v, (int, float)):
+        return repr(v)
+    if isinstance(v, str):
+        return json.dumps(v)
+    if isinstance(v, list):
+        return "[" + ", ".join(toml_value(x) for x in v) + "]"
+    if isinstance(v, dict):
+        return "{ " + ", ".join(f"{json.dumps(k)} = {toml_value(x)}" for k, x in v.items()) + " }"
+    raise TypeError(f"no TOML for {v!r}")  # (None among them: TOML has no null)
+
 
 def recipe(name, extra="", full_reads=True):
     """base and protected keep every read (the Observatory shows them); the buggy pair keeps digests."""
@@ -128,6 +164,15 @@ def main_() -> None:
     vault = (Path(__file__).parents[1] / "tests" / "fixtures" / "vault_people").as_posix()
     canon.write_text(CANON.format(vault=vault), encoding="utf-8", newline="\n")
     assert main(["run", str(canon), "--out", str(OUT)]) == 0
+    # A Fourth Age run with beliefs and a ward failure (the Knowledge page): the guild's lie, and its spread.
+    from renasci import renascita
+
+    sc = json.loads(json.dumps(renascita.SCENARIO))
+    sc["params"]["beliefs"] = True
+    ward = OUT.parent / "ward.toml"
+    ward.write_text(WARD.format(scenario=toml_value(sc)), encoding="utf-8", newline="\n")
+    assert main(["run", str(ward), "--out", str(OUT)]) == 0
+    assert main(["claims", str(OUT / "ward")]) == 0
     for f in (OUT.parent).glob("*.toml"):
         f.unlink()
     print(f"fixtures written to {OUT}")

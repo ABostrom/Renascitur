@@ -300,6 +300,26 @@ def _adjusted(r: dict, args, cal) -> dict:
     return out
 
 
+def cmd_claims(args) -> int:
+    """What the run's world believes, judged against what happened: analysis/claims.json (#106)."""
+    from renasci.analysis.claims import claims_report
+
+    run = Path(args.run)
+    rf = _open_complete(run)
+    state = json.loads(gzip.decompress((run / "state.json.gz").read_bytes()))
+    geo = run / "geography.json"
+    geography = json.loads(geo.read_text(encoding="utf-8")) if geo.exists() else None
+    report = claims_report(list(rf.read("events")), state, geography)
+    (run / "analysis").mkdir(exist_ok=True)
+    (run / "analysis" / "claims.json").write_text(json.dumps({"run": run.name, **report}, indent=1), encoding="utf-8")
+    sys.stdout.reconfigure(errors="replace")
+    print(f"{sum(len(t['claims']) for t in report['topics'])} claims in {len(report['topics'])} topics")
+    for t in report["topics"][:args.top]:
+        most = t["claims"][0]
+        print(f"  {t['about_name']}: {most['text']} ({most['truth']}, {most['holders']} hold it)")
+    return 0
+
+
 def cmd_stories(args) -> int:
     run = Path(args.run)
     rf = _open_complete(run)
@@ -648,6 +668,10 @@ def main(argv=None) -> int:
     v.add_argument("--world", default="fourth_age", help="whose calendar dates are read in")
     v.add_argument("--from", dest="from_", default="4A 1")
     v.add_argument("--to", default="4A 256")
+    p = sub.add_parser("claims", help="what a run's world believes, judged against what happened "
+                                       "(writes analysis/claims.json)")
+    p.add_argument("run")
+    p.add_argument("--top", type=int, default=5)
     p = sub.add_parser("observe", help="serve the Observatory and a runs folder, read-only, on localhost")
     p.add_argument("runs", nargs="?", default="runs")
     p.add_argument("--port", type=int, default=8765)
@@ -669,7 +693,7 @@ def main(argv=None) -> int:
     p.add_argument("--out", default="runs/_bench")
     args = parser.parse_args(argv)
     try:
-        commands = {"run": cmd_run, "replay": cmd_replay, "diff": cmd_diff, "inspect": cmd_inspect, "bench": cmd_bench, "latch": cmd_latch, "stories": cmd_stories, "vault": cmd_vault,
+        commands = {"run": cmd_run, "replay": cmd_replay, "diff": cmd_diff, "inspect": cmd_inspect, "bench": cmd_bench, "latch": cmd_latch, "stories": cmd_stories, "claims": cmd_claims, "vault": cmd_vault,
                     "observe": cmd_observe}
         return commands[args.command](args)
     except (ValueError, FileExistsError, FileNotFoundError) as err:
