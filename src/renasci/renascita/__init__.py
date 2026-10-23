@@ -15,18 +15,20 @@ import copy
 import json
 from pathlib import Path
 
+from renasci import geo
 from renasci.core.calendar import Age, Calendar, Date
 from renasci.core.engine import Engine
 from renasci.people.scenario import synthesise
 from renasci.people.world import people_ruleset
 
 CAL = Calendar(ages=(Age(4, "4A", "Fourth Age", last_year=256),))
-SCENARIO: dict = json.loads((Path(__file__).parent / "fourth_age.json").read_text(encoding="utf-8"))
+SCENARIO: dict = geo.attach(json.loads((Path(__file__).parent / "fourth_age.json").read_text(encoding="utf-8")),
+                             Path(__file__).parent)
 START = Date.from_json(SCENARIO["start"])
 
 
 def _scenario(scenario: dict | None) -> dict:
-    return copy.deepcopy(SCENARIO if scenario is None else scenario)
+    return geo.attach(copy.deepcopy(SCENARIO if scenario is None else scenario), Path(__file__).parent)
 
 
 def start_of(scenario: dict) -> Date:
