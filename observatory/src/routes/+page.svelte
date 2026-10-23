@@ -78,6 +78,7 @@
 				<li class="card">
 					<div class="head">
 						<a class="name" href={`/run/${encodeURIComponent(run.name)}/events`}>{run.name}</a>
+						<a class="diff-link" href={`/run/${enc(run.name)}/stories`}>stories</a>
 						{#if m.meta.complete}
 							<span class="badge ok">complete</span>
 						{:else}

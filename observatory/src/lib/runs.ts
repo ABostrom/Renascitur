@@ -2,6 +2,7 @@ import { buildCauseGraph, type CauseGraph } from './run/causes';
 import { buildIndex, type EventIndex } from './run/index';
 import { openRun, type Run } from './run/run';
 import { HttpSource } from './run/source';
+import { loadStories, type Stories } from './run/stories';
 
 /** Runs and their indexes, loaded once per page session and shared by every view. */
 const cache = new Map<string, Promise<{ run: Run; index: EventIndex }>>();
@@ -28,6 +29,23 @@ export function loadGraph(name: string) {
 		p = loadRun(name).then(({ index }) => buildCauseGraph(index));
 		p.catch(() => graphs.delete(name));
 		graphs.set(name, p);
+	}
+	return p;
+}
+
+const storyCache = new Map<string, Promise<{ run: Run; stories: Stories | null }>>();
+
+/** A run's `analysis/stories.json` (null if `renasci stories` hasn't been run), loaded once. */
+export function loadRunStories(name: string) {
+	let p = storyCache.get(name);
+	if (!p) {
+		p = (async () => {
+			const source = new HttpSource();
+			const run = await openRun(source, name);
+			return { run, stories: await loadStories(source, name) };
+		})();
+		p.catch(() => storyCache.delete(name));
+		storyCache.set(name, p);
 	}
 	return p;
 }

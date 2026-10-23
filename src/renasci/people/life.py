@@ -85,6 +85,9 @@ def world_params(races: list, catalogue: dict, house_from: str = "father", kin_d
     if traits is not None:  # {role: trait name}: wits, temper, charm (S7 §12)
         if not isinstance(traits, dict) or not all(isinstance(k, str) and isinstance(v, str) for k, v in traits.items()):
             raise ValueError("traits maps roles to trait names")
+        unknown = sorted(set(traits.values()) - set(catalogue.get("traits", {})))
+        if unknown:
+            raise ValueError(f"traits names {unknown}, which the catalogue doesn't have: {sorted(catalogue.get('traits', {}))}")
         params["traits"] = traits
     if ambitions is not None:
         params["ambitions"] = list(ambitions)

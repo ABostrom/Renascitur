@@ -30,9 +30,12 @@ RACES: list[dict] = SCENARIO["races"]
 CATALOGUE: dict = SCENARIO["catalogue"]
 
 
-def scenario(people_per_settlement=None, races=None, catalogue=None, residence=None, masses=None, base=None) -> dict:
-    """The kin scenario with test overrides applied."""
+def scenario(people_per_settlement=None, races=None, catalogue=None, residence=None, masses=None, base=None,
+             traits=None) -> dict:
+    """The kin scenario with test overrides applied (`traits`: the S7 role mapping, {role: trait})."""
     sc = copy.deepcopy(base or SCENARIO)
+    if traits is not None:
+        sc["params"]["traits"] = dict(traits)
     if races is not None:
         sc["races"] = races
     if catalogue is not None:
@@ -54,9 +57,9 @@ def ruleset(races=None, catalogue=None, residence=None, sc=None) -> Ruleset:
 
 def new_engine(seed: int = 1234, ripples=(), pins=(), people_per_settlement: int | None = None, races=None,
                catalogue=None, residence: str | None = None, masses: int | None = None,
-               scenario: dict | None = None) -> Engine:
+               scenario: dict | None = None, traits: dict | None = None) -> Engine:
     """A fresh kin world at 1K 1, before anything runs."""
-    sc = globals()["scenario"](people_per_settlement, races, catalogue, residence, masses, base=scenario)
+    sc = globals()["scenario"](people_per_settlement, races, catalogue, residence, masses, base=scenario, traits=traits)
     e = Engine(CAL, seed=seed, rulesets=[(START, ruleset(sc=sc))])
     synthesise(e, sc, seed)
     e.apply_pins(pins)
