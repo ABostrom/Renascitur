@@ -251,7 +251,38 @@ class Protect(Vengeance):
         return f"protect their own from {ctx.get(target, 'name') or target}"
 
 
-STARTER = (Marry(), Protect(), Seize(), Standing(), Vengeance())
+class Ruin(Ambition):
+    """Bring a rival or an enemy low: see them shamed (S6 §8, #98). Only in a world with beliefs, where
+    shame can be had by testimony, slander or a frame as well as at court."""
+
+    name, cooldown_years = "Ruin", 8
+    reads = frozenset({"ties", "a", "b", "kind", "ended", "status", "favour", "born"})
+
+    def eligible(self, ctx, person):
+        if not ctx.params.get("beliefs"):
+            return None
+        for t in ctx.get(person, "ties") or []:
+            if ctx.get(t, "ended") or ctx.get(t, "kind") not in ("rival", "enemy"):
+                continue
+            other = ctx.get(t, "b") if ctx.get(t, "a") == person else ctx.get(t, "a")
+            if ctx.status(other) == "active" and float(ctx.get(other, "favour") or 0.0) >= SHAMED:
+                return Formation(other, ("drive", "rivalry"))
+        return None
+
+    def urge(self, ctx, person):  # (rare: most rivals live with it)
+        return 0.01 + 0.04 * trait(ctx, person, "temper")
+
+    def subgoals(self, ctx, amb):
+        return [frozenset({f"shamed:{ctx.get(amb, 'target')}"})]
+
+    def satisfied(self, ctx, amb):
+        return float(ctx.get(ctx.get(amb, "target"), "favour") or 0.0) < SHAMED
+
+    def text(self, ctx, owner, target):
+        return f"see {ctx.get(target, 'name') or target} brought low"
+
+
+STARTER = (Marry(), Protect(), Ruin(), Seize(), Standing(), Vengeance())
 
 
 LIBRARY: dict[str, Ambition] = {a.name: a for a in STARTER}

@@ -257,6 +257,115 @@ class Shame(Action):
         minds.wound(ctx, target, "shame", event)
 
 
+def _killings(ctx, actor: str, firm: float = 0.0) -> list[tuple[str, str, float]]:
+    """The killings `actor` believes in (victim, killer, confidence), the victim dead, openly held."""
+    out = []
+    for b in (ctx.get(actor, "beliefs") or {}).values():
+        c = b["claim"]
+        if c["pred"] == "killed" and not b.get("secret") and b["conf"] >= firm and ctx.exists(c["args"]["victim"]) \
+                and ctx.status(c["args"]["victim"]) == "dead":
+            out.append((c["args"]["victim"], c["args"]["by"], b["conf"]))
+    return sorted(out)
+
+
+def _townsfolk(ctx, actor: str, exclude=()) -> list[str]:
+    """Those living where the actor does, at home: who hears what's said there."""
+    home = ctx.get(actor, "place")
+    skip = {actor, *exclude}
+    return sorted(r for r in ctx.get(home, "residents")
+                  if r not in skip and ctx.status(r) == "active" and not ctx.get(r, "journey"))
+
+
+class Slander(Action):
+    """A lie told to the town: the target killed someone (a death the actor knows of, pinned on them).
+    Riskier and costlier to plan than shaming at court (a fallback for those not heard there)."""
+
+    name, achieves, secrecy, duration_days = "Slander", "shamed:{target}", 0.6, 60
+    hearers, trust = 3, 0.5
+
+    def _lie(self, ctx, actor, target):
+        victims = [v for v, by, _ in _killings(ctx, actor) if by != target and v != target]
+        return beliefs.claim("killed", victim=victims[0], by=target) if victims else None
+
+    def possible(self, ctx, actor, target, scheme):
+        return (beliefs.enabled(ctx) and super().possible(ctx, actor, target, scheme) and target is not None
+                and self._lie(ctx, actor, target) is not None)
+
+    def odds(self, ctx, actor, target, scheme):
+        return 0.3 + 0.3 * trait(ctx, actor, "charm")
+
+    def succeed(self, ctx, actor, target, scheme, event):
+        lie = self._lie(ctx, actor, target)
+        town = _townsfolk(ctx, actor, exclude=(target,))
+        told = []
+        for i in range(min(self.hearers, len(town))):
+            h = ctx.choose(f"slander:{i}", [r for r in town if r not in told], owner=scheme or actor)
+            told.append(h)
+            beliefs.tell(ctx, actor, h, lie, self.trust, conf=0.8, intent="lie", cause=event,
+                         place=ctx.get(actor, "place"))
+        if told:  # (a lie nobody heard shames nobody)
+            _favour(ctx, target, -0.3)
+
+
+class Frame(Action):
+    """Planted evidence: the victim's kin come to believe, firmly, that the target killed their own."""
+
+    name, requires, achieves, secrecy, duration_days = "Frame", frozenset({"accomplice"}), "shamed:{target}", 0.5, 120
+    evidence_conf = 0.85
+
+    def _setup(self, ctx, actor, target):
+        for v, by, _ in _killings(ctx, actor):
+            kin = [k for k in life.grieving(ctx, v) if k not in (target, actor)]
+            if by != target and v != target and kin:
+                return beliefs.claim("killed", victim=v, by=target), kin
+        return None, []
+
+    def possible(self, ctx, actor, target, scheme):
+        return (beliefs.enabled(ctx) and super().possible(ctx, actor, target, scheme) and target is not None
+                and self._setup(ctx, actor, target)[0] is not None)
+
+    def odds(self, ctx, actor, target, scheme):  # (nobody to frame it for: no chance, so no plan wastes a step on it)
+        return 0.3 + 0.4 * trait(ctx, actor, "wits") if self._setup(ctx, actor, target)[0] is not None else 0.0
+
+    def succeed(self, ctx, actor, target, scheme, event):
+        claim, kin = self._setup(ctx, actor, target)
+        for k in kin:  # (they find it: evidence, so they believe it firmly, and hold it against the target)
+            beliefs.hold(ctx, k, claim, self.evidence_conf, event)
+        _favour(ctx, target, -0.3)
+
+
+class BearWitness(Action):
+    """Public testimony to a killing the actor believes in: it corrects what the town believes."""
+
+    name, achieves, duration_days = "BearWitness", "shamed:{target}", 30
+    hearers, firm = 8, 0.8
+
+    def _testimony(self, ctx, actor, target):
+        for v, by, _ in _killings(ctx, actor, firm=self.firm):
+            if by == target:
+                return beliefs.claim("killed", victim=v, by=target)
+        return None
+
+    def possible(self, ctx, actor, target, scheme):
+        return (beliefs.enabled(ctx) and super().possible(ctx, actor, target, scheme) and target is not None
+                and self._testimony(ctx, actor, target) is not None)
+
+    def odds(self, ctx, actor, target, scheme):
+        return 0.5 + 0.3 * trait(ctx, actor, "charm")
+
+    def succeed(self, ctx, actor, target, scheme, event):
+        said = self._testimony(ctx, actor, target)
+        town = _townsfolk(ctx, actor, exclude=(target,))
+        heard = []
+        for i in range(min(self.hearers, len(town))):
+            h = ctx.choose(f"witness:{i}", [r for r in town if r not in heard], owner=scheme or actor)
+            heard.append(h)
+            beliefs.correct(ctx, h, said, event)
+        if heard:  # (testimony nobody heard shames nobody)
+            _favour(ctx, target, -0.3)
+            minds.wound(ctx, target, "shame", event)
+
+
 class Flee(Action):
     """Leave home: by road to any settlement within `flee_days` (S4 §5), else, in a world without routes,
     at once to another settlement of the region. The step is the decision; the journey takes the road's days."""
