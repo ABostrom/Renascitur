@@ -26,7 +26,7 @@ from __future__ import annotations
 import math
 
 from renasci.core.events import Cause, EventType
-from renasci.people import families, life, population
+from renasci.people import families, life, minds, population
 from renasci.people.ambitions import trait
 from renasci.people.races import age_years
 
@@ -223,8 +223,7 @@ class Shame(Action):
 
     def succeed(self, ctx, actor, target, scheme, event):
         _favour(ctx, target, -0.3)
-        if ctx.get(target, "wound") is None:  # (wounds proper are #95's: an existing wound isn't overwritten)
-            ctx.set(target, "wound", {"kind": "shame", "event": event, "since": ctx.today.to_json()})
+        minds.wound(ctx, target, "shame", event)
 
 
 class Flee(Action):
@@ -290,7 +289,7 @@ ACTIONS = library()
 READS = (life.DIE_READS | families.Marriage.reads | population.COLUMN_READS | frozenset({
     "favour", "wound", "place", "residents", "region", "accomplices", "state", "born", "traits", "race", "sex",
     "spouse", "mother", "father", "ids:settlement", "offices"}))
-WRITES = (life.DIE_WRITES | families.Marriage.writes | frozenset({"favour", "wound", "accomplices", "state"}))
+WRITES = (life.DIE_WRITES | families.Marriage.writes | frozenset({"favour", "wound", "need", "accomplices", "state"}))
 EVENT_TYPES = (ACTION,) + life.DIE_EVENTS + (families.MARRIAGE,) + population.LOD_TYPES
 
 
