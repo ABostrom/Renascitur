@@ -86,6 +86,8 @@ export function compareArcs(base: Stories, variant: Stories) {
 export interface Job {
 	id: number;
 	state: 'running' | 'done' | 'failed';
+	job?: 'latch' | 'run' | 'replay'; // what kind of job (a latch what-if, a run or a replay from a recipe)
+	recipe?: string;
 	run: string;
 	rank: number;
 	kind: string | null;
@@ -114,12 +116,36 @@ export const launcher = {
 	async launch(run: string, rank: number, adjust: Adjust): Promise<Job> {
 		const body: Record<string, unknown> = { run, rank };
 		for (const [k, v] of Object.entries(adjust)) if (v) body[k] = v;
-		const r = await fetch('/api/launch', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json', 'X-Renasci-Launch': '1' },
-			body: JSON.stringify(body)
-		});
-		if (!r.ok) throw new Error((await r.text()) || `launch refused (${r.status})`);
-		return r.json();
+		return post('/api/launch', body);
+	},
+	/** The recipes the server may run (its recipes folder). */
+	async recipes(): Promise<Recipe[]> {
+		const r = await fetch('/api/recipes');
+		return r.ok ? r.json() : [];
+	},
+	run(recipe: string): Promise<Job> {
+		return post('/api/run', { recipe });
+	},
+	replay(run: string, recipe: string): Promise<Job> {
+		return post('/api/replay', { run, recipe });
 	}
 };
+
+export interface Recipe {
+	file: string;
+	name: string | null;
+	world: string | null;
+	end: string | null;
+	ripples: number;
+	error: string | null;
+}
+
+async function post(url: string, body: unknown): Promise<Job> {
+	const r = await fetch(url, {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json', 'X-Renasci-Launch': '1' },
+		body: JSON.stringify(body)
+	});
+	if (!r.ok) throw new Error((await r.text()) || `launch refused (${r.status})`);
+	return r.json();
+}

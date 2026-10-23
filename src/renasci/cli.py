@@ -580,7 +580,8 @@ def cmd_bench(args) -> int:
 def cmd_observe(args) -> int:
     from renasci.observe import serve
 
-    serve(args.app, args.runs, port=args.port, open_browser=not args.no_browser, launch=args.allow_launch)
+    serve(args.app, args.runs, port=args.port, open_browser=not args.no_browser, launch=args.allow_launch,
+          recipes=args.recipes)
     return 0
 
 
@@ -651,7 +652,8 @@ def main(argv=None) -> int:
     p.add_argument("--app", default=str(Path(__file__).resolve().parents[2] / "observatory" / "build"))
     p.add_argument("--no-browser", action="store_true")
     p.add_argument("--allow-launch", action="store_true",
-                   help="let the Observatory launch latch-point what-ifs (each writes a new run folder)")
+                   help="let the Observatory launch runs, replays and what-ifs (each writes a new run folder)")
+    p.add_argument("--recipes", default="recipes", help="the recipes the Observatory may launch (with --allow-launch)")
     p = sub.add_parser("bench", help="time a world (simulation plus writing the run folder, "
                                       "not world setup) and append to the benchmark history")
     p.add_argument("--world", choices=("toy", "fourth_age"), default="toy")

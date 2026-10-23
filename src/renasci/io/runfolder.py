@@ -59,6 +59,8 @@ class RunFolder:
     @classmethod
     def create(cls, path, meta: dict, parent: dict | None = None) -> RunFolder:
         path = Path(path)
+        if path.name in ("", ".", "..") or ".." in path.parts:
+            raise ValueError(f"a run folder is one name inside its parent, not {str(path)!r}")
         if path.exists() and any(path.iterdir()):
             raise FileExistsError(f"run folder {path} already exists")
         path.mkdir(parents=True, exist_ok=True)

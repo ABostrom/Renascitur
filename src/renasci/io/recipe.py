@@ -24,6 +24,7 @@ Recipes are committed to git (`recipes/`); run folders are not.
 from __future__ import annotations
 
 import tomllib
+import re
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -33,6 +34,15 @@ from renasci.core.ripples import Ripple
 from renasci.worlds import get_world
 
 RUN_KEYS = {"name", "engine", "seed", "world", "end", "checkpoint_every_years", "full_reads"}
+# A run's name is its folder's name: one plain name, never a path, and nothing Windows treats specially.
+RUN_NAME = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,63}")
+RESERVED = re.compile(r"(con|prn|aux|nul|com[0-9]|lpt[0-9])(\..*)?", re.IGNORECASE)
+
+
+def check_run_name(name) -> str:
+    if not isinstance(name, str) or not RUN_NAME.fullmatch(name) or name.endswith(".") or RESERVED.fullmatch(name):
+        raise ValueError(f"[run] name must be a plain folder name (letters, digits, . _ -; at most 64), got {name!r}")
+    return name
 SECTIONS = {"run", "world", "ripple", "vault"}
 VAULT_KEYS = {"path"}
 RIPPLE_KEYS = {"id", "kind", "date", "target", "params"}
@@ -60,6 +70,7 @@ def parse_recipe(raw: dict) -> Recipe:
     if set(run) - RUN_KEYS or not {"name", "engine", "seed", "world", "end"} <= set(run):
         raise ValueError(f"[run] needs {sorted(RUN_KEYS - {'checkpoint_every_years', 'full_reads'})} and allows only "
                          f"{sorted(RUN_KEYS)}; got {sorted(run)}")
+    check_run_name(run["name"])
     if run["engine"] != __version__:
         raise ValueError(f"recipe is for engine {run['engine']}, this is {__version__}")
     if type(run["seed"]) is not int:

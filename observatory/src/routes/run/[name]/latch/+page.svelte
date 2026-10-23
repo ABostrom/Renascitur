@@ -63,7 +63,7 @@
 			const n = untrack(() => name);
 			let before = untrack(() => jobs.some((j) => j.state === 'running'));
 			for (;;) {
-				const now = (await launcher.jobs()).filter((j) => j.run === n);
+				const now = (await launcher.jobs()).filter((j) => (j.job ?? 'latch') === 'latch' && j.run === n);
 				if (!alive || n !== untrack(() => name)) return;
 				jobs = now;
 				const busy = now.some((j) => j.state === 'running');

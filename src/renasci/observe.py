@@ -1,8 +1,11 @@
 """`renasci observe`: serve the Observatory and a runs folder, read-only, on localhost.
 
 A static file server and nothing more. It uses only the standard library and never writes, unless it
-is started with `--allow-launch`: then the Observatory may launch latch-point what-ifs (#101), each
-`renasci latch <run> --launch N` in a child process that writes a new run folder.
+is started with `--allow-launch`: then the Observatory may launch, each in a child process that writes
+a new run folder:
+- latch-point what-ifs (#101): `renasci latch <run> --launch N`;
+- runs and replays from the recipes folder (`--recipes`, default `recipes`; #57): `renasci run <recipe>`
+  and `renasci replay <run> --recipe <recipe>`. Only `.toml` files directly in that folder, by name.
 
 - `/runs/index.json`  the run folders, each with its manifest
 - `/runs/<dir>/`      a directory inside the runs folder, as a JSON list of file names
@@ -16,11 +19,13 @@ Safety, because any web page in the browser can send requests to localhost:
 - **Host check:** only requests addressed to `127.0.0.1:<port>` or `localhost:<port>` are answered,
   so a DNS-rebinding page can't read runs.
 - It binds to 127.0.0.1 and answers only GET and HEAD.
-- **The launcher** (off by default) answers one POST, `/api/launch`, and only from the Observatory
+- **The launcher** (off by default) answers three POSTs, `/api/launch`, `/api/run` and `/api/replay`,
+  and only from the Observatory
   itself: the `Origin` must be this server, the body JSON, and a custom `X-Renasci-Launch` header
   present (a cross-site page can't send one without a preflight, which this server never answers). The
   body is validated field by field; the child gets an argument list, never a shell. One job at a time.
-  `GET /api/capabilities` says whether launching is on; `GET /api/jobs` lists the jobs.
+  `GET /api/capabilities` says whether launching is on; `GET /api/jobs` lists the jobs (each with its
+  `job`: latch, run or replay; and the run folder it made as `variant`); `GET /api/recipes` lists the recipes.
 """
 
 from __future__ import annotations
@@ -74,6 +79,31 @@ MAX_BODY = 4096
 JOB_SECONDS = 3600  # a what-if that takes longer than an hour is stopped
 
 
+# What each kind of job prints when it has made its run folder (the folder's name in group 1).
+MADE = {"latch": r"^latch: launched (\S+)$", "run": r"^run (\S+): ", "replay": r"^replayed (\S+) from "}
+
+
+def list_recipes(folder: Path | None) -> list[dict]:
+    """The `.toml` recipes directly in `folder`: what each would run, or why it can't be read."""
+    from renasci.io.recipe import load_recipe
+
+    if folder is None or not folder.is_dir():
+        return []
+    root = folder.resolve()
+    out = []
+    for path in sorted(p for p in folder.iterdir() if p.is_file() and p.suffix == ".toml"):
+        if path.resolve().parent != root:
+            continue  # (a link out of the folder: never read, as `_recipe` never runs it)
+        row = {"file": path.name, "name": None, "world": None, "end": None, "ripples": 0, "error": None}
+        try:
+            r = load_recipe(path)
+            row.update(name=r.name, world=r.world, end=str(r.raw["run"]["end"]), ripples=len(r.ripples))
+        except Exception as err:  # (any failure to read is shown, not raised: it's someone's draft)
+            row["error"] = str(err) or type(err).__name__
+        out.append(row)
+    return out
+
+
 class Jobs:
     """What-if launches: one child process at a time, its output kept for the Observatory to show."""
 
@@ -89,7 +119,8 @@ class Jobs:
         with self.lock:
             if self.busy():
                 return None
-            job = {"id": next(self.ids), "state": "running", "returncode": None, "output": "", "variant": None, **about}
+            job = {"id": next(self.ids), "state": "running", "returncode": None, "output": "", "variant": None,
+                   "job": "latch", **about}
             self.jobs.append(job)
         threading.Thread(target=self._run, args=(job, argv), daemon=True).start()
         return dict(job)
@@ -103,11 +134,12 @@ class Jobs:
             out, code = f"stopped after {JOB_SECONDS} s", -1
         except OSError as err:
             out, code = str(err), -1
-        found = re.search(r"^latch: launched (\S+)$", out, re.MULTILINE)
-        with self.lock:  # exit 3: the what-if ran, but its diff found unexplained divergence
+        found = re.search(MADE[job["job"]], out, re.MULTILINE)
+        ok = code in (0, 3) if job["job"] == "latch" else code == 0
+        with self.lock:  # exit 3 (latch): the what-if ran, but its diff found unexplained divergence
             job.update(output=out, returncode=code, variant=found.group(1) if found else None,
-                       state="done" if code in (0, 3) and found else "failed",
-                       warning="unexplained divergence" if code == 3 else None)
+                       state="done" if ok and found else "failed",
+                       warning="unexplained divergence" if job["job"] == "latch" and code == 3 else None)
 
     def list(self) -> list[dict]:
         with self.lock:
@@ -118,7 +150,8 @@ class Handler(BaseHTTPRequestHandler):
     server_version = "renasci-observe"
     protocol_version = "HTTP/1.1"  # keep-alive: the Observatory asks for many small files
 
-    def __init__(self, *args, app: Path, runs: Path, jobs: Jobs | None = None, **kw):
+    def __init__(self, *args, app: Path, runs: Path, jobs: Jobs | None = None, recipes: Path | None = None, **kw):
+        self.recipes = recipes.resolve() if recipes is not None else None
         self.app, self.runs, self.jobs = app.resolve(), runs.resolve(), jobs
         super().__init__(*args, **kw)
 
@@ -162,6 +195,11 @@ class Handler(BaseHTTPRequestHandler):
         if path == "/api/capabilities":
             body = json.dumps({"launch": self.jobs is not None}).encode("utf-8")
             return self._send(HTTPStatus.OK, body, "application/json", head_only)
+        if path == "/api/recipes":
+            if self.jobs is None:
+                return self._send(HTTPStatus.NOT_FOUND, b"the launcher is off", "text/plain", head_only=head_only)
+            body = json.dumps(list_recipes(self.recipes)).encode("utf-8")
+            return self._send(HTTPStatus.OK, body, "application/json", head_only=head_only)
         if path == "/api/jobs":
             body = json.dumps(self.jobs.list() if self.jobs else []).encode("utf-8")
             return self._send(HTTPStatus.OK, body, "application/json", head_only)
@@ -203,7 +241,9 @@ class Handler(BaseHTTPRequestHandler):
     do_PUT = do_DELETE = do_PATCH = _refuse  # noqa: N815
 
     def do_POST(self):  # noqa: N802
-        if self.jobs is None or unquote(urlsplit(self.path).path) != "/api/launch":
+        route = unquote(urlsplit(self.path).path)
+        builders = {"/api/launch": self._launch_argv, "/api/run": self._run_argv, "/api/replay": self._replay_argv}
+        if self.jobs is None or route not in builders:
             return self._refuse()
         port = self.server.server_address[1]
         if not self._host_ok() or self.headers.get("Origin") not in (f"http://127.0.0.1:{port}", f"http://localhost:{port}") \
@@ -220,12 +260,12 @@ class Handler(BaseHTTPRequestHandler):
                               b"a launch is a small JSON body", "text/plain", head_only=False)
         try:
             body = json.loads(self.rfile.read(length) or b"null")
-            argv, about = self._launch_argv(body)
+            argv, about = builders[route](body)
         except (ValueError, TypeError) as err:
             return self._send(HTTPStatus.BAD_REQUEST, str(err).encode("utf-8"), "text/plain", head_only=False)
         job = self.jobs.start(argv, about)
         if job is None:
-            return self._send(HTTPStatus.CONFLICT, b"a what-if is already running", "text/plain", head_only=False)
+            return self._send(HTTPStatus.CONFLICT, b"a job is already running", "text/plain", head_only=False)
         self._send(HTTPStatus.ACCEPTED, json.dumps(job).encode("utf-8"), "application/json", head_only=False)
 
     def _launch_argv(self, body) -> tuple[list[str], dict]:
@@ -256,16 +296,51 @@ class Handler(BaseHTTPRequestHandler):
                       "until": body.get("until")}
 
 
-def make_server(app, runs, port: int = 8765, launch: bool = False) -> ThreadingHTTPServer:
-    handler = partial(Handler, app=Path(app), runs=Path(runs), jobs=Jobs() if launch else None)
+    def _recipe(self, name) -> Path:
+        """A recipe in the recipes folder, by file name only."""
+        if not isinstance(name, str) or safe_relative(name) != name or "/" in name or not name.endswith(".toml"):
+            raise ValueError("recipe must be the name of a .toml file in the recipes folder")
+        path = self._inside(self.recipes, name) if self.recipes is not None else None
+        if path is None or not path.is_file():
+            raise ValueError(f"no recipe {name!r}")
+        return path
+
+    def _run_folder(self, run) -> Path:
+        if not isinstance(run, str) or safe_relative(run) != run or "/" in run:
+            raise ValueError("run must be a run folder's name")
+        folder = self._inside(self.runs, run)
+        if folder is None or not (folder / "manifest.json").is_file():
+            raise ValueError(f"no run {run!r}")
+        return folder
+
+    def _run_argv(self, body) -> tuple[list[str], dict]:
+        """`renasci run <recipe>` into the runs folder."""
+        if not isinstance(body, dict) or set(body) != {"recipe"}:
+            raise ValueError(f"a run is {{recipe}}; got {body!r}")
+        recipe = self._recipe(body["recipe"])
+        return ([sys.executable, "-m", "renasci.cli", "run", str(recipe), "--out", str(self.runs)],
+                {"job": "run", "recipe": recipe.name})
+
+    def _replay_argv(self, body) -> tuple[list[str], dict]:
+        """`renasci replay <run> --recipe <recipe>` into the runs folder (the recipe changes only ripples)."""
+        if not isinstance(body, dict) or set(body) != {"run", "recipe"}:
+            raise ValueError(f"a replay is {{run, recipe}}; got {body!r}")
+        folder, recipe = self._run_folder(body["run"]), self._recipe(body["recipe"])
+        return ([sys.executable, "-m", "renasci.cli", "replay", str(folder), "--recipe", str(recipe), "--out",
+                 str(self.runs)], {"job": "replay", "run": body["run"], "recipe": recipe.name})
+
+
+def make_server(app, runs, port: int = 8765, launch: bool = False, recipes=None) -> ThreadingHTTPServer:
+    handler = partial(Handler, app=Path(app), runs=Path(runs), jobs=Jobs() if launch else None,
+                      recipes=Path(recipes) if recipes is not None else None)
     return ThreadingHTTPServer(("127.0.0.1", port), handler)
 
 
-def serve(app, runs, port: int = 8765, open_browser: bool = True, launch: bool = False) -> None:
-    server = make_server(app, runs, port, launch=launch)
+def serve(app, runs, port: int = 8765, open_browser: bool = True, launch: bool = False, recipes=None) -> None:
+    server = make_server(app, runs, port, launch=launch, recipes=recipes)
     url = f"http://127.0.0.1:{server.server_address[1]}/"
     print(f"Observatory at {url}  (runs from {Path(runs).resolve()}"
-          f"{'; what-ifs can be launched from it' if launch else ''}; Ctrl+C to stop)")
+          f"{'; runs, replays and what-ifs can be launched from it' if launch else ''}; Ctrl+C to stop)")
     if open_browser:
         webbrowser.open(url)
     try:

@@ -206,7 +206,7 @@ def test_observe_defaults_to_the_committed_build(monkeypatch):
     from renasci.cli import main as cli_main
 
     seen = {}
-    monkeypatch.setattr(observe, "serve", lambda app, runs, port, open_browser, launch: seen.update(app=app, launch=launch))
+    monkeypatch.setattr(observe, "serve", lambda app, runs, port, open_browser, launch, recipes=None: seen.update(app=app, launch=launch))
     cli_main(["observe", "--no-browser"])
     from pathlib import Path
 
@@ -310,3 +310,133 @@ def test_a_launch_body_must_say_its_length_and_be_small(launcher):
             pass  # the server refused and closed first (it may, under load): refused all the same
         finally:
             conn.close()
+
+
+# ---------------------------------------------------------------- launching runs and replays from recipes (#57)
+
+
+@pytest.fixture(scope="module")
+def recipes_launcher(tmp_path_factory, served):
+    _, runs = served
+    tmp = tmp_path_factory.mktemp("recipes")
+    recipes = tmp / "recipes"
+    recipes.mkdir()
+    (recipes / "fresh.toml").write_text(RECIPE.format(name="fresh"), encoding="utf-8")
+    (recipes / "again.toml").write_text(RECIPE.format(name="tiny"), encoding="utf-8")  # its run already exists
+    (recipes / "broken.toml").write_text("[run\nname = ", encoding="utf-8")
+    (recipes / "notes.txt").write_text("not a recipe", encoding="utf-8")
+    (recipes / "what-if.toml").write_text(RECIPE.format(name="tiny-whatif") + '\n[[ripple]]\nid = "r1"\nkind = "doom"\n'
+                                          'date = "1X 3"\ntarget = "t:Ashford-00"\n', encoding="utf-8")
+    app = tmp / "app"
+    app.mkdir()
+    (app / "index.html").write_text("<!doctype html>", encoding="utf-8")
+    server = make_server(app, runs, port=0, launch=True, recipes=recipes)
+    threading.Thread(target=server.serve_forever, daemon=True).start()
+    yield f"http://127.0.0.1:{server.server_address[1]}", runs
+    server.shutdown()
+
+
+def wait_for(base, job):
+    import time
+
+    for _ in range(600):
+        _, jobs = call(base, "/api/jobs")
+        mine = next(j for j in jobs if j["id"] == job["id"])
+        if mine["state"] != "running":
+            return mine
+        time.sleep(0.2)
+    raise AssertionError("the job never finished")
+
+
+def test_recipes_are_listed_with_what_they_run(recipes_launcher):
+    base, _ = recipes_launcher
+    status, recipes = call(base, "/api/recipes")
+    assert status == 200
+    by = {r["file"]: r for r in recipes}
+    assert sorted(by) == ["again.toml", "broken.toml", "fresh.toml", "what-if.toml"]  # .toml only
+    assert by["fresh.toml"] == {"file": "fresh.toml", "name": "fresh", "world": "toy", "end": "1X 3", "ripples": 0,
+                                "error": None}
+    assert by["what-if.toml"]["ripples"] == 1 and by["broken.toml"]["error"]
+
+
+def test_no_recipes_without_the_launcher(served):
+    base, _ = served
+    assert call(base, "/api/recipes")[0] in (404, 405) or call(base, "/api/recipes")[1] == []
+
+
+def test_a_run_is_launched_from_a_recipe_and_named(recipes_launcher):
+    base, runs = recipes_launcher
+    status, job = call(base, "/api/run", {"recipe": "fresh.toml"}, launch_headers(base))
+    assert status == 202 and job["job"] == "run" and job["recipe"] == "fresh.toml"
+    done = wait_for(base, job)
+    assert done["state"] == "done" and done["variant"] == "fresh", done["output"]
+    assert (runs / "fresh" / "manifest.json").is_file()
+
+
+def test_a_run_whose_folder_exists_fails_and_says_why(recipes_launcher):
+    base, _ = recipes_launcher
+    status, job = call(base, "/api/run", {"recipe": "again.toml"}, launch_headers(base))
+    assert status == 202
+    done = wait_for(base, job)
+    assert done["state"] == "failed" and done["output"]
+
+
+def test_a_replay_forks_a_run_with_a_recipes_ripples(recipes_launcher):
+    base, runs = recipes_launcher
+    status, job = call(base, "/api/replay", {"run": "tiny", "recipe": "what-if.toml"}, launch_headers(base))
+    assert status == 202 and job["job"] == "replay"
+    done = wait_for(base, job)
+    assert done["state"] == "done" and done["variant"] == "tiny-whatif", done["output"]
+    assert (runs / "tiny-whatif" / "manifest.json").is_file()
+
+
+@pytest.mark.parametrize("path, body", [
+    ("/api/run", {"recipe": "../fresh.toml"}), ("/api/run", {"recipe": "notes.txt"}), ("/api/run", {"recipe": "nope.toml"}),
+    ("/api/run", {"recipe": 3}), ("/api/run", {"recipe": "fresh.toml", "extra": 1}), ("/api/run", ["fresh.toml"]),
+    ("/api/run", {"recipe": "sub/fresh.toml"}), ("/api/run", {"recipe": "C:fresh.toml"}),
+    ("/api/replay", {"run": "nope", "recipe": "what-if.toml"}), ("/api/replay", {"run": "tiny"}),
+])
+def test_launch_requests_are_validated(recipes_launcher, path, body):
+    base, _ = recipes_launcher
+    assert call(base, path, body, launch_headers(base))[0] == 400
+
+
+def test_a_run_launch_must_come_from_the_observatory_itself(recipes_launcher):
+    base, _ = recipes_launcher
+    body = {"recipe": "fresh.toml"}
+    assert call(base, "/api/run", body, {**launch_headers(base), "Origin": "http://evil.example"})[0] == 403
+    assert call(base, "/api/replay", {"run": "tiny", "recipe": "what-if.toml"},
+                {k: v for k, v in launch_headers(base).items() if k != "X-Renasci-Launch"})[0] == 403
+
+
+def test_a_relative_recipes_folder_works(tmp_path, monkeypatch, served):
+    _, runs = served
+    monkeypatch.chdir(tmp_path)
+    (tmp_path / "recipes").mkdir()
+    (tmp_path / "recipes" / "ok.toml").write_text(RECIPE.format(name="rel"), encoding="utf-8")
+    app = tmp_path / "app"
+    app.mkdir()
+    (app / "index.html").write_text("<!doctype html>", encoding="utf-8")
+    server = make_server(app, runs, port=0, launch=True, recipes="recipes")
+    threading.Thread(target=server.serve_forever, daemon=True).start()
+    base = f"http://127.0.0.1:{server.server_address[1]}"
+    try:
+        assert [r["file"] for r in call(base, "/api/recipes")[1]] == ["ok.toml"]
+        status, job = call(base, "/api/run", {"recipe": "ok.toml"}, launch_headers(base))
+        assert status == 202
+        assert wait_for(base, job)["state"] == "done"
+    finally:
+        server.shutdown()
+
+
+def test_recipes_listed_never_reach_outside_the_folder(tmp_path):
+    from renasci.observe import list_recipes
+
+    (tmp_path / "outside.toml").write_text(RECIPE.format(name="outside"), encoding="utf-8")
+    folder = tmp_path / "recipes"
+    folder.mkdir()
+    try:
+        (folder / "link.toml").symlink_to(tmp_path / "outside.toml")
+    except OSError:
+        pytest.skip("this system can't make symlinks")
+    assert list_recipes(folder) == []
