@@ -227,3 +227,23 @@ def test_castable_drops_orderings_whose_pins_it_dropped():
     o = Pin("a:before:b", "ordering", payload={"before": "a", "after": "b"})
     kept, dropped = castable([a, b, o], scenario())
     assert [p.id for p in kept] == ["b"] and {d["pin"] for d in dropped} == {"a", "a:before:b"}
+
+
+def test_a_pin_after_the_runs_end_is_out_of_scope_and_guards_nobody(tmp_path):
+    """Out-of-scope pins reach the engine (S1 classifies them again); it must classify them against the
+    run's end, not the age's, or a wedding after the run guards the bride and groom inside it."""
+    import gzip
+    import json
+    import shutil
+
+    from renasci.cli import main
+
+    vault = tmp_path / "vault"
+    shutil.copytree(FIXTURE, vault)
+    recipe = tmp_path / "r.toml"
+    recipe.write_text(f'[run]\nname = "r"\nengine = "0.1.0"\nseed = 1234\nworld = "fourth_age"\nend = "4A 30"\n\n'
+                      f'[vault]\npath = "{vault.as_posix()}"\n', encoding="utf-8")
+    assert main(["run", str(recipe), "--out", str(tmp_path / "runs")]) == 0
+    strain = [json.loads(line) for p in sorted((tmp_path / "runs" / "r" / "strain").glob("*.gz"))
+              for line in gzip.decompress(p.read_bytes()).decode("utf-8").splitlines() if line]
+    assert not [s for s in strain if s["pin"] == "v:wedding-of-bryn:event"]  # pinned in 4A 40

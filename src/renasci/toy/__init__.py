@@ -278,7 +278,8 @@ def ruleset(buggy: bool | str = False) -> Ruleset:
                    forcers=(FireForcer(),), disguises=(Illness(), FireDisguise()))
 
 
-def new_engine(seed: int = 1234, ripples=(), pins=(), buggy: bool | str = False, people_per_village: int = 100) -> Engine:
+def new_engine(seed: int = 1234, ripples=(), pins=(), buggy: bool | str = False, people_per_village: int = 100,
+               end=None) -> Engine:
     """A fresh toy world at 1X 1, before anything runs."""
     _Counter.n = 0
     _ValleyDeaths.count = {}
@@ -292,7 +293,7 @@ def new_engine(seed: int = 1234, ripples=(), pins=(), buggy: bool | str = False,
         for i, p in enumerate(people):
             e.cast("person", p, {"sex": "f" if i % 2 else "m", "born": 1 - (i * 7 + vi * 3) % 50,
                                  "village": v, "spouse": None})
-    e.apply_pins(pins)
+    e.apply_pins(pins, end=end)
     e.apply_ripples(ripples)
     return e
 
