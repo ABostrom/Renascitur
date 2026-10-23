@@ -29,6 +29,12 @@ the settlement's most salient beliefs first, at most `TELL_CAP` per teller and `
 settlement a season. A belief heard again is refreshed (`belief.reinforced`); once a year, what nobody
 repeated for `DECAY_YEARS` fades a step (`belief.faded`).
 
+**Secrets** (§5, #89): a belief taken on from a secret event is marked `secret`. Gossip never tells it;
+it only **leaks**, a season's small chance (`LEAK_ACCOMPLICE`, or `LEAK_ACTOR` for the one who did it), to
+someone the holder talks to, who holds it openly. Leaks come before the season's gossip and outside its
+budget (they're rare). A kept secret doesn't fade. When a schemer is **exposed**, `reveal` brings out the
+killings they hid: public evidence that corrects the cover for bystanders and the victim's kin.
+
 All of this runs only in a world whose params say `beliefs: true` (`enabled`): elsewhere history is as
 it was. Systems that may perceive declare `PERCEIVE_READS`, `PERCEIVE_WRITES` and `EVENT_TYPES`.
 """
@@ -43,6 +49,7 @@ from renasci.core.systems import System
 BELIEF_CAP, WITNESS_CAP = 16, 3
 PARTICIPANT_CONF, BYSTANDER_CONF, CORRECTION_CONF = 0.9, 0.5, 0.85
 TELL_CAP, SETTLEMENT_TELLS, DRIFT_RATE = 2, 40, 0.08
+LEAK_ACTOR, LEAK_ACCOMPLICE = 0.02, 0.08  # a season's chance that a secret slips out (S6 §5)
 DECAY_YEARS, DECAY_STEP, FORGET_BELOW = 10, 0.1, 0.1
 TRUST = {"mentor": 0.8, "friend": 0.7, "lover": 0.7, "rival": 0.3, "enemy": 0.1, "kin": 0.8}
 CLOSENESS_KIN = 0.5  # (household: spouse, parents and children living together)
@@ -212,7 +219,7 @@ def hold(ctx, person: str, c: dict, conf: float, cause_event: str, kind: str = "
         if other != k and topic(b["claim"]) == t:
             after[other] = {**b, "conf": round(b["conf"] / 2, 3)}
     after[k] = {"claim": c, "conf": conf, "since": (held or {}).get("since", ctx.today.to_json()),
-                "from": "", "heard": ctx.today.to_json()}
+                "from": "", "heard": ctx.today.to_json(), **({"secret": True} if secret else {})}
     after = _capped(after)
     if k not in after:
         return False
@@ -280,8 +287,8 @@ def correct(ctx, person: str, c: dict, cause_event: str, conf: float = CORRECTIO
     rivals = [o for o, b in beliefs.items() if o != k and topic(b["claim"]) == t]
     held = (beliefs.get(k) or {}).get("conf", 0)
     conf = round(max(conf, CORRECTION_CONF, held, *(beliefs[o]["conf"] for o in rivals)), 3)
-    if not rivals and held >= conf:
-        return False
+    if not rivals and held >= conf and not (beliefs.get(k) or {}).get("secret"):
+        return False  # (nothing to correct; but a secret made public is a change: it's no secret now)
     after = {o: b for o, b in beliefs.items() if o not in rivals}
     after[k] = {"claim": c, "conf": conf, "since": (beliefs.get(k) or {}).get("since", ctx.today.to_json()),
                 "from": "", "heard": ctx.today.to_json()}
@@ -300,6 +307,9 @@ def decayed(beliefs: dict, today) -> dict:
     year = today[1] if not isinstance(today, Date) else today.year
     out = {}
     for k, b in beliefs.items():
+        if b.get("secret"):  # (nobody repeats a secret to its keeper; it isn't forgotten while kept)
+            out[k] = b
+            continue
         idle = year - b["heard"][1]
         conf = round(b["conf"] - DECAY_STEP, 3) if idle > DECAY_YEARS else b["conf"]
         if conf >= FORGET_BELOW:
@@ -352,11 +362,13 @@ class Gossip(System):
     def _gossip(self, ctx, settlement: str, residents: list[str], trait) -> None:
         here = set(residents)
         candidates = []  # (-weight, teller, claim key): the settlement's most salient beliefs are told first
+        budget, again = SETTLEMENT_TELLS, {}
         for teller in residents:
             mine = ctx.get(teller, "beliefs") or {}
-            top = sorted(mine, key=lambda k: (-salience(mine[k]["claim"]) * mine[k]["conf"], k))[:TELL_CAP]
-            candidates += [(-salience(mine[k]["claim"]) * mine[k]["conf"], teller, k) for k in top]
-        budget, again = SETTLEMENT_TELLS, {}
+            budget -= self._leak(ctx, settlement, teller, mine, here)
+            open_ = {k: b for k, b in mine.items() if not b.get("secret")}  # (secrets are never gossip)
+            top = sorted(open_, key=lambda k: (-salience(open_[k]["claim"]) * open_[k]["conf"], k))[:TELL_CAP]
+            candidates += [(-salience(open_[k]["claim"]) * open_[k]["conf"], teller, k) for k in top]
         for _, teller, k in sorted(candidates):
             if budget <= 0:
                 break
@@ -381,6 +393,23 @@ class Gossip(System):
                 elif key(said) in (ctx.get(hearer, "beliefs") or {}):
                     again.setdefault(hearer, set()).add(key(said))  # (heard again: it doesn't fade)
         self._reinforce(ctx, settlement, again)
+
+    def _leak(self, ctx, settlement: str, teller: str, mine: dict, here: set[str]) -> int:
+        """A secret slipping out: told to one of those the holder talks to. Returns how many leaked."""
+        leaked = 0
+        for k in sorted(k for k, b in mine.items() if b.get("secret")):
+            b = mine[k]
+            rate = LEAK_ACTOR if b["claim"]["args"].get("by") == teller else LEAK_ACCOMPLICE
+            if not ctx.chance(rate, "leak", owner=f"{teller}|{k}"):
+                continue
+            listeners = _listeners(ctx, teller, here)
+            to = ctx.choose("leak", [h for h, _, _ in listeners], owner=f"{teller}|{k}") if listeners else None
+            if to is None:
+                continue
+            trust = next(tr for h, _, tr in listeners if h == to)
+            leaked += tell(ctx, teller, to, b["claim"], trust, conf=b["conf"], cause=b["from"], intent="leak",
+                           place=settlement)
+        return leaked
 
     def _reinforce(self, ctx, settlement: str, again: dict) -> None:
         today = ctx.today.to_json()
@@ -409,3 +438,31 @@ class Gossip(System):
                      payload={"faded": len(changed)})
             for p, after in sorted(changed.items()):
                 ctx.set(p, "beliefs", after)
+
+
+def reveal(ctx, owner: str, cause_event: str, settlement: str | None) -> list[str]:
+    """`owner` is exposed: every killing they hid (their secret beliefs that they killed someone, not only
+    this scheme's) comes out as public evidence, correcting the cover for up to `WITNESS_CAP` people of `settlement` and the
+    victim's kin. The owner's own belief stops being a secret. Returns the claims revealed."""
+    from renasci.people.life import grieving  # (life -> beliefs: imported here)
+
+    mine = dict(ctx.get(owner, "beliefs") or {})
+    hidden = sorted(k for k, b in mine.items()
+                    if b.get("secret") and b["claim"]["pred"] == "killed" and b["claim"]["args"]["by"] == owner)
+    if hidden:  # (first, so the write is explained by the exposure itself)
+        ctx.set(owner, "beliefs", {k: ({kk: v for kk, v in b.items() if kk != "secret"} if k in hidden else b)
+                                   for k, b in mine.items()})
+    for k in hidden:
+        c = mine[k]["claim"]
+        pool = sorted(r for r in (ctx.get(settlement, "residents") if settlement else [])
+                      if r != owner and ctx.status(r) == "active")
+        told = []
+        for i in range(min(WITNESS_CAP, len(pool))):
+            w = ctx.choose(f"reveal:{i}", [r for r in pool if r not in told], owner=f"{cause_event}|{k}")
+            if w is None:
+                break
+            told.append(w)
+        kin = [p for p in grieving(ctx, c["args"]["victim"]) if p != owner and ctx.status(p) == "active"]
+        for p in [*told, *(x for x in kin if x not in told)]:
+            correct(ctx, p, c, cause_event)  # (an accomplice among them knew already: no longer a secret)
+    return hidden

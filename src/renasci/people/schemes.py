@@ -37,7 +37,7 @@ from renasci.core.calendar import Span
 from renasci.core.events import Cause, EventType
 from renasci.core.systems import System
 from renasci.people import actions as A
-from renasci.people import ambitions, houses, minds, ties, travel
+from renasci.people import ambitions, beliefs, houses, minds, ties, travel
 from renasci.people.ambitions import ADULT, classes, resolve
 from renasci.people.life import add_grievance, grieving
 from renasci.people.planner import holds, plan_for
@@ -168,6 +168,8 @@ def _exposed(ctx, scheme: str, owner: str, amb: str, action: str, aimed_at: str 
     event = ctx.emit("people.scheme_exposed", {"scheme": (scheme,), "owner": (owner,),
                                                "target": (victim,) if victim else ()},
                      purpose="exposed", actor=scheme, payload={"action": action})
+    if beliefs.enabled(ctx):  # (S6: exposed, the killings they hid come out)
+        beliefs.reveal(ctx, owner, event.id, ctx.get(owner, "place"))
     A._favour(ctx, owner, -0.2)
     minds.wound(ctx, owner, "shame", event.id)
     if victim:
