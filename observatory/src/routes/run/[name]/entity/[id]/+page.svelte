@@ -16,6 +16,10 @@
 	let everyone = $state<StateIndex | null>(null);
 
 	const stateIndex = (ix: EventIndex) => stateIndexOf(ix.run, () => finalState(ix.run));
+	const eventOf = (ix: EventIndex) => (eid: string) => {
+		const i = ix.position.get(eid);
+		return i === undefined ? undefined : ix.row(i);
+	};
 
 	// The run's end (its recipe's), for the person view's "as of" control; else its last event.
 	function endOf(ix: EventIndex): DateTuple {
@@ -71,7 +75,7 @@
 {:else}
 	<h1 class="mono">{id}</h1>
 	{#if everyone && detail.record?.kind === 'person'}
-		<PersonView ix={everyone} {id} run={name} {cal} changes={detail.changes} end={endOf(index)} />
+		<PersonView ix={everyone} {id} run={name} {cal} changes={detail.changes} end={endOf(index)} lookup={eventOf(index)} />
 	{/if}
 	<div class="grid">
 		<section class="card">

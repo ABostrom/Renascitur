@@ -208,6 +208,12 @@ try {
 	if (believing === 0) throw new Error('nobody believes anything on the spread map');
 	await page.locator('table button.link').first().click();
 	await page.getByRole('heading', { name: /^Where “/ }).waitFor({ timeout: 5000 });
+	// a person's beliefs, each traced back: this townsman was told the guild's lie
+	await page.goto(`http://127.0.0.1:${port}/run/ward/entity/${encodeURIComponent('s:lux-oescus:003')}`);
+	await page.getByRole('heading', { name: /^Beliefs/ }).waitFor({ timeout: 30000 });
+	const lied = page.locator('ul.beliefs details', { has: page.locator('.badge.warn') }).first();
+	await lied.locator('summary').click();
+	if ((await lied.locator('ol.trace li.lie').count()) === 0) throw new Error('a lie-born belief traces to no lie');
 	// read-only without the launcher: the runs page offers no launch
 	await page.goto(`http://127.0.0.1:${port}/`);
 	await page.getByRole('heading', { name: 'Runs', exact: true, level: 1 }).waitFor({ timeout: 15000 });
@@ -215,7 +221,7 @@ try {
 	// with --allow-launch: a run launched from a recipe and opened from the UI (a scratch runs folder)
 	launched = await launchAndOpen(browser, errors);
 	if (errors.length) throw new Error(`page errors: ${errors.join('; ')}`);
-	console.log(`smoke: ok (browser read ${counts.base.n} events from base; ${shown} granary events listed; detail, cause chain and entity page shown; diff wave of ${cells} cells, ${divergentShown} divergent events in one, buggy roots marked; story river of ${bars} bars, ${barsIn} in a decade, saga to arc to event; latch points and a what-if beside its baseline; a person's page; houses and ${popLines} population lines; canon strain to its event; the Pyrosia map with ${towns} settlements; knowledge with ${believing} believing places; ${launched})`);
+	console.log(`smoke: ok (browser read ${counts.base.n} events from base; ${shown} granary events listed; detail, cause chain and entity page shown; diff wave of ${cells} cells, ${divergentShown} divergent events in one, buggy roots marked; story river of ${bars} bars, ${barsIn} in a decade, saga to arc to event; latch points and a what-if beside its baseline; a person's page; houses and ${popLines} population lines; canon strain to its event; the Pyrosia map with ${towns} settlements; knowledge with ${believing} believing places and a belief traced to its lie; ${launched})`);
 } catch (e) {
 	failed = true;
 	console.error('smoke: FAILED', e);
