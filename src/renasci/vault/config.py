@@ -72,6 +72,7 @@ class Config:
     digest_text: str = ""  # the file's normalised text, for the vault digest ("" when there is none)
     ages: dict = field(default_factory=dict)  # age abbreviation -> its first timeline year (S2 §5.1)
     circa_years: int = 5  # the half-width of a ~ date
+    races: dict = field(default_factory=dict)  # a race note's id -> the scenario's race id (S2 §4)
 
     @classmethod
     def load(cls, root) -> Config:
@@ -80,7 +81,7 @@ class Config:
             return cls()
         text = path.read_bytes().decode("utf-8").removeprefix(chr(0xFEFF)).replace("\r\n", "\n")
         raw = tomllib.loads(text)
-        unknown = set(raw) - {"ignore", "type_aliases", "types", "ids", "ages", "circa_years"}
+        unknown = set(raw) - {"ignore", "type_aliases", "types", "ids", "ages", "circa_years", "races"}
         if unknown:
             raise ValueError(f"vault.toml: unknown settings {sorted(unknown)}")
         ignore = _strings(raw.get("ignore", []), "ignore")
@@ -113,7 +114,10 @@ class Config:
         circa = raw.get("circa_years", 5)
         if not isinstance(circa, int) or isinstance(circa, bool) or circa < 0:
             raise ValueError("vault.toml: circa_years is a whole number of years")
-        return cls(ignore, dict(aliases), rules, dict(ids), text, dict(ages), circa)
+        races = raw.get("races", {})
+        if not isinstance(races, dict) or not all(isinstance(k, str) and isinstance(v, str) for k, v in races.items()):
+            raise ValueError("vault.toml: [races] maps a race note's id to the scenario's race (\"v:leonin\" = \"r:leonin\")")
+        return cls(ignore, dict(aliases), rules, dict(ids), text, dict(ages), circa, dict(races))
 
     def ignored(self, key: str) -> bool:
         return any(glob_match(p, key) for p in self.ignore)
