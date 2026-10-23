@@ -354,6 +354,22 @@ def cmd_vault(args) -> int:
             print(f"note: {rel} is someone else's, or you've edited it: kept as it is")
         print(f"wrote {written} (canon: proposed; promote it by setting canon: true)")
         return 0
+    if args.vault_command == "suggest":
+        from renasci.vault.suggest import apply, suggest
+
+        sys.stdout.reconfigure(errors="replace")
+        found, skipped = suggest(vault)
+        for key, fields in found.items():
+            print(f"{key}.md")
+            for k, v in fields.items():
+                print(f'  +{k}: "{v}"')
+        for sk in skipped:
+            print(f"skipped {sk['key']}: {sk['field']}: {sk['why']}")
+        if args.write:
+            print(f"added fields to {apply(vault, found)} note(s); review the diff before committing")
+        else:
+            print(f"would add fields to {len(found)} note(s)" + ("; run again with --write to add them" if found else ""))
+        return 0
     if args.vault_command == "stale":
         from renasci.vault.proposals import stale
 
@@ -589,6 +605,9 @@ def main(argv=None) -> int:
     v = vsub.add_parser("propose", help="propose a run's person or event as a canon: proposed note (a dry run unless --write)")
     v.add_argument("run")
     v.add_argument("entity")
+    v.add_argument("docs", nargs="?", default="docs")
+    v.add_argument("--write", action="store_true")
+    v = vsub.add_parser("suggest", help="frontmatter from labelled body bullets (a dry run unless --write)")
     v.add_argument("docs", nargs="?", default="docs")
     v.add_argument("--write", action="store_true")
     v = vsub.add_parser("stale", help="list untouched proposals whose run is gone or has been run again")
