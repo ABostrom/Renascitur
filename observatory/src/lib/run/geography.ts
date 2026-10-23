@@ -1,3 +1,4 @@
+import { readTable, type Run } from './run';
 import type { RunSource } from './source';
 
 /** A run's `geography.json` (S4 spec §2): what the run's places, regions and routes were. */
@@ -27,6 +28,7 @@ export interface Route {
 export interface Geography {
 	about?: string;
 	draft?: boolean;
+	changes?: unknown[]; // dated changes the run makes (S4 §8, #81)
 	regions: Region[];
 	places: Place[];
 	routes: Route[];
@@ -136,4 +138,124 @@ export function occupancy(state: { entities: { id: string; kind: string; status:
 		}
 	}
 	return { residents, travellers };
+}
+
+/**
+ * The map by year (S4 §8, #81). A run's state changes to its routes (their ends, days, kind, Vialux,
+ * open, bars; a route built mid-run from its first), its places' regions (a border moved) and its regions'
+ * `within`. Replaying them onto `geography.json` gives the map as of any date: whatever changed it in the
+ * run (the geography's planned `changes`, or a system) is in the state changes.
+ */
+export interface MapDelta {
+	date: [number, number, number];
+	entity: string;
+	field: string;
+	old?: unknown;
+	new: unknown;
+	event: string;
+}
+
+const ROUTE_FIELDS = new Set(['ends', 'days', 'kind', 'vialux', 'open', 'barred']);
+
+/** The ids that are routes: the file's, and any with `ends` set in the run (built mid-run). */
+function routeIds(geo: Geography, deltas: MapDelta[]): Set<string> {
+	const ids = new Set(geo.routes.map((r) => r.id));
+	for (const d of deltas) if (d.field === 'ends') ids.add(d.entity);
+	return ids;
+}
+
+/** Only the changes to the map: a route's fields (and a built route's appearing), a place's region, a
+ * region's `within`. (A settlement's other fields, its residents, aren't the map.) */
+function onMap(geo: Geography, deltas: MapDelta[]): MapDelta[] {
+	const routes = routeIds(geo, deltas);
+	const places = new Set(geo.places.map((p) => p.id));
+	const regions = new Set(geo.regions.map((r) => r.id));
+	// The file's own values, cast at the start (old null, new as in the file): not a change.
+	const fileValue = new Map<string, unknown>();
+	for (const r of geo.routes) for (const [f, v] of Object.entries({ open: true, vialux: false, ...r })) fileValue.set(`${r.id}|${f}`, v);
+	for (const p of geo.places) fileValue.set(`${p.id}|region`, p.region);
+	for (const r of geo.regions) fileValue.set(`${r.id}|within`, r.within ?? null);
+	const cast = (d: MapDelta) =>
+		(d.old ?? null) === null &&
+		(d.field === 'status' || JSON.stringify(fileValue.get(`${d.entity}|${d.field}`) ?? null) === JSON.stringify(d.new ?? null)) &&
+		(places.has(d.entity) || regions.has(d.entity) || geo.routes.some((r) => r.id === d.entity));
+	return deltas.filter(
+		(d) =>
+			!cast(d) &&
+			((routes.has(d.entity) && (ROUTE_FIELDS.has(d.field) || d.field === 'status')) ||
+			(places.has(d.entity) && d.field === 'region') ||
+			(regions.has(d.entity) && d.field === 'within'))
+	);
+}
+
+/** The run's state changes that touch its map, in order. */
+export async function loadMapDeltas(run: Run, geo: Geography): Promise<MapDelta[]> {
+	const rows: MapDelta[] = [];
+	for await (const d of readTable(run, 'state_deltas')) {
+		if (d.field === 'region' || d.field === 'within' || d.field === 'status' || ROUTE_FIELDS.has(d.field))
+			rows.push({ date: d.date, entity: d.entity, field: d.field, old: d.old, new: d.new, event: d.event });
+	}
+	return onMap(geo, rows);
+}
+
+/** The geography as of the end of the day with sort key `at` (`key` turns a date into its sort key). */
+export function geographyAt(geo: Geography, deltas: MapDelta[], at: number, key: (d: [number, number, number]) => number): Geography {
+	const out: Geography = JSON.parse(JSON.stringify(geo)); // (a plain copy: geo may be a reactive proxy)
+	delete (out as { changes?: unknown }).changes;
+	const routes = new Map(out.routes.map((r) => [r.id, r as unknown as Record<string, unknown>]));
+	const places = new Map(out.places.map((p) => [p.id, p]));
+	const regions = new Map(out.regions.map((r) => [r.id, r]));
+	const ids = routeIds(geo, deltas);
+	const built = new Map<string, Record<string, unknown>>();
+	for (const d of onMap(geo, deltas)) {
+		if (key(d.date) > at) continue;
+		if (routes.has(d.entity) && ROUTE_FIELDS.has(d.field)) routes.get(d.entity)![d.field] = d.new;
+		else if (places.has(d.entity) && d.field === 'region') places.get(d.entity)!.region = d.new as string;
+		else if (regions.has(d.entity) && d.field === 'within') regions.get(d.entity)!.within = d.new as string | null;
+		else if (ids.has(d.entity) && ROUTE_FIELDS.has(d.field)) {
+			const r = built.get(d.entity) ?? { id: d.entity };
+			r[d.field] = d.new;
+			built.set(d.entity, r);
+		}
+	}
+	for (const r of [...built.values()].sort((a, b) => String(a.id).localeCompare(String(b.id))))
+		if (r.ends && r.days && r.kind) out.routes.push(r as unknown as Route);
+	return out;
+}
+
+export interface MapChange {
+	date: [number, number, number];
+	event: string;
+	what: 'built' | 'closed' | 'opened' | 'days' | 'moved' | 'changed';
+	site: string; // the route or place
+	detail: string;
+}
+
+/** What changed the map, one entry per event (in order). */
+export function mapChanges(geo: Geography, deltas: MapDelta[]): MapChange[] {
+	const known = new Set(geo.routes.map((r) => r.id));
+	const ids = routeIds(geo, deltas);
+	const out: MapChange[] = [];
+	const byEvent = new Map<string, MapDelta[]>();
+	for (const d of onMap(geo, deltas)) {
+		if (!byEvent.has(d.event)) byEvent.set(d.event, []);
+		byEvent.get(d.event)!.push(d);
+	}
+	for (const [event, ds] of byEvent) {
+		const first = ds[0];
+		const f = new Map(ds.map((d) => [d.field, d.new]));
+		let what: MapChange['what'] = 'changed';
+		let detail = '';
+		if (ids.has(first.entity) && !known.has(first.entity) && f.has('ends')) {
+			what = 'built';
+			detail = `${(f.get('ends') as string[]).join(' – ')}, ${f.get('days')} days by ${f.get('kind')}`;
+		} else if (f.get('open') === false) what = 'closed';
+		else if (f.get('open') === true) what = 'opened';
+		else if (f.has('days')) what = 'days';
+		else if (f.has('region')) what = 'moved';
+		if (f.has('days') && what !== 'built') detail = `${f.get('days')} days`;
+		if (what === 'moved') detail = `into ${f.get('region')}`;
+		out.push({ date: first.date, event, what, site: first.entity, detail });
+	}
+	return out;
 }

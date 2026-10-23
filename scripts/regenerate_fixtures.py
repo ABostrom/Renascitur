@@ -169,6 +169,10 @@ def main_() -> None:
 
     sc = json.loads(json.dumps(renascita.SCENARIO))
     sc["params"]["beliefs"] = True
+    sc["geography"]["changes"] = [  # (the map by year, #81: fixture changes, not lore)
+        {"date": [4, 3, 100], "route": "g:lions-rest--magnus-rest", "open": False, "why": "a rockfall"},
+        {"date": [4, 4, 0], "build": {"id": "g:magnus-rest--old-westgate", "ends": ["v:magnus-rest", "v:old-westgate"],
+                                      "days": 9, "kind": "road"}, "why": "a new road"}]
     ward = OUT.parent / "ward.toml"
     ward.write_text(WARD.format(scenario=toml_value(sc)), encoding="utf-8", newline="\n")
     assert main(["run", str(ward), "--out", str(OUT)]) == 0

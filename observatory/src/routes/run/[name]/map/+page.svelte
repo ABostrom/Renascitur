@@ -2,7 +2,19 @@
 	import { page } from '$app/state';
 
 	import { finalState } from '$lib/run/entity';
-	import { layout, loadGeography, occupancy, type Geography, type Layout, type Traveller } from '$lib/run/geography';
+	import {
+		geographyAt,
+		layout,
+		loadGeography,
+		loadMapDeltas,
+		mapChanges,
+		occupancy,
+		type Geography,
+		type Layout,
+		type MapChange,
+		type MapDelta,
+		type Traveller
+	} from '$lib/run/geography';
 	import { openRun, type Run } from '$lib/run/run';
 	import { HttpSource } from '$lib/run/source';
 
@@ -16,6 +28,8 @@
 	let residents = $state<Record<string, number>>({});
 	let travellers = $state<Traveller[]>([]);
 	let partial = $state(false); // an unfinished run has no final state: no residents, no travellers
+	let deltas = $state<MapDelta[]>([]);
+	let step = $state<number | null>(null); // which moment the map shows (null: the end)
 
 	$effect(() => {
 		const n = name;
@@ -26,6 +40,8 @@
 		residents = {};
 		travellers = [];
 		partial = false;
+		deltas = [];
+		step = null;
 		const source = new HttpSource();
 		Promise.all([openRun(source, n), loadGeography(source, n)])
 			.then(async ([r, g]) => {
@@ -34,6 +50,12 @@
 				geo = g;
 				missing = !g;
 				partial = r.manifest.meta.complete === false;
+				if (g?.changes?.length) {
+					// (only a run whose map changes: it reads every state change once)
+					const ds = await loadMapDeltas(r, g);
+					if (stale) return;
+					deltas = ds;
+				}
 				if (g && !partial) {
 					const occ = occupancy(await finalState(r), g);
 					if (stale) return;
@@ -47,9 +69,48 @@
 		return () => (stale = true);
 	});
 
-	const pos: Layout = $derived(geo ? layout(geo, W, H) : {});
+	const cal = $derived(run?.calendar);
+	const key = (d: [number, number, number]) => cal!.sortKey(d);
+	const changes = $derived(geo ? mapChanges(geo, deltas) : []);
+	// The moments the map can be shown at: the start, then each change; the last is the end of the run.
+	// One moment per day something changed (the map is as of the end of that day).
+	const moments = $derived([
+		null,
+		...[...new Map(changes.map((c) => [key(c.date), c.date])).values()]
+	] as ([number, number, number] | null)[]);
+	const momentOf = (d: [number, number, number]) => moments.findIndex((m) => m !== null && key(m) === key(d));
+	const at = $derived(step === null ? moments.length - 1 : Math.min(step, moments.length - 1));
+	const atEnd = $derived(at === moments.length - 1);
+	const shown = $derived(
+		geo && cal ? (moments[at] === null ? geographyAt(geo, [], 0, key) : geographyAt(geo, deltas, key(moments[at]!), key)) : null
+	);
+	// Laid out once, from the map with every road the run ever had, so places don't jump between years.
+	const everything = $derived(geo && cal && deltas.length ? geographyAt(geo, deltas, Infinity, key) : geo);
+	const pos: Layout = $derived(everything ? layout(everything, W, H) : {});
+	const when = (i: number) => (moments[i] === null ? 'the start' : cal ? cal.format(moments[i]!, 'season') : '');
+	const eventHref = (e: string) => `/run/${encodeURIComponent(name)}/events?e=${encodeURIComponent(e)}`;
+	function site(id: string): string {
+		const r = everything?.routes.find((x) => x.id === id);
+		return r ? `the ${r.kind} from ${names[r.ends[0]] ?? r.ends[0]} to ${names[r.ends[1]] ?? r.ends[1]}` : (names[id] ?? id);
+	}
+	function describe(c: MapChange): string {
+		const r = everything?.routes.find((x) => x.id === c.site);
+		if (c.what === 'built' && r) return `${site(c.site)} built (${r.days} days)`;
+		if (c.what === 'moved') return `${site(c.site)} moved into ${regions[c.detail.slice(5)] ?? c.detail.slice(5)}`;
+		if (c.what === 'opened') return `${site(c.site)} reopened${c.detail ? `, now ${c.detail}` : ''}`;
+		return `${site(c.site)} ${WHAT[c.what]}${c.what === 'days' ? ` ${c.detail}` : ''}`;
+	}
+	const WHAT: Record<string, string> = {
+		built: 'built',
+		closed: 'closed',
+		opened: 'reopened',
+		days: 'now takes',
+		moved: 'moved',
+		changed: 'changed'
+	};
 	const names = $derived(Object.fromEntries((geo?.places ?? []).map((p) => [p.id, p.name ?? p.id])));
 	const regions = $derived(Object.fromEntries((geo?.regions ?? []).map((r) => [r.id, r.name ?? r.id])));
+	const regionOf = $derived(Object.fromEntries((shown?.places ?? []).map((p) => [p.id, p.region])));
 	const biggest = $derived(Math.max(1, ...Object.values(residents)));
 	const onRoad = $derived(
 		travellers.reduce<Record<string, number>>((acc, t) => ((acc[t.from] = (acc[t.from] ?? 0) + 1), acc), {})
@@ -78,19 +139,28 @@
 {:else}
 	<h1>Map</h1>
 	{#if geo.draft}<p class="muted">{geo.about ?? 'A draft geography.'}</p>{/if}
+	{#if changes.length}
+		<label class="asof">
+			As of
+			<input type="range" min="0" max={moments.length - 1} value={at} aria-label="As of" aria-valuetext={when(at)}
+				oninput={(e) => (step = +e.currentTarget.value)} />
+			<span class="mono">{when(at)}</span>
+			<span class="muted small">({changes.length} change{changes.length === 1 ? '' : 's'} to the map in this run)</span>
+		</label>
+	{/if}
 	{#if !geo.places.every((p) => p.at)}
 		<p class="muted small">Laid out by road distance: the file has no map positions, so distances are travel days, not miles.</p>
 	{/if}
 
 	<figure class="card map">
 		<div class="scroll">
-		<svg class="chart" viewBox={`0 0 ${W} ${H}`} role="group" aria-label={`Map of ${geo.places.length} places and ${geo.routes.length} routes`}>
-			{#each geo.routes as r (r.id)}
+		<svg class="chart" viewBox={`0 0 ${W} ${H}`} role="group" aria-label={`Map of ${geo.places.length} places and ${shown!.routes.length} routes`}>
+			{#each shown!.routes as r (r.id)}
 				{@const a = pos[r.ends[0]]}
 				{@const b = pos[r.ends[1]]}
 				{#if a && b}
 					<line x1={a.x} y1={a.y} x2={b.x} y2={b.y} class={`route ${r.kind}`} class:vialux={r.vialux} class:closed={r.open === false}>
-						<title>{names[r.ends[0]]} – {names[r.ends[1]]}: {r.days} days by {r.kind}{r.vialux ? ' (the Vialux)' : ''}</title>
+						<title>{names[r.ends[0]]} – {names[r.ends[1]]}: {r.days} days by {r.kind}{r.vialux ? ' (the Vialux)' : ''}{r.open === false ? ', closed' : ''}</title>
 					</line>
 					<text x={(a.x + b.x) / 2} y={(a.y + b.y) / 2 - 3} class="days">{r.days}</text>
 				{/if}
@@ -99,8 +169,8 @@
 				{@const at = pos[p.id]}
 				<a href={entity(p.id)} aria-label={names[p.id]}>
 					{#if p.kind === 'settlement'}
-						<circle cx={at.x} cy={at.y} r={radius(p.id)} class="settlement">
-							<title>{names[p.id]} ({regions[p.region] ?? p.region}): {residents[p.id] ?? 0} notables{onRoad[p.id] ? `, ${onRoad[p.id]} on the road` : ''}</title>
+						<circle cx={at.x} cy={at.y} r={atEnd ? radius(p.id) : 8} class="settlement">
+							<title>{names[p.id]} ({regions[regionOf[p.id]] ?? regionOf[p.id]}){atEnd ? `: ${residents[p.id] ?? 0} notables${onRoad[p.id] ? `, ${onRoad[p.id]} on the road` : ''}` : ''}</title>
 						</circle>
 					{:else}
 						<rect x={at.x - 4} y={at.y - 4} width="8" height="8" class={`place ${p.kind}`} transform={`rotate(45 ${at.x} ${at.y})`}>
@@ -111,9 +181,9 @@
 			{/each}
 			{#each geo.places as p (p.id)}
 				{@const at = pos[p.id]}
-				<text x={at.x} y={at.y + (p.kind === 'settlement' ? radius(p.id) + 13 : 16)} class:label={true} class:minor={p.kind !== 'settlement'} aria-hidden="true">{names[p.id]}</text>
+				<text x={at.x} y={at.y + (p.kind === 'settlement' ? (atEnd ? radius(p.id) : 8) + 13 : 16)} class:label={true} class:minor={p.kind !== 'settlement'} aria-hidden="true">{names[p.id]}</text>
 			{/each}
-			{#each travellers as t (t.id)}
+			{#each atEnd ? travellers : [] as t (t.id)}
 				{@const a = pos[t.from]}
 				{@const b = pos[t.next]}
 				{#if a && b}
@@ -133,6 +203,26 @@
 			<span><svg width="12" height="12" aria-hidden="true"><circle cx="6" cy="6" r="3.5" class="traveller" /></svg> on the road</span>
 		</figcaption>
 	</figure>
+
+	{#if changes.length}
+		<section class="card">
+			<h2>Changes to the map</h2>
+			<div class="scroll">
+				<table>
+					<thead><tr><th>When</th><th>What</th><th></th></tr></thead>
+					<tbody>
+						{#each changes as c, i (c.event)}
+							<tr class:current={momentOf(c.date) === at}>
+								<td><button class="link" onclick={() => (step = momentOf(c.date))}>{cal ? cal.format(c.date, 'season') : ''}</button></td>
+								<td>{describe(c)}</td>
+								<td><a href={eventHref(c.event)}>why</a></td>
+							</tr>
+						{/each}
+					</tbody>
+				</table>
+			</div>
+		</section>
+	{/if}
 
 	<section class="card">
 		<h2>On the road at the end</h2>
@@ -239,5 +329,22 @@
 	}
 	.small {
 		font-size: 0.85rem;
+	}
+	.asof {
+		display: flex;
+		align-items: center;
+		gap: 0.6rem;
+		flex-wrap: wrap;
+		margin: 0.5rem 0;
+	}
+	button.link {
+		background: none;
+		border: none;
+		padding: 0;
+		color: var(--accent);
+		text-decoration: underline;
+	}
+	tr.current {
+		background: var(--surface-2);
 	}
 </style>
