@@ -104,6 +104,15 @@ def _write_canon(folder: Path, doc: dict) -> None:
     (folder / "casting.json").write_text(json.dumps(doc["casting"], indent=1), encoding="utf-8")
 
 
+def _write_geography(folder: Path, world, params: dict) -> None:
+    """The geography a run used (S4 §3), for the Observatory: replays read routes from the checkpoint."""
+    g = world.scenario(**params).get("geography") if world.scenario else None
+    if isinstance(g, dict):
+        from renasci import geo
+
+        geo.save(folder / "geography.json", g)
+
+
 def _run(recipe, out: Path, meta: dict | None = None, canon_doc: dict | None = None) -> Path:
     from renasci.core.pins import Pin
 
@@ -119,6 +128,7 @@ def _run(recipe, out: Path, meta: dict | None = None, canon_doc: dict | None = N
                                                   "calendar": world.calendar.to_json(), **(meta or {})})
     if canon_doc is not None:
         _write_canon(folder.path, canon_doc)
+    _write_geography(folder.path, world, recipe.params)
     _finish(engine, folder, recipe)
     print(f"run {recipe.name}: {folder.manifest['segments']} segments, state {folder.manifest['meta']['state_hash']}")
     return folder.path
@@ -185,6 +195,8 @@ def _replay(run: Path, new, out: Path, from_: str | None = None, rerun: bool = F
                                   "replayed_from": {"run": base.path.name, "at": mark["before"]}, **(meta or {})})
     if canon_doc is not None:
         _write_canon(folder.path, canon_doc)
+    if (base.path / "geography.json").exists():  # the fork restores the base's routes, so it keeps its file
+        shutil.copyfile(base.path / "geography.json", folder.path / "geography.json")
     _finish(engine, folder, new, after=at)
     print(f"replayed {new.name} from {base.path.name} at {world.calendar.format(at)}")
     return folder.path

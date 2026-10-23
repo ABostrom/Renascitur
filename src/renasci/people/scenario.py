@@ -36,6 +36,7 @@ before the masses are cast, so conservation holds as it does for synthesised not
 
 from __future__ import annotations
 
+from renasci import geo
 from renasci.core.calendar import Date
 from renasci.people.genome import Catalogue, founder, inherit, keyed, phenotype
 from renasci.people.population import cast_masses
@@ -296,6 +297,18 @@ class _Builder:
                 person[k] = parent
                 self.people[parent]["children"].append(cid)
 
+    def geography(self) -> None:
+        """The scenario's places, regions and routes (S4 §2-3), once its settlements agree with them."""
+        g = self.sc.get("geography")
+        if g is None:
+            return
+        if not isinstance(g, dict):
+            raise ValueError("the scenario's geography must be loaded first (renasci.geo.attach)")
+        bad = [f for f in geo.check(g) if f["severity"] == "error"] or geo.check_scenario(self.sc, g)
+        if bad:
+            raise ValueError("geography: " + "; ".join(f"{f['kind']}: {f['message']}" for f in bad))
+        geo.cast(self.e, g)
+
     # ------------------------------------------------------------ cast it all
 
     def build(self) -> None:
@@ -323,6 +336,7 @@ class _Builder:
                 "danger": spec.get("danger", 0.0)})
         cast_masses(self.e, {s: (spec["race"], spec["genome_group"], spec.get("masses", 0), len(residents[s]))
                              for s, spec in settlements.items()}, self.cat, self.races)
+        self.geography()
         for pid in sorted(self.people):
             person = self.people[pid]
             if pid in heads.values():

@@ -88,11 +88,13 @@ for sid, name, region, masses, commoners in CITIES:
 
 scenario = {
     "draft": True,
+    "geography": "pyrosia.json",  # scripts/pyrosia_draft.py (S4, #76)
     "about": ("PROVISIONAL Fourth Age scenario for 4A 1 (#73). Names come from the vault (the 12 Great Houses; "
               "Pyrosia's cities and provinces); every number is a placeholder, and none of it is canon. "
               "Open questions are on the review queue (#150)."),
     "start": [4, 1, 0],
-    "params": {"house_from": "father", "residence": "husband", "kin_degree": 2, "market_rate": 0.35},
+    "params": {"house_from": "father", "residence": "husband", "kin_degree": 2, "market_rate": 0.35,
+               "traits": {"wits": "wits", "charm": "charm", "temper": "temper"}},
     "races": RACES,
     "catalogue": catalogue,
     "regions": regions,
