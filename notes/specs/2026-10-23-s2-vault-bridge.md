@@ -138,13 +138,17 @@ tradition, language · essay, index.
 - **Form:** `id: v:<slug>`. The slug: the file stem, NFKD-normalised, combining marks dropped, apostrophes
   (`'` and `’`) dropped, every run of other non-alphanumerics → `-`, trimmed, lowercased. So `Lion’s Rest`
   → `v:lions-rest`, `Magnus’ Rest` → `v:magnus-rest`, `Duo - Second Emperor` → `v:duo-second-emperor`
-  (matching the Fourth Age draft's ids). Collisions get `-2`, `-3`… in sorted key order (the language
-  `Leonin` → `v:leonin`, the race → `v:leonin-2`; `vault.toml` may pin a preferred id per key instead).
-- **Who gets one:** every note that isn't an essay or index (reference notes too: links name them).
+  (matching the Fourth Age draft's ids). Letters that don't decompose are spelled out (`Þ` → `th`, `ß` →
+  `ss`); a name with no slug is a finding. Collisions get `-2`, `-3`… in sorted key order, unless
+  `vault.toml`'s `[ids]` prefers ids (the vault pins the race `Leonin` to `v:leonin` and the language to
+  `v:leonin-language`). Every id already written is reserved; a malformed or shared one gets no new id
+  until it's fixed by hand.
+- **Who gets one:** every note whose type isn't essay or index (reference notes too: links name them),
+  drafts included; not proposals, which get theirs when written (§9).
 - **Migration:** `renasci vault ids` prints the exact lines it would add (a diff); `--write` adds them and
   touches nothing else. Idempotent; never changes an existing id. Aaron reviews the git diff.
 - **Afterwards:** renames and moves keep ids. A duplicate id is a finding that blocks pins from both notes.
-- **Races:** `vault.toml` maps vault race ids to the scenario's race ids (`[races] "v:leonin-2" = "r:leonin"`),
+- **Races:** `vault.toml` maps vault race ids to the scenario's race ids (`[races] "v:leonin" = "r:leonin"`),
   for casting and the fertility checks.
 
 ## 5. Dates and the typed schema

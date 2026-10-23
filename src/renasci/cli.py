@@ -257,16 +257,30 @@ def cmd_vault(args) -> int:
     from renasci.vault.loader import load
 
     vault = load(args.docs)
+    if args.vault_command == "ids":
+        from renasci.vault.ids import migrate
+
+        sys.stdout.reconfigure(errors="replace")
+        plan = migrate(vault, write=args.write)
+        for c in plan:
+            print(f"{c['key']}.md")
+            print(f"  +{c['line']}")
+        verb = "added" if args.write else "would add"
+        print(f"{verb} {len(plan)} id line(s)" + ("" if args.write or not plan else "; run again with --write to add them"))
+        return 0
     if args.json:  # UTF-8 whatever the console's code page (names like Yōkuro no Ki)
         sys.stdout.buffer.write(json.dumps(vault.to_json(), ensure_ascii=False).encode("utf-8") + b"\n")
         sys.stdout.flush()
         return 0
     sys.stdout.reconfigure(errors="replace")
+    from renasci.vault.ids import check_ids, migrate
+    from renasci.vault.mapping import role
+
+    vault.findings = sorted(vault.findings + check_ids(vault), key=lambda f: (f["key"], f["line"], f["kind"]))
+    missing = len(migrate(vault))
     counts: dict[str, int] = {}
     for f in vault.findings:
         counts[f["kind"]] = counts.get(f["kind"], 0) + 1
-    from renasci.vault.mapping import role
-
     sources: dict[str, int] = {}
     roles: dict[str, int] = {}
     for n in vault.notes.values():
@@ -276,6 +290,8 @@ def cmd_vault(args) -> int:
     print(f"  typed by frontmatter {sources.get('frontmatter', 0)}, by folder {sources.get('folder', 0)}, "
           f"untyped (essay) {sources.get('default', 0)}")
     print("  " + ", ".join(f"{n} {r.replace('_', ' ')}" for r, n in sorted(roles.items(), key=lambda x: -x[1])))
+    if missing:
+        print(f"  {missing} notes have no id yet (`renasci vault ids` lists them; --write adds them)")
     for kind, n in sorted(counts.items()):
         print(f"  {kind}: {n}")
     for f in vault.findings[:args.top]:
@@ -421,6 +437,9 @@ def main(argv=None) -> int:
     v.add_argument("docs", nargs="?", default="docs")
     v.add_argument("--json", action="store_true")
     v.add_argument("--top", type=int, default=40)
+    v = vsub.add_parser("ids", help="add missing id: lines to notes (a dry run unless --write)")
+    v.add_argument("docs", nargs="?", default="docs")
+    v.add_argument("--write", action="store_true")
     p = sub.add_parser("observe", help="serve the Observatory and a runs folder, read-only, on localhost")
     p.add_argument("runs", nargs="?", default="runs")
     p.add_argument("--port", type=int, default=8765)

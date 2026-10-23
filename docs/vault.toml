@@ -113,3 +113,10 @@ type = "cosmic-force"
 [[types]]
 match = "Cosmology/Cosmic Functions/**"
 type = "cosmic-force"
+
+# Preferred ids where two notes share a name (S2 spec §4). Without these, key order decides.
+[ids]
+"Races/Kyojin/Leonin/Leonin" = "v:leonin"
+"Languages/Modern/Leonin" = "v:leonin-language"
+"Realms/Renascita/Geography/Mokoweri/Locations/Eversoul Grove" = "v:eversoul-grove-mokoweri"
+"Realms/Renascita/Geography/Qethusiyya/Provinces/Al-Ramal/Eversoul Grove" = "v:eversoul-grove-al-ramal"

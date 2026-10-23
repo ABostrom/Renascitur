@@ -171,8 +171,9 @@ def parse(text: str) -> tuple[dict, list[dict], dict, int]:
     end = next((i for i in range(1, len(lines)) if lines[i].strip() == "---"), None)
     if end is None:
         return {}, [{"field": None, "line": 1, "message": "frontmatter never closes (no second ---)"}], {}, 0
-    if end > 1 and not any(KEY.match(lines[i]) for i in range(1, end)):
-        return {}, [], {}, 0  # a horizontal rule, not frontmatter
+    content = [lines[i] for i in range(1, end) if not _skippable(lines[i])]
+    if content and not any(KEY.match(x) for x in content):
+        return {}, [], {}, 0  # a horizontal rule around prose, not frontmatter (comments alone are frontmatter)
     fm: dict = {}
     findings: list[dict] = []
     line_of: dict = {}
