@@ -50,6 +50,18 @@ def end_ties(ctx, person: str, why: str) -> None:
             ctx.set(p, "ties", [x for x in ctx.get(p, "ties") or [] if x != t])
 
 
+def form_tie(ctx, a: str, b: str, kind: str, strength: float = 0.5, place: str | None = None, causes=()) -> str:
+    """A new tie between `a` and `b` (an enemy made by an exposed plot, a friend made by a year together)."""
+    a, b = sorted((a, b))
+    fields = {"a": a, "b": b, "kind": kind, "strength": strength, "since": ctx.today.to_json(), "ended": None}
+    event = ctx.emit("people.tie_formed", {"a": (a,), "b": (b,)}, purpose=f"tie:{kind}", actor=a, place=place,
+                     payload={"kind": kind}, causes=causes, creates={"tie": [("tie", fields)]})
+    tie = event.roles["tie"][0]
+    for person in (a, b):
+        ctx.set(person, "ties", sorted((ctx.get(person, "ties") or []) + [tie]))
+    return tie
+
+
 def quantise(x: float) -> float:
     return round(min(max(x, 0.0), 1.0) * 20) / 20
 

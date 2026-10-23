@@ -27,6 +27,8 @@ from renasci.core.events import Cause, EventType
 from renasci.core.systems import System
 from renasci.people.races import age_years
 
+SHAMED = -0.25  # (actions.SHAMED: in disgrace)
+
 FORMED = EventType("people.ambition_formed", 1, roles={"owner": (1, 1), "ambition": (1, 1), "target": (0, 1)},
                    payload={"class": "str", "text": "str"})
 RESOLVED = EventType("people.ambition_resolved", 1, roles={"owner": (1, 1), "ambition": (1, 1)},
@@ -69,6 +71,14 @@ class Ambition:
     def moot(self, ctx, amb) -> bool:
         target = ctx.get(amb, "target")
         return target is not None and ctx.status(target) != "active"
+
+    def keeps(self, ctx, amb) -> bool:
+        """Whether the yearly pass keeps an unmet ambition: while a scheme pursues it, the scheme decides;
+        otherwise while it is still eligible."""
+        return ctx.get(amb, "scheme") is not None or self.eligible(ctx, ctx.get(amb, "owner")) is not None
+
+    def formed(self, ctx, amb, formation: Formation) -> None:
+        """Called once the record exists (Vengeance takes up its grievance here)."""
 
     def text(self, ctx, owner, target) -> str:
         return self.name.lower()
@@ -128,7 +138,120 @@ class Standing(Ambition):
         return f"raise House {ctx.get(house, 'name') or house} high at court"
 
 
-STARTER = (Marry(), Standing())
+class Seize(Ambition):
+    """A succession plot: take the house's headship by removing those ahead in the line (up to three)."""
+
+    name, cooldown_years = "Seize", 10
+    reads = frozenset({"house", "headship", "holder", "rule", "children", "father", "mother", "sex", "status",
+                       "drives", "traits", "offices", "extinct"})
+
+    def _ahead(self, ctx, person):
+        from renasci.people.houses import RULES
+
+        house = ctx.get(person, "house")
+        if house is None or ctx.get(house, "extinct") is not None:
+            return None
+        office = ctx.get(house, "headship")
+        holder = ctx.get(office, "holder")
+        if holder is None or holder == person or ctx.status(holder) != "active":
+            return None
+        line = RULES[ctx.get(office, "rule")].candidates(ctx, office, holder)
+        if person not in line:
+            return None
+        return [holder] + line[:line.index(person)]
+
+    def eligible(self, ctx, person):
+        ahead = self._ahead(ctx, person)
+        if not ahead or len(ahead) > 3:
+            return None  # too far down the line to plot
+        status = (ctx.get(person, "drives") or {}).get("status", 1.0)
+        if trait(ctx, person, "temper") < 0.6 and status >= 0.5:
+            return None  # content, or not hot-blooded enough
+        return Formation(ahead[0], ("drive", "status"))
+
+    def urge(self, ctx, person):
+        return 0.05 + 0.25 * trait(ctx, person, "temper")
+
+    def subgoals(self, ctx, amb):
+        ahead = self._ahead(ctx, ctx.get(amb, "owner")) or []
+        return [frozenset(f"dead:{p}" for p in ahead)] if ahead else []
+
+    def satisfied(self, ctx, amb):
+        owner = ctx.get(amb, "owner")
+        house = ctx.get(owner, "house")
+        return bool(house) and ctx.get(ctx.get(house, "headship"), "holder") == owner
+
+    def moot(self, ctx, amb):  # the holder's death is the plot's aim; once no plot runs, a changed seat ends it
+        if ctx.get(amb, "scheme") is not None:
+            return False
+        house = ctx.get(ctx.get(amb, "owner"), "house")
+        return not house or ctx.get(ctx.get(house, "headship"), "holder") != ctx.get(amb, "target")
+
+    def text(self, ctx, owner, target):
+        house = ctx.get(owner, "house")
+        return f"take the seat of House {ctx.get(house, 'name') or house}"
+
+
+class Vengeance(Ambition):
+    """Answer an attributed harm: the killer of one's kin, or whoever plotted against one."""
+
+    name, cooldown_years = "Vengeance", 8
+    kinds = ("killed", "exposed")
+    reads = frozenset({"grievances", "status", "favour", "traits"})
+
+    def _grievance(self, ctx, person):
+        """The first grievance of this kind not yet taken up, against someone still here and not yet humbled."""
+        for g in ctx.get(person, "grievances") or []:
+            t = g["against"]
+            if g.get("kind") in self.kinds and not g.get("answered") and t != person and ctx.exists(t) \
+                    and ctx.status(t) == "active" and float(ctx.get(t, "favour") or 0.0) >= SHAMED:
+                return g
+        return None
+
+    def eligible(self, ctx, person):
+        g = self._grievance(ctx, person)
+        return Formation(g["against"], ("event", g["event"])) if g else None
+
+    def keeps(self, ctx, amb):  # its grievance is taken up: kept while the target is here to answer
+        return ctx.status(ctx.get(amb, "target")) == "active"
+
+    def formed(self, ctx, amb, formation):
+        owner, (_, event) = ctx.get(amb, "owner"), formation.born_of
+        ctx.set(owner, "grievances", [{**g, "answered": amb} if g["event"] == event and g["against"] == formation.target
+                                      and not g.get("answered") else g for g in ctx.get(owner, "grievances") or []])
+
+    def urge(self, ctx, person):
+        return 0.15 + 0.35 * trait(ctx, person, "temper")
+
+    def subgoals(self, ctx, amb):
+        t = ctx.get(amb, "target")
+        return [frozenset({f"dead:{t}"}), frozenset({f"shamed:{t}"})]
+
+    def satisfied(self, ctx, amb):
+        t = ctx.get(amb, "target")
+        return ctx.status(t) == "dead" or float(ctx.get(t, "favour") or 0.0) < SHAMED
+
+    def moot(self, ctx, amb):
+        return False  # a target's death satisfies; nothing else ends a vendetta
+
+    def text(self, ctx, owner, target):
+        return f"avenge themselves on {ctx.get(target, 'name') or target}"
+
+
+class Protect(Vengeance):
+    """Strike first at whoever plotted against one's own (a kin's exposed plot)."""
+
+    name, cooldown_years = "Protect", 8
+    kinds = ("threatened",)
+
+    def urge(self, ctx, person):
+        return 0.1 + 0.2 * trait(ctx, person, "temper")
+
+    def text(self, ctx, owner, target):
+        return f"protect their own from {ctx.get(target, 'name') or target}"
+
+
+STARTER = (Marry(), Protect(), Seize(), Standing(), Vengeance())
 
 
 LIBRARY: dict[str, Ambition] = {a.name: a for a in STARTER}
@@ -172,7 +295,7 @@ def on_death(ctx, person: str, death_event: str) -> None:
 
 
 READS = frozenset({"ambitions", "cooldowns", "owner", "class", "target", "status", "state", "scheme"})
-WRITES = frozenset({"ambitions", "cooldowns", "state", "resolved", "scheme", "new:ambition"})
+WRITES = frozenset({"ambitions", "cooldowns", "state", "resolved", "scheme", "new:ambition", "grievances"})
 
 
 class Ambitions(System):
@@ -201,7 +324,7 @@ class Ambitions(System):
                 resolve(ctx, amb, "abandoned")  # its class is no longer part of this world
             elif cls.satisfied(ctx, amb):
                 resolve(ctx, amb, "fulfilled")
-            elif cls.moot(ctx, amb) or cls.eligible(ctx, person) is None:
+            elif cls.moot(ctx, amb) or not cls.keeps(ctx, amb):
                 resolve(ctx, amb, "abandoned")
 
     @staticmethod
@@ -223,3 +346,4 @@ class Ambitions(System):
                              causes=(Cause(*formation.born_of),), creates={"ambition": [("ambition", fields)]})
             amb = event.roles["ambition"][0]
             ctx.set(person, "ambitions", sorted((ctx.get(person, "ambitions") or []) + [amb]))
+            cls.formed(ctx, amb, formation)

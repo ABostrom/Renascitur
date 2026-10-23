@@ -24,7 +24,7 @@ from __future__ import annotations
 import heapq
 from dataclasses import dataclass
 
-from renasci.people.actions import ACTIONS, FAVOURED, HEARD
+from renasci.people.actions import ACTIONS, FAVOURED, HEARD, SHAMED
 from renasci.people.ambitions import trait
 
 
@@ -140,22 +140,7 @@ def plan_for(ctx, owner: str, goals, scheme: str | None = None) -> Plan | None:
     """A plan for `owner`, reading the world through `ctx` (every fact is a recorded read)."""
 
     def fact(tag: str) -> bool:
-        kind, _, ref = tag.partition(":")
-        if kind == "tie":
-            return ref in _people_of(ctx, owner)
-        if kind == "heard":
-            return float(ctx.get(owner, "favour") or 0.0) >= HEARD
-        if kind == "favoured":
-            return float(ctx.get(owner, "favour") or 0.0) >= FAVOURED
-        if kind == "married":
-            return ctx.get(owner, "spouse") is not None
-        if kind == "dead":
-            return ctx.exists(ref) and ctx.status(ref) == "dead"
-        if kind == "shamed":  # already in disgrace: a negative favour (Shame is how it gets there)
-            return ctx.exists(ref) and float(ctx.get(ref, "favour") or 0.0) < 0
-        if kind == "accomplice":  # only a scheme has accomplices; a fresh plan recruits first
-            return bool(scheme and ctx.get(scheme, "accomplices"))
-        return False
+        return holds(ctx, owner, tag, scheme)
 
     def odds(action, target) -> float:
         return action.odds(ctx, owner, target, scheme)
@@ -170,11 +155,32 @@ def plan_for(ctx, owner: str, goals, scheme: str | None = None) -> Plan | None:
     return plan(goals, depth=depth, fact=fact, odds=odds, candidates=candidates, possible=possible)
 
 
+def holds(ctx, owner: str, tag: str, scheme: str | None = None) -> bool:
+    """Whether a planner tag is true of the world for `owner` now (a recorded read)."""
+    kind, _, ref = tag.partition(":")
+    if kind == "tie":
+        return ref in _people_of(ctx, owner)
+    if kind == "heard":
+        return float(ctx.get(owner, "favour") or 0.0) >= HEARD
+    if kind == "favoured":
+        return float(ctx.get(owner, "favour") or 0.0) >= FAVOURED
+    if kind == "married":
+        return ctx.get(owner, "spouse") is not None
+    if kind == "dead":
+        return ctx.exists(ref) and ctx.status(ref) == "dead"
+    if kind == "shamed":  # in disgrace (Shame is how it gets there)
+        return ctx.exists(ref) and float(ctx.get(ref, "favour") or 0.0) < SHAMED
+    if kind == "accomplice":  # only a scheme has accomplices; a fresh plan recruits first
+        return bool(scheme and ctx.get(scheme, "accomplices"))
+    return False
+
+
 def _people_of(ctx, owner: str) -> list[str]:
-    """Those the owner could ask: tie partners and the spouse, sorted."""
+    """Those the owner could ask: tie partners (not enemies) and the spouse, sorted."""
     out = set()
     for t in ctx.get(owner, "ties") or []:
-        out.update({ctx.get(t, "a"), ctx.get(t, "b")})
+        if ctx.get(t, "kind") != "enemy":
+            out.update({ctx.get(t, "a"), ctx.get(t, "b")})
     spouse = ctx.get(owner, "spouse")
     if spouse:
         out.add(spouse)

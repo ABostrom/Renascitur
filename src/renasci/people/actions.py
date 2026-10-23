@@ -33,6 +33,7 @@ from renasci.people.races import age_years
 ACTION = EventType("people.action", 1, roles={"actor": (1, 1), "target": (0, 1), "accomplice": (0, 1)},
                    payload={"action": "str", "outcome": "str"})
 HEARD, FAVOURED = 0.2, 0.5
+SHAMED = -0.25  # in disgrace: below this (a lost duel or an exposed plot alone isn't enough)
 
 
 def _favour(ctx, person: str, delta: float) -> None:
