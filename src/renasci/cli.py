@@ -8,6 +8,7 @@
     renasci observe [runs] [--port 8765] [--allow-launch]   (the Observatory, on localhost)
     renasci latch <run-folder> [--top 10] [--launch N [--kind K] [--date D] [--until D] [--name N]] [--out runs]
     renasci stories <run-folder> [--top 10] [--from 20 --to 30]
+    renasci vault check [docs] [--json]            (load the vault: notes, links, findings; read-only)
 
 `run` writes a run folder with a checkpoint every N years. `replay` forks a run at the latest
 checkpoint before the first changed ripple (or `--from`), restores, and continues with the new
@@ -252,6 +253,29 @@ def cmd_stories(args) -> int:
     return 0
 
 
+def cmd_vault(args) -> int:
+    from renasci.vault.loader import load
+
+    vault = load(args.docs)
+    if args.json:  # UTF-8 whatever the console's code page (names like Yōkuro no Ki)
+        sys.stdout.buffer.write(json.dumps(vault.to_json(), ensure_ascii=False).encode("utf-8") + b"\n")
+        sys.stdout.flush()
+        return 0
+    sys.stdout.reconfigure(errors="replace")
+    counts: dict[str, int] = {}
+    for f in vault.findings:
+        counts[f["kind"]] = counts.get(f["kind"], 0) + 1
+    typed = sum(1 for n in vault.notes.values() if n.type_from != "default")
+    print(f"{len(vault.notes)} notes ({typed} typed), {len(vault.findings)} findings, digest {vault.digest[:12]}")
+    for kind, n in sorted(counts.items()):
+        print(f"  {kind}: {n}")
+    for f in vault.findings[:args.top]:
+        print(f"  {f['key']}:{f['line']}  {f['kind']}  {f['message']}")
+    if len(vault.findings) > args.top:
+        print(f"  ... and {len(vault.findings) - args.top} more (--top N, or --json)")
+    return 0
+
+
 def cmd_inspect(args) -> int:
     path = Path(args.run)
     rf = _open_complete(path)
@@ -382,6 +406,12 @@ def main(argv=None) -> int:
     p.add_argument("--top", type=int, default=10)
     p.add_argument("--from", dest="from_", type=int, default=None)
     p.add_argument("--to", type=int, default=None)
+    p = sub.add_parser("vault", help="the vault bridge (S2): check")
+    vsub = p.add_subparsers(dest="vault_command", required=True)
+    v = vsub.add_parser("check", help="load the vault and report its notes and findings (read-only)")
+    v.add_argument("docs", nargs="?", default="docs")
+    v.add_argument("--json", action="store_true")
+    v.add_argument("--top", type=int, default=40)
     p = sub.add_parser("observe", help="serve the Observatory and a runs folder, read-only, on localhost")
     p.add_argument("runs", nargs="?", default="runs")
     p.add_argument("--port", type=int, default=8765)
@@ -398,7 +428,7 @@ def main(argv=None) -> int:
     p.add_argument("--out", default="runs/_bench")
     args = parser.parse_args(argv)
     try:
-        commands = {"run": cmd_run, "replay": cmd_replay, "diff": cmd_diff, "inspect": cmd_inspect, "bench": cmd_bench, "latch": cmd_latch, "stories": cmd_stories,
+        commands = {"run": cmd_run, "replay": cmd_replay, "diff": cmd_diff, "inspect": cmd_inspect, "bench": cmd_bench, "latch": cmd_latch, "stories": cmd_stories, "vault": cmd_vault,
                     "observe": cmd_observe}
         return commands[args.command](args)
     except (ValueError, FileExistsError, FileNotFoundError) as err:
