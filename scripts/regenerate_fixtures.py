@@ -50,6 +50,18 @@ world = "fourth_age"
 end = "4A 6"
 """
 
+CANON = """
+[run]
+name = "canon"
+engine = "0.1.0"
+seed = 1234
+world = "fourth_age"
+end = "4A 30"
+
+[vault]
+path = "{vault}"
+"""
+
 KIN = """
 [run]
 name = "kin"
@@ -111,6 +123,11 @@ def main_() -> None:
     pyrosia = OUT.parent / "pyrosia.toml"
     pyrosia.write_text(PYROSIA, encoding="utf-8", newline="\n")
     assert main(["run", str(pyrosia), "--out", str(OUT)]) == 0
+    # A Fourth Age run cast from the test vault (the strain page): guards, a violation, met and dropped pins.
+    canon = OUT.parent / "canon.toml"
+    vault = (Path(__file__).parents[1] / "tests" / "fixtures" / "vault_people").as_posix()
+    canon.write_text(CANON.format(vault=vault), encoding="utf-8", newline="\n")
+    assert main(["run", str(canon), "--out", str(OUT)]) == 0
     for f in (OUT.parent).glob("*.toml"):
         f.unlink()
     print(f"fixtures written to {OUT}")
