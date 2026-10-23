@@ -120,6 +120,22 @@ A test checks that the draft loads with no errors, every scenario settlement is 
 
 M2's routing keeps `path`'s signature with optional arguments, so M1 callers don't change.
 
+**As built (#78).**
+- A route's `days` are days **on foot, in fair weather, walking by day**.
+- The world param `routing` (`true`, or a table overriding `geo.ROUTING` entry by entry) turns on routing by:
+  - **mode**: foot, horse, cart and army. Each has a factor per land kind, and a kind it lacks is impassable. A cart can't take a pass.
+  - **water**: river and sea are taken by boat, by anyone.
+  - **season**: a factor per kind and season name, or `null` for closed. A pass is closed in Winter; tracks are muddy in Spring.
+  - **time of day**: the Vialux is lit and safe, so a day's walk goes on past dusk (×0.6). Off it, travel stops at dusk, which the base days already assume.
+  - **access**: a route's `barred` marks (e.g. `["stained"]`) close it to anyone carrying one in their `marks`.
+- `path(ctx, a, b, who)` and `reach(ctx, a, days, who)` cost the journey for `who` on the day they set out (the season doesn't change on the road).
+- An unknown mode, or a table naming seasons the calendar doesn't have, is an error. In a mode, `null` marks a kind it can't take. A journey takes at least a day.
+- News (`beliefs.neighbour_settlements`) keeps the file's days: it has no mode or marks. A pass closed in Winter still carries news, for now. Their mode comes from the `travels` field (else the table's default), their marks from `marks`, and the season from today's date. Part days round up.
+- Without `routing`, or without a traveller, every path is the file's days, as in M1.
+- Journeys, flight, migration and in-person actions pass the traveller.
+- The factors are a draft. So are the draft geography's days: they are placeholders, so the ticket's "Lux road span ~8–9 weeks on foot" can't be checked yet (review queue).
+- Not built: danger by night off the Vialux, as attacks on the road (that's night terrors, S10); and who rides (no one has `travels` set until a world or a later ticket sets it).
+
 ## 9. Testing
 
 - **Loader:** each validation rule has a failing fixture; a good file round-trips (load, save, identical bytes).

@@ -76,7 +76,7 @@ class Action:
         here, there = ctx.get(actor, "place"), ctx.get(target, "place")
         if here == there:
             return 0
-        found = geo.path(ctx, here, there)
+        found = geo.path(ctx, here, there, actor)
         return None if found is None else found[0]
 
     def duration(self, ctx, actor, target) -> int:
@@ -379,7 +379,7 @@ class Flee(Action):
     def _elsewhere(self, ctx, actor):
         home = ctx.get(actor, "place")
         if travel.has_routes(ctx):
-            return list(travel.destinations(ctx, home, int(ctx.params.get("flee_days", travel.FLEE_DAYS))))
+            return list(travel.destinations(ctx, home, int(ctx.params.get("flee_days", travel.FLEE_DAYS)), actor))
         region = ctx.get(home, "region")
         return [s for s in ctx.ids("settlement") if s != home and ctx.get(s, "region") == region]
 
@@ -393,7 +393,7 @@ class Flee(Action):
     def succeed(self, ctx, actor, target, scheme, event):
         home = ctx.get(actor, "place")
         if travel.has_routes(ctx):
-            options = travel.destinations(ctx, home, int(ctx.params.get("flee_days", travel.FLEE_DAYS)))
+            options = travel.destinations(ctx, home, int(ctx.params.get("flee_days", travel.FLEE_DAYS)), actor)
             new = ctx.choose("flee", list(options), owner=scheme or actor, weights=[1.0 / d for d in options.values()])
             travel.depart(ctx, actor, new, "flee", causes=(Cause("event", event),) if event else ())
             return

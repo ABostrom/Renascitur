@@ -19,13 +19,16 @@ entities and routes `route` entities (`open` as the file says, else true). Settl
 
 from __future__ import annotations
 
+import copy
 import heapq
 import json
+import math
 import re
+from dataclasses import dataclass
 from pathlib import Path
 
 ID = re.compile(r"[vgt]:[^\s]+")
-READS = frozenset({"ids:route", "ends", "days", "open"})
+READS = frozenset({"ids:route", "ends", "days", "open", "kind", "vialux", "barred", "travels", "marks"})
 ROUTE_KINDS = ("road", "track", "river", "sea", "pass")
 FIELDS = {"regions": ("id",), "places": ("id", "kind", "region"), "routes": ("id", "ends", "days", "kind")}
 
@@ -110,6 +113,8 @@ def check(doc: dict) -> list[dict]:
             out.append(_f("bad_kind", rid, f"{rid}'s kind must be one of {', '.join(ROUTE_KINDS)}, not {r['kind']!r}"))
         if "open" in r and not isinstance(r["open"], bool):
             out.append(_f("bad_open", rid, f"{rid}'s open must be true or false"))
+        if "barred" in r and not (isinstance(r["barred"], list) and all(map(_str, r["barred"]))):
+            out.append(_f("bad_barred", rid, f"{rid}'s barred must be a list of marks (e.g. [\"stained\"])"))
         pair = (*sorted(ends), str(r.get("kind")))
         if pair in pairs:
             out.append(_f("duplicate_route", rid, f"{rid} repeats a {r.get('kind')} between {ends[0]} and {ends[1]}"))
@@ -157,58 +162,205 @@ def save(path, doc: dict) -> None:
     Path(path).write_text(dumps(doc), encoding="utf-8", newline="\n")
 
 
+# ------------------------------------------------------------ routing (S4 §8, #78)
+
+# A route's `days` are days on foot in fair weather, walking by day. With the world param `routing`, a
+# traveller's journey is costed by mode, season, the Vialux and their marks; without it (M1) every journey
+# takes the file's days. The numbers are a draft (world data: a world's `routing` table overrides them).
+ROUTING: dict = {
+    "modes": {  # land kinds each mode can take, and the factor on their days (a kind left out: can't)
+        "foot": {"road": 1.0, "track": 1.0, "pass": 1.0},
+        "horse": {"road": 0.5, "track": 0.6, "pass": 0.8},
+        "cart": {"road": 1.2, "track": 1.6},
+        "army": {"road": 1.5, "track": 2.0, "pass": 2.5},
+    },
+    "water": {"river": 1.0, "sea": 1.0},  # by boat: any traveller takes passage
+    "seasons": {  # by season name, a factor on a kind's days, or null: closed
+        "pass": {"Winter": None, "Spring": 1.5},
+        "track": {"Spring": 1.3, "Winter": 1.5},
+        "road": {"Winter": 1.2},
+        "sea": {"Winter": 1.5},
+    },
+    "vialux": 0.6,  # lit at night and safe: a day's walk goes on past dusk
+    "default_mode": "foot",
+}
+
+
+@dataclass(frozen=True)
+class Travel:
+    """Who is travelling, how and when: a mode in the routing table, a season name, and the marks they
+    carry (a route `barred` to a mark is closed to them)."""
+
+    mode: str
+    season: str
+    marks: frozenset = frozenset()
+
+
+def _factor(x, where) -> float | None:
+    if x is None:
+        return None
+    if isinstance(x, bool) or not isinstance(x, (int, float)) or x <= 0:
+        raise ValueError(f"routing: {where} must be a positive number or null, not {x!r}")
+    return float(x)
+
+
+def _table(x, where) -> dict:
+    if not isinstance(x, dict):
+        raise ValueError(f"routing: {where} must be a table, not {x!r}")
+    return x
+
+
+def routing_table(value) -> dict:
+    """The routing table for the world param `routing`: true (or an empty table) for the defaults, or a table
+    whose entries replace the defaults' by mode, kind or season. In a mode, a kind set to null is one the
+    mode can't take. Refused (ValueError) if malformed."""
+    if value is True:
+        value = {}
+    _table(value, "the table")
+    unknown = set(value) - set(ROUTING)
+    if unknown:
+        raise ValueError(f"routing: unknown entries {sorted(unknown)}; known: {sorted(ROUTING)}")
+    t = copy.deepcopy(ROUTING)
+    for mode, kinds in _table(value.get("modes", {}), "modes").items():
+        merged = {**t["modes"].get(mode, {}), **_table(kinds, f"modes.{mode}")}
+        t["modes"][mode] = {k: x for k, x in merged.items() if x is not None}
+    t["water"].update(_table(value.get("water", {}), "water"))
+    for kind, seasons in _table(value.get("seasons", {}), "seasons").items():
+        t["seasons"][kind] = {**t["seasons"].get(kind, {}), **_table(seasons, f"seasons.{kind}")}
+    t["vialux"] = value.get("vialux", t["vialux"])
+    t["default_mode"] = value.get("default_mode", t["default_mode"])
+    for kind, x in t["water"].items():
+        if kind not in ROUTE_KINDS or _factor(x, f"water.{kind}") is None:
+            raise ValueError(f"routing: water.{kind} must be a route kind with a positive factor")
+    for mode, kinds in t["modes"].items():
+        for kind, x in kinds.items():
+            if kind not in ROUTE_KINDS or kind in t["water"]:
+                raise ValueError(f"routing: modes.{mode}.{kind} must be a land route kind (water is by boat)")
+            _factor(x, f"modes.{mode}.{kind}")
+    for kind, seasons in t["seasons"].items():
+        if kind not in ROUTE_KINDS:
+            raise ValueError(f"routing: seasons.{kind} isn't a route kind")
+        for season, x in seasons.items():
+            _factor(x, f"seasons.{kind}.{season}")
+    if _factor(t["vialux"], "vialux") is None or t["vialux"] > 1:
+        raise ValueError("routing: vialux must be a factor in (0, 1]")
+    if not isinstance(t["default_mode"], str) or t["default_mode"] not in t["modes"]:
+        raise ValueError(f"routing: default_mode {t['default_mode']!r} isn't a mode")
+    return t
+
+
+def cost(route: dict, travel: Travel | None, table: dict | None) -> float | None:
+    """A route's days for this traveller (the file's days with no traveller), or None: they can't take it."""
+    if route.get("open", True) is False:
+        return None
+    if travel is None or table is None:
+        return route["days"]
+    kind = route.get("kind", "road")
+    if travel.marks & set(route.get("barred") or ()):
+        return None
+    if kind in table["water"]:
+        x = table["water"][kind]
+    else:
+        x = (table["modes"].get(travel.mode) or {}).get(kind)
+    if x is None:
+        return None
+    seasons = table["seasons"].get(kind) or {}
+    if travel.season in seasons:
+        if seasons[travel.season] is None:
+            return None
+        x *= seasons[travel.season]
+    if route.get("vialux") and kind not in table["water"]:  # (the lit road, not the boats)
+        x *= table["vialux"]
+    return route["days"] * x
+
+
 # ------------------------------------------------------------ paths
 
 
-def _adjacency(routes) -> dict[str, list[tuple[str, int]]]:
-    adj: dict[str, list[tuple[str, int]]] = {}
+def _adjacency(routes, travel=None, table=None) -> dict[str, list[tuple[str, float]]]:
+    adj: dict[str, list[tuple[str, float]]] = {}
     for r in routes:
-        if r.get("open", True) is False:
+        d = cost(r, travel, table)
+        if d is None:
             continue
         a, b = r["ends"]
-        adj.setdefault(a, []).append((b, r["days"]))
-        adj.setdefault(b, []).append((a, r["days"]))
+        adj.setdefault(a, []).append((b, d))
+        adj.setdefault(b, []).append((a, d))
     return adj
 
 
-def _search(routes, start: str, goal: str | None, max_days: int | None):
-    adj, done = _adjacency(routes), {}
+def _days(d) -> int:
+    """Whole days: part of a day rounds up (a costed path's float, or the file's int unchanged)."""
+    return d if isinstance(d, int) else max(1, math.ceil(d - 1e-9)) if d > 0 else 0
+
+
+def _search(routes, start: str, goal: str | None, max_days: int | None, travel=None, table=None):
+    adj, done = _adjacency(routes, travel, table), {}
     heap = [(0, [start])]
     while heap:
         days, path = heapq.heappop(heap)
         at = path[-1]
         if at in done:
             continue
-        done[at] = (days, path)
+        done[at] = (_days(days), path)
         if at == goal:
             break
         for nxt, d in adj.get(at, ()):
-            if nxt not in done and (max_days is None or days + d <= max_days):
+            if nxt not in done and (max_days is None or _days(days + d) <= max_days):
                 heapq.heappush(heap, (days + d, path + [nxt]))
     return done
 
 
-def shortest(routes, a: str, b: str) -> tuple[int, list[str]] | None:
-    """(days, [place ids from a to b]) by the fewest days, or None if there's no way."""
-    return _search(routes, a, b, None).get(b)
+def shortest(routes, a: str, b: str, travel: Travel | None = None,
+             table: dict | None = None) -> tuple[int, list[str]] | None:
+    """(days, [place ids from a to b]) by the fewest days, or None if there's no way. With a traveller
+    and a routing table, by their days (part days round up)."""
+    return _search(routes, a, b, None, travel, table).get(b)
 
 
-def within(routes, a: str, max_days: int | None) -> dict[str, int]:
+def within(routes, a: str, max_days: int | None, travel: Travel | None = None,
+           table: dict | None = None) -> dict[str, int]:
     """Every place reachable from `a` in at most `max_days` (any distance if None), with its days."""
-    return {p: d for p, (d, _) in _search(routes, a, None, max_days).items()}
+    return {p: d for p, (d, _) in _search(routes, a, None, max_days, travel, table).items()}
 
 
-def _routes(ctx) -> list[dict]:
-    return [{"ends": ctx.get(r, "ends"), "days": ctx.get(r, "days"), "open": ctx.get(r, "open")}
-            for r in ctx.ids("route")]
+def _routes(ctx, routed: bool = False) -> list[dict]:
+    """The routes as `cost` reads them (their kind, Vialux and bars only when routing: an M1 run reads
+    just what it always did)."""
+    out = []
+    for r in ctx.ids("route"):
+        rec = {"ends": ctx.get(r, "ends"), "days": ctx.get(r, "days"), "open": ctx.get(r, "open")}
+        if routed:
+            rec.update(kind=ctx.get(r, "kind"), vialux=ctx.get(r, "vialux"), barred=ctx.get(r, "barred"))
+        out.append(rec)
+    return out
 
 
-def path(ctx, a: str, b: str) -> tuple[int, list[str]] | None:
-    return shortest(_routes(ctx), a, b)
+def traveller(ctx, who: str | None) -> tuple[Travel | None, dict | None]:
+    """How `who` travels today, in a world with `routing` (their `travels` mode, else the table's
+    default; their `marks`); (None, None) without routing or a traveller, so the file's days apply."""
+    table = ctx.params.get("routing")
+    if not table or who is None:
+        return None, None
+    names = {n for n, _ in ctx.calendar.seasons}
+    odd = sorted({s for seasons in table["seasons"].values() for s in seasons} - names)
+    if odd:
+        raise ValueError(f"routing: seasons {odd} aren't this calendar's ({', '.join(sorted(names))})")
+    mode = ctx.get(who, "travels") or table["default_mode"]
+    if mode not in table["modes"]:
+        raise ValueError(f"{who} travels by {mode!r}, which isn't a mode in the routing table")
+    return Travel(mode, ctx.calendar.season_name(ctx.today), frozenset(ctx.get(who, "marks") or ())), table
 
 
-def reach(ctx, a: str, max_days: int | None) -> dict[str, int]:
-    return within(_routes(ctx), a, max_days)
+def path(ctx, a: str, b: str, who: str | None = None) -> tuple[int, list[str]] | None:
+    """The way from a to b; for `who` in a world with routing, by how they travel today."""
+    travel, table = traveller(ctx, who)
+    return shortest(_routes(ctx, travel is not None), a, b, travel, table)
+
+
+def reach(ctx, a: str, max_days: int | None, who: str | None = None) -> dict[str, int]:
+    travel, table = traveller(ctx, who)
+    return within(_routes(ctx, travel is not None), a, max_days, travel, table)
 
 
 # ------------------------------------------------------------ in a run
@@ -251,4 +403,5 @@ def cast(engine, doc: dict) -> None:
             engine.cast("place", p["id"], {"name": p.get("name", p["id"]), "kind": p["kind"], "region": p["region"]})
     for r in doc.get("routes", []):
         engine.cast("route", r["id"], {"ends": list(r["ends"]), "days": r["days"], "kind": r["kind"],
-                                       "vialux": bool(r.get("vialux", False)), "open": r.get("open", True)})
+                                       "vialux": bool(r.get("vialux", False)), "open": r.get("open", True),
+                                       **({"barred": list(r["barred"])} if r.get("barred") else {})})
