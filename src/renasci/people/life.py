@@ -59,7 +59,8 @@ def world_params(races: list, catalogue: dict, house_from: str = "father", kin_d
                  traits: dict | None = None, ambitions: list | None = None,
                  married_share: float = 0.7, demote_rate: float = 0.2, commoner_after: int = 6,
                  commoner_rate: float = 0.3, tie_rate: float = 0.08, scheme_rate: float = 0.5,
-                 exposure_base: float = 0.15, wound_years: int = 10, needs: dict | None = None) -> dict:
+                 exposure_base: float = 0.15, wound_years: int = 10, needs: dict | None = None,
+                 flee_days: int | None = None, migration_rate: float | None = None) -> dict:
     """Ruleset params for the people systems, checked now rather than at the first activation."""
     if type(kin_degree) is not int or kin_degree < 0:
         raise ValueError("kin_degree must be a non-negative int")
@@ -91,6 +92,14 @@ def world_params(races: list, catalogue: dict, house_from: str = "father", kin_d
         params["traits"] = traits
     if ambitions is not None:
         params["ambitions"] = list(ambitions)
+    if flee_days is not None:  # (S4 §5; only when set, so worlds without routes keep their params)
+        if type(flee_days) is not int or flee_days < 1:
+            raise ValueError(f"flee_days must be a positive int, got {flee_days!r}")
+        params["flee_days"] = flee_days
+    if migration_rate is not None:
+        if type(migration_rate) not in (int, float) or not 0 <= migration_rate <= 1:
+            raise ValueError(f"migration_rate must be a probability, got {migration_rate!r}")
+        params["migration_rate"] = migration_rate
     if needs is not None:  # {wound kind: phrase} (world data, S7 §7)
         if not isinstance(needs, dict) or not all(isinstance(k, str) and isinstance(v, str) for k, v in needs.items()):
             raise ValueError("needs maps wound kinds to phrases")
@@ -127,6 +136,8 @@ def die(ctx, person: str, settlement: str, cause: str, *, killer: str | None = N
                      actor=person, place=settlement, causes=causes,
                      payload={"age": age_years(ctx.calendar, ctx.get(person, "born"), ctx.today), "cause": cause})
     ctx.set_status(person, "dead")
+    if ctx.get(person, "journey"):  # a death on the road ends the journey (S4 §5)
+        ctx.set(person, "journey", None)
     ctx.set(settlement, "residents", [p for p in ctx.get(settlement, "residents") if p != person])
     spouse = ctx.get(person, "spouse")
     if spouse:
@@ -164,9 +175,9 @@ _AMBITION_READS = frozenset({"ambitions", "cooldowns", "owner", "class", "state"
 _AMBITION_WRITES = frozenset({"ambitions", "cooldowns", "state", "resolved", "scheme"})
 DIE_EVENTS = (DEATH, NEAR_MISS, _RESOLVED) + houses.EVENT_TYPES + (ties.TIE_ENDED,)
 DIE_READS = (frozenset({"born", "residents", "spouse", "status", "flow:*", "mother", "father", "children", "grievances",
-                         "need"})
+                         "need", "journey"})
              | houses.READS | ties.READS | _AMBITION_READS)
-DIE_WRITES = frozenset({"status", "residents", "spouse", "flow:*", "grievances", "wound", "need"}) | houses.WRITES | ties.WRITES | _AMBITION_WRITES
+DIE_WRITES = frozenset({"status", "residents", "spouse", "flow:*", "grievances", "wound", "need", "journey"}) | houses.WRITES | ties.WRITES | _AMBITION_WRITES
 
 
 class Life(System):

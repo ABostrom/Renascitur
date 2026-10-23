@@ -27,7 +27,8 @@ from __future__ import annotations
 import math
 
 from renasci.core.events import Cause, EventType
-from renasci.people import families, life, minds, population
+from renasci import geo
+from renasci.people import families, life, minds, population, travel
 from renasci.people.ambitions import trait
 from renasci.people.races import age_years
 
@@ -60,6 +61,26 @@ class Action:
     stakes = 1.0
     reads: frozenset[str] = frozenset()
     writes: frozenset[str] = frozenset()
+    present = False  # the actor must go where the target lives (S4 §6)
+
+    def road(self, ctx, actor, target) -> int | None:
+        """The days to the target's settlement for an action done in person: 0 when there's no need (or no
+        geography), None when there's no way there."""
+        if not self.present or target is None or not travel.has_routes(ctx):
+            return 0
+        here, there = ctx.get(actor, "place"), ctx.get(target, "place")
+        if here == there:
+            return 0
+        found = geo.path(ctx, here, there)
+        return None if found is None else found[0]
+
+    def duration(self, ctx, actor, target) -> int:
+        """How long a step of this action takes: its own time plus, in person, the road there."""
+        return self.duration_days + (self.road(ctx, actor, target) or 0)
+
+    def feasible(self, ctx, actor, target, scheme) -> bool:
+        """Possible now, and (in person) there's a road to the target: what the planner and `perform` ask."""
+        return self.possible(ctx, actor, target, scheme) and self.road(ctx, actor, target) is not None
 
     def possible(self, ctx, actor, target, scheme) -> bool:
         return _alive(ctx, actor) and (target is None or (_alive(ctx, target) and target != actor))
@@ -128,7 +149,7 @@ class Court(Action):
         lo, hi = races[ctx.get(actor, "race")].marriage
         kin = families.ancestors(ctx, actor, 2)
         return [p for p in ctx.get(home, "residents") if p != actor and ctx.get(p, "sex") != sex
-                and ctx.get(p, "spouse") is None and lo <= age_years(ctx.calendar, ctx.get(p, "born"), ctx.today) <= hi
+                and ctx.get(p, "spouse") is None and not ctx.get(p, "journey") and lo <= age_years(ctx.calendar, ctx.get(p, "born"), ctx.today) <= hi
                 and p not in kin and not (families.ancestors(ctx, p, 2) & kin) and actor not in families.ancestors(ctx, p, 2)]
 
     def _masses_can(self, ctx, actor) -> bool:
@@ -142,7 +163,7 @@ class Court(Action):
 
     def possible(self, ctx, actor, target, scheme):  # only when someone could be won: success means married
         return (_alive(ctx, actor) and ctx.get(actor, "spouse") is None and _adult(ctx, actor)
-                and (bool(self._free(ctx, actor)) or self._masses_can(ctx, actor)))
+                and not ctx.get(actor, "journey") and (bool(self._free(ctx, actor)) or self._masses_can(ctx, actor)))
 
     def odds(self, ctx, actor, target, scheme):
         return 0.5 + 0.3 * trait(ctx, actor, "charm")
@@ -161,6 +182,7 @@ class Court(Action):
 
 class Poison(Action):
     name, requires, achieves, secrecy, duration_days, stakes = "Poison", frozenset({"accomplice"}), "dead:{target}", 0.5, 120, 2.0
+    present = True
 
     def odds(self, ctx, actor, target, scheme):
         return 0.35 + 0.3 * trait(ctx, actor, "wits")
@@ -176,6 +198,7 @@ class Poison(Action):
 class Assassinate(Action):
     name, requires, achieves, secrecy, duration_days, stakes = ("Assassinate", frozenset({"accomplice"}),
                                                                  "dead:{target}", 0.4, 90, 2.0)
+    present = True
 
     def odds(self, ctx, actor, target, scheme):
         return 0.3 + 0.3 * trait(ctx, actor, "wits")
@@ -192,6 +215,7 @@ class Duel(Action):
     """An open challenge. Winning kills the other, by a known hand; losing kills or shames the challenger."""
 
     name, achieves, duration_days, stakes = "Duel", "dead:{target}", 30, 2.0
+    present = True
 
     def possible(self, ctx, actor, target, scheme):
         return super().possible(ctx, actor, target, scheme) and target is not None and _adult(ctx, actor) \
@@ -229,24 +253,36 @@ class Shame(Action):
 
 
 class Flee(Action):
-    """Leave home for another settlement of the region (S4 brings real journeys)."""
+    """Leave home: by road to any settlement within `flee_days` (S4 §5), else, in a world without routes,
+    at once to another settlement of the region. The step is the decision; the journey takes the road's days."""
 
-    name, achieves, duration_days = "Flee", "safe", 30
+    name, achieves, duration_days = "Flee", "safe", 30  # at once, in a world without routes
+    deciding_days = 7  # with routes: the decision; the journey carries the road's days
+
+    def duration(self, ctx, actor, target) -> int:
+        return self.deciding_days if travel.has_routes(ctx) else self.duration_days
 
     def _elsewhere(self, ctx, actor):
         home = ctx.get(actor, "place")
+        if travel.has_routes(ctx):
+            return list(travel.destinations(ctx, home, int(ctx.params.get("flee_days", travel.FLEE_DAYS))))
         region = ctx.get(home, "region")
         return [s for s in ctx.ids("settlement") if s != home and ctx.get(s, "region") == region]
 
     def possible(self, ctx, actor, target, scheme):  # not the married, nor those who hold office (S4: families travel)
         return (_alive(ctx, actor) and ctx.get(actor, "spouse") is None and not ctx.get(actor, "offices")
-                and bool(self._elsewhere(ctx, actor)))
+                and not ctx.get(actor, "journey") and bool(self._elsewhere(ctx, actor)))
 
     def odds(self, ctx, actor, target, scheme):
         return 0.8
 
     def succeed(self, ctx, actor, target, scheme, event):
         home = ctx.get(actor, "place")
+        if travel.has_routes(ctx):
+            options = travel.destinations(ctx, home, int(ctx.params.get("flee_days", travel.FLEE_DAYS)))
+            new = ctx.choose("flee", list(options), owner=scheme or actor, weights=[1.0 / d for d in options.values()])
+            travel.depart(ctx, actor, new, "flee", causes=(Cause("event", event),) if event else ())
+            return
         new = ctx.choose("flee", self._elsewhere(ctx, actor), owner=scheme or actor)
         ctx.set(home, "residents", [p for p in ctx.get(home, "residents") if p != actor])
         ctx.set(new, "residents", sorted(ctx.get(new, "residents") + [actor]))
@@ -290,15 +326,16 @@ ACTIONS = library()
 
 READS = (life.DIE_READS | families.Marriage.reads | population.COLUMN_READS | frozenset({
     "favour", "wound", "place", "residents", "region", "accomplices", "state", "born", "traits", "race", "sex",
-    "spouse", "mother", "father", "ids:settlement", "offices", "plan", "step"}))
-WRITES = (life.DIE_WRITES | families.Marriage.writes | frozenset({"favour", "wound", "need", "accomplices", "state"}))
-EVENT_TYPES = (ACTION,) + life.DIE_EVENTS + (families.MARRIAGE,) + population.LOD_TYPES
+    "spouse", "mother", "father", "ids:settlement", "offices", "plan", "step"}) | travel.READS)
+WRITES = (life.DIE_WRITES | families.Marriage.writes | travel.WRITES
+          | frozenset({"favour", "wound", "need", "accomplices", "state"}))
+EVENT_TYPES = (ACTION,) + life.DIE_EVENTS + (families.MARRIAGE,) + population.LOD_TYPES + travel.EVENT_TYPES
 
 
 def perform(ctx, action: Action, actor: str, target: str | None, scheme: str | None = None,
             odds: float | None = None) -> str:
     """One attempt at `action`: "impossible", "exposed", "success" or "failure" (see the module doc)."""
-    if not action.possible(ctx, actor, target, scheme):
+    if not action.feasible(ctx, actor, target, scheme):
         return "impossible"
     owner = scheme or actor
     roles = {"actor": (actor,), "target": (target,) if target else ()}

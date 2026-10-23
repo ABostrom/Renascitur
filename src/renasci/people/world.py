@@ -15,12 +15,16 @@ from renasci.people.minds import Minds
 from renasci.people.schemes import Schemes
 from renasci.people.population import Lod, Population, conservation
 from renasci.people.ties import Ties
+from renasci.people.travel import Migration
 
 
 def people_ruleset(name: str, scenario: dict, version: int = 1) -> Ruleset:
     params = world_params(scenario["races"], scenario["catalogue"], aggregates=True,
                           **{k: v for k, v in scenario.get("params", {}).items() if k != "aggregates"})
-    return Ruleset(name, version, (Population(), Births(), Life(), Marriage(), Houses(), Lod(), Ties(), Drives(), Ambitions(),
-                                    Schemes(), Minds()),
+    systems = (Population(), Births(), Life(), Marriage(), Houses(), Lod(), Ties(), Drives(), Ambitions(), Schemes(),
+               Minds())
+    if scenario.get("geography"):  # journeys need routes (S4 §5)
+        systems += (Migration(),)
+    return Ruleset(name, version, systems,
                    params=params, forcers=FORCERS, disguises=(Illness(),),
                    conservation=conservation(Catalogue.from_json(scenario["catalogue"])))
