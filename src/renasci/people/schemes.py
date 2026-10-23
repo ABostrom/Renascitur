@@ -221,7 +221,7 @@ def step(ctx, scheme: str) -> None:
         resolve(ctx, amb, "abandoned", causes=(Cause("event", event),))
     elif outcome == "impossible":
         _fail(ctx, scheme, owner, amb)
-    elif outcome == "failure":
+    elif outcome in ("failure", "foiled"):
         retries = int(ctx.get(scheme, "retries") or 0) + 1
         if retries <= action.retries:
             ctx.set(scheme, "retries", retries)

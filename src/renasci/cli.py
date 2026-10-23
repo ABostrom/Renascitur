@@ -6,10 +6,12 @@
     renasci inspect <run-folder> (--event <id> | --entity <id>)
     renasci bench [--years 300] [--people 100] [--history bench/history.csv]
     renasci observe [runs] [--port 8765]           (the Observatory, read-only, on localhost)
+    renasci latch <run-folder> [--top 10] [--launch N] [--out runs]
 
 `run` writes a run folder with a checkpoint every N years. `replay` forks a run at the latest
 checkpoint before the first changed ripple (or `--from`), restores, and continues with the new
-recipe. `diff` explains every difference between two runs (no unexplained divergence).
+recipe. `diff` explains every difference between two runs (no unexplained divergence). `latch` ranks
+the run's latch points into `analysis/latch.json`; `--launch N` replays point N as a what-if and diffs it.
 """
 
 from __future__ import annotations
@@ -26,6 +28,7 @@ import time
 from pathlib import Path
 
 from renasci.analysis.divergence import analyse
+from renasci.analysis.latch import latch_points
 from renasci.core.calendar import Date
 from renasci.io.checkpoint import load_checkpoint, save_checkpoint
 from renasci.io.recipe import load_recipe, parse_recipe
@@ -64,21 +67,31 @@ def _open_complete(path) -> RunFolder:
 
 
 def cmd_run(args) -> int:
-    recipe = load_recipe(args.recipe)
-    world = get_world(recipe.world)
-    engine = world.new_engine(recipe.seed, ripples=recipe.ripples, **recipe.params)
-    engine.full_reads = recipe.full_reads
-    folder = RunFolder.create(Path(args.out) / recipe.name, {"recipe": recipe.raw, "complete": False,
-                                                             "calendar": world.calendar.to_json()})
-    _finish(engine, folder, recipe)
-    print(f"run {recipe.name}: {folder.manifest['segments']} segments, state {folder.manifest['meta']['state_hash']}")
+    _run(load_recipe(args.recipe), Path(args.out))
     return 0
 
 
+def _run(recipe, out: Path) -> Path:
+    world = get_world(recipe.world)
+    engine = world.new_engine(recipe.seed, ripples=recipe.ripples, **recipe.params)
+    engine.full_reads = recipe.full_reads
+    folder = RunFolder.create(out / recipe.name, {"recipe": recipe.raw, "complete": False,
+                                                  "calendar": world.calendar.to_json()})
+    _finish(engine, folder, recipe)
+    print(f"run {recipe.name}: {folder.manifest['segments']} segments, state {folder.manifest['meta']['state_hash']}")
+    return folder.path
+
+
 def cmd_replay(args) -> int:
-    base = _open_complete(args.run)
+    _replay(Path(args.run), load_recipe(args.recipe), Path(args.out), args.from_)
+    return 0
+
+
+def _replay(run: Path, new, out: Path, from_: str | None = None, rerun: bool = False) -> Path:
+    """Fork `run` at the checkpoint before the first changed ripple (or `from_`) and finish it with `new`.
+    With `rerun`, a change before the first checkpoint runs `new` from the start instead of refusing."""
+    base = _open_complete(run)
     old = parse_recipe(base.manifest["meta"]["recipe"])
-    new = load_recipe(args.recipe)
     world = get_world(new.world)
 
     def without_name_and_ripples(raw):  # full_reads only changes what is recorded, not what happens
@@ -88,8 +101,8 @@ def cmd_replay(args) -> int:
     if without_name_and_ripples(old.raw) != without_name_and_ripples(new.raw):
         raise ValueError("a replay may only change ripples, the run name and full_reads; "
                          "for anything else, `renasci run`")
-    if args.from_:
-        target = world.calendar.parse(args.from_)
+    if from_:
+        target = world.calendar.parse(from_)
     else:
         def key(r):
             return json.dumps(r.to_json(), sort_keys=True)
@@ -99,6 +112,8 @@ def cmd_replay(args) -> int:
         changed += [r.date for r in old.ripples if key(r) not in after]  # removed or changed: old date
         target = min(changed) if changed else new.end
     marks = [m for m in base.manifest["marks"] if Date.from_json(m["before"]) <= target]
+    if not marks and rerun:
+        return _run(new, out)
     if not marks:
         raise ValueError(f"no checkpoint at or before {world.calendar.format(target)}; use `renasci run`")
     mark = marks[-1]
@@ -106,12 +121,12 @@ def cmd_replay(args) -> int:
     cp = load_checkpoint(base.path / "checkpoints" / f"{at.age}-{at.year}-{at.day}.json.gz")
     engine = world.restore(cp, new.seed, ripples=new.ripples, **new.params)
     engine.full_reads = new.full_reads
-    folder = RunFolder.fork(base.path, Path(args.out) / new.name, keep=mark["segment"] + 1,
+    folder = RunFolder.fork(base.path, out / new.name, keep=mark["segment"] + 1,
                             meta={"recipe": new.raw, "complete": False, "calendar": world.calendar.to_json(),
                                   "replayed_from": {"run": base.path.name, "at": mark["before"]}})
     _finish(engine, folder, new, after=at)
     print(f"replayed {new.name} from {base.path.name} at {world.calendar.format(at)}")
-    return 0
+    return folder.path
 
 
 def _load(path: Path) -> tuple[dict, dict, dict]:
@@ -123,7 +138,10 @@ def _load(path: Path) -> tuple[dict, dict, dict]:
 
 
 def cmd_diff(args) -> int:
-    a_path, b_path = Path(args.a), Path(args.b)
+    return _diff(Path(args.a), Path(args.b))
+
+
+def _diff(a_path: Path, b_path: Path) -> int:
     a, sa, ra = _load(a_path)
     b, sb, rb = _load(b_path)
     ripples = sorted({i for i in set(ra) | set(rb) if ra.get(i) != rb.get(i)})
@@ -140,6 +158,39 @@ def cmd_diff(args) -> int:
         print(f"  unexplained: {e['type']} {e['date']} {e['roles']}")
     clean = report["unexplained_events"] == report["unexplained_entities"] == report["unexplained_cells"] == 0
     return 0 if clean else 3  # 3, not 2: argparse uses 2 for usage errors
+
+
+def cmd_latch(args) -> int:
+    run = Path(args.run)
+    rf = _open_complete(run)
+    raw = rf.manifest["meta"]["recipe"]
+    world = get_world(raw["run"]["world"])
+    state = json.loads(gzip.decompress((run / "state.json.gz").read_bytes()))
+    points = latch_points(list(rf.read("events")), list(rf.read("hinges")), state,
+                          days_per_year=world.calendar.days_per_year)
+    (run / "analysis").mkdir(exist_ok=True)
+    (run / "analysis" / "latch.json").write_text(json.dumps({"run": run.name, "points": points}, indent=1),
+                                                 encoding="utf-8")
+    cal = world.calendar
+    for p in points[:args.top]:
+        r = p["ripple"]
+        print(f"{p['rank']:>3}. {p['score']:7.3f}  {cal.format(Date.from_json(p['date']), 'day')}  {p['person']}  "
+              f"{p['kind']}: {p['why']}  -> {r['kind']} ({p['means']})")
+    if args.launch is None:
+        return 0
+    point = next((p for p in points if p["rank"] == args.launch), None)
+    if point is None:
+        raise ValueError(f"no latch point {args.launch} (there are {len(points)})")
+    r = point["ripple"]
+    variant = json.loads(json.dumps(raw))
+    variant["run"]["name"] = f"{raw['run']['name']}-latch{args.launch}"
+    variant["ripple"] = [{"id": f"latch{args.launch}", "kind": r["kind"],
+                          "date": cal.format(Date.from_json(r["date"]), "day"), "target": r["target"],
+                          **({"params": r["params"]} if r["params"] else {})}]
+    if raw.get("ripple"):
+        raise ValueError("launch latch points from a run without ripples (a baseline)")
+    path = _replay(run, parse_recipe(variant), Path(args.out), rerun=True)
+    return _diff(run, path)
 
 
 def cmd_inspect(args) -> int:
@@ -258,6 +309,11 @@ def main(argv=None) -> int:
     target = p.add_mutually_exclusive_group(required=True)
     target.add_argument("--event")
     target.add_argument("--entity")
+    p = sub.add_parser("latch", help="rank a run's latch points; --launch N replays one as a what-if and diffs it")
+    p.add_argument("run")
+    p.add_argument("--top", type=int, default=10)
+    p.add_argument("--launch", type=int, default=None)
+    p.add_argument("--out", default="runs")
     p = sub.add_parser("observe", help="serve the Observatory and a runs folder, read-only, on localhost")
     p.add_argument("runs", nargs="?", default="runs")
     p.add_argument("--port", type=int, default=8765)
@@ -272,7 +328,7 @@ def main(argv=None) -> int:
     p.add_argument("--out", default="runs/_bench")
     args = parser.parse_args(argv)
     try:
-        commands = {"run": cmd_run, "replay": cmd_replay, "diff": cmd_diff, "inspect": cmd_inspect, "bench": cmd_bench,
+        commands = {"run": cmd_run, "replay": cmd_replay, "diff": cmd_diff, "inspect": cmd_inspect, "bench": cmd_bench, "latch": cmd_latch,
                     "observe": cmd_observe}
         return commands[args.command](args)
     except (ValueError, FileExistsError, FileNotFoundError) as err:

@@ -10,7 +10,7 @@ from renasci.people.drives import Drives
 from renasci.people.families import Marriage
 from renasci.people.genome import Catalogue
 from renasci.people.houses import Houses
-from renasci.people.life import Births, Life, world_params
+from renasci.people.life import Births, Illness, Life, world_params
 from renasci.people.minds import Minds
 from renasci.people.schemes import Schemes
 from renasci.people.population import Lod, Population, conservation
@@ -22,5 +22,5 @@ def people_ruleset(name: str, scenario: dict, version: int = 1) -> Ruleset:
                           **{k: v for k, v in scenario.get("params", {}).items() if k != "aggregates"})
     return Ruleset(name, version, (Population(), Births(), Life(), Marriage(), Houses(), Lod(), Ties(), Drives(), Ambitions(),
                                     Schemes(), Minds()),
-                   params=params, forcers=FORCERS,
+                   params=params, forcers=FORCERS, disguises=(Illness(),),
                    conservation=conservation(Catalogue.from_json(scenario["catalogue"])))
