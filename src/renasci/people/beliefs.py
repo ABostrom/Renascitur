@@ -35,11 +35,18 @@ someone the holder talks to, who holds it openly. Leaks come before the season's
 budget (they're rare). A kept secret doesn't fade. When a schemer is **exposed**, `reveal` brings out the
 killings they hid: public evidence that corrects the cover for bystanders and the victim's kin.
 
+**The masses** (§9, #88): each settlement's `shares` (`{claim key: {claim, share}}`, the share of its
+masses holding each claim) move each season a step (`MASSES_FOLLOW`) toward its notables' mean confidence
+(secrets aside), are scaled down within a topic so they never sum past 1, dropped under `SHARE_FLOOR`,
+and capped at `SHARE_CAP` (`shares_step`, pure).
+
 All of this runs only in a world whose params say `beliefs: true` (`enabled`): elsewhere history is as
 it was. Systems that may perceive declare `PERCEIVE_READS`, `PERCEIVE_WRITES` and `EVENT_TYPES`.
 """
 
 from __future__ import annotations
+
+import math
 
 from renasci.core.calendar import Date
 from renasci.core.canon import digest
@@ -50,6 +57,7 @@ BELIEF_CAP, WITNESS_CAP = 16, 3
 PARTICIPANT_CONF, BYSTANDER_CONF, CORRECTION_CONF = 0.9, 0.5, 0.85
 TELL_CAP, SETTLEMENT_TELLS, DRIFT_RATE = 2, 40, 0.08
 LEAK_ACTOR, LEAK_ACCOMPLICE = 0.02, 0.08  # a season's chance that a secret slips out (S6 §5)
+MASSES_FOLLOW, SHARE_CAP, SHARE_FLOOR = 0.25, 12, 0.01  # belief shares among the masses (S6 §9)
 DECAY_YEARS, DECAY_STEP, FORGET_BELOW = 10, 0.1, 0.1
 TRUST = {"mentor": 0.8, "friend": 0.7, "lover": 0.7, "rival": 0.3, "enemy": 0.1, "kin": 0.8}
 CLOSENESS_KIN = 0.5  # (household: spouse, parents and children living together)
@@ -62,7 +70,8 @@ CORRECTED = EventType("belief.corrected", 1, roles={"holder": (1, 1)},
                       payload={"claim": "json", "key": "str", "conf": "float"})
 FADED = EventType("belief.faded", 1, roles={"settlement": (1, 1)}, payload={"faded": "int"})
 REINFORCED = EventType("belief.reinforced", 1, roles={"settlement": (1, 1)}, payload={"people": "int"})
-EVENT_TYPES = (PERCEIVED, TOLD, CORRECTED, FADED, REINFORCED)
+SHARES = EventType("belief.shares", 1, roles={"settlement": (1, 1)}, payload={"claims": "int"})
+EVENT_TYPES = (PERCEIVED, TOLD, CORRECTED, FADED, REINFORCED, SHARES)
 PERCEIVE_READS = frozenset({"beliefs", "residents", "status"})
 PERCEIVE_WRITES = frozenset({"beliefs"})
 
@@ -341,8 +350,8 @@ class Gossip(System):
     name, cadence = "beliefs.gossip", "seasonal"
     priority = 9  # after minds (8)
     reads = frozenset({"ids:settlement", "residents", "beliefs", "journey", "status", "ties", "a", "b", "kind",
-                       "strength", "ended", "spouse", "mother", "father", "children", "traits", "house"})
-    writes = frozenset({"beliefs"})
+                       "strength", "ended", "spouse", "mother", "father", "children", "traits", "house", "shares"})
+    writes = frozenset({"beliefs", "shares"})
     event_types = EVENT_TYPES
 
     def run(self, ctx):
@@ -358,6 +367,7 @@ class Gossip(System):
                 if yearly:
                     self._fade(ctx, s, residents)
                 self._gossip(ctx, s, residents, trait)
+                self._masses(ctx, s, residents)
 
     def _gossip(self, ctx, settlement: str, residents: list[str], trait) -> None:
         here = set(residents)
@@ -410,6 +420,14 @@ class Gossip(System):
             leaked += tell(ctx, teller, to, b["claim"], trust, conf=b["conf"], cause=b["from"], intent="leak",
                            place=settlement)
         return leaked
+
+    def _masses(self, ctx, settlement: str, residents: list[str]) -> None:
+        before = ctx.get(settlement, "shares") or {}
+        after = shares_step(before, {p: ctx.get(p, "beliefs") or {} for p in residents})
+        if shares_changed(before, after):
+            ctx.emit("belief.shares", {"settlement": (settlement,)}, purpose="shares", actor=settlement,
+                     payload={"claims": len(after)})
+            ctx.set(settlement, "shares", after)
 
     def _reinforce(self, ctx, settlement: str, again: dict) -> None:
         today = ctx.today.to_json()
@@ -466,3 +484,50 @@ def reveal(ctx, owner: str, cause_event: str, settlement: str | None) -> list[st
         for p in [*told, *(x for x in kin if x not in told)]:
             correct(ctx, p, c, cause_event)  # (an accomplice among them knew already: no longer a secret)
     return hidden
+
+
+def shares_step(shares: dict, people: dict) -> dict:
+    """One season of the masses (§9): `shares` moved toward the mean confidence of `people` (each a
+    notable's beliefs; secrets aside) in each claim, scaled within each topic to sum to at most 1,
+    dropped under `SHARE_FLOOR`, capped at `SHARE_CAP`. Pure."""
+    n = max(1, len(people))
+    claims, sums = {}, {}
+    for beliefs in people.values():
+        for k, b in beliefs.items():
+            if b.get("secret"):
+                continue
+            claims[k] = b["claim"]
+            sums[k] = sums.get(k, 0.0) + b["conf"]
+    for k, s in shares.items():
+        claims.setdefault(k, s["claim"])
+    moved, target = {}, {}
+    for k in sorted(claims):
+        old = shares.get(k, {}).get("share", 0.0)
+        target[k] = sums.get(k, 0.0) / n
+        moved[k] = old + MASSES_FOLLOW * (target[k] - old)
+    by_topic: dict[str, list[str]] = {}
+    for k in moved:
+        by_topic.setdefault(topic(claims[k]), []).append(k)
+    for ks in by_topic.values():
+        total = sum(moved[k] for k in ks)
+        if total > 1:
+            for k in ks:
+                moved[k] /= total
+    # Rounded down, so a topic never sums past 1; dropped only when the share and where it is heading are
+    # both under the floor (a claim a few hold must be able to take hold, starting small).
+    kept = {k: math.floor(min(1.0, max(0.0, v)) * 1e4) / 1e4 for k, v in moved.items()
+            if v >= SHARE_FLOOR or target[k] >= SHARE_FLOOR}
+    kept = {k: v for k, v in kept.items() if v > 0}
+    top = sorted(kept, key=lambda k: (-kept[k], k))[:SHARE_CAP]
+    return {k: {"claim": claims[k], "share": kept[k]} for k in sorted(top)}
+
+
+SHARE_STEP = 0.005  # a move smaller than this isn't written (shares converge slowly; this bounds the writes)
+
+
+def shares_changed(before: dict, after: dict) -> bool:
+    """Whether a settlement's shares changed enough to write: a claim came or went, or one moved by
+    `SHARE_STEP` or more."""
+    if set(before) != set(after):
+        return True
+    return any(abs(after[k]["share"] - before[k]["share"]) >= SHARE_STEP for k in after)

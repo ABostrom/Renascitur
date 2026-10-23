@@ -115,7 +115,7 @@ When a **salient** world event happens, the system that emits it calls `beliefs.
 
 ## 9. Aggregates (#88)
 
-`beliefs.masses` runs each season. Each settlement's `shares` move toward its resident notables' mean confidence (`masses_follow`, default 0.25 a season), plus arriving news (§7), minus decay. Within each topic they are renormalised so they sum to at most 1, and capped at `share_cap`. With six settlements and a dozen claims each this is plain Python over a JSON field; vectorising waits until there are hundreds of settlements (M3). "Conserved" means no share leaves [0, 1] and no topic sums past 1, and a test checks both.
+`beliefs.masses` runs each season (as built, inside `beliefs.gossip`'s settlement scope, after the season's tellings; a share is written only when it moves by 0.005 or more, or a claim comes or goes). Each settlement's `shares` move toward its resident notables' mean confidence (`masses_follow`, default 0.25 a season), plus arriving news (§7), minus decay. Within each topic they are renormalised so they sum to at most 1, and capped at `share_cap`. With six settlements and a dozen claims each this is plain Python over a JSON field; vectorising waits until there are hundreds of settlements (M3). "Conserved" means no share leaves [0, 1] and no topic sums past 1, and a test checks both.
 
 ## 10. The ward failure (#90)
 
