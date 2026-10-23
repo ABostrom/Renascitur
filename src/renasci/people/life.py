@@ -139,6 +139,9 @@ def add_grievance(ctx, holder: str, against: str, event: str, kind: str) -> None
     ctx.set(holder, "grievances", grievances)
 
 
+KIN_CONF = 0.8  # how surely the victim's close kin take in how they died (S6: above the grievance bar)
+
+
 def die(ctx, person: str, settlement: str, cause: str, *, killer: str | None = None, causes=(),
         cover: bool = False, knew=()) -> bool:
     """A death and what it undoes: the record, the settlement's roster, the spouse's marriage.
@@ -165,7 +168,8 @@ def die(ctx, person: str, settlement: str, cause: str, *, killer: str | None = N
     if killer:  # an attributed killing: the victim's close kin hold it against the killer (S7 §7)
         for kin in grieving(ctx, person):
             if kin != killer:  # (a son who kills his father in a duel holds nothing against himself)
-                add_grievance(ctx, kin, killer, death.id, "killed")
+                if not beliefs.enabled(ctx):  # (with beliefs, the grievance follows what they believe: S6 §8)
+                    add_grievance(ctx, kin, killer, death.id, "killed")
                 minds.wound(ctx, kin, "grief", death.id)
     ties.end_ties(ctx, person, "death")
     from renasci.people import ambitions
@@ -174,7 +178,8 @@ def die(ctx, person: str, settlement: str, cause: str, *, killer: str | None = N
     if beliefs.enabled(ctx) and (killer or cover):  # (S6: an attributed death is seen for what it was; a
         kin = tuple(grieving(ctx, person))          # covered one, as its cover: a secret killer knows better)
         said = beliefs.claim("killed", victim=person, by=killer or cause)
-        beliefs.perceive(ctx, death.id, settlement, [killer] if killer else [], said, also=kin, exclude=knew)
+        beliefs.perceive(ctx, death.id, settlement, [killer] if killer else [], said, also=kin, exclude=knew,
+                         also_conf=KIN_CONF)
     return True
 
 

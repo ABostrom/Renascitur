@@ -29,6 +29,13 @@ the settlement's most salient beliefs first, at most `TELL_CAP` per teller and `
 settlement a season. A belief heard again is refreshed (`belief.reinforced`); once a year, what nobody
 repeated for `DECAY_YEARS` fades a step (`belief.faded`).
 
+**Grievances follow belief** (§8, #155): taking on (or being corrected to) a firm belief that someone
+killed one's own (spouse, parent, child) holds it against them, right or wrong: a frame makes a feud
+with the wrong person (and so the wrong house). Only a person is held to account (a claim drifted onto a
+house names nobody to avenge), only for someone truly dead, never by one who knew it in secret (an
+accomplice), and a correction adds its grievance beside any earlier one. `life.die`'s known-killer rule
+gives way to this in a world with beliefs (`beliefs: true`).
+
 **Secrets** (§5, #89): a belief taken on from a secret event is marked `secret`. Gossip never tells it;
 it only **leaks**, a season's small chance (`LEAK_ACCOMPLICE`, or `LEAK_ACTOR` for the one who did it), to
 someone the holder talks to, who holds it openly. Leaks come before the season's gossip and outside its
@@ -89,10 +96,11 @@ NEWS_ARRIVED = EventType("belief.news_arrived", 1, roles={"settlement": (1, 1)},
 EVENT_TYPES = (PERCEIVED, TOLD, CORRECTED, FADED, REINFORCED, SHARES, NEWS, NEWS_ARRIVED, HEARD)
 # What telling a newcomer's tale touches (travel.arrive declares these for the systems that handle arrivals).
 ARRIVAL_READS = frozenset({"beliefs", "residents", "status", "journey", "ties", "a", "b", "kind", "strength",
-                           "ended", "spouse", "mother", "father", "children"})
-ARRIVAL_WRITES = frozenset({"beliefs"})
-PERCEIVE_READS = frozenset({"beliefs", "residents", "status"})
-PERCEIVE_WRITES = frozenset({"beliefs"})
+                           "ended", "spouse", "mother", "father", "children", "grievances"})
+ARRIVAL_WRITES = frozenset({"beliefs", "grievances"})
+GRIEVANCE_CONF = 0.5  # how sure the kin must be of who killed their own to hold it against them (§8)
+PERCEIVE_READS = frozenset({"beliefs", "residents", "status", "grievances", "mother", "father", "spouse", "children"})
+PERCEIVE_WRITES = frozenset({"beliefs", "grievances"})
 
 
 class Predicate:
@@ -257,11 +265,14 @@ def hold(ctx, person: str, c: dict, conf: float, cause_event: str, kind: str = "
                      causes=(Cause("event", cause_event),), visibility="secret" if secret else None)
     after[k] = {**after[k], "from": event.id}
     ctx.set(person, "beliefs", dict(sorted(after.items())))
+    if not secret:  # (one who knew it in secret was in on it: no grievance against a co-conspirator)
+        _grieve(ctx, person, c, conf, event.id)
     return True
 
 
 def perceive(ctx, event: str, settlement: str | None, participants, claim: dict, *, secret: bool = False,
-             bystander_claim: dict | None = None, also: tuple[str, ...] = (), exclude=()) -> list[str]:
+             bystander_claim: dict | None = None, also: tuple[str, ...] = (), exclude=(),
+             also_conf: float = BYSTANDER_CONF) -> list[str]:
     """Those in `event` believe `claim` firmly; for a public event, up to `WITNESS_CAP` bystanders of
     `settlement` (and anyone in `also`, such as the victim's kin) believe `bystander_claim` (else
     `claim`) less surely. Nobody in `exclude` (those who know better: a secret killer) is a bystander.
@@ -282,9 +293,13 @@ def perceive(ctx, event: str, settlement: str | None, participants, claim: dict,
         if w is None:
             break
         bystanders.append(w)
-    for w in [*bystanders, *(a for a in also if a not in seen and a not in bystanders)]:
+    for w in bystanders:
         if ctx.status(w) == "active":
             hold(ctx, w, bystander_claim or claim, BYSTANDER_CONF, event)
+            seen.append(w)
+    for w in (a for a in also if a not in seen):  # (the victim's kin: they hear of it surely)
+        if ctx.status(w) == "active":
+            hold(ctx, w, bystander_claim or claim, also_conf, event)
             seen.append(w)
     return seen
 
@@ -317,6 +332,7 @@ def correct(ctx, person: str, c: dict, cause_event: str, conf: float = CORRECTIO
     conf = round(max(conf, CORRECTION_CONF, held, *(beliefs[o]["conf"] for o in rivals)), 3)
     if not rivals and held >= conf and not (beliefs.get(k) or {}).get("secret"):
         return False  # (nothing to correct; but a secret made public is a change: it's no secret now)
+    was_secret = bool((beliefs.get(k) or {}).get("secret"))
     after = {o: b for o, b in beliefs.items() if o not in rivals}
     after[k] = {"claim": c, "conf": conf, "since": (beliefs.get(k) or {}).get("since", ctx.today.to_json()),
                 "from": "", "heard": ctx.today.to_json()}
@@ -326,6 +342,8 @@ def correct(ctx, person: str, c: dict, cause_event: str, conf: float = CORRECTIO
                      payload={"claim": c, "key": k, "conf": conf}, causes=(Cause("event", cause_event),))
     after[k] = {**after[k], "from": event.id}
     ctx.set(person, "beliefs", dict(sorted(_capped(after).items())))
+    if not was_secret:
+        _grieve(ctx, person, c, conf, event.id)
     return True
 
 
@@ -370,8 +388,8 @@ class Gossip(System):
     priority = 9  # after minds (8)
     reads = frozenset({"ids:settlement", "residents", "beliefs", "journey", "status", "ties", "a", "b", "kind",
                        "strength", "ended", "spouse", "mother", "father", "children", "traits", "house", "shares",
-                       "news_sent", "ids:route", "ends", "days", "vialux", "open"})
-    writes = frozenset({"beliefs", "shares", "news_sent"})
+                       "news_sent", "ids:route", "ends", "days", "vialux", "open", "grievances"})
+    writes = frozenset({"beliefs", "shares", "news_sent", "grievances"})
     event_types = EVENT_TYPES
 
     def run(self, ctx):
@@ -686,3 +704,21 @@ def neighbour_settlements(ctx, settlement: str) -> list[tuple[str, int, bool]]:
             if nxt not in best:
                 heapq.heappush(heap, (days + d, [*path, nxt], vialux and v))
     return [(s, best[s][0], best[s][2]) for s in sorted(best) if s != settlement and s in towns]
+
+
+def _grieve(ctx, person: str, c: dict, conf: float, event: str) -> None:
+    """A firm belief that someone killed one's own: the grievance, held once per killer and victim."""
+    if c["pred"] != "killed" or conf < GRIEVANCE_CONF:
+        return
+    victim, by = c["args"]["victim"], c["args"]["by"]
+    if by == person or not ctx.exists(by) or ctx.kind(by) != "person" or not ctx.exists(victim)             or ctx.status(victim) != "dead":  # (a lie that someone living was killed grieves nobody)
+        return
+    kin = {ctx.get(victim, "spouse"), ctx.get(victim, "mother"), ctx.get(victim, "father"),
+           *(ctx.get(victim, "children") or [])}
+    if person not in kin:
+        return
+    held = ctx.get(person, "grievances") or []
+    if any(g["against"] == by and g.get("about") == victim for g in held):
+        return
+    ctx.set(person, "grievances", [*held, {"against": by, "event": event, "kind": "killed", "about": victim,
+                                           "since": ctx.today.to_json()}])

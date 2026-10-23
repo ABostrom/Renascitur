@@ -104,7 +104,8 @@ When a **salient** world event happens, the system that emits it calls `beliefs.
 - **Grievances follow belief.** In a world with S6:
   - a notable who comes to believe `killed(v, k)`, with confidence at least 0.5, about someone they grieve, holds the grievance against `k`, whether or not `k` did it (a frame makes a feud with the wrong house);
   - the grievance is caused by `Cause("event", belief.from)`, so taint flows;
-  - `life.die`'s known-killer rule is switched off (`grievance_from: "belief"` world param), so it doesn't count twice. Worlds without S6 keep the S7 rule.
+  - `life.die`'s known-killer rule is switched off in a world with beliefs (`beliefs: true`; as built, no separate param), so it doesn't count twice. Worlds without S6 keep the S7 rule.
+  - As built (#155): only a person is held to account (a claim drifted onto a house names nobody to avenge); only for someone truly dead; never by an accomplice who knew it in secret; kin take a death in at 0.8, above the 0.5 bar; a correction adds its grievance beside an earlier, wrong one.
 - **Promotion** (#105): `belief.*` events are not pinnable (master spec §2), so the promote panel doesn't offer them as causes to keep.
 - **Belief actions** (#98, S7 in M2), trimmed for M2:
   - `Slander`: tell a damaging false claim;
