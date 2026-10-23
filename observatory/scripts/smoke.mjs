@@ -134,6 +134,13 @@ try {
 	const before = await asOf.textContent();
 	await page.getByRole('slider', { name: 'Year' }).fill('0');
 	if ((await asOf.textContent()) === before) throw new Error('the year control changed nothing');
+	// houses and population: a line per region, a table of houses with their heads in order
+	await page.goto(`http://127.0.0.1:${port}/run/kin/houses`);
+	await page.getByRole('heading', { name: 'Population by place' }).waitFor({ timeout: 20000 });
+	const popLines = await page.locator('.chart svg path').count();
+	if (popLines < 2) throw new Error(`the population chart has ${popLines} lines`);
+	await page.locator('table.houses tbody tr').first().waitFor({ timeout: 10000 });
+	await page.locator('td.heads a').first().waitFor({ timeout: 20000 });
 	// the map: a Fourth Age run's places and routes, the Vialux drawn as itself; a world without one says so
 	await page.goto(`http://127.0.0.1:${port}/run/pyrosia/map`);
 	await page.getByRole('heading', { name: 'Map' }).waitFor({ timeout: 20000 });
@@ -143,7 +150,7 @@ try {
 	await page.goto(`http://127.0.0.1:${port}/run/base/map`);
 	await page.getByText(/has no geography/).waitFor({ timeout: 15000 });
 	if (errors.length) throw new Error(`page errors: ${errors.join('; ')}`);
-	console.log(`smoke: ok (browser read ${counts.base.n} events from base; ${shown} granary events listed; detail, cause chain and entity page shown; diff wave of ${cells} cells, ${divergentShown} divergent events in one, buggy roots marked; story river of ${bars} bars, ${barsIn} in a decade, saga to arc to event; latch points and a what-if beside its baseline; a person's page; the Pyrosia map with ${towns} settlements)`);
+	console.log(`smoke: ok (browser read ${counts.base.n} events from base; ${shown} granary events listed; detail, cause chain and entity page shown; diff wave of ${cells} cells, ${divergentShown} divergent events in one, buggy roots marked; story river of ${bars} bars, ${barsIn} in a decade, saga to arc to event; latch points and a what-if beside its baseline; a person's page; houses and ${popLines} population lines; the Pyrosia map with ${towns} settlements)`);
 } catch (e) {
 	failed = true;
 	console.error('smoke: FAILED', e);
