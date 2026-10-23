@@ -1,6 +1,7 @@
 """The vault loader (S2 spec §2): every note as a record, its links resolved, and what's wrong as findings.
 
-`load(root)` walks `*.md` under the vault root in sorted order (skipping dot-folders and `_proposed/`),
+`load(root)` walks `*.md` under the vault root in sorted order (skipping dot-folders, and proposals in
+`_proposed/` until they are promoted),
 normalises each file (UTF-8, no BOM, `\\n` line ends), reads its frontmatter (`frontmatter.parse`),
 and resolves every `[[wikilink]]` like Obsidian, in this order (§2.3):
 
@@ -79,6 +80,7 @@ class Vault:
     config: Config = field(default_factory=Config)
     bad_ids: frozenset = frozenset()  # notes whose `id:` is malformed or shared (their pins are blocked)
     resolver: Resolver | None = None
+    proposed_ids: frozenset = frozenset()  # ids taken by proposals not yet promoted (never reassigned)
 
     def resolve(self, text: str, expects: set[str] | None = None) -> str | None:
         """The note key a link text names (`[[X]]` or `X`), or None when it names none or several."""
@@ -102,12 +104,12 @@ def normalise(raw: bytes) -> tuple[str, bool]:
 
 
 def _walk(root: Path, config: Config):
-    """Notes: `*.md` exactly (on every platform), outside dot-folders, `_proposed/` and the config's
-    `ignore`, by NFC key."""
+    """Notes: `*.md` exactly (on every platform), outside dot-folders and the config's `ignore`, by NFC
+    key (`load` then sets aside proposals not yet promoted)."""
     found = []
     for p in root.rglob("*.md"):
         rel = p.relative_to(root)
-        if p.suffix != ".md" or any(part.startswith(".") for part in rel.parts) or rel.parts[0] == "_proposed":
+        if p.suffix != ".md" or any(part.startswith(".") for part in rel.parts):
             continue
         key = nfc(rel.with_suffix("").as_posix())
         if not config.ignored(key):
@@ -194,6 +196,7 @@ def load(root, config: Config | None = None) -> Vault:
     if not root.is_dir():
         raise FileNotFoundError(f"no vault at {root}")
     config = config if config is not None else Config.load(root)
+    proposed_ids: set[str] = set()  # ids written in proposals not yet promoted: reserved
     notes: dict[str, Note] = {}
     texts: dict[str, tuple[str, int]] = {}
     findings: list[dict] = []
@@ -206,6 +209,13 @@ def load(root, config: Config | None = None) -> Vault:
         if not utf8:
             finding("not_utf8", key, 1, "not UTF-8: undecodable bytes were replaced")
         fm, problems, line_of, body_start = parse(text)
+        if key.startswith("_proposed/"):  # the writer's until promoted (S2 §9): canon: true, or no canon: at all
+            promoted = body_start > 0 and (fm.get("canon") is True or "canon" not in fm)
+            if not promoted:
+                if isinstance(fm.get("id"), str):
+                    proposed_ids.add(fm["id"])
+                continue
+            finding("promoted_in_proposed", key, 1, "promoted: move it out of _proposed/ to where it belongs")
         state = ("present" if body_start > 0 else
                  "unclosed" if any("never closes" in p["message"] for p in problems) else "none")
         for p in problems:
@@ -265,4 +275,5 @@ def load(root, config: Config | None = None) -> Vault:
     config_hash = hashlib.sha256(config.digest_text.encode("utf-8")).hexdigest()
     digest = hashlib.sha256(json.dumps({"notes": sorted([k, n.hash] for k, n in notes.items()), "config": config_hash},
                                        separators=(",", ":")).encode("utf-8")).hexdigest()
-    return Vault(str(root), dict(sorted(notes.items())), findings, digest, config, frozenset(bad), resolver)
+    return Vault(str(root), dict(sorted(notes.items())), findings, digest, config, frozenset(bad), resolver,
+                 frozenset(proposed_ids))

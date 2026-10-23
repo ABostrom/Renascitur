@@ -280,9 +280,11 @@ names each pin, its verdict and the notes involved.
    `_proposed/` is loaded too (with a finding suggesting the move). The bridge never writes `canon: true`.
    **Round trip:** a proposed character with a `born` and canon parents becomes a birth pin the next run
    meets.
-5. **Stale:** a proposal is stale when its source run folder is gone, or a later run (by manifest
-   creation order) of the same recipe name exists, **and** it is untouched. `renasci vault stale` lists
-   them; nothing is deleted. The vault digest in `source` is informational (any canon edit changes it).
+5. **Stale:** a proposal is stale when it is untouched **and** its source run is gone, or has been run
+   again since (the run folder's state hash differs from the one recorded in `source`; run folders are
+   never overwritten, so a changed hash means the run was redone). The run is found at `source.run_path`,
+   else under `--runs`. `renasci vault stale` lists them; nothing is deleted. The vault digest in `source`
+   is informational (any canon edit changes it). *(As built, #64.)*
 
 ## 10. Claim seeds
 
@@ -296,8 +298,8 @@ renasci vault check [docs] [--json]         load, map, extract pins, feasibility
 renasci vault ids [docs] [--write]          assign missing ids (a diff first)
 renasci vault suggest [docs] [--write]      frontmatter from labelled body bullets (a diff first)
 renasci vault pins [docs] --age 4A          the resolved pins as JSON
-renasci vault propose <run> <id> [docs]     write a proposed note (never over an edit)
-renasci vault stale [docs] [runs]           untouched proposals from superseded runs
+renasci vault propose <run> <id> [docs] [--write]  a proposed note (never over an edit)
+renasci vault stale [docs] [--runs runs]    untouched proposals from superseded runs
 ```
 
 A recipe names the vault with `[vault] path = "docs"`; the run loads it, writes `pins.json`,
