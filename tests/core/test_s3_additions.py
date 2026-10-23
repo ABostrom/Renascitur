@@ -367,3 +367,21 @@ def test_a_bare_star_declaration_is_refused():
 
     with pytest.raises(ValueError, match=r"\*"):
         Greedy().check()
+
+
+def test_an_event_pin_matches_its_other_payload_fields_too():
+    """Two reign pins differing only in office: a succession to B must not meet A's (#61 review)."""
+    from types import SimpleNamespace
+
+    from renasci.core.pins import Director
+
+    w = (Date(4, 30, 0), Date(4, 30, 359))
+    a = Pin("k:reign:A", "event", window=w, payload={"type": "people.succession", "roles": {"successor": ["v:k"]},
+                                                     "office": "v:a-head"})
+    b = Pin("k:reign:B", "event", window=w, payload={"type": "people.succession", "roles": {"successor": ["v:k"]},
+                                                     "office": "v:b-head"})
+    d = Director([a, b])
+    d.status = {a.id: "open", b.id: "open"}
+    d.observe(SimpleNamespace(id="x1", type="people.succession", date=Date(4, 30, 5), roles={"successor": ("v:k",)},
+                              payload={"office": "v:b-head", "abdication": False}))
+    assert d.status == {a.id: "open", b.id: "satisfied"}

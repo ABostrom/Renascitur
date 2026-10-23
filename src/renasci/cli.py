@@ -257,6 +257,19 @@ def cmd_vault(args) -> int:
     from renasci.vault.loader import load
 
     vault = load(args.docs)
+    if args.vault_command == "pins":
+        from renasci.people.vault import people_hook
+        from renasci.vault.pins import extract
+
+        cal = get_world(args.world).calendar
+        start = cal.parse(args.from_)
+        end = cal.parse(args.to)
+        if len(args.to.split()) == 2:  # a year: to its end
+            end = Date(end.age, end.year, cal.days_per_year - 1)
+        found = extract(vault, cal, start, end, hooks=[people_hook])
+        sys.stdout.buffer.write(json.dumps(found.to_json(), ensure_ascii=False).encode("utf-8") + b"\n")
+        sys.stdout.flush()
+        return 0
     if args.vault_command == "ids":
         from renasci.vault.ids import migrate
 
@@ -440,6 +453,11 @@ def main(argv=None) -> int:
     v = vsub.add_parser("ids", help="add missing id: lines to notes (a dry run unless --write)")
     v.add_argument("docs", nargs="?", default="docs")
     v.add_argument("--write", action="store_true")
+    v = vsub.add_parser("pins", help="the pins the vault's canon gives for a run window, as JSON")
+    v.add_argument("docs", nargs="?", default="docs")
+    v.add_argument("--world", default="fourth_age", help="whose calendar dates are read in")
+    v.add_argument("--from", dest="from_", default="4A 1")
+    v.add_argument("--to", default="4A 256")
     p = sub.add_parser("observe", help="serve the Observatory and a runs folder, read-only, on localhost")
     p.add_argument("runs", nargs="?", default="runs")
     p.add_argument("--port", type=int, default=8765)

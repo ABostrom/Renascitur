@@ -70,6 +70,8 @@ class Config:
     rules: list = field(default_factory=list)
     ids: dict = field(default_factory=dict)  # note key -> a preferred id (S2 §4)
     digest_text: str = ""  # the file's normalised text, for the vault digest ("" when there is none)
+    ages: dict = field(default_factory=dict)  # age abbreviation -> its first timeline year (S2 §5.1)
+    circa_years: int = 5  # the half-width of a ~ date
 
     @classmethod
     def load(cls, root) -> Config:
@@ -78,7 +80,7 @@ class Config:
             return cls()
         text = path.read_bytes().decode("utf-8").removeprefix(chr(0xFEFF)).replace("\r\n", "\n")
         raw = tomllib.loads(text)
-        unknown = set(raw) - {"ignore", "type_aliases", "types", "ids"}
+        unknown = set(raw) - {"ignore", "type_aliases", "types", "ids", "ages", "circa_years"}
         if unknown:
             raise ValueError(f"vault.toml: unknown settings {sorted(unknown)}")
         ignore = _strings(raw.get("ignore", []), "ignore")
@@ -105,7 +107,13 @@ class Config:
         if not isinstance(ids, dict) or not all(isinstance(k, str) and isinstance(v, str) and ID.fullmatch(v)
                                                  for k, v in ids.items()):
             raise ValueError("vault.toml: [ids] maps note keys to ids like \"v:house-medani\"")
-        return cls(ignore, dict(aliases), rules, dict(ids), text)
+        ages = raw.get("ages", {})
+        if not isinstance(ages, dict) or not all(isinstance(v, int) and not isinstance(v, bool) for v in ages.values()):
+            raise ValueError("vault.toml: [ages] maps an age's abbreviation to its first timeline year (\"4A\" = 12001)")
+        circa = raw.get("circa_years", 5)
+        if not isinstance(circa, int) or isinstance(circa, bool) or circa < 0:
+            raise ValueError("vault.toml: circa_years is a whole number of years")
+        return cls(ignore, dict(aliases), rules, dict(ids), text, dict(ages), circa)
 
     def ignored(self, key: str) -> bool:
         return any(glob_match(p, key) for p in self.ignore)
