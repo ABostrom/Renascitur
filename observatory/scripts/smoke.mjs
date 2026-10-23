@@ -125,6 +125,15 @@ try {
 	await page.getByText(/In kin-latch1: (lives on|dies)/).waitFor({ timeout: 30000 });
 	const rivers = await page.locator('svg[aria-label^="Ambitions by house"]').count();
 	if (rivers !== 2) throw new Error(`the comparison shows ${rivers} rivers`);
+	// a person: family, inner life as of a year, ambitions, ties and genome (a synthesised kin notable)
+	await page.goto(`http://127.0.0.1:${port}/run/kin/entity/${encodeURIComponent('s:House-Ridge:010')}`);
+	await page.getByRole('heading', { name: 'Family' }).waitFor({ timeout: 20000 });
+	await page.getByRole('heading', { name: 'Genome' }).waitFor({ timeout: 5000 });
+	if ((await page.locator('.person table.genome tbody tr').count()) === 0) throw new Error('the person page shows no genome');
+	const asOf = page.getByRole('heading', { name: /^Inner life/ });
+	const before = await asOf.textContent();
+	await page.getByRole('slider', { name: 'Year' }).fill('0');
+	if ((await asOf.textContent()) === before) throw new Error('the year control changed nothing');
 	// the map: a Fourth Age run's places and routes, the Vialux drawn as itself; a world without one says so
 	await page.goto(`http://127.0.0.1:${port}/run/pyrosia/map`);
 	await page.getByRole('heading', { name: 'Map' }).waitFor({ timeout: 20000 });
@@ -134,7 +143,7 @@ try {
 	await page.goto(`http://127.0.0.1:${port}/run/base/map`);
 	await page.getByText(/has no geography/).waitFor({ timeout: 15000 });
 	if (errors.length) throw new Error(`page errors: ${errors.join('; ')}`);
-	console.log(`smoke: ok (browser read ${counts.base.n} events from base; ${shown} granary events listed; detail, cause chain and entity page shown; diff wave of ${cells} cells, ${divergentShown} divergent events in one, buggy roots marked; story river of ${bars} bars, ${barsIn} in a decade, saga to arc to event; latch points and a what-if beside its baseline; the Pyrosia map with ${towns} settlements)`);
+	console.log(`smoke: ok (browser read ${counts.base.n} events from base; ${shown} granary events listed; detail, cause chain and entity page shown; diff wave of ${cells} cells, ${divergentShown} divergent events in one, buggy roots marked; story river of ${bars} bars, ${barsIn} in a decade, saga to arc to event; latch points and a what-if beside its baseline; a person's page; the Pyrosia map with ${towns} settlements)`);
 } catch (e) {
 	failed = true;
 	console.error('smoke: FAILED', e);
