@@ -122,7 +122,7 @@
 	}
 </script>
 
-<p class="crumbs"><a href="/">Runs</a> › <strong>{name}</strong> › events</p>
+<p class="crumbs"><a href="/">Runs</a> › <strong>{name}</strong> › events · <a href={`/run/${encodeURIComponent(name)}/stories`}>stories</a></p>
 
 {#if error}
 	<p class="card">{error}</p>

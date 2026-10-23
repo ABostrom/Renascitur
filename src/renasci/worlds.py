@@ -35,12 +35,12 @@ def _kin() -> World:
     from renasci import kin
 
     def rulesets(people_per_settlement=None, races=None, catalogue=None, residence=None, masses=None,
-                 scenario=None):
-        sc = kin.scenario(people_per_settlement, races, catalogue, residence, masses, base=scenario)
+                 scenario=None, traits=None):
+        sc = kin.scenario(people_per_settlement, races, catalogue, residence, masses, base=scenario, traits=traits)
         return [(kin.START, kin.ruleset(sc=sc))]
 
     return World("kin", kin.CAL, kin.new_engine, rulesets,
-                 frozenset({"people_per_settlement", "races", "catalogue", "residence", "masses", "scenario"}))
+                 frozenset({"people_per_settlement", "races", "catalogue", "residence", "masses", "scenario", "traits"}))
 
 
 def _fourth_age() -> World:

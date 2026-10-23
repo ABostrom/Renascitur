@@ -42,6 +42,8 @@ def test_every_ambition_is_an_arc_with_its_beats(world):
 
 def test_arcs_have_salience_titles_and_spans(world):
     for arc in world.found["arcs"]:
+        assert [t["event"] for t in arc["timeline"]] == arc["beats"]
+        assert arc["owner_name"] and all(0 <= p["step"] <= p["steps"] for p in arc["progress"])
         assert arc["title"] and "{" not in arc["title"]
         assert arc["salience"] > 0
         assert arc["span"][0] <= arc["span"][1]

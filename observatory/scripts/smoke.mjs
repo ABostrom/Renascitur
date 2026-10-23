@@ -100,7 +100,24 @@ try {
 	await page.getByRole('heading', { name: 'Unexplained' }).waitFor({ timeout: 15000 });
 	await page.locator('.badge.bad', { hasText: 'root' }).first().waitFor({ timeout: 10000 });
 	if ((await page.locator('a.cell.unexplained').count()) === 0) throw new Error('no unexplained wave cell outlined');
-	console.log(`smoke: ok (browser read ${counts.base.n} events from base; ${shown} granary events listed; detail, cause chain and entity page shown; diff wave of ${cells} cells, ${divergentShown} divergent events in one, buggy roots marked)`);
+	// stories: the river over a preset period, a bar to its arc, a beat to the event browser, a saga
+	await page.goto(`http://127.0.0.1:${port}/run/kin/stories`);
+	await page.getByRole('heading', { name: 'The story river' }).waitFor({ timeout: 15000 });
+	const bars = await page.locator('rect.bar').count();
+	if (bars === 0) throw new Error('the story river has no bars');
+	await page.locator('select').first().selectOption({ label: 'Years 11–20' });
+	await page.waitForURL(/from=11&to=20/, { timeout: 10000 });
+	const barsIn = await page.locator('rect.bar').count();
+	if (!(barsIn > 0 && barsIn < bars)) throw new Error(`a decade showed ${barsIn} of ${bars} bars`);
+	await page.goto(`http://127.0.0.1:${port}/run/kin/stories?from=5&to=30`);
+	await page.locator('section', { hasText: 'Sagas' }).getByRole('link').first().click();
+	await page.getByRole('heading', { name: 'Arcs, in order' }).waitFor({ timeout: 15000 });
+	await page.locator('table a[href*="/stories/arc/"]').first().click();
+	await page.getByRole('heading', { name: 'Beats' }).waitFor({ timeout: 15000 });
+	await page.locator('table a[href*="/events?e="]').first().click();
+	await page.getByRole('heading', { name: 'What it read' }).waitFor({ timeout: 20000 });
+	if (errors.length) throw new Error(`page errors: ${errors.join('; ')}`);
+	console.log(`smoke: ok (browser read ${counts.base.n} events from base; ${shown} granary events listed; detail, cause chain and entity page shown; diff wave of ${cells} cells, ${divergentShown} divergent events in one, buggy roots marked; story river of ${bars} bars, ${barsIn} in a decade, saga to arc to event)`);
 } catch (e) {
 	failed = true;
 	console.error('smoke: FAILED', e);

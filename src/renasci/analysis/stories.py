@@ -119,12 +119,38 @@ def stories(events: list[dict], state: dict) -> dict:
             template = templates.get(state_, templates["*"])
             title = template.format(owner=full(owner), target=full(get(amb, "target")),
                                     house=get(house, "name") or house or "?", **{"class": cls})
-        arcs.append({"id": f"arc:{amb}", "ambition": amb, "owner": owner, "class": cls, "target": get(amb, "target"),
+        target = get(amb, "target")
+        timeline = [{"event": b, "date": by_id[b]["date"], "type": by_id[b]["type"],
+                     "turn": _turn(by_id[b], full, deaths)} for b in mine]
+        progress = [{"scheme": sc, "state": get(sc, "state"), "step": get(sc, "step"), "steps": len(get(sc, "plan") or []),
+                     "plan": [st["action"] for st in get(sc, "plan") or []]} for sc in sorted(schemes_of.get(amb, []))]
+        arcs.append({"id": f"arc:{amb}", "ambition": amb, "owner": owner, "class": cls, "target": target,
+                     "owner_name": full(owner), "target_name": full(target) if target else None,
+                     "house": house, "house_name": get(house, "name") if house else None,
                      "outcome": state_, "born_of": get(amb, "born_of"), "formed_by": formed or (mine[0] if mine else None),
-                     "beats": mine, "schemes": sorted(schemes_of.get(amb, [])), "people": people, "span": span,
-                     "violent": violent, "salience": round(salience, 6), "title": title})
+                     "beats": mine, "timeline": timeline, "schemes": sorted(schemes_of.get(amb, [])), "progress": progress,
+                     "people": people, "span": span, "violent": violent, "salience": round(salience, 6), "title": title})
 
     return {"arcs": arcs, "sagas": _sagas(arcs, by_id, ents, deaths)}
+
+
+def _turn(ev: dict, full, deaths) -> str | None:
+    """A beat's line on the story river, if it is a turning point (a killing, a death, an exposure, a seat
+    changing hands, the end)."""
+    t, roles, pay = ev["type"], ev["roles"], ev["payload"]
+    if t == "people.action" and pay["action"] in KILLS and pay["outcome"] == "success":
+        victim = (roles.get("target") or [None])[0]
+        died = victim in deaths and any(tuple(c) == ("event", ev["id"]) for c in deaths[victim]["causes"])
+        return f"{pay['action']} on {full(victim)}" + ("" if died else " (survived)")
+    if t == "people.death":
+        return f"{full(roles['deceased'][0])} dies ({pay['cause']})"
+    if t == "people.scheme_exposed":
+        return "the plot is exposed"
+    if t == "people.succession":
+        return f"{full(roles['successor'][0])} takes the seat"
+    if t == "people.ambition_resolved":
+        return pay["status"].replace("_", " ")
+    return None
 
 
 def _sagas(arcs, by_id, ents, deaths) -> list[dict]:

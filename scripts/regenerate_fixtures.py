@@ -41,6 +41,20 @@ date = "1X 4"
 target = "t:Brook-02"
 """
 
+KIN = """
+[run]
+name = "kin"
+engine = "0.1.0"
+seed = 1234
+world = "kin"
+end = "1K 40"
+checkpoint_every_years = 10
+
+[world]
+people_per_settlement = 10
+traits = { wits = "stature", charm = "stature", temper = "stature" }
+"""
+
 
 def recipe(name, extra="", full_reads=True):
     """base and protected keep every read (the Observatory shows them); the buggy pair keeps digests."""
@@ -77,6 +91,12 @@ def main_() -> None:
     manifest["meta"]["complete"] = False  # the run never finished
     text = json.dumps(manifest, sort_keys=True, separators=(",", ":")) + "\n"
     (broken / "manifest.json").write_text(text, encoding="utf-8", newline="\n")
+    # A kin run with stories and latch points (the Stories pages): traits mapped, so plots and sagas emerge.
+    kin = OUT.parent / "kin.toml"
+    kin.write_text(KIN, encoding="utf-8", newline="\n")
+    assert main(["run", str(kin), "--out", str(OUT)]) == 0
+    assert main(["stories", str(OUT / "kin")]) == 0
+    assert main(["latch", str(OUT / "kin")]) == 0
     for f in (OUT.parent).glob("*.toml"):
         f.unlink()
     print(f"fixtures written to {OUT}")

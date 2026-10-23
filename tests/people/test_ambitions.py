@@ -211,3 +211,12 @@ def test_the_death_flow_is_explained_by_the_death(world):
             ev = next(e for e in world.events if e.id == d["event"])
             assert ev.type in ("people.death", "people.population", "engine.cast_column"), ev.type
     assert deaths
+
+
+def test_a_trait_mapping_names_traits_the_catalogue_has():
+    from renasci.kin import SCENARIO
+    from renasci.people.life import world_params
+
+    with pytest.raises(ValueError, match="statue"):
+        world_params(SCENARIO["races"], SCENARIO["catalogue"], traits={"wits": "statue"})
+    assert world_params(SCENARIO["races"], SCENARIO["catalogue"], traits={"wits": "stature"})["traits"] == {"wits": "stature"}
