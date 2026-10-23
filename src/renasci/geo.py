@@ -119,6 +119,8 @@ def check(doc: dict) -> list[dict]:
         if pair in pairs:
             out.append(_f("duplicate_route", rid, f"{rid} repeats a {r.get('kind')} between {ends[0]} and {ends[1]}"))
         pairs.add(pair)
+    if isinstance(doc, dict):
+        out += _check_changes(doc.get("changes"), places, regions, {r.get("id") for r in sections.get("routes", [])})
     if out:
         return out
     settlements = sorted(p["id"] for p in sections["places"] if p["kind"] == "settlement")
@@ -160,6 +162,129 @@ def dumps(doc: dict) -> str:
 
 def save(path, doc: dict) -> None:
     Path(path).write_text(dumps(doc), encoding="utf-8", newline="\n")
+
+
+# ------------------------------------------------------------ the map by year (S4 §8, #81)
+
+# A geography's optional `changes`: dated, each one of
+#   {"date": [age, year, day], "route": <id>, "open": bool and/or "days": int, "why": str}
+#   {"date": ..., "build": <a route record>, "why": ...}
+#   {"date": ..., "place": <place id>, "region": <region id>, "why": ...}   (a border moves)
+# They happen on their dates in a run (`MapHistory`); the map as of a date is rebuilt from the run's state
+# changes (`renasci.analysis.mapyear`), so whatever else changes the map later (a war) shows up too.
+CHANGE_KEYS = ("route", "build", "place")
+
+
+def _check_changes(changes, places, regions, routes) -> list[dict]:
+    out: list[dict] = []
+    if changes is None:
+        return out
+    if not isinstance(changes, list):
+        return [_f("bad_change", None, "changes must be a list")]
+    built = set()
+    dated = []
+    for i, c in enumerate(changes):
+        where = f"change {i + 1}"
+        if not isinstance(c, dict):
+            out.append(_f("bad_change", None, f"{where} isn't a table"))
+            continue
+        d = c.get("date")
+        if not (isinstance(d, list) and len(d) == 3 and all(type(x) is int for x in d)):
+            out.append(_f("bad_change", None, f"{where}'s date must be [age, year, day], not {d!r}"))
+            continue
+        dated.append((d, i, c))
+    for d, i, c in sorted(dated, key=lambda x: (x[0], x[1])):  # (in the order they happen: a road is built first)
+        where = f"change {i + 1}"
+        if "why" in c and not _str(c["why"]):
+            out.append(_f("bad_change", None, f"{where}'s why must be text"))
+        what = [k for k in CHANGE_KEYS if k in c]
+        if len(what) != 1:
+            out.append(_f("bad_change", None, f"{where} needs exactly one of {', '.join(CHANGE_KEYS)}"))
+            continue
+        if what == ["route"]:
+            if c["route"] not in routes | built:
+                out.append(_f("bad_change", c["route"], f"{where} changes {c['route']!r}, which isn't a route"))
+            if "open" not in c and "days" not in c:
+                out.append(_f("bad_change", c["route"], f"{where} must set open or days"))
+            if "open" in c and not isinstance(c["open"], bool):
+                out.append(_f("bad_change", c["route"], f"{where}'s open must be true or false"))
+            if "days" in c and (type(c["days"]) is not int or c["days"] < 1):
+                out.append(_f("bad_change", c["route"], f"{where}'s days must be a positive whole number"))
+        elif what == ["build"]:
+            r = c["build"]
+            ok = (isinstance(r, dict) and _str(r.get("id")) and ID.fullmatch(r["id"]) and r["id"] not in routes | built
+                  and isinstance(r.get("ends"), list) and len(r["ends"]) == 2 and all(e in places for e in r["ends"])
+                  and r["ends"][0] != r["ends"][1] and type(r.get("days")) is int and r["days"] >= 1
+                  and r.get("kind") in ROUTE_KINDS)
+            if not ok:
+                out.append(_f("bad_change", None, f"{where} builds a route that isn't a new route between two places"))
+            else:
+                built.add(r["id"])
+        elif c["place"] not in places or c.get("region") not in regions:
+            out.append(_f("bad_change", c.get("place"), f"{where} must move a place into a region"))
+    return out
+
+
+def map_history():
+    """The `MapHistory` system class (made on first use: geo itself doesn't need the engine)."""
+    from renasci.core.calendar import AgeBoundaryError, Date, Span
+    from renasci.core.events import EventType
+    from renasci.core.systems import System
+
+    changed = EventType("geo.changed", 1, roles={"site": (1, 2)}, payload={"why": "str", "change": "json"})
+
+    class MapHistory(System):
+        """Each of the geography's dated `changes` (the ruleset param `map_changes`) on its date."""
+
+        name, cadence, priority = "geo.map", "seasonal", -5  # (before journeys and people that season)
+        reads = frozenset({"ids:route", "ends"})
+        writes = frozenset({"new:route", "open", "days", "region"})
+        event_types = (changed,)
+
+        def run(self, ctx):
+            """This season's changes: today's now, later ones by one follow-up per day (each day's in the
+            list's order). The follow-ups are scheduled first, so none is caused by a change made today."""
+            try:
+                nxt = ctx.calendar.start_of_next(ctx.today, "season")
+            except AgeBoundaryError:  # (the age's last season)
+                nxt = None
+            days: dict = {}
+            for i, c in enumerate(ctx.params.get("map_changes") or []):
+                when = Date.from_json(c["date"])
+                if when == ctx.today or (ctx.today < when and (nxt is None or when < nxt)):
+                    days.setdefault(when, []).append(i)
+            for when, idx in sorted(days.items()):
+                if when != ctx.today:
+                    ctx.schedule(Span(days=ctx.calendar.days_between(ctx.today, when)), "map", payload={"i": idx})
+            for i in days.get(ctx.today, ()):
+                self._apply(ctx, ctx.params["map_changes"][i])
+
+        def handle(self, ctx, activation):
+            for i in activation.payload["i"]:
+                self._apply(ctx, ctx.params["map_changes"][i])
+
+        def _apply(self, ctx, c):
+            why = c.get("why", "")
+            if "build" in c:
+                r = c["build"]
+                ctx.emit("geo.changed", {"site": tuple(r["ends"])}, purpose="map", actor=r["ends"][0],
+                         place=r["ends"][0], payload={"why": why, "change": c})
+                ctx.create("route", r["id"], {"ends": list(r["ends"]), "days": r["days"], "kind": r["kind"],
+                                              "vialux": bool(r.get("vialux", False)), "open": r.get("open", True),
+                                              **({"barred": list(r["barred"])} if r.get("barred") else {})})
+            elif "route" in c:
+                ends = ctx.get(c["route"], "ends")
+                ctx.emit("geo.changed", {"site": (c["route"],)}, purpose="map", actor=c["route"], place=ends[0],
+                         payload={"why": why, "change": c})
+                for f in ("open", "days"):
+                    if f in c:
+                        ctx.set(c["route"], f, c[f])
+            else:
+                ctx.emit("geo.changed", {"site": (c["place"],)}, purpose="map", actor=c["place"], place=c["place"],
+                         payload={"why": why, "change": c})
+                ctx.set(c["place"], "region", c["region"])
+
+    return MapHistory
 
 
 # ------------------------------------------------------------ routing (S4 §8, #78)

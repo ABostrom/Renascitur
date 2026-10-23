@@ -26,6 +26,11 @@ def people_ruleset(name: str, scenario: dict, version: int = 1) -> Ruleset:
                Minds())
     if scenario.get("geography"):  # journeys need routes (S4 §5)
         systems += (Migration(),)
+        if scenario["geography"].get("changes"):  # the map by year (S4 §8, #81)
+            from renasci import geo
+
+            params = {**params, "map_changes": scenario["geography"]["changes"]}
+            systems += (geo.map_history()(),)
     if scenario.get("params", {}).get("beliefs"):  # gossip needs minds that hold beliefs (S6 §6)
         systems += (Gossip(),)
     return Ruleset(name, version, systems,

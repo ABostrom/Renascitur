@@ -117,6 +117,17 @@ A test checks that the draft loads with no errors, every scenario settlement is 
 - **#78 Routing by mode, season, time of day and access:** `path` takes a traveller (mode: foot, horse, cart, ship; their access) and a date; each route gains cost per mode and season and danger by time of day. The Vialux is safe at night, so journeys on it don't stop at dusk.
 - **#79 News travels by route:** S6 claims spread along the same paths, at the speed of whoever carries them.
 - **#81 The map by year:** route and place fields change by events (a road built, a city razed); the Observatory shows the map at a date.
+  **As built (#81).**
+  - A geography may carry dated `changes`:
+    - a route closed, reopened or re-timed (`{"route", "open"/"days"}`);
+    - a road built (`{"build": <route>}`);
+    - a place changing region (`{"place", "region"}`: a border moves).
+  - `geo.check` validates them. The system `geo.map` (seasonal) makes each one happen on its date, as a `geo.changed` event carrying its `why`.
+  - The map as of a date is rebuilt from the run's **state changes**, not from the plan, so whatever else changes the map later (a war, S8) shows up the same way:
+    - in Python, `renasci.analysis.mapyear.geography_at`;
+    - in the Observatory, `geographyAt`. The map page gets an "as of" control and a list of changes, each linking to its event.
+  - Residents and travellers are shown only at the end, because they come from the final state.
+  - Not built: a city razed. Settlements carry people, so that waits for S8.
 
 M2's routing keeps `path`'s signature with optional arguments, so M1 callers don't change.
 

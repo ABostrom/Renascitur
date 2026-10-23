@@ -197,6 +197,14 @@ try {
 	const towns = await page.locator('svg[aria-label^="Map of"] circle.settlement').count();
 	if (towns < 6) throw new Error(`the map shows ${towns} settlements`);
 	if ((await page.locator('svg[aria-label^="Map of"] line.route.vialux').count()) === 0) throw new Error('no Vialux on the map');
+	// the map by year: the ward run's road built mid-run is there at the end, not at the start
+	await page.goto(`http://127.0.0.1:${port}/run/ward/map`);
+	await page.getByRole('heading', { name: 'Changes to the map' }).waitFor({ timeout: 20000 });
+	const roads = () => page.locator('svg[aria-label^="Map of"] line.route').count();
+	const atEnd = await roads();
+	await page.getByRole('slider', { name: 'As of' }).fill('0');
+	const atStart = await roads();
+	if (atEnd !== atStart + 1) throw new Error(`the map by year: ${atStart} routes at the start, ${atEnd} at the end`);
 	await page.goto(`http://127.0.0.1:${port}/run/base/map`);
 	await page.getByText(/has no geography/).waitFor({ timeout: 15000 });
 	// knowledge: the ward failure's lie beside the truth, and a claim picked onto the spread map
@@ -221,7 +229,7 @@ try {
 	// with --allow-launch: a run launched from a recipe and opened from the UI (a scratch runs folder)
 	launched = await launchAndOpen(browser, errors);
 	if (errors.length) throw new Error(`page errors: ${errors.join('; ')}`);
-	console.log(`smoke: ok (browser read ${counts.base.n} events from base; ${shown} granary events listed; detail, cause chain and entity page shown; diff wave of ${cells} cells, ${divergentShown} divergent events in one, buggy roots marked; story river of ${bars} bars, ${barsIn} in a decade, saga to arc to event; latch points and a what-if beside its baseline; a person's page; houses and ${popLines} population lines; canon strain to its event; the Pyrosia map with ${towns} settlements; knowledge with ${believing} believing places and a belief traced to its lie; ${launched})`);
+	console.log(`smoke: ok (browser read ${counts.base.n} events from base; ${shown} granary events listed; detail, cause chain and entity page shown; diff wave of ${cells} cells, ${divergentShown} divergent events in one, buggy roots marked; story river of ${bars} bars, ${barsIn} in a decade, saga to arc to event; latch points and a what-if beside its baseline; a person's page; houses and ${popLines} population lines; canon strain to its event; the Pyrosia map with ${towns} settlements and a map by year; knowledge with ${believing} believing places and a belief traced to its lie; ${launched})`);
 } catch (e) {
 	failed = true;
 	console.error('smoke: FAILED', e);

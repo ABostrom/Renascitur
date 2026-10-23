@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { layout, occupancy, type Geography } from './geography';
+import { geographyAt, layout, loadGeography, loadMapDeltas, mapChanges, occupancy, type Geography } from './geography';
 
 const GEO: Geography = {
 	regions: [{ id: 'g:land' }, { id: 'g:north', name: 'North', within: 'g:land' }],
@@ -60,5 +60,52 @@ describe('occupancy', () => {
 		const occ = occupancy(state, GEO);
 		expect(occ.residents).toEqual({ 't:a': 3, 't:b': 0 });
 		expect(occ.travellers).toEqual([{ id: 'p1', name: 'Ama', from: 't:a', to: 't:c', next: 't:b', why: 'migration' }]);
+	});
+});
+
+describe('the map by year', () => {
+	const delta = (date: [number, number, number], entity: string, field: string, value: unknown, event = 'x1') => ({
+		date, entity, field, new: value, event
+	});
+	const DELTAS = [
+		{ ...delta([1, 3, 10], 'g:a--b', 'open', false, 'x1'), old: true },
+		delta([1, 4, 0], 'g:b--ruin', 'status', 'active', 'x2'),
+		delta([1, 4, 0], 'g:b--ruin', 'ends', ['t:b', 'g:ruin'], 'x2'),
+		delta([1, 4, 0], 'g:b--ruin', 'days', 3, 'x2'),
+		delta([1, 4, 0], 'g:b--ruin', 'kind', 'track', 'x2'),
+		{ ...delta([1, 5, 0], 't:c', 'region', 'g:north', 'x3'), old: 'g:land' },
+		delta([1, 1, 0], 't:b', 'region', 'g:north', 'x0'), // (cast at the start: the file's own)
+		delta([1, 6, 0], 'g:north', 'within', 'g:wider', 'x4'), // (null to a value later: a real change)
+		delta([1, 5, 0], 'p:someone', 'region', 'g:north', 'x9') // (not a place: ignored)
+	];
+	const key = (d: [number, number, number]) => d[0] * 1e6 + d[1] * 1000 + d[2];
+
+	it('replays the changes up to a date, and no further', () => {
+		const before = geographyAt(GEO, DELTAS, key([1, 3, 0]), key);
+		expect(before).toEqual({ ...GEO });
+		const later = geographyAt(GEO, DELTAS, key([1, 5, 0]), key);
+		expect(later.routes.find((r) => r.id === 'g:a--b')!.open).toBe(false);
+		expect(later.routes.find((r) => r.id === 'g:b--ruin')).toMatchObject({ ends: ['t:b', 'g:ruin'], days: 3, kind: 'track' });
+		expect(later.places.find((p) => p.id === 't:c')!.region).toBe('g:north');
+		expect(GEO.routes.find((r) => r.id === 'g:a--b')!.open).toBeUndefined(); // (the file is untouched)
+	});
+
+	it('lists what changed the map, one entry per event', () => {
+		expect(mapChanges(GEO, DELTAS).map((c) => [c.event, c.what])).toEqual([
+			['x1', 'closed'],
+			['x2', 'built'],
+			['x3', 'moved'],
+			['x4', 'changed']
+		]);
+	});
+
+	it("reads the ward run's map changes from its state deltas", async () => {
+		const { NodeSource } = await import('./node-source');
+		const { openRun } = await import('./run');
+		const { resolve } = await import('node:path');
+		const run = await openRun(new NodeSource(resolve(__dirname, '../../../fixtures/runs')), 'ward');
+		const geo = (await loadGeography(run.source, 'ward'))!;
+		const changes = mapChanges(geo, await loadMapDeltas(run, geo));
+		expect(changes.map((c) => c.what)).toEqual(['closed', 'built']);
 	});
 });
