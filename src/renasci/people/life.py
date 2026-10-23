@@ -85,6 +85,20 @@ def world_params(races: list, catalogue: dict, house_from: str = "father", kin_d
     return params
 
 
+def grieving(ctx, person: str) -> list[str]:
+    """A person's living close kin: spouse, parents, children (sorted)."""
+    kin = {ctx.get(person, "spouse"), ctx.get(person, "mother"), ctx.get(person, "father"),
+           *(ctx.get(person, "children") or [])}
+    return sorted(k for k in kin if k and ctx.exists(k) and ctx.status(k) == "active")
+
+
+def add_grievance(ctx, holder: str, against: str, event: str, kind: str) -> None:
+    """`holder` holds `event` against `against` (attributed harm only: S7 §7)."""
+    grievances = list(ctx.get(holder, "grievances") or [])
+    grievances.append({"against": against, "event": event, "kind": kind, "since": ctx.today.to_json()})
+    ctx.set(holder, "grievances", grievances)
+
+
 def die(ctx, person: str, settlement: str, cause: str, *, killer: str | None = None, causes=()) -> None:
     """A death and what it undoes: the record, the settlement's roster, the spouse's marriage."""
     death = ctx.emit("people.death", {"deceased": (person,), "killer": (killer,) if killer else ()}, purpose="death",
@@ -97,6 +111,10 @@ def die(ctx, person: str, settlement: str, cause: str, *, killer: str | None = N
         ctx.set(spouse, "spouse", None)
     houses.vacate(ctx, person)
     population.bump(ctx, settlement, died=1)  # explained by the death itself
+    if killer:  # an attributed killing: the victim's close kin hold it against the killer (S7 §7)
+        for kin in grieving(ctx, person):
+            if kin != killer:  # (a son who kills his father in a duel holds nothing against himself)
+                add_grievance(ctx, kin, killer, death.id, "killed")
     ties.end_ties(ctx, person, "death")
     from renasci.people import ambitions
 
@@ -117,11 +135,13 @@ _crowding = crowding  # (the name tests used first)
 
 # What `die` touches. Every system (or forcer) that calls `die` declares these, and handles the
 # succession follow-ups `die` schedules through `houses.handle_succession`.
-_AMBITION_READS = frozenset({"ambitions", "cooldowns", "owner", "class", "state", "scheme", "spouse", "favour"})
+_AMBITION_READS = frozenset({"ambitions", "cooldowns", "owner", "class", "state", "scheme", "spouse", "favour",
+                             "target", "house", "headship", "holder"})  # (and whatever any `satisfied` reads)
 _AMBITION_WRITES = frozenset({"ambitions", "cooldowns", "state", "resolved", "scheme"})
 DIE_EVENTS = (DEATH, _RESOLVED) + houses.EVENT_TYPES + (ties.TIE_ENDED,)
-DIE_READS = frozenset({"born", "residents", "spouse", "status", "flow:*"}) | houses.READS | ties.READS | _AMBITION_READS
-DIE_WRITES = frozenset({"status", "residents", "spouse", "flow:*"}) | houses.WRITES | ties.WRITES | _AMBITION_WRITES
+DIE_READS = (frozenset({"born", "residents", "spouse", "status", "flow:*", "mother", "father", "children", "grievances"})
+             | houses.READS | ties.READS | _AMBITION_READS)
+DIE_WRITES = frozenset({"status", "residents", "spouse", "flow:*", "grievances"}) | houses.WRITES | ties.WRITES | _AMBITION_WRITES
 
 
 class Life(System):
