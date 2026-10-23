@@ -41,13 +41,18 @@ WRITES = frozenset({"ties", "ended"})
 
 def end_ties(ctx, person: str, why: str) -> None:
     """End every live tie of `person` (who has died or faded): both sides stop listing it."""
-    for t in ctx.get(person, "ties") or []:
-        a, b = ctx.get(t, "a"), ctx.get(t, "b")
-        ctx.emit("people.tie_ended", {"tie": (t,), "a": (a,), "b": (b,)}, purpose="tie_ended", actor=t,
-                 payload={"kind": ctx.get(t, "kind"), "why": why})
-        ctx.set(t, "ended", ctx.today.to_json())
-        for p in (a, b):
-            ctx.set(p, "ties", [x for x in ctx.get(p, "ties") or [] if x != t])
+    for t in list(ctx.get(person, "ties") or []):
+        end_tie(ctx, t, why)
+
+
+def end_tie(ctx, t: str, why: str) -> None:
+    """End one live tie: both sides stop listing it."""
+    a, b = ctx.get(t, "a"), ctx.get(t, "b")
+    ctx.emit("people.tie_ended", {"tie": (t,), "a": (a,), "b": (b,)}, purpose="tie_ended", actor=t,
+             payload={"kind": ctx.get(t, "kind"), "why": why})
+    ctx.set(t, "ended", ctx.today.to_json())
+    for p in (a, b):
+        ctx.set(p, "ties", [x for x in ctx.get(p, "ties") or [] if x != t])
 
 
 def form_tie(ctx, a: str, b: str, kind: str, strength: float = 0.5, place: str | None = None, causes=()) -> str:

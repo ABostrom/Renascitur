@@ -37,7 +37,7 @@ from renasci.core.calendar import Span
 from renasci.core.events import Cause, EventType
 from renasci.core.systems import System
 from renasci.people import actions as A
-from renasci.people import ambitions, houses, ties
+from renasci.people import ambitions, houses, minds, ties
 from renasci.people.ambitions import ADULT, classes, resolve
 from renasci.people.life import add_grievance, grieving
 from renasci.people.planner import holds, plan_for
@@ -53,13 +53,13 @@ EXPOSED = EventType("people.scheme_exposed", 1, roles={"scheme": (1, 1), "owner"
                     payload={"action": "str"})
 LOST = EventType("people.accomplice_lost", 1, roles={"scheme": (1, 1), "accomplice": (1, 1)}, payload={},
                  dead_roles=("accomplice",))
-EVENT_TYPES = (BEGUN, REPLANNED, ENDED, EXPOSED, LOST)
+EVENT_TYPES = (BEGUN, REPLANNED, ENDED, EXPOSED, LOST, ties.TIE_ENDED)
 HARMS = ("dead:", "shamed:")
 
 READS = frozenset({"owner", "ambition", "target", "plan", "step", "retries", "replans", "accomplices", "state",
                    "plots", "class", "grievances", "wound", "favour", "ties", "a", "b", "spouse", "mother", "father",
-                   "children", "name", "place"})
-WRITES = frozenset({"new:scheme", "plan", "step", "retries", "replans", "accomplices", "state", "ended", "plots",
+                   "children", "name", "place", "kind", "need"})
+WRITES = frozenset({"need", "new:scheme", "plan", "step", "retries", "replans", "accomplices", "state", "ended", "plots",
                     "scheme", "grievances", "favour", "wound", "ties", "new:tie"})
 
 
@@ -168,9 +168,14 @@ def _exposed(ctx, scheme: str, owner: str, amb: str, action: str, aimed_at: str 
                                                "target": (victim,) if victim else ()},
                      purpose="exposed", actor=scheme, payload={"action": action})
     A._favour(ctx, owner, -0.2)
-    if ctx.get(owner, "wound") is None:
-        ctx.set(owner, "wound", {"kind": "shame", "event": event.id, "since": ctx.today.to_json()})
+    minds.wound(ctx, owner, "shame", event.id)
     if victim:
+        turned = [t for t in ctx.get(victim, "ties") or [] if owner in (ctx.get(t, "a"), ctx.get(t, "b"))
+                  and ctx.get(t, "kind") != "enemy"]
+        for t in turned:  # a friend (or mentor, or rival) who plotted: the tie turns enemy, the victim is betrayed
+            ties.end_tie(ctx, t, "betrayed")
+        if turned:
+            minds.wound(ctx, victim, "betrayal", event.id)
         ties.form_tie(ctx, owner, victim, "enemy", place=ctx.get(victim, "place"), causes=(Cause("event", event.id),))
         add_grievance(ctx, victim, owner, event.id, "exposed")
         for kin in grieving(ctx, victim):

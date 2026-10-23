@@ -33,6 +33,7 @@ DEATH = EventType("people.death", 1, roles={"deceased": (1, 1), "killer": (0, 1)
 NEAR_MISS = EventType("people.near_miss", 1, roles={"survivor": (1, 1)}, payload={"would_have": "str"})
 EVENT_TYPES = (BIRTH, DEATH, NEAR_MISS)
 from renasci.people.ambitions import RESOLVED as _RESOLVED  # noqa: E402  (die resolves ambitions)
+from renasci.people import minds  # noqa: E402  (die and near misses strike wounds)
 
 WORLD_PARAMS = ("races", "catalogue", "house_from")  # (families.py also reads kin_degree, residence, market_rate)
 
@@ -56,7 +57,8 @@ def world_params(races: list, catalogue: dict, house_from: str = "father", kin_d
                  residence: str = "husband", market_rate: float = 0.35, aggregates: bool = False,
                  traits: dict | None = None, ambitions: list | None = None,
                  married_share: float = 0.7, demote_rate: float = 0.2, commoner_after: int = 6,
-                 commoner_rate: float = 0.3) -> dict:
+                 commoner_rate: float = 0.3, tie_rate: float = 0.08, scheme_rate: float = 0.5,
+                 exposure_base: float = 0.15, wound_years: int = 10, needs: dict | None = None) -> dict:
     """Ruleset params for the people systems, checked now rather than at the first activation."""
     if type(kin_degree) is not int or kin_degree < 0:
         raise ValueError("kin_degree must be a non-negative int")
@@ -64,23 +66,31 @@ def world_params(races: list, catalogue: dict, house_from: str = "father", kin_d
         raise ValueError(f"residence is husband or wife, got {residence!r}")
     if type(market_rate) not in (int, float) or not 0 <= market_rate <= 1:
         raise ValueError(f"market_rate must be a probability, got {market_rate!r}")
-    for name, p in (("married_share", married_share), ("demote_rate", demote_rate), ("commoner_rate", commoner_rate)):
+    for name, p in (("married_share", married_share), ("demote_rate", demote_rate), ("commoner_rate", commoner_rate),
+                    ("tie_rate", tie_rate), ("scheme_rate", scheme_rate), ("exposure_base", exposure_base)):
         if type(p) not in (int, float) or not 0 <= p <= 1:
             raise ValueError(f"{name} must be a probability, got {p!r}")
     if type(aggregates) is not bool:
         raise ValueError("aggregates must be true or false")
     if type(commoner_after) is not int or commoner_after < 0:
         raise ValueError("commoner_after must be a non-negative int")
+    if type(wound_years) is not int or wound_years < 1:
+        raise ValueError("wound_years must be a positive int")
     params = {"races": races, "catalogue": catalogue, "house_from": house_from, "kin_degree": kin_degree,
               "residence": residence, "market_rate": market_rate, "aggregates": aggregates,
               "married_share": married_share, "demote_rate": demote_rate, "commoner_after": commoner_after,
-              "commoner_rate": commoner_rate}
+              "commoner_rate": commoner_rate, "tie_rate": tie_rate, "scheme_rate": scheme_rate,
+              "exposure_base": exposure_base, "wound_years": wound_years}
     if traits is not None:  # {role: trait name}: wits, temper, charm (S7 §12)
         if not isinstance(traits, dict) or not all(isinstance(k, str) and isinstance(v, str) for k, v in traits.items()):
             raise ValueError("traits maps roles to trait names")
         params["traits"] = traits
     if ambitions is not None:
         params["ambitions"] = list(ambitions)
+    if needs is not None:  # {wound kind: phrase} (world data, S7 §7)
+        if not isinstance(needs, dict) or not all(isinstance(k, str) and isinstance(v, str) for k, v in needs.items()):
+            raise ValueError("needs maps wound kinds to phrases")
+        params["needs"] = dict(needs)
     _parse(canonical({k: params[k] for k in WORLD_PARAMS}))
     return params
 
@@ -115,6 +125,7 @@ def die(ctx, person: str, settlement: str, cause: str, *, killer: str | None = N
         for kin in grieving(ctx, person):
             if kin != killer:  # (a son who kills his father in a duel holds nothing against himself)
                 add_grievance(ctx, kin, killer, death.id, "killed")
+                minds.wound(ctx, kin, "grief", death.id)
     ties.end_ties(ctx, person, "death")
     from renasci.people import ambitions
 
@@ -139,9 +150,10 @@ _AMBITION_READS = frozenset({"ambitions", "cooldowns", "owner", "class", "state"
                              "target", "house", "headship", "holder"})  # (and whatever any `satisfied` reads)
 _AMBITION_WRITES = frozenset({"ambitions", "cooldowns", "state", "resolved", "scheme"})
 DIE_EVENTS = (DEATH, _RESOLVED) + houses.EVENT_TYPES + (ties.TIE_ENDED,)
-DIE_READS = (frozenset({"born", "residents", "spouse", "status", "flow:*", "mother", "father", "children", "grievances"})
+DIE_READS = (frozenset({"born", "residents", "spouse", "status", "flow:*", "mother", "father", "children", "grievances",
+                         "need"})
              | houses.READS | ties.READS | _AMBITION_READS)
-DIE_WRITES = frozenset({"status", "residents", "spouse", "flow:*", "grievances"}) | houses.WRITES | ties.WRITES | _AMBITION_WRITES
+DIE_WRITES = frozenset({"status", "residents", "spouse", "flow:*", "grievances", "wound", "need"}) | houses.WRITES | ties.WRITES | _AMBITION_WRITES
 
 
 class Life(System):
@@ -165,8 +177,9 @@ class Life(System):
                         continue
                     cause = "old age" if age >= 60 else "infancy" if age < 5 else "illness"
                     if ctx.guarded(person):
-                        ctx.emit("people.near_miss", {"survivor": (person,)}, purpose="near_miss", actor=person,
-                                 place=settlement, payload={"would_have": cause})
+                        miss = ctx.emit("people.near_miss", {"survivor": (person,)}, purpose="near_miss",
+                                        actor=person, place=settlement, payload={"would_have": cause})
+                        minds.wound(ctx, person, "terror", miss.id)
                     else:
                         die(ctx, person, settlement, cause)
 
