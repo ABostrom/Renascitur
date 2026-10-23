@@ -58,6 +58,11 @@ class Probe(System):
                 ctx.schedule(after, "probe", entity="t:probe", payload={"i": i})
 
     def handle(self, ctx, activation):
+        if activation.purpose != "probe":  # (a death it caused may vacate a seat: succession follows)
+            from renasci.people import houses
+
+            houses.handle_succession(ctx, activation)
+            return
         PLAN["steps"][activation.payload["i"]][1](ctx)
 
 
