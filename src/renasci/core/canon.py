@@ -6,6 +6,7 @@ Sorted keys, no whitespace, floats as Python's shortest round-trip repr (exact f
 
 from __future__ import annotations
 
+import functools
 import hashlib
 import json
 
@@ -47,4 +48,16 @@ def canonical(value) -> str:
 
 def digest(value, size: int = 8) -> str:
     """Hex blake2b of the canonical form."""
-    return hashlib.blake2b(canonical(value).encode(), digest_size=size).hexdigest()
+    if value is None or type(value) in (str, int, bool):  # most reads are of ids and small values: cache them
+        return _scalar_digest(type(value), value, size)
+    return digest_text(canonical(value), size)
+
+
+@functools.lru_cache(maxsize=1 << 16)
+def _scalar_digest(kind: type, value, size: int) -> str:  # (`kind` keeps True apart from 1)
+    return digest_text(canonical(value), size)
+
+
+def digest_text(text: str, size: int = 8) -> str:
+    """`digest` of a value whose canonical text is already at hand."""
+    return hashlib.blake2b(text.encode(), digest_size=size).hexdigest()

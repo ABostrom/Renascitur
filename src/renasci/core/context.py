@@ -17,7 +17,7 @@ import math
 from contextlib import contextmanager
 
 from renasci.core.calendar import Span
-from renasci.core.canon import canonical, digest
+from renasci.core.canon import canonical, digest, digest_text
 from renasci.core.choice import match, scored
 from renasci.core.events import Cause, Event, Source
 from renasci.core.ids import entity_id, event_id
@@ -87,11 +87,12 @@ class Ctx:
             raise ValueError(f"{self.system.name} wrote {name!r} before emitting an event to explain it")
         return self._event
 
-    def _note(self, key: tuple[str, str], value) -> None:
-        """Record a read and a digest of the value seen (the first time, i.e. before own writes)."""
+    def _note(self, key: tuple[str, str], value, text: str | None = None) -> None:
+        """Record a read and a digest of the value seen (the first time, i.e. before own writes).
+        `text` is the value's canonical JSON when the caller already has it."""
         target = self._reads if self._scope is None else self._scoped[self._scope]
         if key not in target:
-            target[key] = digest(value)
+            target[key] = digest(value) if text is None else digest_text(text)
 
     @contextmanager
     def scope(self, key: str):
@@ -144,8 +145,8 @@ class Ctx:
 
     def get(self, entity: str, field: str, default=None):
         self._may_read(field)
-        value = self._engine.store.get(entity, field, default)
-        self._note((entity, field), value)
+        value, text = self._engine.store.read(entity, field, default)
+        self._note((entity, field), value, text)
         return value
 
     def status(self, entity: str) -> str:

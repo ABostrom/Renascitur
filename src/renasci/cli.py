@@ -505,12 +505,27 @@ BENCH_FIELDS = ["date", "commit", "engine", "python", "numpy", "world", "years",
 
 
 def cmd_bench(args) -> int:
-    """Run the toy world for N years into a scratch run folder and append the numbers to the history."""
+    """Run a world for N years into a scratch run folder and append the numbers to the history: the toy
+    world (`--people` per village) or the Fourth Age (`--scale` times the draft's population)."""
     from renasci.core.determinism import versions
-    from renasci.toy import CAL, new_engine
 
-    if args.years < 1 or args.people < 1:
-        raise ValueError("--years and --people must be at least 1")
+    if args.years < 1 or args.people < 1 or args.scale < 1:
+        raise ValueError("--years, --people and --scale must be at least 1")
+    if args.world == "toy":
+        from renasci.toy import CAL, START, new_engine
+
+        engine = new_engine(seed=1234, people_per_village=args.people)
+        label = f"toy x{args.people}"
+    else:
+        from renasci import renascita
+
+        CAL, START = renascita.CAL, renascita.START
+        last = CAL._by_index[START.age].last_year
+        if last is not None and START.year + args.years - 1 > last:  # (past it, the scheduler drops everything)
+            raise ValueError(f"the age ends in year {last}: at most {last - START.year + 1} years from "
+                             f"{CAL.format(START)}")
+        engine = renascita.new_engine(seed=1234, scale=args.scale)
+        label = f"fourth_age x{args.scale}"
     out = Path(args.out)
     if out.exists():  # only ever delete a previous bench folder
         manifest = out / "manifest.json"
@@ -518,14 +533,13 @@ def cmd_bench(args) -> int:
         if not (out.is_dir() and (is_bench or not any(out.iterdir()))):
             raise FileExistsError(f"{out} exists and is not a previous bench run; choose another --out")
         shutil.rmtree(out)
-    engine = new_engine(seed=1234, people_per_village=args.people)
     engine.full_reads = args.full_reads  # off by default, as in recipe runs (#151)
     folder = RunFolder.create(out, {"bench": True})
     people_start = peak = len(engine.store.ids("person", "active"))
     events = 0
     began = time.perf_counter()
     for year in range(1, args.years + 1):
-        engine.run(until=Date(1, year, CAL.days_per_year - 1))
+        engine.run(until=Date(START.age, START.year + year - 1, CAL.days_per_year - 1))
         peak = max(peak, len(engine.store.ids("person", "active")))
         events += len(engine.events)
         flush(engine, folder)
@@ -541,7 +555,7 @@ def cmd_bench(args) -> int:
         commit = "unknown"
     v = versions()
     row = {"date": datetime.date.today().isoformat(), "commit": commit, "engine": v["engine"], "python": v["python"],
-           "numpy": v["numpy"], "world": f"toy x{args.people}" + (" full reads" if args.full_reads else " digest reads"), "years": args.years, "people_start": people_start,
+           "numpy": v["numpy"], "world": label + (" full reads" if args.full_reads else " digest reads"), "years": args.years, "people_start": people_start,
            "people_peak": peak, "events": events, "seconds": round(seconds, 2),
            "years_per_s": round(args.years / seconds, 3), "events_per_s": round(events / seconds, 1),
            "run_mb": round(run_mb, 3)}
@@ -638,8 +652,10 @@ def main(argv=None) -> int:
     p.add_argument("--no-browser", action="store_true")
     p.add_argument("--allow-launch", action="store_true",
                    help="let the Observatory launch latch-point what-ifs (each writes a new run folder)")
-    p = sub.add_parser("bench", help="time the toy world (simulation plus writing the run folder, "
+    p = sub.add_parser("bench", help="time a world (simulation plus writing the run folder, "
                                       "not world setup) and append to the benchmark history")
+    p.add_argument("--world", choices=("toy", "fourth_age"), default="toy")
+    p.add_argument("--scale", type=int, default=10, help="fourth_age: times the draft's population (10: M1 scale)")
     p.add_argument("--years", type=int, default=300)
     p.add_argument("--people", type=int, default=100, help="people per village (6 villages)")
     p.add_argument("--history", default="bench/history.csv")
