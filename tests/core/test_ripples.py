@@ -99,7 +99,7 @@ def test_ripples_need_a_disguise_a_known_kind_and_a_date_in_the_run():
     with pytest.raises(ValueError):
         engine([Ripple("r", "protect", Date(1, 2, 0), "t:Ada", {"until": [1, 1, 0]})])  # ends before it starts
     with pytest.raises(ValueError):
-        engine([Ripple("r", "favour", Date(1, 2, 0), "t:Ada")])  # S1 supports protect, doom, inject
+        engine([Ripple("r", "favour", Date(1, 2, 0), "t:Ada")])  # (favour needs params.by and params.until)
 
 
 def test_a_failed_disguise_is_recorded_not_fatal():

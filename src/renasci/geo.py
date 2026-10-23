@@ -225,21 +225,52 @@ def _check_changes(changes, places, regions, routes) -> list[dict]:
     return out
 
 
+CHANGE_READS = frozenset({"ids:route", "ends"})
+CHANGE_WRITES = frozenset({"new:route", "open", "days", "region"})
+
+
+def changed_type():
+    """The `geo.changed` event type (built on use: geo itself doesn't need the engine)."""
+    from renasci.core.events import EventType
+
+    return EventType("geo.changed", 1, roles={"site": (1, 2)}, payload={"why": "str", "change": "json"})
+
+
+def apply_change(ctx, c: dict) -> None:
+    """Make one map change (a `changes` entry without its date) happen now: a `geo.changed` event, then
+    the write. Systems and disguises that call it declare CHANGE_READS, CHANGE_WRITES and changed_type()."""
+    why = c.get("why", "")
+    if "build" in c:
+        r = c["build"]
+        ctx.emit("geo.changed", {"site": tuple(r["ends"])}, purpose="map", actor=r["ends"][0],
+                 place=r["ends"][0], payload={"why": why, "change": c})
+        ctx.create("route", r["id"], {"ends": list(r["ends"]), "days": r["days"], "kind": r["kind"],
+                                      "vialux": bool(r.get("vialux", False)), "open": r.get("open", True),
+                                      **({"barred": list(r["barred"])} if r.get("barred") else {})})
+    elif "route" in c:
+        ends = ctx.get(c["route"], "ends")
+        ctx.emit("geo.changed", {"site": (c["route"],)}, purpose="map", actor=c["route"], place=ends[0],
+                 payload={"why": why, "change": c})
+        for f in ("open", "days"):
+            if f in c:
+                ctx.set(c["route"], f, c[f])
+    else:
+        ctx.emit("geo.changed", {"site": (c["place"],)}, purpose="map", actor=c["place"], place=c["place"],
+                 payload={"why": why, "change": c})
+        ctx.set(c["place"], "region", c["region"])
+
+
 def map_history():
     """The `MapHistory` system class (made on first use: geo itself doesn't need the engine)."""
     from renasci.core.calendar import AgeBoundaryError, Date, Span
-    from renasci.core.events import EventType
     from renasci.core.systems import System
-
-    changed = EventType("geo.changed", 1, roles={"site": (1, 2)}, payload={"why": "str", "change": "json"})
 
     class MapHistory(System):
         """Each of the geography's dated `changes` (the ruleset param `map_changes`) on its date."""
 
         name, cadence, priority = "geo.map", "seasonal", -5  # (before journeys and people that season)
-        reads = frozenset({"ids:route", "ends"})
-        writes = frozenset({"new:route", "open", "days", "region"})
-        event_types = (changed,)
+        reads, writes = CHANGE_READS, CHANGE_WRITES
+        event_types = (changed_type(),)
 
         def run(self, ctx):
             """This season's changes: today's now, later ones by one follow-up per day (each day's in the
@@ -257,34 +288,45 @@ def map_history():
                 if when != ctx.today:
                     ctx.schedule(Span(days=ctx.calendar.days_between(ctx.today, when)), "map", payload={"i": idx})
             for i in days.get(ctx.today, ()):
-                self._apply(ctx, ctx.params["map_changes"][i])
+                apply_change(ctx, ctx.params["map_changes"][i])
 
         def handle(self, ctx, activation):
             for i in activation.payload["i"]:
-                self._apply(ctx, ctx.params["map_changes"][i])
-
-        def _apply(self, ctx, c):
-            why = c.get("why", "")
-            if "build" in c:
-                r = c["build"]
-                ctx.emit("geo.changed", {"site": tuple(r["ends"])}, purpose="map", actor=r["ends"][0],
-                         place=r["ends"][0], payload={"why": why, "change": c})
-                ctx.create("route", r["id"], {"ends": list(r["ends"]), "days": r["days"], "kind": r["kind"],
-                                              "vialux": bool(r.get("vialux", False)), "open": r.get("open", True),
-                                              **({"barred": list(r["barred"])} if r.get("barred") else {})})
-            elif "route" in c:
-                ends = ctx.get(c["route"], "ends")
-                ctx.emit("geo.changed", {"site": (c["route"],)}, purpose="map", actor=c["route"], place=ends[0],
-                         payload={"why": why, "change": c})
-                for f in ("open", "days"):
-                    if f in c:
-                        ctx.set(c["route"], f, c[f])
-            else:
-                ctx.emit("geo.changed", {"site": (c["place"],)}, purpose="map", actor=c["place"], place=c["place"],
-                         payload={"why": why, "change": c})
-                ctx.set(c["place"], "region", c["region"])
+                apply_change(ctx, ctx.params["map_changes"][i])
 
     return MapHistory
+
+
+def upheaval():
+    """The people world's `structural` disguise (#114): the world changes shape, a ripple's map change.
+
+    A ripple `{"kind": "structural", "target": <route>, "params": {"open"/"days", "why"}}` closes, reopens
+    or re-times the route (a pass closes); `{"target": <place>, "params": {"region", "why"}}` moves a place
+    into another region. A harvest failing waits for S10's harvests."""
+    from renasci.core.ripples import Disguise
+
+    class Upheaval(Disguise):
+        name, handles = "geo.upheaval", "structural"
+        reads, writes = CHANGE_READS | frozenset({"region"}), CHANGE_WRITES
+        event_types = (changed_type(),)
+
+        def apply(self, ctx, ripple) -> bool:
+            p, target = ripple.params, ripple.target
+            if not ctx.exists(target):
+                return False
+            if "region" in p:  # (a place or a settlement into a region)
+                if ctx.kind(target) not in ("place", "settlement") or not ctx.exists(p["region"]) \
+                        or ctx.kind(p["region"]) != "region":
+                    return False
+                apply_change(ctx, {"place": target, "region": p["region"], "why": p.get("why", "")})
+            else:
+                if target not in ctx.ids("route"):
+                    return False
+                apply_change(ctx, {"route": target, **{k: p[k] for k in ("open", "days") if k in p},
+                                   "why": p.get("why", "")})
+            return True
+
+    return Upheaval
 
 
 # ------------------------------------------------------------ routing (S4 §8, #78)

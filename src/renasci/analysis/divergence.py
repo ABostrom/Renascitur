@@ -83,10 +83,13 @@ def _reads_mode(*histories: dict) -> str:
     return "full" if kinds <= {True} else "digest" if kinds == {False} else "mixed"
 
 
-def analyse(baseline: dict, variant: dict, baseline_state: dict, variant_state: dict, ripples=()) -> dict:
+def analyse(baseline: dict, variant: dict, baseline_state: dict, variant_state: dict, ripples=(),
+            since: list | None = None) -> dict:
     """Compare two runs (history tables and final store snapshots) and explain their differences.
 
-    `ripples` are the ripple ids that separate the runs. Returns counts, the divergent event ids per
+    `ripples` are the ripple ids that separate the runs; `since`, a date from which one run's draws are
+    re-rolled (a reshuffle only one of them has): every event and activation from then on is explained,
+    since everything after it differs on purpose (the master spec's "reshuffle from year X"). Returns counts, the divergent event ids per
     side, every unexplained item with the side it is on ("baseline", "variant" or "both"), and the
     causal wave (divergent, unexplained and total events per age-year per place).
     """
@@ -115,6 +118,8 @@ def analyse(baseline: dict, variant: dict, baseline_state: dict, variant_state: 
         if act in explained_acts:
             return True
         info = run.activations.get(act)
+        if info is not None and since is not None and info["date"] >= since:
+            return True
         return info is not None and any(cause_tainted(k, r) for k, r in info["causes"])
 
     changed = True
@@ -131,6 +136,7 @@ def analyse(baseline: dict, variant: dict, baseline_state: dict, variant_state: 
                 act, scope = run.scope_of[eid]
                 if ((act, scope) in tainted_scopes or (act, None) in tainted_scopes
                         or act in explained_acts
+                        or (since is not None and e["date"] >= since)
                         or (e["source"][0] == "ripple" and e["source"][1] in ripples)
                         or any(cause_tainted(k, r) for k, r in e["causes"])):
                     tainted_events.add(eid)

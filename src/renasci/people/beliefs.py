@@ -66,6 +66,7 @@ import math
 from renasci.core.calendar import Date, Span
 from renasci.core.canon import digest
 from renasci.core.events import Cause, EventType
+from renasci.core.ripples import Disguise
 from renasci.core.systems import System
 
 BELIEF_CAP, WITNESS_CAP = 16, 3
@@ -722,3 +723,53 @@ def _grieve(ctx, person: str, c: dict, conf: float, event: str) -> None:
         return
     ctx.set(person, "grievances", [*held, {"against": by, "event": event, "kind": "killed", "about": victim,
                                            "since": ctx.today.to_json()}])
+
+
+# ------------------------------------------------------------ plant (a ripple, #114)
+
+RUMOUR = EventType("belief.rumour", 1, roles={"settlement": (1, 1)},
+                   payload={"claim": "json", "key": "str", "share": "float"})
+
+
+class PlantRumour(Disguise):
+    """The people world's `plant` disguise (#114): a rumour starts in a town's talk.
+
+    A ripple `{"kind": "plant", "target": <settlement>, "params": {"claim": {pred, args}, "share": (0, 1]}}`
+    gives the claim that share of the town's masses (rival answers to the same question make room): from there gossip leaks it to
+    notables and the road carries it on as news, like any line the town tells. Only in a world with
+    beliefs, and only a claim the world's predicates know. (Planting an object waits for S9's objects.)"""
+
+    name, handles = "people.rumour", "plant"
+    reads = frozenset({"shares", "ids:settlement"})
+    writes = frozenset({"shares"})
+    event_types = (RUMOUR,)
+
+    @staticmethod
+    def check_ripple(ripple) -> None:
+        """Refuse a claim the world's predicates can't read, before the run."""
+        c = ripple.params["claim"]
+        try:
+            claim(c["pred"], **c["args"])
+        except (KeyError, TypeError, ValueError) as e:
+            raise ValueError(f"plant ripple {ripple.id}: {c!r} isn't a claim this world knows ({e})") from None
+
+    def apply(self, ctx, ripple) -> bool:
+        c, share = ripple.params["claim"], ripple.params.get("share", 0.2)
+        town = ripple.target
+        if not enabled(ctx) or town not in ctx.ids("settlement"):
+            return False
+        c = claim(c["pred"], **c["args"])  # (its canonical form)
+        k, t = key(c), topic(c)
+        shares = {s: v for s, v in (ctx.get(town, "shares") or {}).items() if s != k}
+        rivals = [s for s, v in shares.items() if topic(v["claim"]) == t]  # (other answers to the same question)
+        rest = sum(shares[s]["share"] for s in rivals)
+        if rest + share > 1:  # (the rumour takes its share from them, not from other topics)
+            for s in rivals:
+                shares[s] = {**shares[s], "share": shares[s]["share"] * (1 - share) / rest}
+        shares[k] = {"claim": c, "share": float(share)}
+        shares = _normalised(shares)
+        held = shares.get(k, {}).get("share", 0.0)  # (what the town holds: floored, maybe crowded out)
+        ctx.emit("belief.rumour", {"settlement": (town,)}, purpose="rumour", actor=town, place=town,
+                 payload={"claim": c, "key": k, "share": held})
+        ctx.set(town, "shares", shares)
+        return True
