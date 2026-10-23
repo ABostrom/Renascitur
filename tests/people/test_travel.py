@@ -40,7 +40,7 @@ class Probe(System):
     reads = travel.READS | A.READS | life.DIE_READS | frozenset(
         {"ids:settlement", "ids:person", "residents", "place", "spouse", "offices", "born", "sex", "race", "status",
          "region", "capacity", "vialux"}).union(*(a.reads for a in A.ACTIONS.values()))
-    writes = travel.WRITES | life.DIE_WRITES | A.WRITES
+    writes = travel.WRITES | life.DIE_WRITES | A.WRITES | frozenset({"travels", "marks"})
     event_types = tuple({t.name: t for t in travel.EVENT_TYPES + life.DIE_EVENTS + A.EVENT_TYPES}.values())
 
     def run(self, ctx):
@@ -105,6 +105,61 @@ def test_a_journey_departs_takes_the_routes_days_and_arrives():
     arr = next(ev for ev in e.events if ev.type == "people.arrive")
     assert arr.date == CAL.add(dep.date, Span(days=6))
     assert any(c.kind == "event" and c.ref == dep.id for c in arr.causes)
+
+
+def mark(ctx, p, field, value):
+    """Set a field on someone (a write follows an event: the probe's own)."""
+    ctx.emit("people.action", {"actor": (p,)}, purpose="probe", actor=p, payload={"action": "Probe", "outcome": "success"})
+    ctx.set(p, field, value)
+
+
+@pytest.mark.parametrize("mode, days", [(None, 6), ("horse", 3)])
+def test_with_routing_a_rider_gets_there_sooner(mode, days):
+    """(S4 §8, #78) The test world's roads are 3 days each; a rider takes half that, on foot the file's days."""
+    def go(ctx):
+        a, c = [s["id"] for s in renascita.SCENARIO["settlements"]][0:3:2]
+        p = traveller(ctx, a)
+        if mode:
+            mark(ctx, p, "travels", mode)
+        SEEN["days"] = travel.depart(ctx, p, c, "test")
+
+    e, _ = engine(scenario(routing=True), [(Span(days=1), go)])
+    e.run(until=CAL.add(START, Span(days=3)))
+    assert SEEN["days"] == days
+
+
+def test_with_routing_the_stained_cannot_take_a_road_barred_to_them():
+    sc = scenario(routing=True)
+    sc["geography"]["routes"][0]["barred"] = ["stained"]
+
+    def go(ctx):
+        a, b = [s["id"] for s in renascita.SCENARIO["settlements"]][0:2]
+        p, q = [x for x in ctx.get(a, "residents") if A._adult(ctx, x) and not ctx.get(x, "offices")][:2]
+        mark(ctx, p, "marks", ["stained"])
+        SEEN.update(barred=travel.depart(ctx, p, b, "test"), free=travel.depart(ctx, q, b, "test"))
+
+    e, _ = engine(sc, [(Span(days=1), go)])
+    e.run(until=CAL.add(START, Span(days=3)))
+    assert SEEN == {"barred": None, "free": 3}
+
+
+def test_routing_refuses_a_mode_or_season_it_doesnt_know():
+    def go(ctx):
+        a, c = [s["id"] for s in renascita.SCENARIO["settlements"]][0:3:2]
+        p = traveller(ctx, a)
+        mark(ctx, p, "travels", "griffin")
+        with pytest.raises(ValueError, match="griffin"):
+            travel.depart(ctx, p, c, "test")
+        SEEN["checked"] = True
+
+    e, _ = engine(scenario(routing=True), [(Span(days=1), go)])
+    e.run(until=CAL.add(START, Span(days=3)))
+    assert SEEN["checked"]
+    with pytest.raises(ValueError, match="winter"):
+        e2, _ = engine(scenario(routing={"seasons": {"pass": {"winter": None}}}),
+                       [(Span(days=1), lambda ctx: travel.depart(ctx, traveller(ctx, ctx.ids("settlement")[0]),
+                                                                  ctx.ids("settlement")[2], "test"))])
+        e2.run(until=CAL.add(START, Span(days=3)))
 
 
 def test_no_path_no_journey():
@@ -210,7 +265,8 @@ def test_an_overdue_journey_is_completed_by_the_yearly_pass():
     assert SEEN["later"]["in_c"] and SEEN["later"]["journey"] is None
 
 
-@pytest.mark.parametrize("bad", [{"flee_days": 0}, {"migration_rate": 2.0}])
+@pytest.mark.parametrize("bad", [{"flee_days": 0}, {"migration_rate": 2.0}, {"routing": "fast"},
+                                 {"routing": {"vialux": 3}}, {"routing": 0}])
 def test_travel_params_are_checked(bad):
     with pytest.raises(ValueError):
         people_ruleset("fourth_age", scenario(**bad))

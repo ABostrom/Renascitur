@@ -41,10 +41,11 @@ def has_routes(ctx) -> bool:
     return bool(ctx.ids("route"))
 
 
-def destinations(ctx, home: str, max_days: int) -> dict[str, int]:
-    """Settlements other than `home` within `max_days` by road, with their days."""
+def destinations(ctx, home: str, max_days: int, who: str | None = None) -> dict[str, int]:
+    """Settlements other than `home` within `max_days` by road, with their days (as `who` travels today,
+    in a world with routing)."""
     settlements = set(ctx.ids("settlement"))
-    return {p: d for p, d in sorted(geo.reach(ctx, home, max_days).items()) if p in settlements and p != home}
+    return {p: d for p, d in sorted(geo.reach(ctx, home, max_days, who).items()) if p in settlements and p != home}
 
 
 def depart(ctx, person: str, to: str, why: str, causes=()) -> int | None:
@@ -52,7 +53,7 @@ def depart(ctx, person: str, to: str, why: str, causes=()) -> int | None:
     if ctx.get(person, "journey"):
         return None
     home = ctx.get(person, "place")
-    found = geo.path(ctx, home, to) if home != to else None
+    found = geo.path(ctx, home, to, person) if home != to else None
     if found is None:
         return None
     days, path = found
@@ -114,7 +115,7 @@ class Migration(System):
                         continue
                     if not ctx.chance(rate, "migrate", owner=p):
                         continue
-                    options = destinations(ctx, s, reach)
+                    options = destinations(ctx, s, reach, p)
                     if not options:
                         continue
                     weights = [_pull(ctx, d, days) for d, days in options.items()]

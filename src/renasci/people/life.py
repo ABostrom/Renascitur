@@ -73,7 +73,7 @@ def world_params(races: list, catalogue: dict, house_from: str = "father", kin_d
                  commoner_rate: float = 0.3, tie_rate: float = 0.08, scheme_rate: float = 0.5,
                  exposure_base: float = 0.15, wound_years: int = 10, needs: dict | None = None,
                  flee_days: int | None = None, migration_rate: float | None = None,
-                 beliefs: bool | None = None) -> dict:
+                 beliefs: bool | None = None, routing: bool | dict | None = None) -> dict:
     """Ruleset params for the people systems, checked now rather than at the first activation."""
     if type(kin_degree) is not int or kin_degree < 0:
         raise ValueError("kin_degree must be a non-negative int")
@@ -113,6 +113,12 @@ def world_params(races: list, catalogue: dict, house_from: str = "father", kin_d
         if type(beliefs) is not bool:
             raise ValueError(f"beliefs must be true or false, got {beliefs!r}")
         params["beliefs"] = beliefs
+    if routing is True or isinstance(routing, dict):  # (S4 §8, #78: journeys by mode, season, Vialux, marks)
+        from renasci import geo
+
+        params["routing"] = geo.routing_table(routing)
+    elif routing is not None and routing is not False:
+        raise ValueError(f"routing must be true, false or a table, got {routing!r}")
     if migration_rate is not None:
         if type(migration_rate) not in (int, float) or not 0 <= migration_rate <= 1:
             raise ValueError(f"migration_rate must be a probability, got {migration_rate!r}")
