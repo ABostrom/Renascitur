@@ -199,6 +199,15 @@ try {
 	if ((await page.locator('svg[aria-label^="Map of"] line.route.vialux').count()) === 0) throw new Error('no Vialux on the map');
 	await page.goto(`http://127.0.0.1:${port}/run/base/map`);
 	await page.getByText(/has no geography/).waitFor({ timeout: 15000 });
+	// knowledge: the ward failure's lie beside the truth, and a claim picked onto the spread map
+	await page.goto(`http://127.0.0.1:${port}/run/ward/knowledge`);
+	await page.getByRole('heading', { name: 'Knowledge' }).waitFor({ timeout: 20000 });
+	await page.getByRole('button', { name: /ward failure/ }).click();
+	if ((await page.locator('table .badge.warn').count()) === 0) throw new Error('no false claim about the ward failure');
+	const believing = await page.locator('svg[aria-label="Spread map"] circle.held').count();
+	if (believing === 0) throw new Error('nobody believes anything on the spread map');
+	await page.locator('table button.link').first().click();
+	await page.getByRole('heading', { name: /^Where “/ }).waitFor({ timeout: 5000 });
 	// read-only without the launcher: the runs page offers no launch
 	await page.goto(`http://127.0.0.1:${port}/`);
 	await page.getByRole('heading', { name: 'Runs', exact: true, level: 1 }).waitFor({ timeout: 15000 });
@@ -206,7 +215,7 @@ try {
 	// with --allow-launch: a run launched from a recipe and opened from the UI (a scratch runs folder)
 	launched = await launchAndOpen(browser, errors);
 	if (errors.length) throw new Error(`page errors: ${errors.join('; ')}`);
-	console.log(`smoke: ok (browser read ${counts.base.n} events from base; ${shown} granary events listed; detail, cause chain and entity page shown; diff wave of ${cells} cells, ${divergentShown} divergent events in one, buggy roots marked; story river of ${bars} bars, ${barsIn} in a decade, saga to arc to event; latch points and a what-if beside its baseline; a person's page; houses and ${popLines} population lines; canon strain to its event; the Pyrosia map with ${towns} settlements; ${launched})`);
+	console.log(`smoke: ok (browser read ${counts.base.n} events from base; ${shown} granary events listed; detail, cause chain and entity page shown; diff wave of ${cells} cells, ${divergentShown} divergent events in one, buggy roots marked; story river of ${bars} bars, ${barsIn} in a decade, saga to arc to event; latch points and a what-if beside its baseline; a person's page; houses and ${popLines} population lines; canon strain to its event; the Pyrosia map with ${towns} settlements; knowledge with ${believing} believing places; ${launched})`);
 } catch (e) {
 	failed = true;
 	console.error('smoke: FAILED', e);

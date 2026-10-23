@@ -43,8 +43,11 @@ def _ancestry(by_id, eid, depth: int = DEPTH) -> list[dict]:
     return out
 
 
-def _killed(by_id, events, args):
-    deaths = [e for e in events if e["type"] == "people.death" and args["victim"] in (e["roles"].get("deceased") or [])]
+def _killed(by_id, events, args, deaths=None):
+    if deaths is None:
+        deaths = [e for e in events if e["type"] == "people.death" and args["victim"] in (e["roles"].get("deceased") or [])]
+    else:
+        deaths = deaths.get(args["victim"], [])
     if not deaths:
         return "unknown", []
     death = deaths[0]
@@ -74,13 +77,26 @@ def _caused(by_id, args, also_stated: bool, houses: dict):
     return "false", [e["id"] for e in chain]
 
 
-def judge(claim: dict, events, houses: dict | None = None) -> tuple[str, list[str]]:
-    events = list(events)
+class Log:
+    """An event log indexed once, for judging many claims against it (`judge(..., log=Log(events))`)."""
+
+    def __init__(self, events):
+        self.events = list(events)
+        self.by_id = _index(self.events)
+        self.deaths: dict[str, list[dict]] = {}
+        for e in self.events:
+            if e["type"] == "people.death":
+                for v in e["roles"].get("deceased") or []:
+                    self.deaths.setdefault(v, []).append(e)
+
+
+def judge(claim: dict, events, houses: dict | None = None, log: Log | None = None) -> tuple[str, list[str]]:
+    log = log or Log(events)
+    events, by_id = log.events, log.by_id
     houses = houses or {}
-    by_id = _index(events)
     pred, args = claim["pred"], claim["args"]
     if pred == "killed":
-        return _killed(by_id, events, args)
+        return _killed(by_id, events, args, log.deaths)
     if pred == "caused":
         return _caused(by_id, args, also_stated=False, houses=houses)
     if pred == "fault":
