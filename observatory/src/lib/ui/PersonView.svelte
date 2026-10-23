@@ -3,6 +3,8 @@
 	import type { EntityChange } from '$lib/run/entity';
 	import { asOf, moments, personView, raceName, type StateIndex, type Who } from '$lib/run/person';
 
+	import PromotePanel from './PromotePanel.svelte';
+
 	let {
 		ix,
 		id,
@@ -46,6 +48,8 @@
 		{me.fields.sex === 'f' ? 'Woman' : me.fields.sex === 'm' ? 'Man' : 'Person'}{#if race}{' '}of {race}{/if}{#if view.born}, born {date(view.born)}{/if}{#if view.house}, of
 			<a href={href(view.house.id)}>House {view.house.name}</a>{/if}{#if me.status !== 'active'} ({me.status}){/if}.
 	</p>
+
+	<PromotePanel {run} entity={id} />
 
 	<h3>Family</h3>
 	<div class="tree" aria-label="Family tree">

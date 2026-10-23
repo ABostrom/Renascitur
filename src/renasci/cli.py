@@ -355,7 +355,7 @@ def cmd_vault(args) -> int:
         rel, text, notes = propose(state, list(rf.read("events")), args.entity, vault, cal,
                                    source={"run": run.name, "run_path": str(run.resolve()),
                                            "state_hash": rf.manifest["meta"].get("state_hash", "")},
-                                   bindings=bindings)
+                                   bindings=bindings, causes=args.cause)
         sys.stdout.reconfigure(errors="replace")
         for note in notes:
             print(f"note: {note}")
@@ -581,7 +581,7 @@ def cmd_observe(args) -> int:
     from renasci.observe import serve
 
     serve(args.app, args.runs, port=args.port, open_browser=not args.no_browser, launch=args.allow_launch,
-          recipes=args.recipes)
+          recipes=args.recipes, vault=args.vault)
     return 0
 
 
@@ -635,6 +635,8 @@ def main(argv=None) -> int:
     v.add_argument("entity")
     v.add_argument("docs", nargs="?", default="docs")
     v.add_argument("--write", action="store_true")
+    v.add_argument("--cause", action="append", default=[],
+                   help="an event's own cause to keep with it (kind:ref, as the run records it); repeatable")
     v = vsub.add_parser("suggest", help="frontmatter from labelled body bullets (a dry run unless --write)")
     v.add_argument("docs", nargs="?", default="docs")
     v.add_argument("--write", action="store_true")
@@ -654,6 +656,8 @@ def main(argv=None) -> int:
     p.add_argument("--allow-launch", action="store_true",
                    help="let the Observatory launch runs, replays and what-ifs (each writes a new run folder)")
     p.add_argument("--recipes", default="recipes", help="the recipes the Observatory may launch (with --allow-launch)")
+    p.add_argument("--vault", default=None,
+                   help="a vault the Observatory may write proposed notes into (with --allow-launch; never by default)")
     p = sub.add_parser("bench", help="time a world (simulation plus writing the run folder, "
                                       "not world setup) and append to the benchmark history")
     p.add_argument("--world", choices=("toy", "fourth_age"), default="toy")

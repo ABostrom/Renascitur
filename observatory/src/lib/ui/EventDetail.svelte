@@ -6,6 +6,7 @@
 	import { loadGraph } from '$lib/runs';
 
 	import CauseTree from './CauseTree.svelte';
+	import PromotePanel from './PromotePanel.svelte';
 
 	let { index, id, onSelect }: { index: EventIndex; id: string; onSelect: (id: string) => void } = $props();
 
@@ -129,6 +130,9 @@
 						</li>
 					{/each}
 				</ul>
+			{/if}
+			{#if event.type.startsWith('people.')}
+				<PromotePanel run={index.run.name} entity={event.id} causes={event.causes} />
 			{/if}
 		</section>
 
