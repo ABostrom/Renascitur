@@ -59,6 +59,7 @@ def people_hook(ctx) -> None:
             if pid:
                 parents[role] = pid
         house = ctx.id_of(ctx.link(fm.get("house"), {"house"}))
+        race = ctx.id_of(ctx.link(fm.get("race"), {"race"}))
         if died is not None and died[1] < ctx.start:
             status = "dead"
         elif born is None:
@@ -72,7 +73,8 @@ def people_hook(ctx) -> None:
         people[cid] = {"key": key, "note": note, "status": status, "house": house, "born_w": born, "died_w": died,
                        "parents": parents, "sex": fm.get("sex") if fm.get("sex") in ("m", "f") else None}
         ctx.out.placements[cid] = {"status": status, "key": key, "house": house, "born": _window_json(born),
-                                   "died": _window_json(died), "sex": people[cid]["sex"], "parents": parents}
+                                   "died": _window_json(died), "sex": people[cid]["sex"], "parents": parents,
+                                   "race": race}
 
     for cid, p in people.items():
         key, born, died = p["key"], p["born_w"], p["died_w"]
@@ -123,7 +125,10 @@ def people_hook(ctx) -> None:
             if office in ctx.ids.values():
                 ctx.finding("office", key, f"{office} is also a note's id: rename one")
                 continue
-            reigns.setdefault(office, []).append((start, cid, key, oid))
+            until = ctx.date(key, entry.get("to")) if entry.get("to") is not None else None
+            row = {"office": office, "holder": cid, "key": key, "from": start, "to": until, "pin": None}
+            ctx.out.reigns.append(row)
+            reigns.setdefault(office, []).append((start, cid, key, oid, row))
 
     holders: dict[str, str] = {}
     for office, held in sorted(reigns.items()):
@@ -133,7 +138,7 @@ def people_hook(ctx) -> None:
             holders[office] = before[-1][1]
         counts: dict[str, int] = {}
         previous = None
-        for i, (window, cid, key, house) in enumerate(held):
+        for i, (window, cid, key, house, row) in enumerate(held):
             counts[cid] = n = counts.get(cid, 0) + 1
             if i + 1 < len(held) and held[i + 1][0][1] < window[1]:
                 window = (window[0], held[i + 1][0][1])  # end no later than the next reign's window
@@ -150,6 +155,7 @@ def people_hook(ctx) -> None:
                 ctx.finding("outside_house", key, f"{cid} reigns over {office} but isn't of that house: it will be forced")
             pin = ctx.pin(Pin(f"{cid}:reign:{office}:{n}", "event", window=window, payload={
                 "type": "people.succession", "roles": {"successor": [cid]}, "office": office}))
+            row["pin"] = pin.id
             if previous is not None:
                 ctx.order(previous, pin, key, f"the reign before {cid}'s of {office}")
             previous = pin
@@ -157,3 +163,123 @@ def people_hook(ctx) -> None:
 
 
 people_hook.owns = OWNS
+
+
+# ---------------------------------------------------------------- feasibility (S2 §8)
+
+
+def _years(calendar, earlier, later) -> tuple[float, float]:
+    """The least and most whole years from a date in window `earlier` to one in window `later`."""
+    def days(a, b):
+        return calendar.days_between(a, b) if a <= b else -calendar.days_between(b, a)
+
+    per = calendar.days_per_year
+    return days(earlier[1], later[0]) / per, days(earlier[0], later[1]) / per
+
+
+def people_check(extraction, vault, races, report, calendar) -> None:
+    """Lineages, lives, ages at a birth and reigns (S2 §8), marking pins infeasible in `report`."""
+    from renasci.core.calendar import Date
+    from renasci.vault.feasibility import infeasible
+
+    people = extraction.placements
+
+    def window(p, k):
+        w = p.get(k)
+        return (Date.from_json(w[0]), Date.from_json(w[1])) if w else None
+
+    def pins_of(cid):
+        return [pid for pid in report["pins"] if pid.startswith(f"{cid}:")]
+
+    def finding(kind, key, message):
+        report["findings"].append({"kind": kind, "key": key, "message": message})
+
+    for cid, p in people.items():  # died before born: nothing about them can hold
+        born, died = window(p, "born"), window(p, "died")
+        if born and died and died[1] < born[0]:
+            finding("died_before_born", p["key"], f"{cid} dies before being born")
+            for pid in pins_of(cid):
+                infeasible(report, pid, f"{cid} dies before being born", [p["key"]])
+
+    state: dict[str, int] = {}  # lineage cycles: a DFS over every parent (0 visiting, 1 done)
+    stack: list[str] = []
+    cycles: list[list[str]] = []
+
+    def visit(node):
+        state[node] = 0
+        stack.append(node)
+        for parent in sorted(people[node].get("parents", {}).values()):
+            if parent not in people:
+                continue
+            if state.get(parent) == 0:
+                cycles.append(stack[stack.index(parent):])
+            elif parent not in state:
+                visit(parent)
+        stack.pop()
+        state[node] = 1
+
+    for cid in sorted(people):
+        if cid not in state:
+            visit(cid)
+    for cycle in cycles:
+        keys = [people[m]["key"] for m in cycle]
+        finding("lineage_cycle", keys[0], " -> ".join(cycle + [cycle[0]]))
+        for member in cycle:
+            infeasible(report, f"{member}:born", "a lineage cycle", keys)
+
+    race_of = vault.config.races
+    missing_race = False
+    for cid, p in people.items():  # ages at a birth
+        pid = f"{cid}:born"
+        if pid not in report["pins"]:
+            continue
+        born = window(p, "born")
+        for role, parent_id in sorted(p.get("parents", {}).items()):
+            parent = people.get(parent_id)
+            pborn = window(parent, "born") if parent else None
+            if parent is None or pborn is None:
+                continue
+            race = races.get(race_of.get(parent.get("race"))) if races and parent.get("race") else None
+            if race is None:
+                missing_race = True
+                continue
+            try:
+                lo, hi = _years(calendar, pborn, born)
+            except ValueError:  # (born in different ages: ages across a boundary come with M7a)
+                continue
+            if role == "mother" and (hi < race.fertile[0] or lo >= race.fertile[1] + 1):
+                infeasible(report, pid, f"its mother {parent_id} would be {lo:.0f}-{hi:.0f}, outside her race's "
+                           f"fertile years {race.fertile[0]}-{race.fertile[1]}", [p["key"], parent["key"]])
+            if role == "father" and hi < race.marriage[0]:
+                infeasible(report, pid, f"its father {parent_id} would be at most {hi:.0f}, too young to marry "
+                           f"({race.marriage[0]})", [p["key"], parent["key"]])
+    if missing_race:
+        report["reports"].append({"kind": "no_race_data", "key": None, "message":
+                                  "some parents have no race the scenario knows (vault.toml [races]): their ages "
+                                  "at a birth weren't checked"})
+
+    by_office: dict[str, list] = {}
+    for r in extraction.reigns:  # reigns: overlaps and outside a life
+        by_office.setdefault(r["office"], []).append(r)
+        holder = people.get(r["holder"])
+        died = window(holder, "died") if holder else None
+        if r["pin"] and died and r["from"][0] > died[1]:
+            infeasible(report, r["pin"], f"{r['holder']} is dead before this reign begins", [r["key"]])
+    for office, held in by_office.items():
+        held.sort(key=lambda r: (r["from"][0], r["holder"]))
+        holding = None  # the reign whose end is latest so far
+        for r in held:
+            if holding and holding["to"] and r["pin"] and holding["to"][0] > r["from"][1]:
+                infeasible(report, r["pin"], f"{holding['holder']} still holds {office} until "
+                           f"{holding['to'][0].to_json()}", [holding["key"], r["key"]])
+            if r["to"] and (holding is None or holding["to"] is None or r["to"][0] > holding["to"][0]):
+                holding = r
+    for pid, entry in report["pins"].items():  # an ordering stands or falls with its two pins
+        if ":before:" in pid and entry["verdict"] != "infeasible":
+            before, after = pid.split(":before:")
+            for end in (before, after):
+                if report["pins"].get(end, {}).get("verdict") == "infeasible":
+                    infeasible(report, pid, f"{end} can't hold", report["pins"][end]["notes"])
+
+
+people_hook.check = people_check

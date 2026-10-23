@@ -253,6 +253,22 @@ def cmd_stories(args) -> int:
     return 0
 
 
+def _run_window(args):
+    """(calendar, start, end, races) for a vault command's --world/--from/--to."""
+    import importlib
+
+    from renasci.people.races import Race
+
+    cal = get_world(args.world).calendar
+    start, end = cal.parse(args.from_), cal.parse(args.to)
+    if len(args.to.split()) == 2:  # a year: to its end
+        end = Date(end.age, end.year, cal.days_per_year - 1)
+    module = importlib.import_module("renasci.renascita" if args.world == "fourth_age" else f"renasci.{args.world}")
+    scenario = getattr(module, "SCENARIO", None)
+    races = {r["id"]: Race.from_json(r) for r in scenario["races"]} if scenario else {}
+    return cal, start, end, races
+
+
 def cmd_vault(args) -> int:
     from renasci.vault.loader import load
 
@@ -261,11 +277,7 @@ def cmd_vault(args) -> int:
         from renasci.people.vault import people_hook
         from renasci.vault.pins import extract
 
-        cal = get_world(args.world).calendar
-        start = cal.parse(args.from_)
-        end = cal.parse(args.to)
-        if len(args.to.split()) == 2:  # a year: to its end
-            end = Date(end.age, end.year, cal.days_per_year - 1)
+        cal, start, end, _ = _run_window(args)
         found = extract(vault, cal, start, end, hooks=[people_hook])
         sys.stdout.buffer.write(json.dumps(found.to_json(), ensure_ascii=False).encode("utf-8") + b"\n")
         sys.stdout.flush()
@@ -281,8 +293,20 @@ def cmd_vault(args) -> int:
         verb = "added" if args.write else "would add"
         print(f"{verb} {len(plan)} id line(s)" + ("" if args.write or not plan else "; run again with --write to add them"))
         return 0
+    found = report = None
+    if args.world:  # the pins a run over --from..--to would get, and whether they can all hold
+        from renasci.people.vault import people_hook
+        from renasci.vault.feasibility import check
+        from renasci.vault.pins import extract as extract_pins
+
+        cal, start, end, races = _run_window(args)
+        found = extract_pins(vault, cal, start, end, hooks=[people_hook])
+        report = check(found, vault, start, end, hooks=[people_hook], races=races, calendar=cal)
     if args.json:  # UTF-8 whatever the console's code page (names like Yōkuro no Ki)
-        sys.stdout.buffer.write(json.dumps(vault.to_json(), ensure_ascii=False).encode("utf-8") + b"\n")
+        data = vault.to_json()
+        if report is not None:
+            data |= {"extraction": found.to_json(), "feasibility": report}
+        sys.stdout.buffer.write(json.dumps(data, ensure_ascii=False, default=str).encode("utf-8") + b"\n")
         sys.stdout.flush()
         return 0
     sys.stdout.reconfigure(errors="replace")
@@ -305,6 +329,23 @@ def cmd_vault(args) -> int:
     print("  " + ", ".join(f"{n} {r.replace('_', ' ')}" for r, n in sorted(roles.items(), key=lambda x: -x[1])))
     if missing:
         print(f"  {missing} notes have no id yet (`renasci vault ids` lists them; --write adds them)")
+    if report is not None:
+        verdicts: dict[str, int] = {}
+        for v in report["pins"].values():
+            verdicts[v["verdict"]] = verdicts.get(v["verdict"], 0) + 1
+        statuses: dict[str, int] = {}
+        for pl in found.placements.values():
+            statuses[pl["status"]] = statuses.get(pl["status"], 0) + 1
+        print(f"  pins for {args.from_}..{args.to}: " + (", ".join(f"{n} {v}" for v, n in sorted(verdicts.items())) or "none"))
+        print("  characters: " + (", ".join(f"{n} {s}" for s, n in sorted(statuses.items())) or "none"))
+        lines = [f"  {v['verdict']}: {pid}: {v['why']}" for pid, v in report["pins"].items()
+                 if v["verdict"] in ("infeasible", "unsupported")]
+        lines += [f"  {f.get('key')}  {f['kind']}  {f['message']}"
+                  for f in report["findings"] + found.findings + report["reports"] + found.reports]
+        for line in lines[:args.top]:
+            print(line)
+        if len(lines) > args.top:
+            print(f"  ... and {len(lines) - args.top} more about pins (--top N, or --json)")
     for kind, n in sorted(counts.items()):
         print(f"  {kind}: {n}")
     for f in vault.findings[:args.top]:
@@ -450,6 +491,9 @@ def main(argv=None) -> int:
     v.add_argument("docs", nargs="?", default="docs")
     v.add_argument("--json", action="store_true")
     v.add_argument("--top", type=int, default=40)
+    v.add_argument("--world", default=None, help="also extract pins in this world's calendar and check them")
+    v.add_argument("--from", dest="from_", default="4A 1")
+    v.add_argument("--to", default="4A 256")
     v = vsub.add_parser("ids", help="add missing id: lines to notes (a dry run unless --write)")
     v.add_argument("docs", nargs="?", default="docs")
     v.add_argument("--write", action="store_true")

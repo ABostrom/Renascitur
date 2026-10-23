@@ -120,3 +120,21 @@ type = "cosmic-force"
 "Languages/Modern/Leonin" = "v:leonin-language"
 "Realms/Renascita/Geography/Mokoweri/Locations/Eversoul Grove" = "v:eversoul-grove-mokoweri"
 "Realms/Renascita/Geography/Qethusiyya/Provinces/Al-Ramal/Eversoul Grove" = "v:eversoul-grove-al-ramal"
+
+# Which scenario race each race note is (S2 spec §4), for the ages at a birth (feasibility).
+# Provisional: the Fourth Age draft has only three races (src/renasci/renascita/fourth_age.json).
+[races]
+"v:leonin" = "r:leonin"
+"v:imperial-leonin" = "r:leonin"
+"v:dwarf" = "r:dwarf"
+"v:flamebound" = "r:dwarf"
+"v:icebound" = "r:dwarf"
+"v:stormbound" = "r:dwarf"
+"v:tidebound" = "r:dwarf"
+"v:terran" = "r:human"
+"v:elasi" = "r:human"
+"v:imperial-human" = "r:human"
+"v:mokoweri-human" = "r:human"
+"v:thraysian-human" = "r:human"
+"v:uftine-human" = "r:human"
+"v:rahalan" = "r:human"

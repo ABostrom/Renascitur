@@ -37,6 +37,7 @@ class Extraction:
     reports: list = field(default_factory=list)  # informational: {kind, key, message}
     findings: list = field(default_factory=list)  # problems: {kind, key, message}
     holders: dict = field(default_factory=dict)  # office -> who holds it when the run starts (hooks)
+    reigns: list = field(default_factory=list)  # {office, holder, key, from, to, pin} (hooks; feasibility reads it)
 
     def to_json(self) -> dict:
         return {"pins": [p.to_json() for p in self.pins], "placements": self.placements, "holders": self.holders,
