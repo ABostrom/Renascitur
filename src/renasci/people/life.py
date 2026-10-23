@@ -24,7 +24,7 @@ from renasci.core.canon import canonical
 from renasci.core.events import EventType
 from renasci.core.ripples import Disguise
 from renasci.core.systems import System
-from renasci.people import houses, population, ties
+from renasci.people import beliefs, houses, population, ties
 from renasci.people.genome import Catalogue, inherit, keyed, phenotype
 from renasci.people.races import Race, age_years, band, days_since, quarterly
 
@@ -72,7 +72,8 @@ def world_params(races: list, catalogue: dict, house_from: str = "father", kin_d
                  married_share: float = 0.7, demote_rate: float = 0.2, commoner_after: int = 6,
                  commoner_rate: float = 0.3, tie_rate: float = 0.08, scheme_rate: float = 0.5,
                  exposure_base: float = 0.15, wound_years: int = 10, needs: dict | None = None,
-                 flee_days: int | None = None, migration_rate: float | None = None) -> dict:
+                 flee_days: int | None = None, migration_rate: float | None = None,
+                 beliefs: bool | None = None) -> dict:
     """Ruleset params for the people systems, checked now rather than at the first activation."""
     if type(kin_degree) is not int or kin_degree < 0:
         raise ValueError("kin_degree must be a non-negative int")
@@ -108,6 +109,10 @@ def world_params(races: list, catalogue: dict, house_from: str = "father", kin_d
         if type(flee_days) is not int or flee_days < 1:
             raise ValueError(f"flee_days must be a positive int, got {flee_days!r}")
         params["flee_days"] = flee_days
+    if beliefs is not None:  # (S6: only when set, so worlds without it keep their params)
+        if type(beliefs) is not bool:
+            raise ValueError(f"beliefs must be true or false, got {beliefs!r}")
+        params["beliefs"] = beliefs
     if migration_rate is not None:
         if type(migration_rate) not in (int, float) or not 0 <= migration_rate <= 1:
             raise ValueError(f"migration_rate must be a probability, got {migration_rate!r}")
@@ -134,7 +139,8 @@ def add_grievance(ctx, holder: str, against: str, event: str, kind: str) -> None
     ctx.set(holder, "grievances", grievances)
 
 
-def die(ctx, person: str, settlement: str, cause: str, *, killer: str | None = None, causes=()) -> bool:
+def die(ctx, person: str, settlement: str, cause: str, *, killer: str | None = None, causes=(),
+        cover: bool = False, knew=()) -> bool:
     """A death and what it undoes: the record, the settlement's roster, the spouse's marriage.
 
     Someone guarded (a protect ripple, a pin) survives instead: a near miss, and terror (S7 §7).
@@ -165,6 +171,10 @@ def die(ctx, person: str, settlement: str, cause: str, *, killer: str | None = N
     from renasci.people import ambitions
 
     ambitions.on_death(ctx, person, death.id)
+    if beliefs.enabled(ctx) and (killer or cover):  # (S6: an attributed death is seen for what it was; a
+        kin = tuple(grieving(ctx, person))          # covered one, as its cover: a secret killer knows better)
+        said = beliefs.claim("killed", victim=person, by=killer or cause)
+        beliefs.perceive(ctx, death.id, settlement, [killer] if killer else [], said, also=kin, exclude=knew)
     return True
 
 
@@ -185,11 +195,11 @@ _crowding = crowding  # (the name tests used first)
 _AMBITION_READS = frozenset({"ambitions", "cooldowns", "owner", "class", "state", "scheme", "spouse", "favour",
                              "target", "house", "headship", "holder"})  # (and whatever any `satisfied` reads)
 _AMBITION_WRITES = frozenset({"ambitions", "cooldowns", "state", "resolved", "scheme"})
-DIE_EVENTS = (DEATH, NEAR_MISS, _RESOLVED) + houses.EVENT_TYPES + (ties.TIE_ENDED,)
+DIE_EVENTS = (DEATH, NEAR_MISS, _RESOLVED) + houses.EVENT_TYPES + (ties.TIE_ENDED,) + beliefs.EVENT_TYPES
 DIE_READS = (frozenset({"born", "residents", "spouse", "status", "flow:*", "mother", "father", "children", "grievances",
                          "need", "journey"})
-             | houses.READS | ties.READS | _AMBITION_READS)
-DIE_WRITES = frozenset({"status", "residents", "spouse", "flow:*", "grievances", "wound", "need", "journey"}) | houses.WRITES | ties.WRITES | _AMBITION_WRITES
+             | houses.READS | ties.READS | _AMBITION_READS | beliefs.PERCEIVE_READS)
+DIE_WRITES = frozenset({"status", "residents", "spouse", "flow:*", "grievances", "wound", "need", "journey"}) | houses.WRITES | ties.WRITES | _AMBITION_WRITES | beliefs.PERCEIVE_WRITES
 
 
 class Life(System):

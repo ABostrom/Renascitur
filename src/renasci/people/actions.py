@@ -28,7 +28,7 @@ import math
 
 from renasci.core.events import Cause, EventType
 from renasci import geo
-from renasci.people import families, life, minds, population, travel
+from renasci.people import beliefs, families, life, minds, population, travel
 from renasci.people.ambitions import trait
 from renasci.people.races import age_years
 
@@ -44,6 +44,11 @@ def _favour(ctx, person: str, delta: float) -> None:
 
 def _adult(ctx, person: str) -> bool:
     return age_years(ctx.calendar, ctx.get(person, "born"), ctx.today) >= 16
+
+
+def _knew(ctx, actor: str, scheme: str | None) -> tuple[str, ...]:
+    """Who knows the truth of a secret act: the actor and the scheme's accomplices."""
+    return (actor, *(ctx.get(scheme, "accomplices") or [] if scheme else []))
 
 
 def _alive(ctx, person) -> bool:
@@ -192,7 +197,7 @@ class Poison(Action):
 
     def succeed(self, ctx, actor, target, scheme, event):
         return life.die(ctx, target, ctx.get(target, "place"), self.cover(ctx, actor, target, scheme),
-                        causes=(Cause("event", event),))
+                        causes=(Cause("event", event),), cover=True, knew=_knew(ctx, actor, scheme))
 
 
 class Assassinate(Action):
@@ -208,7 +213,7 @@ class Assassinate(Action):
 
     def succeed(self, ctx, actor, target, scheme, event):
         return life.die(ctx, target, ctx.get(target, "place"), self.cover(ctx, actor, target, scheme),
-                        causes=(Cause("event", event),))
+                        causes=(Cause("event", event),), cover=True, knew=_knew(ctx, actor, scheme))
 
 
 class Duel(Action):
@@ -358,4 +363,8 @@ def perform(ctx, action: Action, actor: str, target: str | None, scheme: str | N
         return "failure"
     if action.succeed(ctx, actor, target, scheme, event.id) is False:
         return "foiled"  # the blow landed and the target lived (a near miss follows the action event)
+    if beliefs.enabled(ctx) and action.secrecy and action.achieves.startswith("dead:") and target \
+            and ctx.status(target) == "dead":  # (S6: those in a secret killing know who did it)
+        beliefs.perceive(ctx, event.id, None, _knew(ctx, actor, scheme),
+                         beliefs.claim("killed", victim=target, by=actor), secret=True)
     return "success"
