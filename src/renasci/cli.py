@@ -329,6 +329,39 @@ def cmd_vault(args) -> int:
     from renasci.vault.loader import load
 
     vault = load(args.docs)
+    if args.vault_command == "propose":
+        from renasci.vault.proposals import propose, write_proposal
+
+        run = Path(args.run)
+        rf = _open_complete(run)
+        state = json.loads(gzip.decompress((run / "state.json.gz").read_bytes()))
+        cal = get_world(rf.manifest["meta"]["recipe"]["run"]["world"]).calendar
+        bindings = {}
+        for row in rf.read("pins"):  # canon ids born in the run, through their birth pins
+            bindings.update(row.get("binding") or {})
+        rel, text, notes = propose(state, list(rf.read("events")), args.entity, vault, cal,
+                                   source={"run": run.name, "run_path": str(run.resolve()),
+                                           "state_hash": rf.manifest["meta"].get("state_hash", "")},
+                                   bindings=bindings)
+        sys.stdout.reconfigure(errors="replace")
+        for note in notes:
+            print(f"note: {note}")
+        if not args.write:
+            print(f"would write {rel}:\n{text}\n(run again with --write to write it)")
+            return 0
+        written = write_proposal(args.docs, rel, text)
+        if written != rel:
+            print(f"note: {rel} is someone else's, or you've edited it: kept as it is")
+        print(f"wrote {written} (canon: proposed; promote it by setting canon: true)")
+        return 0
+    if args.vault_command == "stale":
+        from renasci.vault.proposals import stale
+
+        found = stale(args.docs, args.runs)
+        for s in found:
+            print(f"{s['path']}: {s['why']}")
+        print(f"{len(found)} stale proposal(s); nothing was deleted" if found else "no stale proposals")
+        return 0
     if args.vault_command == "pins":
         from renasci.people.vault import people_hook
         from renasci.vault.pins import extract
@@ -553,6 +586,14 @@ def main(argv=None) -> int:
     v = vsub.add_parser("ids", help="add missing id: lines to notes (a dry run unless --write)")
     v.add_argument("docs", nargs="?", default="docs")
     v.add_argument("--write", action="store_true")
+    v = vsub.add_parser("propose", help="propose a run's person or event as a canon: proposed note (a dry run unless --write)")
+    v.add_argument("run")
+    v.add_argument("entity")
+    v.add_argument("docs", nargs="?", default="docs")
+    v.add_argument("--write", action="store_true")
+    v = vsub.add_parser("stale", help="list untouched proposals whose run is gone or has been run again")
+    v.add_argument("docs", nargs="?", default="docs")
+    v.add_argument("--runs", default="runs")
     v = vsub.add_parser("pins", help="the pins the vault's canon gives for a run window, as JSON")
     v.add_argument("docs", nargs="?", default="docs")
     v.add_argument("--world", default="fourth_age", help="whose calendar dates are read in")

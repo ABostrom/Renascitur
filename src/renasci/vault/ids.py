@@ -53,6 +53,7 @@ def assign(vault) -> dict[str, str]:
     wanted = [k for k, n in vault.notes.items() if _wants_id(n)]
     out: dict[str, str] = {}
     taken = {n.frontmatter["id"] for n in vault.notes.values() if isinstance(n.frontmatter.get("id"), str)}
+    taken |= set(getattr(vault, "proposed_ids", ()))  # (proposals hold theirs until promoted or deleted)
     for k in wanted:  # a good id already written is kept
         n = vault.notes[k]
         if n.id and k not in vault.bad_ids:
