@@ -1,0 +1,115 @@
+# The vault bridge's view of this vault (S2 spec §3.2; renasci.vault.config).
+# Until notes carry `type:` themselves (the typed-vault refactor), folder rules type them.
+# A note's own `type:` always wins. Rules apply in order; the first match wins.
+# Globs: `*` is within one folder, `**` any depth; everything else is literal.
+
+[type_aliases]
+city = "settlement"
+
+# Indexes that sit in typed folders.
+[[types]]
+match = "Languages/Languages"
+type = "index"
+[[types]]
+match = "Cosmology/Gods/**/Pantheon *"
+type = "index"
+
+# History: era notes first (they carry timeline dates too, and they define the age table),
+# then everything else with a timeline date is an event.
+[[types]]
+match = "History/*/The * Age"
+type = "era"
+[[types]]
+match = "History/**"
+when = "aat-event-start-date"
+type = "event"
+
+# People, houses, orders and traditions of the societies (at any depth: holds have sub-societies).
+[[types]]
+match = "Realms/**/Societies/**/Characters/*"
+type = "character"
+[[types]]
+match = "Realms/**/Societies/**/Emperors/*"
+type = "character"
+[[types]]
+match = "Realms/**/Societies/**/Elders/*"
+type = "character"
+[[types]]
+match = "Realms/**/Societies/**/Great Houses/*"
+type = "house"
+[[types]]
+match = "Realms/**/Societies/**/Guilds/**"
+type = "organisation"
+[[types]]
+match = "Realms/**/Societies/**/Orders/**"
+type = "organisation"
+[[types]]
+match = "Realms/**/Societies/**/Traditions/**"
+type = "tradition"
+[[types]]
+match = "Realms/**/Societies/**/Technology/**"
+type = "technology"
+[[types]]
+match = "Realms/**/Societies/**/The Prophecy of *"
+type = "myth"
+[[types]]
+match = "Realms/*/Factions/Orders/**"
+type = "organisation"
+[[types]]
+match = "Realms/*/Factions/Organisations/**"
+type = "organisation"
+[[types]]
+match = "Realms/*/Factions/Cults/**"
+type = "faction"
+[[types]]
+match = "Realms/*/Factions/Religions/**"
+type = "faction"
+[[types]]
+match = "Realms/*/Legendarium/Characters/**"
+type = "character"
+[[types]]
+match = "Realms/*/Legendarium/Prophecies/**"
+type = "myth"
+
+# Geography: locations first (they sit inside cities and provinces), at any depth.
+[[types]]
+match = "Realms/**/Geography/**/Locations/**"
+type = "landmark"
+[[types]]
+match = "Realms/**/Geography/**/Cities/**"
+type = "settlement"
+[[types]]
+match = "Realms/**/Geography/**/Provinces/**"
+type = "region"
+[[types]]
+match = "Realms/**/Geography/**/Mountains/**"
+type = "range"
+[[types]]
+match = "Realms/**/Geography/**/Rivers/**"
+type = "waterway"
+
+# Things and knowledge.
+[[types]]
+match = "Realms/*/Legendarium/Artifacts/**"
+type = "artifact"
+[[types]]
+match = "Realms/*/Legendarium/Natural Resources/**"
+type = "resource"
+[[types]]
+match = "Realms/*/Legendarium/Technology/**"
+type = "technology"
+[[types]]
+match = "Races/**"
+type = "race"
+[[types]]
+match = "Languages/**"
+type = "language"
+[[types]]
+match = "Cosmology/Gods/**"
+type = "deity"
+[[types]]
+match = "Cosmology/Elementals/**"
+type = "cosmic-force"
+[[types]]
+match = "Cosmology/Cosmic Functions/**"
+type = "cosmic-force"

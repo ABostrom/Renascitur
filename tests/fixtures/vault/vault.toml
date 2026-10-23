@@ -1,0 +1,22 @@
+# The fixture vault's bridge config (S2 spec §3.2).
+ignore = ["Images/**"]
+
+[type_aliases]
+city = "settlement"
+
+[[types]]   # eras first: they carry timeline dates too
+match = "History/*/The * Age"
+type = "era"
+
+[[types]]
+match = "History/**"
+when = "aat-event-start-date"
+type = "event"
+
+[[types]]
+match = "Realms/*/Societies/*/Characters/*"
+type = "character"
+
+[[types]]
+match = "Realms/*/Societies/*/Great Houses/*"
+type = "house"

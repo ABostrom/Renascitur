@@ -265,8 +265,17 @@ def cmd_vault(args) -> int:
     counts: dict[str, int] = {}
     for f in vault.findings:
         counts[f["kind"]] = counts.get(f["kind"], 0) + 1
-    typed = sum(1 for n in vault.notes.values() if n.type_from != "default")
-    print(f"{len(vault.notes)} notes ({typed} typed), {len(vault.findings)} findings, digest {vault.digest[:12]}")
+    from renasci.vault.mapping import role
+
+    sources: dict[str, int] = {}
+    roles: dict[str, int] = {}
+    for n in vault.notes.values():
+        roles[role(n)] = roles.get(role(n), 0) + 1
+        sources[n.type_from] = sources.get(n.type_from, 0) + 1
+    print(f"{len(vault.notes)} notes, {len(vault.findings)} findings, digest {vault.digest[:12]}")
+    print(f"  typed by frontmatter {sources.get('frontmatter', 0)}, by folder {sources.get('folder', 0)}, "
+          f"untyped (essay) {sources.get('default', 0)}")
+    print("  " + ", ".join(f"{n} {r.replace('_', ' ')}" for r, n in sorted(roles.items(), key=lambda x: -x[1])))
     for kind, n in sorted(counts.items()):
         print(f"  {kind}: {n}")
     for f in vault.findings[:args.top]:

@@ -14,8 +14,8 @@ What can't be settled is a finding (`unresolved_link`, `ambiguous_link`), as is 
 subset (`frontmatter_subset`) or a type that isn't one of the 22 (`unknown_type`). Findings never stop
 the load: the vault is a manuscript, and the loader reports on it.
 
-Types here come from `type:` alone; folder rules arrive with the mapping (#59). The digest is the sha256
-of the sorted `[key, hash]` pairs (ids replace keys once notes have them, #60).
+Types come from `type:` (through `vault.toml`'s type aliases), then its folder rules, then `essay`
+(§3.2). The digest covers the sorted `[key, hash]` pairs and `vault.toml` (ids replace keys, #60).
 """
 
 from __future__ import annotations
@@ -28,16 +28,10 @@ import unicodedata
 from dataclasses import asdict, dataclass, field
 from pathlib import Path, PurePosixPath
 
+from renasci.vault.config import Config
 from renasci.vault.frontmatter import parse
+from renasci.vault.loader_types import TYPES
 
-TYPES = frozenset({
-    "continent", "region", "settlement", "landmark", "waterway", "range",
-    "character", "race", "culture", "faction", "house", "organisation",
-    "era", "event", "myth", "chronicle",
-    "artifact", "item", "resource", "technology",
-    "deity", "cosmic-force", "tradition", "language",
-    "essay", "index",
-})
 # What a frontmatter field's links should be, to settle a shared name (§2.3 step 3).
 EXPECTS = {"race": {"race"}, "house": {"house"}, "father": {"character"}, "mother": {"character"},
            "spouse": {"character"}, "head": {"character"}, "seat": {"settlement", "landmark"},
@@ -63,7 +57,7 @@ class Note:
     title: str
     id: str | None
     type: str
-    type_from: str  # frontmatter | default (| folder, #59)
+    type_from: str  # frontmatter | folder | default
     status: str  # canon | draft | proposed
     frontmatter: dict
     links: dict = field(default_factory=dict)  # field -> [note keys], in order, without repeats
@@ -94,14 +88,17 @@ def normalise(raw: bytes) -> tuple[str, bool]:
     return nfc(text.removeprefix(BOM).replace(CRLF, LF).replace(CR, LF)), ok
 
 
-def _walk(root: Path):
-    """Notes: `*.md` exactly (on every platform), outside dot-folders and `_proposed/`, by NFC key."""
+def _walk(root: Path, config: Config):
+    """Notes: `*.md` exactly (on every platform), outside dot-folders, `_proposed/` and the config's
+    `ignore`, by NFC key."""
     found = []
     for p in root.rglob("*.md"):
         rel = p.relative_to(root)
         if p.suffix != ".md" or any(part.startswith(".") for part in rel.parts) or rel.parts[0] == "_proposed":
             continue
-        found.append((nfc(rel.with_suffix("").as_posix()), p))
+        key = nfc(rel.with_suffix("").as_posix())
+        if not config.ignored(key):
+            found.append((key, p))
     return sorted(found)
 
 
@@ -179,10 +176,11 @@ class Resolver:
         return ("ambiguous", None) if aliases else ("unresolved", None)
 
 
-def load(root) -> Vault:
+def load(root, config: Config | None = None) -> Vault:
     root = Path(root)
     if not root.is_dir():
         raise FileNotFoundError(f"no vault at {root}")
+    config = config if config is not None else Config.load(root)
     notes: dict[str, Note] = {}
     texts: dict[str, tuple[str, int]] = {}
     findings: list[dict] = []
@@ -190,7 +188,7 @@ def load(root) -> Vault:
     def finding(kind, key, line, message):
         findings.append({"kind": kind, "key": key, "line": line, "message": message})
 
-    for key, path in _walk(root):
+    for key, path in _walk(root, config):
         text, utf8 = normalise(path.read_bytes())
         if not utf8:
             finding("not_utf8", key, 1, "not UTF-8: undecodable bytes were replaced")
@@ -198,12 +196,14 @@ def load(root) -> Vault:
         for p in problems:
             finding("frontmatter_subset", key, p["line"], (f"{p['field']}: " if p["field"] else "") + p["message"])
         declared = fm.get("type")
+        declared = config.type_aliases.get(declared, declared) if isinstance(declared, str) else declared
         if isinstance(declared, str) and declared in TYPES:
             kind, kind_from = declared, "frontmatter"
         else:
             if declared is not None:
                 finding("unknown_type", key, line_of.get("type", 1), f"type {declared!r} is not one of the 22")
-            kind, kind_from = "essay", "default"
+            folder = config.folder_type(key, fm)
+            kind, kind_from = (folder, "folder") if folder else ("essay", "default")
         status = ("proposed" if fm.get("canon") == "proposed" else "draft" if fm.get("status") == "draft" else "canon")
         notes[key] = Note(key, PurePosixPath(key).name, fm.get("id") if isinstance(fm.get("id"), str) else None,
                           kind, kind_from, status, fm, aliases=_aliases(fm.get("aliases")), line_of=line_of,
@@ -233,6 +233,7 @@ def load(root) -> Vault:
                 take(t, n, None, note.body_links)
 
     findings.sort(key=lambda f: (f["key"], f["line"], f["kind"], f["message"]))
-    digest = hashlib.sha256(json.dumps(sorted([k, n.hash] for k, n in notes.items()),
+    config_hash = hashlib.sha256(config.digest_text.encode("utf-8")).hexdigest()
+    digest = hashlib.sha256(json.dumps({"notes": sorted([k, n.hash] for k, n in notes.items()), "config": config_hash},
                                        separators=(",", ":")).encode("utf-8")).hexdigest()
     return Vault(str(root), dict(sorted(notes.items())), findings, digest)
