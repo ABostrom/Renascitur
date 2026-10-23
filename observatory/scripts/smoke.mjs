@@ -116,8 +116,17 @@ try {
 	await page.getByRole('heading', { name: 'Beats' }).waitFor({ timeout: 15000 });
 	await page.locator('table a[href*="/events?e="]').first().click();
 	await page.getByRole('heading', { name: 'What it read' }).waitFor({ timeout: 20000 });
+	// latch points (the launcher is off here, so each shows its command) and a what-if next to its baseline
+	await page.goto(`http://127.0.0.1:${port}/run/kin/latch`);
+	await page.locator('code.cmd', { hasText: '--launch 1' }).first().waitFor({ timeout: 15000 });
+	await page.getByRole('link', { name: 'kin-latch1' }).first().click();
+	await page.getByRole('heading', { name: 'What if…' }).waitFor({ timeout: 15000 });
+	await page.getByText(/every difference traces to the ripple/).waitFor({ timeout: 15000 });
+	await page.getByText(/In kin-latch1: (lives on|dies)/).waitFor({ timeout: 30000 });
+	const rivers = await page.locator('svg[aria-label^="Ambitions by house"]').count();
+	if (rivers !== 2) throw new Error(`the comparison shows ${rivers} rivers`);
 	if (errors.length) throw new Error(`page errors: ${errors.join('; ')}`);
-	console.log(`smoke: ok (browser read ${counts.base.n} events from base; ${shown} granary events listed; detail, cause chain and entity page shown; diff wave of ${cells} cells, ${divergentShown} divergent events in one, buggy roots marked; story river of ${bars} bars, ${barsIn} in a decade, saga to arc to event)`);
+	console.log(`smoke: ok (browser read ${counts.base.n} events from base; ${shown} granary events listed; detail, cause chain and entity page shown; diff wave of ${cells} cells, ${divergentShown} divergent events in one, buggy roots marked; story river of ${bars} bars, ${barsIn} in a decade, saga to arc to event; latch points and a what-if beside its baseline)`);
 } catch (e) {
 	failed = true;
 	console.error('smoke: FAILED', e);

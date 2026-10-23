@@ -206,11 +206,11 @@ def test_observe_defaults_to_the_committed_build(monkeypatch):
     from renasci.cli import main as cli_main
 
     seen = {}
-    monkeypatch.setattr(observe, "serve", lambda app, runs, port, open_browser: seen.update(app=app))
+    monkeypatch.setattr(observe, "serve", lambda app, runs, port, open_browser, launch: seen.update(app=app, launch=launch))
     cli_main(["observe", "--no-browser"])
     from pathlib import Path
 
-    assert (Path(seen["app"]) / "index.html").is_file()
+    assert (Path(seen["app"]) / "index.html").is_file() and seen["launch"] is False
 
 
 @pytest.mark.parametrize("path", ["/run/base/entity/t%3AAshford", "/%5C%5Cattacker.example%5Cshare%5Cx", "/C:%5Cx"])
@@ -225,3 +225,84 @@ def test_unsafe_looking_app_routes_get_the_app_without_touching_the_disk(served,
     status, body = raw_get(base, path)
     assert status == 200 and b"Observatory" in body
     assert not any("attacker" in t or t.startswith("C:\\x") for t in touched)
+
+
+# ---------------------------------------------------------------- the what-if launcher (opt-in)
+
+
+def call(base, path, body=None, headers=None, method=None):
+    data = json.dumps(body).encode("utf-8") if body is not None else None
+    req = urllib.request.Request(base + path, data=data, method=method or ("POST" if data is not None else "GET"),
+                                 headers=headers or {})
+    try:
+        with urllib.request.urlopen(req) as r:
+            return r.status, json.loads(r.read() or b"null")
+    except urllib.error.HTTPError as e:
+        return e.code, None
+
+
+def launch_headers(base):
+    return {"Content-Type": "application/json", "Origin": base, "X-Renasci-Launch": "1"}
+
+
+def test_the_launcher_is_off_unless_asked_for(served):
+    base, _ = served
+    assert call(base, "/api/capabilities") == (200, {"launch": False})
+    assert call(base, "/api/launch", {"run": "tiny", "rank": 1}, launch_headers(base))[0] == 405
+
+
+@pytest.fixture(scope="module")
+def launcher(tmp_path_factory, served):
+    _, runs = served
+    app = tmp_path_factory.mktemp("app2")
+    (app / "index.html").write_text("<!doctype html>", encoding="utf-8")
+    server = make_server(app, runs, port=0, launch=True)
+    threading.Thread(target=server.serve_forever, daemon=True).start()
+    yield f"http://127.0.0.1:{server.server_address[1]}"
+    server.shutdown()
+
+
+def test_a_launch_must_come_from_the_observatory_itself(launcher):
+    base = launcher
+    assert call(base, "/api/capabilities") == (200, {"launch": True})
+    body = {"run": "tiny", "rank": 1}
+    assert call(base, "/api/launch", body, {**launch_headers(base), "Origin": "http://evil.example"})[0] == 403
+    no_header = {k: v for k, v in launch_headers(base).items() if k != "X-Renasci-Launch"}
+    assert call(base, "/api/launch", body, no_header)[0] == 403
+    assert call(base, "/api/launch", body, {**launch_headers(base), "Content-Type": "text/plain"})[0] == 403
+
+
+@pytest.mark.parametrize("body", [{"run": "../tiny", "rank": 1}, {"run": "nope", "rank": 1}, {"run": "tiny", "rank": "1"},
+                                  {"run": "tiny", "rank": 1, "kind": "favour"}, {"run": "tiny", "rank": 1, "date": "1X 3; rm"},
+                                  {"run": "tiny", "rank": 1, "extra": 1}, ["tiny"]])
+def test_a_launch_request_is_validated(launcher, body):
+    assert call(launcher, "/api/launch", body, launch_headers(launcher))[0] == 400
+
+
+def test_a_launch_runs_as_a_job_and_reports_back(launcher):
+    import time
+
+    status, job = call(launcher, "/api/launch", {"run": "tiny", "rank": 999, "kind": "doom"}, launch_headers(launcher))
+    assert status == 202 and job["state"] == "running"
+    for _ in range(300):
+        _, jobs = call(launcher, "/api/jobs")
+        mine = next(j for j in jobs if j["id"] == job["id"])
+        if mine["state"] != "running":
+            break
+        time.sleep(0.2)
+    assert mine["state"] == "failed" and "latch point" in mine["output"]  # (a toy run has no latch points)
+
+
+def test_a_launch_body_must_say_its_length_and_be_small(launcher):
+    import http.client
+    from urllib.parse import urlsplit
+
+    host = urlsplit(launcher).netloc
+    for length, big in (("-1", b"{}"), ("99999", b"{}"), ("abc", b"{}")):
+        conn = http.client.HTTPConnection(host, timeout=5)
+        conn.putrequest("POST", "/api/launch")
+        for k, v in {**launch_headers(launcher), "Host": host, "Content-Length": length}.items():
+            conn.putheader(k, v)
+        conn.endheaders(big)
+        assert conn.getresponse().status in (411, 413)
+        conn.close()

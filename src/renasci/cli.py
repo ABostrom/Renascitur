@@ -5,8 +5,8 @@
     renasci diff <baseline-run> <variant-run>      (exit 3 if anything is unexplained)
     renasci inspect <run-folder> (--event <id> | --entity <id>)
     renasci bench [--years 300] [--people 100] [--history bench/history.csv]
-    renasci observe [runs] [--port 8765]           (the Observatory, read-only, on localhost)
-    renasci latch <run-folder> [--top 10] [--launch N] [--out runs]
+    renasci observe [runs] [--port 8765] [--allow-launch]   (the Observatory, on localhost)
+    renasci latch <run-folder> [--top 10] [--launch N [--kind K] [--date D] [--until D] [--name N]] [--out runs]
     renasci stories <run-folder> [--top 10] [--from 20 --to 30]
 
 `run` writes a run folder with a checkpoint every N years. `replay` forks a run at the latest
@@ -75,12 +75,12 @@ def cmd_run(args) -> int:
     return 0
 
 
-def _run(recipe, out: Path) -> Path:
+def _run(recipe, out: Path, meta: dict | None = None) -> Path:
     world = get_world(recipe.world)
     engine = world.new_engine(recipe.seed, ripples=recipe.ripples, **recipe.params)
     engine.full_reads = recipe.full_reads
     folder = RunFolder.create(out / recipe.name, {"recipe": recipe.raw, "complete": False,
-                                                  "calendar": world.calendar.to_json()})
+                                                  "calendar": world.calendar.to_json(), **(meta or {})})
     _finish(engine, folder, recipe)
     print(f"run {recipe.name}: {folder.manifest['segments']} segments, state {folder.manifest['meta']['state_hash']}")
     return folder.path
@@ -91,7 +91,7 @@ def cmd_replay(args) -> int:
     return 0
 
 
-def _replay(run: Path, new, out: Path, from_: str | None = None, rerun: bool = False) -> Path:
+def _replay(run: Path, new, out: Path, from_: str | None = None, rerun: bool = False, meta: dict | None = None) -> Path:
     """Fork `run` at the checkpoint before the first changed ripple (or `from_`) and finish it with `new`.
     With `rerun`, a change before the first checkpoint runs `new` from the start instead of refusing."""
     base = _open_complete(run)
@@ -117,7 +117,7 @@ def _replay(run: Path, new, out: Path, from_: str | None = None, rerun: bool = F
         target = min(changed) if changed else new.end
     marks = [m for m in base.manifest["marks"] if Date.from_json(m["before"]) <= target]
     if not marks and rerun:
-        return _run(new, out)
+        return _run(new, out, meta=meta)
     if not marks:
         raise ValueError(f"no checkpoint at or before {world.calendar.format(target)}; use `renasci run`")
     mark = marks[-1]
@@ -127,7 +127,7 @@ def _replay(run: Path, new, out: Path, from_: str | None = None, rerun: bool = F
     engine.full_reads = new.full_reads
     folder = RunFolder.fork(base.path, out / new.name, keep=mark["segment"] + 1,
                             meta={"recipe": new.raw, "complete": False, "calendar": world.calendar.to_json(),
-                                  "replayed_from": {"run": base.path.name, "at": mark["before"]}})
+                                  "replayed_from": {"run": base.path.name, "at": mark["before"]}, **(meta or {})})
     _finish(engine, folder, new, after=at)
     print(f"replayed {new.name} from {base.path.name} at {world.calendar.format(at)}")
     return folder.path
@@ -185,16 +185,49 @@ def cmd_latch(args) -> int:
     point = next((p for p in points if p["rank"] == args.launch), None)
     if point is None:
         raise ValueError(f"no latch point {args.launch} (there are {len(points)})")
-    r = point["ripple"]
-    variant = json.loads(json.dumps(raw))
-    variant["run"]["name"] = f"{raw['run']['name']}-latch{args.launch}"
-    variant["ripple"] = [{"id": f"latch{args.launch}", "kind": r["kind"],
-                          "date": cal.format(Date.from_json(r["date"]), "day"), "target": r["target"],
-                          **({"params": r["params"]} if r["params"] else {})}]
     if raw.get("ripple"):
         raise ValueError("launch latch points from a run without ripples (a baseline)")
-    path = _replay(run, parse_recipe(variant), Path(args.out), rerun=True)
-    return _diff(run, path)
+    ripple = _adjusted(point["ripple"], args, cal)
+    out = Path(args.out)
+    name = args.name or f"{raw['run']['name']}-latch{args.launch}"
+    if not args.name:  # a second what-if of the same point gets its own folder
+        n = 2
+        while (out / name).exists():
+            name, n = f"{raw['run']['name']}-latch{args.launch}-{n}", n + 1
+    variant = json.loads(json.dumps(raw))
+    variant["run"]["name"] = name
+    variant["ripple"] = [{"id": f"latch{args.launch}", **ripple}]
+    path = _replay(run, parse_recipe(variant), out, rerun=True,
+                   meta={"latch_of": {"run": run.name, "rank": args.launch, "kind": point["kind"],
+                                      "person": point["person"]}})
+    code = _diff(run, path)
+    if (run / "analysis" / "stories.json").exists():  # so the what-if's stories sit next to the baseline's
+        found = stories(list(RunFolder.open(path).read("events")),
+                        json.loads(gzip.decompress((path / "state.json.gz").read_bytes())))
+        (path / "analysis" / "stories.json").write_text(json.dumps({"run": path.name, **found}, indent=1),
+                                                        encoding="utf-8")
+    print(f"latch: launched {path.name}")
+    return code
+
+
+def _adjusted(r: dict, args, cal) -> dict:
+    """The suggested ripple with any of --kind, --date, --until applied (dates as the calendar writes them)."""
+    kind = args.kind or r["kind"]
+    date = cal.parse(args.date) if args.date else Date.from_json(r["date"])
+    out = {"kind": kind, "date": cal.format(date, "day"), "target": r["target"]}
+    if kind == "protect":
+        if args.until:  # a year means to its end
+            until = cal.parse(args.until)
+            if len(args.until.split()) == 2:
+                until = Date(until.age, until.year, cal.days_per_year - 1)
+        elif "until" in r["params"]:
+            until = Date.from_json(r["params"]["until"])
+        else:  # (a doom suggestion turned protect: ten years)
+            until = Date(date.age, date.year + 10, cal.days_per_year - 1)
+        if until < date:
+            raise ValueError("--until is before the ripple's date")
+        out["params"] = {"until": until.to_json()}
+    return out
 
 
 def cmd_stories(args) -> int:
@@ -312,7 +345,7 @@ def cmd_bench(args) -> int:
 def cmd_observe(args) -> int:
     from renasci.observe import serve
 
-    serve(args.app, args.runs, port=args.port, open_browser=not args.no_browser)
+    serve(args.app, args.runs, port=args.port, open_browser=not args.no_browser, launch=args.allow_launch)
     return 0
 
 
@@ -339,6 +372,10 @@ def main(argv=None) -> int:
     p.add_argument("run")
     p.add_argument("--top", type=int, default=10)
     p.add_argument("--launch", type=int, default=None)
+    p.add_argument("--kind", choices=("protect", "doom"), default=None, help="override the suggested ripple's kind")
+    p.add_argument("--date", default=None, help="override its date, e.g. '1K 25'")
+    p.add_argument("--until", default=None, help="for protect: until when, e.g. '1K 40'")
+    p.add_argument("--name", default=None, help="the what-if's run name (default <run>-latch<N>)")
     p.add_argument("--out", default="runs")
     p = sub.add_parser("stories", help="find a run's arcs and sagas; --from/--to lists what flows through those years")
     p.add_argument("run")
@@ -350,6 +387,8 @@ def main(argv=None) -> int:
     p.add_argument("--port", type=int, default=8765)
     p.add_argument("--app", default=str(Path(__file__).resolve().parents[2] / "observatory" / "build"))
     p.add_argument("--no-browser", action="store_true")
+    p.add_argument("--allow-launch", action="store_true",
+                   help="let the Observatory launch latch-point what-ifs (each writes a new run folder)")
     p = sub.add_parser("bench", help="time the toy world (simulation plus writing the run folder, "
                                       "not world setup) and append to the benchmark history")
     p.add_argument("--years", type=int, default=300)

@@ -3,8 +3,9 @@
 	import { page } from '$app/state';
 
 	import type { Run } from '$lib/run/run';
-	import { glyph, inPeriod, presets, river, runYears, type Stories } from '$lib/run/stories';
+	import { glyph, inPeriod, presets, runYears, type Stories } from '$lib/run/stories';
 	import { loadRunStories } from '$lib/runs';
+	import StoryRiver from '$lib/ui/StoryRiver.svelte';
 
 	const name = $derived(page.params.name ?? '');
 	let run = $state<Run | null>(null);
@@ -56,37 +57,17 @@
 	const choices = $derived(stories ? presets(years[0], years[1]) : []);
 	const chosen = $derived(choices.findIndex((c) => c.from === from && c.to === to));
 	const flowing = $derived(stories ? inPeriod(stories, from, to) : { arcs: [], sagas: [] });
-	const lanes = $derived(stories ? river(stories.arcs, from, to) : []);
 	const age = $derived(stories?.arcs[0]?.timeline[0]?.date[0] ?? 1);
 	const label = (y: number) => (run ? run.calendar.format([age, y, 0], 'year') : String(y));
 
-	// Layout: one column per year, one row per lane, a gap between houses.
-	const LEFT = 130;
-	const ROW = 16;
-	const GAP = 14;
-	const width = 900;
-	const col = $derived((width - LEFT - 10) / Math.max(1, to - from + 1));
-	const x = (y: number) => LEFT + (y - from) * col;
-	const tops = $derived(
-		lanes.reduce<number[]>((acc, h, i) => [...acc, i === 0 ? 24 : acc[i - 1] + lanes[i - 1].lanes * ROW + GAP], [])
-	);
-	const height = $derived(lanes.length ? tops.at(-1)! + lanes.at(-1)!.lanes * ROW + 10 : 40);
-	const ticks = $derived.by(() => {
-		const span = to - from + 1;
-		const step = span <= 12 ? 1 : span <= 30 ? 5 : span <= 120 ? 10 : 25;
-		const out: number[] = [];
-		for (let y = Math.ceil(from / step) * step; y <= to; y += step) out.push(y);
-		return out;
-	});
 	const enc = encodeURIComponent;
 	const arcHref = (amb: string) => `/run/${enc(name)}/stories/arc/${enc(amb)}`;
 	const sagaHref = (id: string) => `/run/${enc(name)}/stories/saga/${enc(id)}`;
-	const CLASSES = ['Seize', 'Vengeance', 'Protect', 'Standing', 'Marry'];
-	const cls = (c: string) => (CLASSES.includes(c) ? c.toLowerCase() : 'other');
 </script>
 
 <p class="crumbs">
-	<a href="/">Runs</a> › <a href={`/run/${enc(name)}/events`}>{name}</a> › stories
+	<a href="/">Runs</a> › <a href={`/run/${enc(name)}/events`}>{name}</a> › stories ·
+	<a href={`/run/${enc(name)}/latch`}>latch points</a>
 </p>
 
 {#if error}
@@ -140,30 +121,7 @@
 			are turning points. <span class="key seize">Seize</span> <span class="key vengeance">Vengeance</span>
 			<span class="key protect">Protect</span> <span class="key standing">Standing</span> <span class="key marry">Marry</span>
 		</p>
-		<svg viewBox={`0 0 ${width} ${height}`} role="group" aria-label="Ambitions by house over the period">
-			{#each ticks as t (t)}
-				<line class="tick" x1={x(t)} x2={x(t)} y1={16} y2={height} />
-				<text class="tick-label" x={x(t) + 2} y={12}>{t}</text>
-			{/each}
-			{#each lanes as h, i (h.house ?? '-')}
-				<text class="house" x={4} y={tops[i] + 12}>{h.name}</text>
-				{#each h.bars as b (b.arc.id)}
-					{@const y0 = tops[i] + b.lane * ROW}
-					<a href={arcHref(b.arc.ambition)} aria-label={`${b.arc.title}, ${b.arc.outcome.replace('_', ' ')}`}>
-						<rect class={`bar ${cls(b.arc.class)}`} x={x(b.from)} y={y0 + 2} width={Math.max(3, (b.to - b.from + 1) * col - 1)}
-							height={ROW - 4} rx={3}>
-							<title>{b.arc.title} ({b.arc.span[0]}–{b.arc.span[1]}, {b.arc.outcome.replace('_', ' ')})</title>
-						</rect>
-						{#if b.to === b.arc.span[1]}
-							<text class="glyph" x={x(b.to) + col + 1} y={y0 + 12}>{glyph(b.arc.outcome)}</text>
-						{/if}
-						{#each b.turns as t (t.event)}
-							<circle class="turn" cx={x(t.year) + col / 2} cy={y0 + ROW / 2} r={3}><title>{t.label}</title></circle>
-						{/each}
-					</a>
-				{/each}
-			{/each}
-		</svg>
+		<StoryRiver arcs={stories.arcs} {from} {to} run={name} />
 	</section>
 
 	<div class="cols">
@@ -221,68 +179,26 @@
 		font-size: 0.85rem;
 		margin-top: 0;
 	}
-	svg {
-		width: 100%;
-		height: auto;
-		display: block;
-	}
-	.tick {
-		stroke: var(--border);
-		stroke-width: 1;
-	}
-	.tick-label,
-	.house {
-		fill: var(--muted);
-		font-size: 11px;
-	}
-	.house {
-		font-family: var(--serif);
-		fill: var(--text);
-		font-size: 12px;
-	}
-	.bar {
-		opacity: 0.85;
-	}
-	.bar:hover {
-		opacity: 1;
-	}
 	.seize {
-		fill: var(--unexplained);
 		background: var(--unexplained);
 	}
 	.vengeance {
-		fill: var(--divergent);
 		background: var(--divergent);
 	}
 	.protect {
-		fill: var(--pin);
 		background: var(--pin);
 	}
 	.standing {
-		fill: var(--ripple);
 		background: var(--ripple);
 	}
 	.marry {
-		fill: var(--ok);
 		background: var(--ok);
-	}
-	.other {
-		fill: var(--muted);
 	}
 	.key {
 		color: var(--surface);
 		padding: 0 0.35rem;
 		border-radius: 3px;
 		font-size: 0.8rem;
-	}
-	.glyph {
-		fill: var(--text);
-		font-size: 11px;
-	}
-	.turn {
-		fill: var(--surface);
-		stroke: var(--text);
-		stroke-width: 1.5;
 	}
 	.cols {
 		display: grid;
