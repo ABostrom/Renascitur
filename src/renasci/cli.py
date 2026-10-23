@@ -7,11 +7,14 @@
     renasci bench [--years 300] [--people 100] [--history bench/history.csv]
     renasci observe [runs] [--port 8765]           (the Observatory, read-only, on localhost)
     renasci latch <run-folder> [--top 10] [--launch N] [--out runs]
+    renasci stories <run-folder> [--top 10] [--from 20 --to 30]
 
 `run` writes a run folder with a checkpoint every N years. `replay` forks a run at the latest
 checkpoint before the first changed ripple (or `--from`), restores, and continues with the new
 recipe. `diff` explains every difference between two runs (no unexplained divergence). `latch` ranks
 the run's latch points into `analysis/latch.json`; `--launch N` replays point N as a what-if and diffs it.
+`stories` finds the run's arcs and sagas (`analysis/stories.json`); `--from/--to` lists what flows through
+those years.
 """
 
 from __future__ import annotations
@@ -29,6 +32,7 @@ from pathlib import Path
 
 from renasci.analysis.divergence import analyse
 from renasci.analysis.latch import latch_points
+from renasci.analysis.stories import period, stories
 from renasci.core.calendar import Date
 from renasci.io.checkpoint import load_checkpoint, save_checkpoint
 from renasci.io.recipe import load_recipe, parse_recipe
@@ -193,6 +197,28 @@ def cmd_latch(args) -> int:
     return _diff(run, path)
 
 
+def cmd_stories(args) -> int:
+    run = Path(args.run)
+    rf = _open_complete(run)
+    state = json.loads(gzip.decompress((run / "state.json.gz").read_bytes()))
+    found = stories(list(rf.read("events")), state)
+    (run / "analysis").mkdir(exist_ok=True)
+    (run / "analysis" / "stories.json").write_text(json.dumps({"run": run.name, **found}, indent=1), encoding="utf-8")
+    lo = args.from_ if args.from_ is not None else args.to
+    hi = args.to if args.to is not None else lo
+    if lo is not None and hi < lo:
+        raise ValueError(f"--from {lo} is after --to {hi}")
+    shown = found if lo is None else period(found, lo, hi)
+    arcs = sorted(shown["arcs"], key=lambda a: (-a["salience"], a["id"]))
+    print(f"{len(found['arcs'])} arcs, {len(found['sagas'])} sagas"
+          + (f"; {len(shown['arcs'])} arcs and {len(shown['sagas'])} sagas in years {lo}-{hi}" if lo is not None else ""))
+    for sg in shown["sagas"][:args.top]:
+        print(f"  saga  {sg['span'][0]:>4}-{sg['span'][1]:<4} {len(sg['arcs']):>2} arcs  {sg['title']}")
+    for a in arcs[:args.top]:
+        print(f"  arc   {a['span'][0]:>4}-{a['span'][1]:<4} {a['outcome']:<16} {a['title']}")
+    return 0
+
+
 def cmd_inspect(args) -> int:
     path = Path(args.run)
     rf = _open_complete(path)
@@ -314,6 +340,11 @@ def main(argv=None) -> int:
     p.add_argument("--top", type=int, default=10)
     p.add_argument("--launch", type=int, default=None)
     p.add_argument("--out", default="runs")
+    p = sub.add_parser("stories", help="find a run's arcs and sagas; --from/--to lists what flows through those years")
+    p.add_argument("run")
+    p.add_argument("--top", type=int, default=10)
+    p.add_argument("--from", dest="from_", type=int, default=None)
+    p.add_argument("--to", type=int, default=None)
     p = sub.add_parser("observe", help="serve the Observatory and a runs folder, read-only, on localhost")
     p.add_argument("runs", nargs="?", default="runs")
     p.add_argument("--port", type=int, default=8765)
@@ -328,7 +359,7 @@ def main(argv=None) -> int:
     p.add_argument("--out", default="runs/_bench")
     args = parser.parse_args(argv)
     try:
-        commands = {"run": cmd_run, "replay": cmd_replay, "diff": cmd_diff, "inspect": cmd_inspect, "bench": cmd_bench, "latch": cmd_latch,
+        commands = {"run": cmd_run, "replay": cmd_replay, "diff": cmd_diff, "inspect": cmd_inspect, "bench": cmd_bench, "latch": cmd_latch, "stories": cmd_stories,
                     "observe": cmd_observe}
         return commands[args.command](args)
     except (ValueError, FileExistsError, FileNotFoundError) as err:
