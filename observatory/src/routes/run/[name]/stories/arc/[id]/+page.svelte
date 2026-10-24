@@ -4,6 +4,7 @@
 	import type { Run } from '$lib/run/run';
 	import { bornOf, glyph, type Arc, type Saga } from '$lib/run/stories';
 	import { loadRunStories } from '$lib/runs';
+	import StoryPanel from '$lib/ui/StoryPanel.svelte';
 
 	const name = $derived(page.params.name ?? '');
 	const id = $derived(page.params.id ?? '');
@@ -49,6 +50,7 @@
 	<p class="muted">Loading…</p>
 {:else}
 	<h1>{arc.title}</h1>
+	<StoryPanel run={name} subject="arc" id={arc.id} />
 	<section class="card facts">
 		<dl>
 			<dt>Who</dt>

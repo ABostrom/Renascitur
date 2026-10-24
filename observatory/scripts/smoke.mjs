@@ -156,7 +156,16 @@ async function launchAndOpen(browser, errors) {
 	await page.getByText(/wrote _proposed\/event\//).waitFor({ timeout: 60000 });
 	const written = readdirSync(resolve(vault, '_proposed', 'event'));
 	if (written.length !== 1) throw new Error(`the vault has ${written.length} proposed events`);
-	return 'a run launched from a recipe and opened; a road drawn, a province painted and a draft accepted and rejected in the map editor, saved and baked; a ripple authored on a person, replayed as a branch and diffed; an event proposed to the vault with its cause';
+	// the story layer (#111): a chronicle of the same event, made and offered as a file
+	await page.getByRole('heading', { name: 'Write from it' }).waitFor({ timeout: 20000 });
+	await page.getByRole('button', { name: 'Chronicle' }).click();
+	await page.getByRole('link', { name: /^open event-.*\.md$/ }).waitFor({ timeout: 90000 });
+	// and prose pasted on the canon-check page, judged against the run
+	await page.goto(`http://127.0.0.1:${lport}/run/canon/check`);
+	await page.getByLabel('prose to check').fill('In 4A 3, nobody of note died. **4A 4.** The harvest was good.');
+	await page.getByRole('button', { name: 'Check' }).click();
+	await page.getByRole('heading', { name: 'Findings' }).waitFor({ timeout: 90000 });
+	return 'a run launched from a recipe and opened; a road drawn, a province painted and a draft accepted and rejected in the map editor, saved and baked; a ripple authored on a person, replayed as a branch and diffed; an event proposed to the vault with its cause; a chronicle of it made; prose checked against the run';
 }
 const browser = await (async () => {
 	await waitForServer();

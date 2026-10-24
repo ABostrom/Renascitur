@@ -87,7 +87,11 @@ export function compareArcs(base: Stories, variant: Stories) {
 export interface Job {
 	id: number;
 	state: 'running' | 'done' | 'failed';
-	job?: 'latch' | 'run' | 'replay' | 'propose' | 'ripple'; // a latch what-if, a run or replay from a recipe, a proposed note, an authored ripple
+	job?: 'latch' | 'run' | 'replay' | 'propose' | 'ripple' | StoryKind | 'check'; // a latch what-if, a run or replay from a recipe, a proposed note, an authored ripple, a story document, a canon check
+	file?: string | null; // a story document or check report the job wrote: a path inside the runs folder
+	subject?: string;
+	of?: string;
+	pov?: string | null;
 	recipe?: string;
 	run: string;
 	rank: number;
@@ -146,8 +150,19 @@ export const launcher = {
 	/** Propose a run's person or event as a `canon: proposed` note, keeping the causes ticked (#105). */
 	propose(run: string, entity: string, causes: string[] = []): Promise<Job> {
 		return post('/api/propose', { run, entity, causes });
+	},
+	/** A context pack, chronicle or campaign brief of a run's arc, saga, person or event (#111). */
+	story(kind: StoryKind, run: string, subject: StorySubject, id: string, pov = 'omniscient'): Promise<Job> {
+		return post(`/api/${kind}`, kind === 'brief' ? { run, subject, id } : { run, subject, id, pov });
+	},
+	/** A canon check of prose against a run, from a point of view (#111). */
+	check(run: string, text: string, pov = 'omniscient'): Promise<Job> {
+		return post('/api/check', { run, text, pov });
 	}
 };
+
+export type StoryKind = 'pack' | 'chronicle' | 'brief';
+export type StorySubject = 'arc' | 'saga' | 'person' | 'event' | 'topic';
 
 export interface Recipe {
 	file: string;
