@@ -33,6 +33,7 @@ names (a Seize plot's heirs).
 
 from __future__ import annotations
 
+from renasci import relations
 from renasci.core.calendar import Span
 from renasci.core.events import Cause, EventType
 from renasci.core.systems import System
@@ -168,6 +169,8 @@ def _exposed(ctx, scheme: str, owner: str, amb: str, action: str, aimed_at: str 
     event = ctx.emit("people.scheme_exposed", {"scheme": (scheme,), "owner": (owner,),
                                                "target": (victim,) if victim else ()},
                      purpose="exposed", actor=scheme, payload={"action": action})
+    # (S8 §4: the realms' ledger, before the revelations' own events, so the exposure explains it)
+    relations.across(ctx, owner, victim or ctx.get(scheme, "target"), "exposed", event.id)
     if beliefs.enabled(ctx):  # (S6: exposed, the killings they hid come out)
         beliefs.reveal(ctx, owner, event.id, ctx.get(owner, "place"))
     A._favour(ctx, owner, -0.2)
@@ -247,8 +250,8 @@ class Schemes(System):
     priority = 7  # after ambitions (6)
     reads = (READS | A.READS | ambitions.Ambitions.reads | houses.READS
              | frozenset({"ids:settlement", "residents", "born", "status", "ambitions", "favour", "traits", "spouse",
-                          "ties", "a", "b"}).union(*(a.reads for a in A.ACTIONS.values())))
-    writes = WRITES | A.WRITES | ambitions.WRITES | houses.WRITES | ties.WRITES
+                          "ties", "a", "b"}).union(*(a.reads for a in A.ACTIONS.values())) | relations.NOTE_READS)
+    writes = WRITES | A.WRITES | ambitions.WRITES | houses.WRITES | ties.WRITES | relations.NOTE_WRITES
     event_types = EVENT_TYPES + A.EVENT_TYPES + ambitions.EVENT_TYPES + (ties.TIE_FORMED,)
 
     def run(self, ctx):

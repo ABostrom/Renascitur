@@ -118,6 +118,8 @@ def check(sc: dict) -> list[dict]:
             out.append(_f("unknown_control", c.get("place"), f"change {i + 1} hands {c.get('place')} to "
                                                               f"{c['control']!r}, which isn't a polity"))
     if not pols and not facs and not offs:
+        if sc.get("relations"):
+            out.append(_f("bad_relation", None, "relations need polities (or factions) to relate"))
         return out
     within, region, settlements = _map(sc)
     houses = {h["id"] for h in sc.get("houses", [])}
@@ -155,6 +157,9 @@ def check(sc: dict) -> list[dict]:
             else:
                 member_of[m] = pid
     out += _check_offices(sc, houses, pids, {f["id"] for f in facs})
+    from renasci import relations
+
+    out += relations.check(sc)
     if not [f for f in out if f["kind"] in ("unknown_control", "control_twice")]:
         control = control_of(sc)
         for p in pols:  # (a polity holds its own seat)
@@ -246,3 +251,7 @@ def cast(engine, sc: dict, today) -> None:
             "name": o.get("name", o["id"]), "scope": o.get("scope", "polity"), "polity": o.get("polity"),
             "faction": o.get("faction"), "house": o.get("house"), "rule": o["rule"], "appointer": o.get("appointer"),
             "holder": None, "heir": None, "legitimacy": "lawful"})
+    if sc.get("polities"):
+        from renasci import relations
+
+        relations.cast(engine, sc, today)

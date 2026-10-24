@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import math
 
+from renasci import relations
 from renasci.core.events import EventType
 from renasci.core.systems import System
 from renasci.core.lod import EVENT_TYPES as LOD_TYPES
@@ -49,8 +50,8 @@ def ancestors(ctx, person: str, depth: int) -> set[str]:
 class Marriage(System):
     name, cadence = "people.marriage", "yearly"
     reads = frozenset({"ids:settlement", "region", "residents", "sex", "race", "born", "spouse", "mother",
-                       "father", "place", "status", "journey"}) | population.COLUMN_READS
-    writes = frozenset({"spouse", "residents", "place", "new:person", "pop:*", "allele:*", "flow:*"})
+                       "father", "place", "status", "journey"}) | population.COLUMN_READS | relations.NOTE_READS
+    writes = frozenset({"spouse", "residents", "place", "new:person", "pop:*", "allele:*", "flow:*"}) | relations.NOTE_WRITES
     event_types = (MARRIAGE,) + LOD_TYPES
 
     def run(self, ctx):
@@ -121,8 +122,9 @@ class Marriage(System):
 
     @staticmethod
     def _wed(ctx, man: str, woman: str, residence: str, commoner: bool) -> None:
-        ctx.emit("people.marriage", {"spouse": (man, woman)}, purpose="marriage", actor=man,
-                 place=ctx.get(man, "place"), payload={"commoner": commoner})
+        wed = ctx.emit("people.marriage", {"spouse": (man, woman)}, purpose="marriage", actor=man,
+                       place=ctx.get(man, "place"), payload={"commoner": commoner})
+        relations.across(ctx, man, woman, "marriage", wed.id)  # (a match across a border, or between blocs: S8 §4)
         ctx.set(man, "spouse", woman)
         ctx.set(woman, "spouse", man)
         mover, stayer = (woman, man) if residence == "husband" else (man, woman)
