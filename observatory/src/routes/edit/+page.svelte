@@ -5,11 +5,27 @@
 	 */
 	import { onMount } from 'svelte';
 
-	import { addPlace, addRoute, deletePlace, deleteRoute, movePlace, placeAt, redrawRoute, setAttr, type MapState } from '$lib/map/edit';
+	import {
+		descendants,
+		addPlace,
+		addRegion,
+		addRoute,
+		brush,
+		deletePlace,
+		deleteRoute,
+		fill,
+		movePlace,
+		paint,
+		placeAt,
+		redrawRoute,
+		setAttr,
+		setRegion,
+		type MapState
+	} from '$lib/map/edit';
 	import { at, centre, corners, days, regionOf, terrainOf, type Grid } from '$lib/map/hex';
 
 	type Finding = { kind: string; id: string | null; message: string; severity: 'error' | 'warning' };
-	type Tool = 'select' | 'move' | 'place' | 'route';
+	type Tool = 'select' | 'move' | 'place' | 'route' | 'terrain' | 'region';
 
 	let world = $state<string | null>(null);
 	let unavailable = $state(false);
@@ -30,6 +46,13 @@
 	let checks = 0; // (each check's number: a slower, older answer is ignored)
 	let showBase = $state(true);
 	let showGrid = $state(true);
+	let showRegions = $state(true);
+	let paintWith = $state<{ terrain: string; region: string }>({ terrain: '', region: '' });
+	let radius = $state(0);
+	let flood = $state(false);
+	let stroke = false; // (a drag in progress: one undo step for the whole stroke)
+	let lastCell: string | null = null; // (moves within one cell paint nothing new)
+	let newRegion = $state({ id: '', name: '', within: '' });
 
 	const grid = $derived(s?.grid as Grid | undefined);
 	const W = $derived(grid ? grid.cols * grid.miles + grid.miles / 2 : 0);
@@ -38,6 +61,17 @@
 	const extent = $derived((grid as Grid & { extent?: [number, number] } | undefined)?.extent ?? [W, H]);
 	const unsaved = $derived(s !== null && saved !== null && JSON.stringify(s) !== saved);
 	const errors = $derived(findings.filter((f) => f.severity === 'error'));
+	// (one line per kind: a thousand cells with one problem are one problem)
+	const grouped = $derived.by(() => {
+		const out = new Map<string, { kind: string; severity: string; first: string; count: number }>();
+		for (const f of findings) {
+			const k = f.kind + f.severity;
+			const g = out.get(k);
+			if (g) g.count++;
+			else out.set(k, { kind: f.kind, severity: f.severity, first: f.message, count: 1 });
+		}
+		return [...out.values()];
+	});
 
 	onMount(async () => {
 		const caps = await (await fetch('/api/capabilities')).json();
@@ -79,12 +113,12 @@
 	}
 	const headers = () => ({ 'Content-Type': 'application/json', 'X-Renasci-Launch': '1' });
 
-	/** One undoable edit. */
-	function edit(f: (s: MapState) => MapState) {
-		if (!s) return;
+	/** One undoable edit; whether it was made. */
+	function edit(f: (s: MapState) => MapState): boolean {
+		if (!s) return false;
 		if (saving) {
 			message = 'Saving… (edits wait until it is done)';
-			return;
+			return false;
 		}
 		try {
 			const next = f(s);
@@ -93,8 +127,10 @@
 			s = next;
 			message = null;
 			check();
+			return true;
 		} catch (e) {
 			message = (e as Error).message;
+			return false;
 		}
 	}
 	function undo() {
@@ -154,12 +190,50 @@
 		return at(p.x, p.y, grid);
 	}
 
+	/** Paint (or fill) at the cell under the pointer; the first cell of a stroke is the undo step. */
+	function paintAt(c: string) {
+		if (!s || saving || c === lastCell) return;
+		lastCell = c;
+		const what = tool as 'terrain' | 'region';
+		const value = what === 'terrain' ? paintWith.terrain || terrains[0] : paintWith.region || null;
+		const r = Math.min(Math.max(Math.round(Number(radius) || 0), 0), 8);
+		const apply = (x: MapState) => (flood ? fill(x, c, what, value) : paint(x, brush(c, r, x.grid), what, value));
+		if (!stroke) {
+			stroke = edit(apply) && !flood;
+		} else {
+			try {
+				s = apply(s);
+			} catch (e) {
+				message = (e as Error).message;
+			}
+		}
+	}
+	function down(e: PointerEvent) {
+		if ((tool !== 'terrain' && tool !== 'region') || e.button !== 0) return;
+		(e.currentTarget as Element).setPointerCapture?.(e.pointerId); // (a quick drag off the edge keeps painting)
+		lastCell = null;
+		const c = cellAt(e);
+		if (c) paintAt(c);
+	}
+	function moveOver(e: PointerEvent) {
+		if (!stroke || !(e.buttons & 1)) return;
+		const c = cellAt(e);
+		if (c) paintAt(c);
+	}
+	function up() {
+		lastCell = null;
+		if (stroke) {
+			stroke = false;
+			check();
+		}
+	}
+
 	function click(e: MouseEvent) {
 		if (!s) return;
 		const c = cellAt(e);
 		if (!c) return;
 		const here = placeAt(s, c);
-		if (saving) return;
+		if (saving || tool === 'terrain' || tool === 'region') return;
 		if (tool === 'select') selected = here ? { what: 'place', id: here } : null;
 		else if (tool === 'move' && selected?.what === 'place') edit((x) => movePlace(x, selected!.id, c));
 		else if (tool === 'place') edit((x) => addPlace(x, { ...newPlace }, c));
@@ -180,9 +254,10 @@
 	}
 
 	const hexPath = (id: string, miles: number) => 'M' + corners(id, miles).map(([x, y]) => `${x.toFixed(2)},${y.toFixed(2)}`).join('L') + 'Z';
+	// (terrain in its own colours, so it isn't taken for a region's)
 	const TERRAIN_FILL: Record<string, string> = {
-		water: 'var(--series-1)', forest: 'var(--series-6)', hills: 'var(--series-4)', mountains: 'var(--muted)',
-		marsh: 'var(--series-3)', desert: 'var(--series-5)'
+		water: 'var(--pin)', forest: 'var(--ok)', hills: 'var(--divergent)', mountains: 'var(--muted)',
+		marsh: 'var(--ripple)', desert: 'var(--accent)'
 	};
 	const painted = $derived(grid ? Object.entries(grid.cells).filter(([, v]) => v.terrain && v.terrain !== 'plains') : []);
 	// (the outline depends only on the grid's size, not on each edit: worked out once per size)
@@ -192,6 +267,23 @@
 		return Array.from({ length: rows * cols }, (_, i) => hexPath(`c:${i % cols},${Math.floor(i / cols)}`, miles)).join('');
 	};
 	const outline = $derived(size && showGrid ? outlineFor(size) : '');
+	const terrains = $derived(grid ? Object.keys(grid.terrain).filter((k) => k !== 'plains') : []);
+	$effect(() => {
+		// (the region picker starts on a region, not on clearing)
+		if (!paintWith.region && leafRegions.length) paintWith.region = leafRegions[0].id;
+	});
+	const leafRegions = $derived.by(() => {
+		const within = new Set((s?.geography.regions ?? []).map((r) => r.within).filter(Boolean));
+		return (s?.geography.regions ?? []).filter((r) => !within.has(r.id));
+	});
+	// Region colours follow each region by its place in the whole list (so nesting or adding one moves no
+	// other's colour): eight hues, then repeating, which side-by-side provinces may share (their borders and
+	// names still tell them apart). Terrain is drawn in other colours.
+	const regionColour = $derived(
+		Object.fromEntries((s?.geography.regions ?? []).map((r, i) => [r.id, `var(--series-${(i % 8) + 1})`]))
+	);
+	const regionCells = $derived(grid ? Object.entries(grid.cells).filter(([, v]) => v.region).map(([c, v]) => [c, v.region!] as [string, string]) : []);
+	const regionName = (id: string) => (s?.geography.regions.find((r) => r.id === id) as { name?: string } | undefined)?.name ?? id;
 	const pts = (cells: string[]) => cells.map((c) => centre(c, grid!.miles).map((v) => v.toFixed(2)).join(',')).join(' ');
 	const name = (id: string) => (s?.geography.places.find((p) => p.id === id) as { name?: string } | undefined)?.name ?? id;
 	const place = $derived(selected?.what === 'place' ? s?.geography.places.find((p) => p.id === selected!.id) : undefined);
@@ -215,7 +307,7 @@
 {:else}
 	<h1>Map editor <span class="muted small">{world}</span></h1>
 	<div class="toolbar" role="toolbar" aria-label="Tools">
-		{#each [['select', 'Select'], ['move', 'Move place'], ['place', 'Add place'], ['route', 'Draw route']] as [t, label] (t)}
+		{#each [['select', 'Select'], ['move', 'Move place'], ['place', 'Add place'], ['route', 'Draw route'], ['terrain', 'Paint terrain'], ['region', 'Paint region']] as [t, label] (t)}
 			<button class:active={tool === t} aria-pressed={tool === t} onclick={() => ((tool = t as Tool), (drawing = null))}>{label}</button>
 		{/each}
 		<span class="sep"></span>
@@ -224,6 +316,7 @@
 		<button class="save" onclick={save} disabled={!unsaved || errors.length > 0 || saving}>{saving ? 'Saving…' : unsaved ? 'Save' : 'Saved'}</button>
 		<label class="small"><input type="checkbox" bind:checked={showBase} disabled={!hasBase} /> map image</label>
 		<label class="small"><input type="checkbox" bind:checked={showGrid} /> cells</label>
+		<label class="small"><input type="checkbox" bind:checked={showRegions} /> regions</label>
 	</div>
 	{#if tool === 'place'}
 		<div class="toolbar small">
@@ -231,6 +324,27 @@
 			<label>Name <input bind:value={newPlace.name} /></label>
 			<label>Kind <input bind:value={newPlace.kind} /></label>
 			<span class="muted">then click a cell</span>
+		</div>
+	{/if}
+	{#if tool === 'terrain' || tool === 'region'}
+		<div class="toolbar small">
+			{#if tool === 'terrain'}
+				<label>Terrain
+					<select bind:value={paintWith.terrain} aria-label="Paint with terrain">
+						{#each Object.keys(grid.terrain) as k (k)}<option value={k} selected={k === (paintWith.terrain || terrains[0])}>{k}</option>{/each}
+					</select>
+				</label>
+			{:else}
+				<label>Region
+					<select bind:value={paintWith.region} aria-label="Paint with region">
+						{#each leafRegions as r (r.id)}<option value={r.id}>{r.name || r.id}</option>{/each}
+						<option value="">(none: clear)</option>
+					</select>
+				</label>
+			{/if}
+			<label>Brush <input type="number" min="0" max="8" bind:value={radius} style="width: 4em" disabled={flood} /> cells</label>
+			<label><input type="checkbox" bind:checked={flood} /> fill (every joined cell like the one clicked{tool === 'region' ? ', over land' : ''})</label>
+			<span class="muted">click or drag on the map</span>
 		</div>
 	{/if}
 	{#if tool === 'route' && !drawing}
@@ -253,13 +367,20 @@
 
 	<div class="layout">
 		<div class="scroll card">
-			<!-- (the map is pointer-driven; every edit it makes is also reachable from the side panel and the lists) -->
+			<!-- (the map is pointer-driven: places and routes are also reachable from the side panel and lists; painting is pointer-only) -->
 			<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_noninteractive_element_interactions -->
-			<svg class="map" viewBox={`0 0 ${W} ${H}`} role="application" aria-label={`Map of ${world}: click cells to edit`} onclick={click}>
+			<svg class="map" viewBox={`0 0 ${W} ${H}`} role="application" aria-label={`Map of ${world}: click cells to edit`} onclick={click}
+				onpointerdown={down} onpointermove={moveOver} onpointerup={up} onpointercancel={up}
+				style={tool === 'terrain' || tool === 'region' ? 'touch-action: none' : ''}>
 				{#if hasBase && showBase}<image href="/api/map/base.png" x="0" y="0" width={extent[0]} height={extent[1]} preserveAspectRatio="none" opacity="0.85" />{/if}
 				{#each painted as [c, v] (c)}
 					<path d={hexPath(c, grid.miles)} class="terrain" style={`fill: ${TERRAIN_FILL[v.terrain ?? ''] ?? 'none'}`} />
 				{/each}
+				{#if showRegions}
+					{#each regionCells as [c, r] (c)}
+						<path d={hexPath(c, grid.miles)} class="region" style={`fill: ${regionColour[r] ?? 'var(--series-other)'}`}><title>{c}: {regionName(r)}</title></path>
+					{/each}
+				{/if}
 				{#if outline}<path d={outline} class="outline" />{/if}
 				{#each s.geography.routes as r (r.id)}
 					{@const path = s.layout.routes[r.id]?.cells}
@@ -334,13 +455,42 @@
 					</ul>
 				{/if}
 			{/if}
+			<details class="regions">
+				<summary><strong>Regions ({s.geography.regions.length})</strong></summary>
+				<ul class="small">
+					{#each s.geography.regions as r (r.id)}
+						<li>
+							<span class="swatch" style={`background: ${regionColour[r.id] ?? 'transparent'}`}></span>
+							<input value={r.name ?? ''} aria-label={`Name of ${r.id}`} placeholder={r.id}
+								onchange={(e) => edit((x) => setRegion(x, r.id, 'name', e.currentTarget.value))} />
+							<select value={r.within ?? ''} aria-label={`What ${r.id} is within`}
+								onchange={(e) => edit((x) => setRegion(x, r.id, 'within', e.currentTarget.value || null))}>
+								<option value="">(top level)</option>
+								{#each s.geography.regions.filter((o) => o.id !== r.id && !descendants(s!, r.id).has(o.id)) as o (o.id)}<option value={o.id}>within {o.name || o.id}</option>{/each}
+							</select>
+							<span class="mono muted">{r.id}</span>
+						</li>
+					{/each}
+				</ul>
+				<form class="add" onsubmit={(e) => { e.preventDefault(); edit((x) => addRegion(x, { ...newRegion, within: newRegion.within || undefined })); newRegion = { id: '', name: '', within: '' }; }}>
+					<input bind:value={newRegion.id} placeholder="g:new-province" class="mono" aria-label="New region id" />
+					<input bind:value={newRegion.name} placeholder="Name" aria-label="New region name" />
+					<select bind:value={newRegion.within} aria-label="New region within">
+						<option value="">(top level)</option>
+						{#each s.geography.regions as o (o.id)}<option value={o.id}>within {o.name ?? o.id}</option>{/each}
+					</select>
+					<button type="submit">Add region</button>
+				</form>
+			</details>
 			<h3>Checks</h3>
 			{#if findings.length === 0}
 				<p class="small"><span class="badge ok">ok</span></p>
 			{:else}
 				<ul class="findings small">
-					{#each findings as f, i (i)}
-						<li class={f.severity}>{f.severity}: {f.message}</li>
+					{#each grouped as g (g.kind + g.severity)}
+						<li class={g.severity}>
+							{g.severity}: {g.first}{#if g.count > 1}<span class="muted"> (and {g.count - 1} more like it)</span>{/if}
+						</li>
 					{/each}
 				</ul>
 			{/if}
@@ -394,6 +544,34 @@
 	.terrain {
 		opacity: 0.55;
 		pointer-events: none;
+	}
+	.region {
+		opacity: 0.35;
+		stroke: none;
+		pointer-events: none;
+	}
+	.regions li {
+		display: flex;
+		gap: 0.3rem;
+		align-items: center;
+		flex-wrap: wrap;
+		margin: 0.2rem 0;
+	}
+	.regions input {
+		width: 9em;
+	}
+	.swatch {
+		display: inline-block;
+		width: 0.8rem;
+		height: 0.8rem;
+		border-radius: 2px;
+		border: 1px solid var(--border);
+	}
+	.add {
+		display: flex;
+		flex-direction: column;
+		gap: 0.3rem;
+		margin-top: 0.4rem;
 	}
 	.route {
 		fill: none;

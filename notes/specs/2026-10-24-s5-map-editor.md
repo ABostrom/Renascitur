@@ -195,6 +195,17 @@ maps/pyrosia/private/                   git-ignored, at the repo root (editor da
   - Edits wait while a save is in flight, and a stale check answer is ignored.
   - Drawing picks a route kind.
 
+**As built (#85).**
+- **Paint terrain** and **Paint region**: a brush (a radius in cells) or a fill.
+  - The fill takes every joined cell like the one clicked; a region fill keeps to land.
+  - Clicking or dragging paints, and a stroke is one undo step.
+- **Regions panel:** add, rename and nest. A region can't be nested under one that is painted: its cells would name a region with regions inside it. The message says how to split a province instead: add the parts at the top level, paint them, then nest them.
+- **Colours:**
+  - each region's colour follows its place in the list, cycling through 8 hues, so neighbours may share one;
+  - terrain uses other colours;
+  - the findings list shows one line per kind.
+- **Painted regions reach the sim** through the save's bake: a settlement takes its cell's region. The smoke test paints a province under a town and checks the saved file.
+
 ## 7. The server
 
 `renasci observe runs --edit-map src/renasci/renascita/pyrosia.json`. This works without `--allow-launch`.

@@ -1,6 +1,6 @@
 import type { Geography } from '$lib/run/geography';
 
-import { line, regionOf, type Grid } from './hex';
+import { line, near, regionOf, terrainOf, type Grid } from './hex';
 
 /**
  * The map editor's state and its edits (S5 §6, #84), as plain functions over a copy, so every edit is one
@@ -122,5 +122,112 @@ export function setAttr(s: MapState, what: 'place' | 'route', id: string, key: s
 	if (!item) throw new Error(`no ${what} ${id}`);
 	if (value === '' || value === undefined) delete item[key];
 	else item[key] = value;
+	return out;
+}
+
+// ------------------------------------------------------------ painting (#85)
+
+/** The cells within `radius` steps of a cell (the brush). */
+export function brush(centre: string, radius: number, grid: Grid): string[] {
+	const seen = new Set([centre]);
+	let ring = [centre];
+	for (let i = 0; i < radius; i++) {
+		ring = ring.flatMap((c) => near(c, grid)).filter((c) => !seen.has(c) && (seen.add(c), true));
+	}
+	return [...seen];
+}
+
+function leaves(s: MapState): Set<string> {
+	const within = new Set(s.geography.regions.map((r) => r.within).filter(Boolean));
+	return new Set(s.geography.regions.map((r) => r.id).filter((id) => !within.has(id)));
+}
+
+/** Paint terrain or a region onto cells (`plains` or null clears it: an unpainted cell is plains, no region). */
+export function paint(s: MapState, cells: string[], what: 'terrain' | 'region', value: string | null): MapState {
+	if (what === 'terrain' && value !== null && !(value in s.grid.terrain)) throw new Error(`${value} isn't a terrain kind`);
+	if (what === 'region' && value !== null && !leaves(s).has(value))
+		throw new Error(`paint a region with nothing within it (${value} has regions within it, or doesn't exist)`);
+	// (only the grid's cells change: everything else is shared, so a drag stays cheap on a big map)
+	const out: MapState = { ...s, grid: { ...s.grid, cells: { ...s.grid.cells } } };
+	for (const c of cells) {
+		const v = { ...(out.grid.cells[c] ?? {}) };
+		if (value === null || (what === 'terrain' && value === 'plains')) delete v[what];
+		else v[what] = value;
+		if (Object.keys(v).length) out.grid.cells[c] = v;
+		else delete out.grid.cells[c];
+	}
+	return out;
+}
+
+/** The regions within `id`, at any depth (not offered as its parent: a cycle). */
+export function descendants(s: MapState, id: string): Set<string> {
+	const out = new Set<string>();
+	let grew = true;
+	while (grew) {
+		grew = false;
+		for (const r of s.geography.regions)
+			if (r.within && (r.within === id || out.has(r.within)) && !out.has(r.id)) {
+				out.add(r.id);
+				grew = true;
+			}
+	}
+	return out;
+}
+
+/** Paint every cell joined to `start` that shares its current value (a region fill keeps to cells a road
+ * can cross, so it stops at water). */
+export function fill(s: MapState, start: string, what: 'terrain' | 'region', value: string | null): MapState {
+	const g = s.grid;
+	const now = (c: string) => (what === 'terrain' ? terrainOf(c, g) : regionOf(c, g));
+	const passable = (c: string) => what === 'terrain' || g.terrain[terrainOf(c, g)] !== null;
+	if (!passable(start)) return paint(s, [start], what, value);
+	const from = now(start);
+	const seen = new Set([start]);
+	const todo = [start];
+	while (todo.length) {
+		for (const n of near(todo.pop()!, g)) {
+			if (!seen.has(n) && passable(n) && now(n) === from) {
+				seen.add(n);
+				todo.push(n);
+			}
+		}
+	}
+	return paint(s, [...seen], what, value);
+}
+
+/** A new region (a `g:` id, or a vault `v:` one), optionally within another. */
+export function addRegion(s: MapState, region: { id: string; name: string; within?: string }): MapState {
+	const ids = [...s.geography.regions, ...s.geography.places, ...s.geography.routes].map((x) => x.id);
+	if (ids.includes(region.id)) throw new Error(`${region.id} already exists`);
+	if (!/^[vg]:\S+$/.test(region.id)) throw new Error('a region id is v:… (a vault note) or g:… (a new one)');
+	if (region.within) unpainted(s, region.within);
+	const out = copy(s);
+	out.geography.regions.push({ id: region.id, ...(region.name ? { name: region.name } : {}), ...(region.within ? { within: region.within } : {}) });
+	return out;
+}
+
+/** A region can't take regions within it while cells are painted with it (they would name a region with
+ * regions inside it): say so, and how to split it instead. */
+function unpainted(s: MapState, id: string) {
+	const n = Object.values(s.grid.cells).filter((v) => v.region === id).length;
+	if (n)
+		throw new Error(
+			`${id} is painted on ${n} cells: a region with regions within it can't be painted. To split it, add the ` +
+				'new regions at the top level, paint them over it, then nest them within it.'
+		);
+}
+
+/** Rename a region, or nest it within another (no cycles). */
+export function setRegion(s: MapState, id: string, key: 'name' | 'within', value: string | null): MapState {
+	const out = copy(s);
+	const r = out.geography.regions.find((x) => x.id === id);
+	if (!r) throw new Error(`no region ${id}`);
+	if (key === 'within' && value) {
+		unpainted(s, value);
+		for (let at: string | null | undefined = value; at; at = out.geography.regions.find((x) => x.id === at)?.within)
+			if (at === id) throw new Error(`${id} can't be within ${value}: a cycle`);
+	}
+	if (value === null || value === '') delete (r as unknown as Record<string, unknown>)[key];
+	else (r as unknown as Record<string, unknown>)[key] = value;
 	return out;
 }
