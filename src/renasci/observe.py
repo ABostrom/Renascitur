@@ -21,8 +21,8 @@ Safety, because any web page in the browser can send requests to localhost:
 - **Host check:** only requests addressed to `127.0.0.1:<port>` or `localhost:<port>` are answered,
   so a DNS-rebinding page can't read runs.
 - It binds to 127.0.0.1 and answers only GET and HEAD.
-- **The launcher** (off by default) answers four POSTs, `/api/launch`, `/api/run`, `/api/replay` and
-  `/api/propose`,
+- **The launcher** (off by default) answers five POSTs, `/api/launch`, `/api/run`, `/api/replay`,
+  `/api/ripple` (a ripple authored on a run: replayed as a branch and diffed, #110) and `/api/propose`,
   and only from the Observatory
   itself: the `Origin` must be this server, the body JSON, and a custom `X-Renasci-Launch` header
   present (a cross-site page can't send one without a preflight, which this server never answers). The
@@ -78,6 +78,7 @@ def list_runs(runs: Path) -> list[dict]:
 
 
 LAUNCH_KEYS = {"run", "rank", "kind", "date", "until"}
+RIPPLE_KEYS = {"run", "kind", "target", "date", "params", "name"}
 CALENDAR_TEXT = re.compile(r"^[A-Za-z0-9][A-Za-z0-9 .'-]{0,39}$")  # "1K 26", "1K 26 m6 d1", "A.E. 3"; never "-..."
 MAX_BODY = 4096
 JOB_SECONDS = 3600  # a what-if that takes longer than an hour is stopped
@@ -85,7 +86,7 @@ JOB_SECONDS = 3600  # a what-if that takes longer than an hour is stopped
 
 # What each kind of job prints when it has made its run folder (the folder's name in group 1).
 MADE = {"latch": r"^latch: launched (\S+)$", "run": r"^run (\S+): ", "replay": r"^replayed (\S+) from ",
-        "propose": r"^wrote (.+?) \(canon: proposed"}
+        "propose": r"^wrote (.+?) \(canon: proposed", "ripple": r"^ripple: launched (\S+)$"}
 ENTITY = re.compile(r"[A-Za-z0-9][A-Za-z0-9:_.-]{0,127}")  # a run's entity or event id
 CAUSE = re.compile(r"[a-z]+:[A-Za-z0-9:_.-]{1,160}")  # kind:ref, as an event records it
 
@@ -142,11 +143,11 @@ class Jobs:
         except OSError as err:
             out, code = str(err), -1
         found = re.search(MADE[job["job"]], out, re.MULTILINE)
-        ok = code in (0, 3) if job["job"] == "latch" else code == 0
+        ok = code in (0, 3) if job["job"] in ("latch", "ripple") else code == 0  # (3: the diff found something)
         with self.lock:  # exit 3 (latch): the what-if ran, but its diff found unexplained divergence
             job.update(output=out, returncode=code, variant=found.group(1) if found else None,
                        state="done" if ok and found else "failed",
-                       warning="unexplained divergence" if job["job"] == "latch" and code == 3 else None)
+                       warning="unexplained divergence" if job["job"] in ("latch", "ripple") and code == 3 else None)
 
     def list(self) -> list[dict]:
         with self.lock:
@@ -253,7 +254,7 @@ class Handler(BaseHTTPRequestHandler):
     def do_POST(self):  # noqa: N802
         route = unquote(urlsplit(self.path).path)
         builders = {"/api/launch": self._launch_argv, "/api/run": self._run_argv, "/api/replay": self._replay_argv,
-                    "/api/propose": self._propose_argv}
+                    "/api/propose": self._propose_argv, "/api/ripple": self._ripple_argv}
         if self.jobs is None or route not in builders:
             return self._refuse()
         port = self.server.server_address[1]
@@ -272,7 +273,7 @@ class Handler(BaseHTTPRequestHandler):
         try:
             body = json.loads(self.rfile.read(length) or b"null")
             argv, about = builders[route](body)
-        except (ValueError, TypeError) as err:
+        except (ValueError, TypeError, RecursionError) as err:  # (RecursionError: a deeply nested body)
             return self._send(HTTPStatus.BAD_REQUEST, str(err).encode("utf-8"), "text/plain", head_only=False)
         job = self.jobs.start(argv, about)
         if job is None:
@@ -359,6 +360,32 @@ class Handler(BaseHTTPRequestHandler):
         folder, recipe = self._run_folder(body["run"]), self._recipe(body["recipe"])
         return ([sys.executable, "-m", "renasci.cli", "replay", str(folder), "--recipe", str(recipe), "--out",
                  str(self.runs)], {"job": "replay", "run": body["run"], "recipe": recipe.name})
+
+    def _ripple_argv(self, body) -> tuple[list[str], dict]:
+        """`renasci ripple <run> --kind --target --date [--params] [--name]` (#110): a ripple authored in the
+        Observatory, replayed as a branch of the run and diffed against it."""
+        from renasci.core.ripples import KINDS
+        from renasci.io.recipe import check_run_name
+
+        if not isinstance(body, dict) or set(body) - RIPPLE_KEYS or not {"run", "kind", "target", "date"} <= set(body):
+            raise ValueError(f"a ripple is {{run, kind, target, date}} and optionally params, name; got {body!r}")
+        folder = self._run_folder(body["run"])
+        if body["kind"] not in KINDS:
+            raise ValueError(f"kind is one of {', '.join(KINDS)}")
+        if not isinstance(body["target"], str) or not ENTITY.fullmatch(body["target"]):
+            raise ValueError("target must be an entity id")
+        if not isinstance(body["date"], str) or not CALENDAR_TEXT.fullmatch(body["date"]):
+            raise ValueError("date must be a date like '1K 26' or '1K 26 m6 d1'")
+        argv = [sys.executable, "-m", "renasci.cli", "ripple", str(folder), "--kind", body["kind"], "--target",
+                body["target"], "--date", body["date"], "--out", str(self.runs)]
+        if "params" in body:
+            if not isinstance(body["params"], dict):
+                raise ValueError("params must be an object")
+            argv += ["--params", json.dumps(body["params"])]
+        if "name" in body:
+            argv += ["--name", check_run_name(body["name"])]
+        return argv, {"job": "ripple", "run": body["run"], "kind": body["kind"], "target": body["target"],
+                      "date": body["date"]}
 
 
 def make_server(app, runs, port: int = 8765, launch: bool = False, recipes=None, vault=None) -> ThreadingHTTPServer:

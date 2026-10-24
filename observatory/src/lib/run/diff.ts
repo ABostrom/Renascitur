@@ -45,9 +45,10 @@ export interface Divergence {
 	wave: WaveCell[];
 }
 
-/** The run a variant is compared with by default: the one it was replayed (forked) from. */
+/** The run a variant is compared with by default: the one it was replayed (forked) from, or branched off. */
 export function defaultBaseline(m: Manifest): string | null {
-	return m.meta.replayed_from?.run ?? m.parent?.run ?? null;
+	const meta = m.meta as { ripple_of?: { run: string }; latch_of?: { run: string } };
+	return m.meta.replayed_from?.run ?? m.parent?.run ?? meta.ripple_of?.run ?? meta.latch_of?.run ?? null;
 }
 
 /** The variant's divergence report, or null when `renasci diff` hasn't been run for it. */

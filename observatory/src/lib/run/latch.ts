@@ -1,3 +1,4 @@
+import type { RippleRequest } from './ripple';
 import type { DateTuple } from './calendar';
 import type { Manifest } from './run';
 import type { RunSource } from './source';
@@ -86,7 +87,7 @@ export function compareArcs(base: Stories, variant: Stories) {
 export interface Job {
 	id: number;
 	state: 'running' | 'done' | 'failed';
-	job?: 'latch' | 'run' | 'replay' | 'propose'; // a latch what-if, a run or replay from a recipe, a proposed note
+	job?: 'latch' | 'run' | 'replay' | 'propose' | 'ripple'; // a latch what-if, a run or replay from a recipe, a proposed note, an authored ripple
 	recipe?: string;
 	run: string;
 	rank: number;
@@ -128,6 +129,10 @@ export const launcher = {
 	},
 	replay(run: string, recipe: string): Promise<Job> {
 		return post('/api/replay', { run, recipe });
+	},
+	/** A ripple authored on a run, replayed as a branch of it and diffed (#110). */
+	ripple(req: RippleRequest): Promise<Job> {
+		return post('/api/ripple', req);
 	},
 	/** Whether this server can write proposed notes to a vault (the launcher is on and it has one). */
 	async canPropose(): Promise<boolean> {
