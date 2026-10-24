@@ -161,8 +161,9 @@ ripple can change: a border incident, a grievance, an ambitious ruler.
    - **The gap:** `guard_pin` protects a person only while they are a role in an open pin. Once the next
      Emperor is born, the reigning one is unguarded. If he died in battle, by a coup or by execution, his
      heir would accede before the next succession pin's window opened, and that pin would fail.
-   - **The fix, a new director rule:** the holder of an office named in a succession pin that hasn't yet
-     closed is guarded, the way roles are guarded, until that pin's window closes.
+   - **The fix, a new director rule:** the holder of an office named in a succession pin is guarded, the way
+     roles are guarded, until that pin's window **opens**; inside the window the holder is left to fate (a death
+     there is how the pinned heir most often succeeds). Only an office's next pin counts. **Done (#120).**
    - **What the guard does:**
      - a guarded ruler's lethal draws are near misses, so battles, coups and executions can't kill them;
      - a guarded office can't be seized;
@@ -353,7 +354,7 @@ existence, event and ordering pins. That support is a separate ticket, not in S8
 2. **Offices:** scope, `legitimacy`, the `choose` hook, appointment and election, the imperial house and
    the throne with its pins, advice and votes, cadet branches. **Done (#120)**, except cadet branches and
    the vault's title-office reigns (#161).
-3. **The pinned-office guard** (§3.4), in the director.
+3. **The pinned-office guard** (§3.4), in the director. **Done (#120).**
 4. **Diplomacy:** sparse relations, the ledger and its writers, drift, incidents, treaties, betrayal.
 5. **Coarse war:** declaration, the war entity, the yearly draw, peace.
 6. **The coarse fallbacks.** Then, as the S1 prerequisite, coarse execution in the engine.

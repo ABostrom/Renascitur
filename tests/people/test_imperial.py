@@ -137,3 +137,44 @@ def test_a_child_is_not_made_a_father():
                                               "bind": {"role": "child", "subject": "v:Nobody"}})])
     e.run(until=D(1, 2, 0))
     assert e.director.status["too-soon"] == "violated" and "v:Nobody" not in e.director.bindings
+
+
+def test_a_reigning_ruler_is_guarded_until_the_next_reign_pins_window_opens():
+    """(S8 spec §3.4.) The next ruler is born early, but his reign is pinned to a window years later: a
+    death of the reigning ruler in between would hand him the throne before his window, and the pin could
+    never be met. The holder of a pinned office is guarded until the window opens, then left to fate."""
+    first = new_engine(seed=1234).store.get(THRONE, "holder")
+    pins = [Pin("born-2", "event", window=(Date(1, 2, 0), Date(1, 5, 359)),
+                payload={"type": "people.birth", "roles": {"father": [first]},
+                         "bind": {"role": "child", "subject": "v:Ruler-2", "fields": {"sex": "m"}}}),
+            Pin("reign-2", "event", window=(Date(1, 20, 0), Date(1, 30, 0)),
+                payload={"type": "people.succession", "roles": {"successor": ["v:Ruler-2"]}, "office": THRONE})]
+    from renasci.core.ripples import Ripple
+
+    doom = Ripple(id="r", kind="doom", target=first, date=Date(1, 10, 0))  # (after the birth, before the window)
+    e = new_engine(seed=1234, pins=pins, ripples=[doom])
+    e.run(until=Date(1, 31, 0))
+    assert e.director.status["reign-2"] in ("satisfied", "forced"), e.director.strain
+    guards = [s for s in e.director.strain if s["action"] == "guard" and s["pin"] == "reign-2"]
+    held = [s for s in guards if s["entity"] == first]  # (the reigning ruler: until the window opened)
+    assert held and all(s["date"][1] < 20 for s in held)
+    assert {s["entity"] for s in guards} <= {first, e.director.bindings["v:Ruler-2"]}  # (and the heir, as before)
+
+
+def test_inside_a_reign_pins_window_the_holder_is_left_to_fate():
+    """(Only an office's next pin guards: a later reign's pin doesn't keep the holder alive through an
+    earlier one's open window, so a death there passes the throne on naturally.)"""
+    first = new_engine(seed=1234).store.get(THRONE, "holder")
+    pins = [Pin("born-2", "event", window=(Date(1, 2, 0), Date(1, 5, 359)),
+                payload={"type": "people.birth", "roles": {"father": [first]},
+                         "bind": {"role": "child", "subject": "v:Ruler-2", "fields": {"sex": "m"}}}),
+            Pin("reign-2", "event", window=(Date(1, 8, 0), Date(1, 30, 0)),
+                payload={"type": "people.succession", "roles": {"successor": ["v:Ruler-2"]}, "office": THRONE}),
+            Pin("reign-3", "event", window=(Date(1, 60, 0), Date(1, 90, 0)),
+                payload={"type": "people.succession", "roles": {"successor": ["v:Ruler-3"]}, "office": THRONE})]
+    from renasci.core.ripples import Ripple
+
+    e = new_engine(seed=1234, pins=pins, ripples=[Ripple(id="r", kind="doom", target=first, date=Date(1, 12, 0))])
+    e.run(until=Date(1, 13, 0))
+    assert e.store.status(first) == "dead"
+    assert e.director.status["reign-2"] == "satisfied"  # (naturally: the heir succeeded inside his window)

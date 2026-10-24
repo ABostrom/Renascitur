@@ -241,8 +241,19 @@ class Director:
 
     # ------------------------------------------------------------ guard
 
-    def guard_pin(self, entity: str, date: Date) -> Pin | None:
-        """The pin that needs `entity` alive today, if any."""
+    def guard_pin(self, entity: str, date: Date, offices=()) -> Pin | None:
+        """The pin that needs `entity` alive today, if any. `offices`: the offices `entity` holds. The holder
+        of an office a succession pin names is guarded until that pin's window opens (S8 §3.4): a death
+        before then would hand the office on early, and the pin could never be met. Inside the window
+        the holder is left to fate (a death there is how the pinned heir most often succeeds), and only an
+        office's next pin counts: a later reign's pin never guards inside an earlier one's window. (A holder
+        of several offices is guarded while any of them is waiting.)"""
+        if offices:
+            for office in sorted(offices):
+                waiting = [p for p in self.pins if p.kind == "event" and p.window and self.status.get(p.id) == "open"
+                           and p.payload.get("type") == "people.succession" and p.payload.get("office") == office]
+                if waiting and not any(p.window[0] <= date for p in waiting):  # (no window open yet)
+                    return min(waiting, key=lambda p: (p.window[0], p.id))
         for pin in self.pins:
             status = self.status.get(pin.id)
             if pin.kind == "existence" and self.resolve(pin.subject) == entity and status in ("open", "satisfied") \
