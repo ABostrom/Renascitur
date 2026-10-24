@@ -6,7 +6,12 @@ A scenario may name `polities` and `factions`:
                   "seat": <settlement>, "members": [<house>...], "control": [<region|place|settlement>...],
                   "draft": true}],
     "factions": [{"id": ..., "name": ..., "polity": <polity>, "kind": "bloc", "members": [<house>...],
-                  "aims": ["peace"], "standing": 0.6}]
+                  "aims": ["peace"], "standing": 0.6}],
+    "offices": [{"id": ..., "name": ..., "scope": "polity", "polity": <polity>, "rule": "election"},
+                {"id": ..., "scope": "polity", "polity": <polity>, "rule": "appointment", "appointer": <office>}]
+
+A polity's `ruler` names an office (a house's headship, `<house>-head`, or one of the scenario's offices).
+Offices are cast vacant and lawful; `people.houses` fills them (S8 §3).
 
 A polity's `control` claims regions (and so every place in them, down the `within` tree) and single places;
 the most specific claim wins (a place named outright, else its nearest claimed region). Control is apart
@@ -76,7 +81,7 @@ def borders(routes, control: dict) -> list[dict]:
 def _shape(sc: dict) -> list[dict]:
     """What would stop the checks below from reading the data at all."""
     out = []
-    for key in ("polities", "factions"):
+    for key in ("polities", "factions", "offices"):
         recs = sc.get(key)
         if recs is None:
             continue
@@ -87,6 +92,9 @@ def _shape(sc: dict) -> list[dict]:
             if not isinstance(rec, dict) or not isinstance(rec.get("id"), str) or not ID.fullmatch(rec["id"]):
                 out.append(_f("bad_id", None, f"each of {key} needs a v:, g: or t: id: {rec!r}"))
                 continue
+            for field in ("rule", "appointer", "ruler", "scope", "polity", "seat"):
+                if rec.get(field) is not None and not isinstance(rec[field], str):
+                    out.append(_f("bad_shape", rec["id"], f"{rec['id']}'s {field} must be an id"))
             for field in ("control", "members", "aims"):
                 v = rec.get(field)
                 if v is not None and not (isinstance(v, list) and all(isinstance(x, str) for x in v)):
@@ -102,21 +110,21 @@ def check(sc: dict) -> list[dict]:
     out = _shape(sc)
     if out:
         return out
-    pols, facs = sc.get("polities") or [], sc.get("factions") or []
+    pols, facs, offs = sc.get("polities") or [], sc.get("factions") or [], sc.get("offices") or []
     pids = {p["id"] for p in pols}
     g = sc.get("geography") if isinstance(sc.get("geography"), dict) else {}
     for i, c in enumerate(g.get("changes") or []):  # (with polities or without: a change hands a place to one)
         if isinstance(c, dict) and "control" in c and c["control"] is not None and c["control"] not in pids:
             out.append(_f("unknown_control", c.get("place"), f"change {i + 1} hands {c.get('place')} to "
                                                               f"{c['control']!r}, which isn't a polity"))
-    if not pols and not facs:
+    if not pols and not facs and not offs:
         return out
     within, region, settlements = _map(sc)
     houses = {h["id"] for h in sc.get("houses", [])}
     taken = set(houses) | set(within) | set(region) | {r for r in (sc.get("regions") or {})}
     seen: set = set()
-    for rec in [*pols, *facs]:
-        if rec["id"] in seen:
+    for rec in [*pols, *facs, *offs]:
+        if rec["id"] in seen or rec["id"] in {f"{h}-head" for h in houses}:
             out.append(_f("duplicate_id", rec["id"], f"{rec['id']} is used twice"))
         elif rec["id"] in taken:
             out.append(_f("duplicate_id", rec["id"], f"{rec['id']} is already a house, region or place"))
@@ -146,6 +154,7 @@ def check(sc: dict) -> list[dict]:
                 out.append(_f("member_twice", pid, f"{m} belongs to {member_of[m]} and {pid}"))
             else:
                 member_of[m] = pid
+    out += _check_offices(sc, houses, pids, {f["id"] for f in facs})
     if not [f for f in out if f["kind"] in ("unknown_control", "control_twice")]:
         control = control_of(sc)
         for p in pols:  # (a polity holds its own seat)
@@ -167,6 +176,45 @@ def check(sc: dict) -> list[dict]:
         s = f.get("standing", 0.5)
         if isinstance(s, bool) or not isinstance(s, (int, float)) or not 0 <= s <= 1:
             out.append(_f("bad_standing", fid, f"{fid}'s standing must be in [0, 1], not {s!r}"))
+    return out
+
+
+def _check_offices(sc: dict, houses: set, pids: set, fids: set) -> list[dict]:
+    from renasci.people.houses import RULES
+
+    out = []
+    offs = sc.get("offices") or []
+    known = {f"{h}-head" for h in houses} | {o["id"] for o in offs}
+    for o in offs:
+        oid, scope, rule = o["id"], o.get("scope", "polity"), o.get("rule")
+        if scope != "polity":  # (a house's other titles and a faction's offices: not yet; they'd never be filled)
+            out.append(_f("bad_scope", oid, f"{oid}'s scope must be polity (house and faction offices aren't built yet)"))
+        elif o.get("polity") not in pids:
+            out.append(_f("unknown_polity", oid, f"{oid}'s polity {o.get('polity')!r} isn't a polity"))
+        if rule not in ("appointment", "election"):
+            out.append(_f("bad_rule", oid, f"{oid}'s rule is appointment or election, not {rule!r} "
+                                           f"(a line of succession is a house's headship)"))
+        if rule == "appointment" and (o.get("appointer") not in known or o.get("appointer") == oid):
+            out.append(_f("bad_appointer", oid, f"{oid} is by appointment, so its appointer must be another office"))
+    by = {o["id"]: o.get("appointer") for o in offs if o.get("rule") == "appointment"}
+    for start in sorted(by):  # (an appointer that comes back round: none of them is ever filled)
+        seen, at = [], start
+        while at in by and at not in seen:
+            seen.append(at)
+            at = by[at]
+        if at == start:
+            out.append(_f("bad_appointer", start, f"{start}'s appointers go round in a circle ({' > '.join(seen + [start])})"))
+    members = {p["id"]: set(p.get("members") or []) for p in sc.get("polities") or []}
+    office_polity = {o["id"]: o.get("polity") for o in offs}
+    for p in sc.get("polities") or []:
+        r = p.get("ruler")
+        if r is None:
+            continue
+        if r not in known:
+            out.append(_f("bad_ruler", p["id"], f"{p['id']}'s ruler {r!r} isn't an office"))
+        elif (r in office_polity and office_polity[r] != p["id"]) or (
+                r not in office_polity and r.removesuffix("-head") not in members[p["id"]]):
+            out.append(_f("bad_ruler", p["id"], f"{p['id']}'s ruler {r} belongs to another polity or house"))
     return out
 
 
@@ -193,3 +241,8 @@ def cast(engine, sc: dict, today) -> None:
             "name": f.get("name", f["id"]), "polity": f["polity"], "kind": f.get("kind", "bloc"),
             "members": sorted(f.get("members") or []), "aims": list(f.get("aims") or []),
             "standing": float(f.get("standing", 0.5))})
+    for o in sc.get("offices") or []:
+        engine.cast("office", o["id"], {
+            "name": o.get("name", o["id"]), "scope": o.get("scope", "polity"), "polity": o.get("polity"),
+            "faction": o.get("faction"), "house": o.get("house"), "rule": o["rule"], "appointer": o.get("appointer"),
+            "holder": None, "heir": None, "legitimacy": "lawful"})
