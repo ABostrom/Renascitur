@@ -8,9 +8,10 @@ result with `isError`, so the model sees it; protocol errors are JSON-RPC errors
 -32601 unknown method, -32602 bad params or an unknown tool). Nothing else is ever written to stdout.
 
 The tools read runs (summaries, events, people with their beliefs' origins, stories, claims) and the
-vault (search, a note). `pack` builds a context pack into the run's `analysis/packs/` and answers with
-a summary and a **handle**: a pack can be larger than a client takes in one result, so its sections are
-paged with `fetch`. Runs are named, never pathed: a run is a folder directly in the runs folder.
+vault (search, a note). The writing tools write under the run's `analysis/` (atomically): `pack` (a
+context pack), `chronicle`, `brief` and `check_prose` (a canon check of prose Claude wrote). Each answers
+with a summary and a **handle**: a document can be larger than a client takes in one result, so its
+sections are paged with `fetch`. Runs are named, never pathed: a run is a folder directly in the runs folder.
 """
 
 from __future__ import annotations
@@ -27,6 +28,7 @@ from renasci.observe import ENTITY, list_runs, safe_relative
 VERSIONS = ("2024-11-05", "2025-03-26", "2025-06-18")
 PAGE = 50
 MAX_PAGE = 200
+HANDLES = 32
 TOOLS = {
     "runs": ("The run folders: world, end, ripples, and the run each was replayed from.", {}),
     "run_summary": ("A run's span, people, top sagas and ripples.", {"run": "string"}),
@@ -41,7 +43,17 @@ TOOLS = {
     "pack": ("Build a context pack: subject arc|saga|person|event|topic and its id, from a point of view "
              "(omniscient, or a person, house or settlement id). Answers with a summary and a handle for fetch.",
              {"run": "string", "subject": "string", "id": "string", "pov": "string?"}),
-    "fetch": ("A page of a pack's section (people, places, events, beliefs, threads), by its handle.",
+    "chronicle": ("Write a POV chronicle: the subject told as its author (pov) believes it, with where it departs "
+                  "from the truth. Answers with a summary and a handle (sections: text, divergence).",
+                  {"run": "string", "subject": "string", "id": "string", "pov": "string?"}),
+    "brief": ("Write a campaign brief for a saga or an event: premise, what really happened, beliefs, factions, NPCs, "
+              "hooks, places. Answers with a summary and a handle (sections: text, threads).",
+              {"run": "string", "subject": "string", "id": "string"}),
+    "check_prose": ("Check prose against a run (up to 256 KB of Markdown; ```claims blocks are read exactly), from a "
+                    "point of view: contradictions, leaks, half truths, ambiguous names. Answers with the counts and a "
+                    "handle (sections: findings, sentences).", {"run": "string", "text": "string", "pov": "string?"}),
+    "fetch": ("A page of a handle's section: a pack's people, places, events, beliefs, threads; a chronicle's or "
+              "brief's text (lines) and divergence or threads; a check's findings and sentences.",
               {"handle": "string", "section": "string", "cursor": "integer?"}),
     "vault_search": ("The vault's notes whose title, type or id contains the query (empty: all, paged).",
                      {"query": "string", "type": "string?", "cursor": "integer?"}),
@@ -108,7 +120,7 @@ class Server:
             try:
                 with redirect_stdout(io.StringIO()):  # (nothing a reused function prints may reach the stream)
                     text, error = json.dumps(getattr(self, f"t_{name}")(**args), ensure_ascii=False, allow_nan=False), False
-            except (ToolError, ValueError, KeyError, TypeError, AttributeError, OSError) as err:
+            except (ToolError, ValueError, LookupError, TypeError, AttributeError, OSError) as err:
                 text, error = json.dumps({"error": str(err) or type(err).__name__}, ensure_ascii=False), True
             return _result(mid, {"content": [{"type": "text", "text": text}], "isError": error})
         return _error(mid, -32601, f"no method {method!r}")
@@ -243,38 +255,98 @@ class Server:
 
         return claims_report(r.events, r.state, r.geography)
 
-    def t_pack(self, run, subject, id, pov="omniscient"):
-        from renasci.core.canon import canonical, digest
-        from renasci.story.pack import build
-        from renasci.story.schema import PACK, validate
-
+    def _subject(self, run, subject, id, pov="omniscient"):
         r = self.run(run)
         if subject not in ("arc", "saga", "person", "event", "topic"):
             raise ToolError("subject is arc, saga, person, event or topic")
+        self._id(id)
         if pov != "omniscient":
             self._id(pov)
+        return r
+
+    @staticmethod
+    def _write(path: Path, text: str) -> None:
+        """Atomically: a temporary file, then a rename."""
+        path.parent.mkdir(parents=True, exist_ok=True)
+        tmp = path.with_suffix(path.suffix + ".tmp")
+        tmp.write_text(text, encoding="utf-8", newline="\n")
+        tmp.replace(path)
+
+    def _keep(self, kind: str, key: list, sections: dict) -> str:
+        from renasci.core.canon import digest
+
+        handle = kind + digest(key, size=8)
+        self.handles.pop(handle, None)
+        self.handles[handle] = sections
+        while len(self.handles) > HANDLES:  # (the oldest go: a long session doesn't grow without end)
+            self.handles.pop(next(iter(self.handles)))
+        return handle
+
+    def t_pack(self, run, subject, id, pov="omniscient"):
+        from renasci.core.canon import canonical
+        from renasci.story.pack import build
+        from renasci.story.schema import PACK, validate
+
+        r = self._subject(run, subject, id, pov)
         pack = build(r, (subject, id), pov)
         if validate(pack, PACK):
             raise ToolError("the pack didn't fit its schema")
-        handle = "pk" + digest([r.name, subject, id, pov], size=8)
-        self.handles[handle] = pack
+        handle = self._keep("pk", [r.name, subject, id, pov], {k: pack[k] for k in PACK_SECTIONS})
         if r.folder is not None:
-            out = r.folder / "analysis" / "packs" / f"{handle}.json"
-            out.parent.mkdir(parents=True, exist_ok=True)
-            tmp = out.with_suffix(".tmp")
-            tmp.write_text(canonical(pack) + "\n", encoding="utf-8", newline="\n")
-            tmp.replace(out)
+            self._write(r.folder / "analysis" / "packs" / f"{subject}-{_safe(id)}--{_safe(pov)}.json", canonical(pack) + "\n")
         return {"handle": handle, "subject": pack["subject"], "pov": pack["pov"], "span": pack["span"],
-                "counts": {k: len(pack[k]) for k in ("people", "places", "events", "beliefs", "threads")},
-                "sections": ["people", "places", "events", "beliefs", "threads"]}
+                "counts": {k: len(pack[k]) for k in PACK_SECTIONS}, "sections": list(PACK_SECTIONS)}
+
+    def t_chronicle(self, run, subject, id, pov="omniscient"):
+        from renasci.story.chronicle import chronicle
+
+        r = self._subject(run, subject, id, pov)
+        doc = chronicle(r, (subject, id), pov)
+        name = f"{subject}-{_safe(id)}--{_safe(pov)}.md"
+        if r.folder is not None:
+            self._write(r.folder / "analysis" / "chronicles" / name, doc["text"])
+        handle = self._keep("ch", [r.name, subject, id, pov], {"text": _lines(doc["text"]), "divergence": doc["divergence"]})
+        return {"handle": handle, "title": doc["title"], "file": name, "divergence": len(doc["divergence"]),
+                "lines": len(_lines(doc["text"])), "sections": ["text", "divergence"]}
+
+    def t_brief(self, run, subject, id):
+        from renasci.story.brief import brief
+
+        r = self._subject(run, subject, id)
+        doc = brief(r, (subject, id))
+        name = f"{subject}-{_safe(id)}.md"
+        if r.folder is not None:
+            self._write(r.folder / "analysis" / "briefs" / name, doc["text"])
+        handle = self._keep("br", [r.name, subject, id], {"text": _lines(doc["text"]), "threads": doc["threads"]})
+        return {"handle": handle, "title": doc["pack"]["subject"]["title"], "file": name, "npcs": len(doc["npcs"]),
+                "hooks": len(doc["threads"]), "latch": len(doc["latch"]), "lines": len(_lines(doc["text"])),
+                "sections": ["text", "threads"]}
+
+    def t_check_prose(self, run, text, pov="omniscient"):
+        from renasci.core.canon import canonical
+        from renasci.story.check import MAX_TEXT, check, findings
+
+        if len(text.encode("utf-8")) > MAX_TEXT:
+            raise ToolError(f"the text is over {MAX_TEXT // 1024} KB")
+        r = self.run(run)
+        if pov != "omniscient":
+            self._id(pov)
+        report = check(r, text, pov)
+        name = f"{report['text']}--{_safe(pov)}.json"
+        if r.folder is not None:
+            self._write(r.folder / "analysis" / "checks" / name, canonical(report) + "\n")
+        found = findings(report)
+        handle = self._keep("ck", [r.name, report["text"], pov], {"findings": found, "sentences": report["sentences"]})
+        return {"handle": handle, "file": name, "counts": report["counts"], "sentences": len(report["sentences"]),
+                "sections": ["findings", "sentences"]}
 
     def t_fetch(self, handle, section, cursor=0):
-        pack = self.handles.get(handle)
-        if pack is None:
-            raise ToolError(f"no pack {handle!r} (build one with the pack tool)")
-        if section not in ("people", "places", "events", "beliefs", "threads"):
-            raise ToolError("a section is people, places, events, beliefs or threads")
-        return self._page(pack[section], cursor)
+        doc = self.handles.get(handle)
+        if doc is None:
+            raise ToolError(f"no handle {handle!r} (make one with pack, chronicle, brief or check_prose)")
+        if section not in doc:
+            raise ToolError(f"this handle's sections are {', '.join(doc)}")
+        return self._page(doc[section], cursor)
 
     def t_vault_search(self, query, type=None, cursor=0):
         v = self.vault()
@@ -296,6 +368,17 @@ class Server:
             raise ToolError(f"note {note!r} isn't readable")
         return {"key": key, "title": n.title, "id": n.id, "type": n.type, "status": n.status,
                 "frontmatter": n.frontmatter, "text": path.read_text(encoding="utf-8")}
+
+
+PACK_SECTIONS = ("people", "places", "events", "beliefs", "threads")
+
+
+def _safe(s: str) -> str:
+    return "".join(c if c.isalnum() or c in "-." else "_" for c in s)
+
+
+def _lines(text: str) -> list[str]:
+    return text.splitlines(keepends=True)
 
 
 def _result(mid, result) -> dict:
