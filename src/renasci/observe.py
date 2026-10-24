@@ -81,6 +81,7 @@ LAUNCH_KEYS = {"run", "rank", "kind", "date", "until"}
 RIPPLE_KEYS = {"run", "kind", "target", "date", "params", "name"}
 CALENDAR_TEXT = re.compile(r"^[A-Za-z0-9][A-Za-z0-9 .'-]{0,39}$")  # "1K 26", "1K 26 m6 d1", "A.E. 3"; never "-..."
 MAX_BODY = 4096
+MAP_MAX_BODY = 16 * 1024 * 1024  # (an edited map: geography, grid and layout)
 JOB_SECONDS = 3600  # a what-if that takes longer than an hour is stopped
 
 
@@ -159,7 +160,8 @@ class Handler(BaseHTTPRequestHandler):
     protocol_version = "HTTP/1.1"  # keep-alive: the Observatory asks for many small files
 
     def __init__(self, *args, app: Path, runs: Path, jobs: Jobs | None = None, recipes: Path | None = None,
-                 vault: Path | None = None, **kw):
+                 vault: Path | None = None, map_files=None, **kw):
+        self.map_files = map_files  # (renasci.mapedit.MapFiles with --edit-map; else None: no editor)
         self.vault = vault.resolve() if vault is not None and vault.is_dir() else None
         self.recipes = recipes.resolve() if recipes is not None else None
         self.app, self.runs, self.jobs = app.resolve(), runs.resolve(), jobs
@@ -204,13 +206,16 @@ class Handler(BaseHTTPRequestHandler):
         path = unquote(urlsplit(self.path).path)
         if path == "/api/capabilities":
             body = json.dumps({"launch": self.jobs is not None,
-                               "propose": self.jobs is not None and self.vault is not None}).encode("utf-8")
+                               "propose": self.jobs is not None and self.vault is not None,
+                               "edit_map": self.map_files.world if self.map_files else None}).encode("utf-8")
             return self._send(HTTPStatus.OK, body, "application/json", head_only)
         if path == "/api/recipes":
             if self.jobs is None:
                 return self._send(HTTPStatus.NOT_FOUND, b"the launcher is off", "text/plain", head_only=head_only)
             body = json.dumps(list_recipes(self.recipes)).encode("utf-8")
             return self._send(HTTPStatus.OK, body, "application/json", head_only=head_only)
+        if path in ("/api/map", "/api/map/base.png"):
+            return self._map_get(path, head_only)
         if path == "/api/jobs":
             body = json.dumps(self.jobs.list() if self.jobs else []).encode("utf-8")
             return self._send(HTTPStatus.OK, body, "application/json", head_only)
@@ -249,10 +254,86 @@ class Handler(BaseHTTPRequestHandler):
     def _refuse(self):
         self._send(HTTPStatus.METHOD_NOT_ALLOWED, b"read-only", "text/plain", head_only=False)
 
-    do_PUT = do_DELETE = do_PATCH = _refuse  # noqa: N815
+    do_DELETE = do_PATCH = _refuse  # noqa: N815
+
+    def _map_get(self, path: str, head_only: bool) -> None:
+        if self.map_files is None:
+            return self._send(HTTPStatus.NOT_FOUND, b"no map is being edited (--edit-map)", "text/plain", head_only)
+        if path == "/api/map":
+            body = json.dumps(self.map_files.load()).encode("utf-8")
+            return self._send(HTTPStatus.OK, body, "application/json", head_only)
+        image = self.map_files.base()
+        if image is None:
+            return self._send(HTTPStatus.NOT_FOUND, b"no base image: run renasci map import", "text/plain", head_only)
+        self.send_response(HTTPStatus.OK)  # (the private map: never cached, never embeddable by another site)
+        self.send_header("Content-Type", "image/png")
+        self.send_header("Content-Length", str(image.stat().st_size))
+        self.send_header("Cache-Control", "no-store")
+        self.send_header("Cross-Origin-Resource-Policy", "same-origin")
+        self.send_header("X-Content-Type-Options", "nosniff")
+        self.end_headers()
+        if not head_only:
+            with image.open("rb") as f:
+                shutil.copyfileobj(f, self.wfile)
+
+    def _trusted_json(self, limit: int):
+        """The request's JSON body, if the request comes from the Observatory itself (Host, Origin, the
+        custom header, the type) and says its length within `limit`; else an error has been sent: None."""
+        port = self.server.server_address[1]
+        if not self._host_ok() or self.headers.get("Origin") not in (f"http://127.0.0.1:{port}", f"http://localhost:{port}") \
+                or self.headers.get("X-Renasci-Launch") != "1" \
+                or self.headers.get("Content-Type", "").split(";")[0].strip() != "application/json":
+            self._send(HTTPStatus.FORBIDDEN, b"forbidden", "text/plain", head_only=False)
+            return None
+        try:
+            length = int(self.headers.get("Content-Length", ""))
+        except ValueError:
+            length = -1
+        if not 0 <= length <= limit:  # (unread bytes would be taken for the next request: close instead)
+            self.close_connection = True
+            self._send(HTTPStatus.REQUEST_ENTITY_TOO_LARGE if length > limit else HTTPStatus.LENGTH_REQUIRED,
+                       b"body too large, or no length", "text/plain", head_only=False)
+            return None
+        try:
+            return json.loads(self.rfile.read(length) or b"null")
+        except (ValueError, RecursionError):
+            self._send(HTTPStatus.BAD_REQUEST, b"not JSON", "text/plain", head_only=False)
+            return None
+
+    def _map_write(self, route: str) -> None:
+        """POST /api/map/check (findings for an unsaved state) and PUT /api/map (save it)."""
+        from renasci import mapedit
+
+        body = self._trusted_json(MAP_MAX_BODY)
+        if body is None:
+            return
+        bad = mapedit.shape(body)
+        if bad:
+            return self._send(HTTPStatus.BAD_REQUEST, bad.encode("utf-8"), "text/plain", head_only=False)
+        try:
+            if route == "/api/map/check":
+                out = json.dumps(mapedit.check(body)).encode("utf-8")
+                return self._send(HTTPStatus.OK, out, "application/json", head_only=False)
+            findings, changed = mapedit.save(self.map_files, body)
+        except PermissionError as err:  # (Windows: a file open elsewhere; nothing was changed)
+            return self._send(HTTPStatus.CONFLICT, f"couldn't write: {err}".encode("utf-8"), "text/plain", False)
+        except (ValueError, TypeError, KeyError, AttributeError, RecursionError) as err:  # (a state the checks choke on)
+            return self._send(HTTPStatus.BAD_REQUEST, f"a malformed map: {err!r}".encode("utf-8"), "text/plain", False)
+        if changed or not any(f["severity"] == "error" for f in findings):
+            out = json.dumps({"changed": changed, "findings": findings}).encode("utf-8")
+            return self._send(HTTPStatus.OK, out, "application/json", head_only=False)
+        return self._send(HTTPStatus.BAD_REQUEST, json.dumps(findings).encode("utf-8"), "application/json", False)
+
+    def do_PUT(self):  # noqa: N802
+        route = unquote(urlsplit(self.path).path)
+        if self.map_files is None or route != "/api/map":
+            return self._refuse()
+        self._map_write(route)
 
     def do_POST(self):  # noqa: N802
         route = unquote(urlsplit(self.path).path)
+        if route == "/api/map/check" and self.map_files is not None:
+            return self._map_write(route)
         builders = {"/api/launch": self._launch_argv, "/api/run": self._run_argv, "/api/replay": self._replay_argv,
                     "/api/propose": self._propose_argv, "/api/ripple": self._ripple_argv}
         if self.jobs is None or route not in builders:
@@ -388,16 +469,26 @@ class Handler(BaseHTTPRequestHandler):
                       "date": body["date"]}
 
 
-def make_server(app, runs, port: int = 8765, launch: bool = False, recipes=None, vault=None) -> ThreadingHTTPServer:
+def make_server(app, runs, port: int = 8765, launch: bool = False, recipes=None, vault=None, edit_map=None,
+                maps=None) -> ThreadingHTTPServer:
+    map_files = None
+    if edit_map is not None:  # (the map editor: the geography file and its world's private layers)
+        from renasci.mapedit import MapFiles
+
+        edit_map = Path(edit_map)
+        map_files = MapFiles(edit_map, Path(maps) / edit_map.stem / "private")
     handler = partial(Handler, app=Path(app), runs=Path(runs), jobs=Jobs() if launch else None,
                       recipes=Path(recipes) if recipes is not None else None,
-                      vault=Path(vault) if vault is not None else None)
+                      vault=Path(vault) if vault is not None else None, map_files=map_files)
     return ThreadingHTTPServer(("127.0.0.1", port), handler)
 
 
 def serve(app, runs, port: int = 8765, open_browser: bool = True, launch: bool = False, recipes=None,
-          vault=None) -> None:
-    server = make_server(app, runs, port, launch=launch, recipes=recipes, vault=vault)
+          vault=None, edit_map=None, maps=None) -> None:
+    server = make_server(app, runs, port, launch=launch, recipes=recipes, vault=vault, edit_map=edit_map, maps=maps)
+    if edit_map is not None:
+        print(f"Editing the map {Path(edit_map).resolve()} at /edit (its private layers in "
+              f"{Path(maps) / Path(edit_map).stem / 'private'})")
     url = f"http://127.0.0.1:{server.server_address[1]}/"
     if launch and vault is not None:
         print(f"Proposed notes may be written into {Path(vault).resolve()}/_proposed (never over an edit)")

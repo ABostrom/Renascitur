@@ -227,3 +227,8 @@ def test_an_empty_path_is_no_path_and_a_bad_grid_is_reported_not_a_crash():
 def test_a_dated_retiming_does_not_hide_drift_in_the_base_days():
     doc = {**DOC, "changes": [{"date": [1, 2, 0], "route": "g:a--b", "days": 20}]}
     assert "days_differ" in {f["kind"] for f in G.check(doc, GRID, LAYOUT)}
+
+
+def test_a_new_grid_records_the_maps_own_extent():
+    g = G.new_grid(miles_across=1000, aspect=0.6)
+    assert g["extent"] == [1000, 600]  # (the cells overhang it: the editor draws the image at its own size)
