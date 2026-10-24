@@ -19,3 +19,4 @@ runs/
 images/Renascitur.png
 maps/*/private/
 *.bak
+*.tmp

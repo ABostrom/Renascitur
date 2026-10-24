@@ -766,8 +766,13 @@ def cmd_bench(args) -> int:
 def cmd_observe(args) -> int:
     from renasci.observe import serve
 
+    maps = Path(args.maps) if args.maps else REPO / "maps"
+    if args.edit_map:
+        if not Path(args.edit_map).is_file():
+            raise ValueError(f"no geography file {args.edit_map}")
+        _refuse_unless_ignored((maps / Path(args.edit_map).stem / "private").resolve())
     serve(args.app, args.runs, port=args.port, open_browser=not args.no_browser, launch=args.allow_launch,
-          recipes=args.recipes, vault=args.vault)
+          recipes=args.recipes, vault=args.vault, edit_map=args.edit_map, maps=maps)
     return 0
 
 
@@ -884,6 +889,9 @@ def main(argv=None) -> int:
     p.add_argument("--recipes", default="recipes", help="the recipes the Observatory may launch (with --allow-launch)")
     p.add_argument("--vault", default=None,
                    help="a vault the Observatory may write proposed notes into (with --allow-launch; never by default)")
+    p.add_argument("--edit-map", default=None,
+                   help="a geography file to edit at /edit (S5), with its world's private layers in --maps")
+    p.add_argument("--maps", default=None, help="the maps folder (default: the repo's maps/)")
     p = sub.add_parser("bench", help="time a world (simulation plus writing the run folder, "
                                       "not world setup) and append to the benchmark history")
     p.add_argument("--world", choices=("toy", "fourth_age"), default="toy")

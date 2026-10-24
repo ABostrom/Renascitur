@@ -154,7 +154,8 @@ def new_grid(miles_across: float, aspect: float, miles: int = MILES, land=None) 
     import's mask as a boolean array, True for land), every cell whose centre is on water is painted water."""
     row_miles = miles * math.sqrt(3) / 2
     g = {"cols": math.ceil(miles_across / miles), "rows": math.ceil(miles_across * aspect / row_miles), "miles": miles,
-         "days_per_cell": round(DAYS_PER_CELL * miles / MILES, 4), "terrain": dict(TERRAIN), "cells": {}}
+         "days_per_cell": round(DAYS_PER_CELL * miles / MILES, 4), "terrain": dict(TERRAIN), "cells": {},
+         "extent": [round(miles_across, 3), round(miles_across * aspect, 3)]}  # (the map's own size: cells overhang it)
     if land is not None:
         h, w = land.shape
         for c in cells(g):

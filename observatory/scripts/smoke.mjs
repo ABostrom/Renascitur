@@ -1,7 +1,7 @@
 // Smoke test of the shipping model: the committed build, served by `renasci observe`, in a real browser.
 //   npm run build && npm run smoke
 import { execSync, spawn } from 'node:child_process';
-import { cpSync, existsSync, mkdtempSync, mkdirSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdtempSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -55,7 +55,20 @@ async function launchAndOpen(browser, errors) {
 	cpSync(resolve(app, 'fixtures', 'runs', 'canon'), resolve(runs, 'canon'), { recursive: true });
 	writeFileSync(resolve(recipes, 'tiny.toml'),
 		'[run]\nname = "tiny"\nengine = "0.1.0"\nseed = 7\nworld = "toy"\nend = "1X 2"\n\n[world]\npeople_per_village = 4\n');
-	launchServer = spawn(`uv run renasci observe "${runs}" --app "${resolve(app, 'build')}" --port ${lport} --no-browser --allow-launch --recipes "${recipes}" --vault "${vault}"`,
+	// a scratch world for the map editor (#84): two towns, a road between them not yet drawn on the grid
+	const world = resolve(scratch, 'toyland.json');
+	writeFileSync(world, JSON.stringify({
+		regions: [{ id: 'g:north' }],
+		places: [{ id: 't:a', name: 'Aston', kind: 'settlement', region: 'g:north' }, { id: 't:b', name: 'Brigg', kind: 'settlement', region: 'g:north' }],
+		routes: [{ id: 'g:a--b', ends: ['t:a', 't:b'], days: 20, kind: 'road' }]
+	}));
+	const editPrivate = resolve(scratch, 'maps', 'toyland', 'private');
+	mkdirSync(editPrivate, { recursive: true });
+	const cells = {};
+	for (let c = 0; c < 10; c++) for (let r = 0; r < 6; r++) cells[`c:${c},${r}`] = { region: 'g:north' };
+	writeFileSync(resolve(editPrivate, 'grid.json'), JSON.stringify({ cols: 10, rows: 6, miles: 24, days_per_cell: 1.2, terrain: { plains: 1, hills: 2, water: null }, cells }));
+	writeFileSync(resolve(editPrivate, 'layout.json'), JSON.stringify({ places: { 't:a': { cell: 'c:1,1' }, 't:b': { cell: 'c:6,1' } }, routes: {} }));
+	launchServer = spawn(`uv run renasci observe "${runs}" --app "${resolve(app, 'build')}" --port ${lport} --no-browser --allow-launch --recipes "${recipes}" --vault "${vault}" --edit-map "${world}" --maps "${resolve(scratch, 'maps')}"`,
 		{ cwd: repo, stdio: 'ignore', shell: true });
 	for (let i = 0; i < 100; i++) {
 		try {
@@ -83,6 +96,31 @@ async function launchAndOpen(browser, errors) {
 	await page.getByRole('heading', { name: 'Causal wave' }).waitFor({ timeout: 20000 });
 	await page.goto(`http://127.0.0.1:${lport}/`);
 	await page.getByText(/branch of\s+tiny/).waitFor({ timeout: 15000 });
+	// the map editor (#84): draw the road over cells, from town to town, save, and it's baked into the file
+	await page.goto(`http://127.0.0.1:${lport}/edit`);
+	await page.getByRole('heading', { name: /^Map editor/ }).waitFor({ timeout: 20000 });
+	const clickCell = async (col, row) => {
+		const at = await page.evaluate(([col, row]) => {
+			const svg = document.querySelector('svg.map');
+			const miles = 24, radius = miles / Math.sqrt(3);
+			const pt = svg.createSVGPoint();
+			pt.x = miles * (col + 0.5 + 0.5 * (row & 1));
+			pt.y = radius + row * 1.5 * radius;
+			const p = pt.matrixTransform(svg.getScreenCTM());
+			return [p.x, p.y];
+		}, [col, row]);
+		await page.mouse.click(at[0], at[1]);
+	};
+	await page.getByRole('button', { name: 'Draw route' }).click();
+	await clickCell(1, 1);
+	await clickCell(3, 3);
+	await clickCell(6, 1);
+	await page.getByRole('button', { name: 'Save', exact: true }).click();
+	await page.getByRole('status').filter({ hasText: /^Saved/ }).waitFor({ timeout: 15000 });
+	const baked = JSON.parse(readFileSync(world, 'utf8'));
+	if (baked.routes.length !== 1 || baked.routes[0].days === 20) throw new Error('the editor did not save a baked route');
+	const layout = JSON.parse(readFileSync(resolve(editPrivate, 'layout.json'), 'utf8'));
+	if (!Object.values(layout.routes).some((r) => r.cells.includes('c:3,3'))) throw new Error('the drawn path was not saved');
 	// promote: the canon run's near miss, with the pin that caused it kept, written to the vault
 	await page.goto(`http://127.0.0.1:${lport}/run/canon/strain`);
 	await page.getByRole('heading', { name: /^Strain, in order/ }).waitFor({ timeout: 20000 });
@@ -93,7 +131,7 @@ async function launchAndOpen(browser, errors) {
 	await page.getByText(/wrote _proposed\/event\//).waitFor({ timeout: 60000 });
 	const written = readdirSync(resolve(vault, '_proposed', 'event'));
 	if (written.length !== 1) throw new Error(`the vault has ${written.length} proposed events`);
-	return 'a run launched from a recipe and opened; a ripple authored on a person, replayed as a branch and diffed; an event proposed to the vault with its cause';
+	return 'a run launched from a recipe and opened; a road drawn in the map editor and saved, baked; a ripple authored on a person, replayed as a branch and diffed; an event proposed to the vault with its cause';
 }
 const browser = await (async () => {
 	await waitForServer();

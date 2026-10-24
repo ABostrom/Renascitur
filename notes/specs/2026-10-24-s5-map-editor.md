@@ -174,6 +174,27 @@ maps/pyrosia/private/                   git-ignored, at the repo root (editor da
 - `POST /api/map/check` returns `geo.check` and the grid check's findings for the unsaved state, debounced as you edit. Errors block saving and warnings are listed.
 - **Save** sends everything changed in one request (§7). The baked `pyrosia.json` is written by `geo.dumps`, so the commit is a reviewable diff, one record per line.
 
+**As built (#84).**
+- `/edit` in the Observatory, with `renasci observe --edit-map <geography> [--maps <dir>]`.
+- **Tools:**
+  - select;
+  - move a place to a cell (its routes re-join it);
+  - add a place (id, name, kind);
+  - draw a route by clicking from place through cells to place. If the pair already has a route of that kind, that one is drawn.
+- **Side panel:**
+  - attributes: name, kind, Vialux, open, a water route's days;
+  - lists of routes and of places not placed yet;
+  - the server's findings, re-checked as you edit.
+- **Saving:** undo and redo; Save sends the whole state. Edits are plain functions in `observatory/src/lib/map/edit.ts`, and the hex maths in `hex.ts` mirrors `renasci.mapgrid`.
+- **Server:** `renasci.mapedit` (load, shape check, check, save: bake, then atomic writes with `.bak`).
+- Linking the import's markers to places (marker → place) is left for #85 or #83: markers are drawn, but not yet clickable.
+- After review:
+  - `grid.json` records the map's own `extent` in miles; the image and markers are drawn at it, since the cells overhang it.
+  - A save writes every file's new version first, then swaps them in together, restoring from `.bak` if a swap fails; saves take turns.
+  - A malformed state is a 400.
+  - Edits wait while a save is in flight, and a stale check answer is ignored.
+  - Drawing picks a route kind.
+
 ## 7. The server
 
 `renasci observe runs --edit-map src/renasci/renascita/pyrosia.json`. This works without `--allow-launch`.

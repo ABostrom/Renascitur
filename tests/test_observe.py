@@ -207,7 +207,7 @@ def test_observe_defaults_to_the_committed_build(monkeypatch):
     from renasci.cli import main as cli_main
 
     seen = {}
-    monkeypatch.setattr(observe, "serve", lambda app, runs, port, open_browser, launch, recipes=None, vault=None:
+    monkeypatch.setattr(observe, "serve", lambda app, runs, port, open_browser, launch, recipes=None, vault=None, edit_map=None, maps=None:
                         seen.update(app=app, launch=launch, vault=vault))
     cli_main(["observe", "--no-browser"])
     from pathlib import Path
@@ -250,7 +250,7 @@ def launch_headers(base):
 
 def test_the_launcher_is_off_unless_asked_for(served):
     base, _ = served
-    assert call(base, "/api/capabilities") == (200, {"launch": False, "propose": False})
+    assert call(base, "/api/capabilities") == (200, {"launch": False, "propose": False, "edit_map": None})
     assert call(base, "/api/launch", {"run": "tiny", "rank": 1}, launch_headers(base))[0] == 405
 
 
@@ -267,7 +267,7 @@ def launcher(tmp_path_factory, served):
 
 def test_a_launch_must_come_from_the_observatory_itself(launcher):
     base = launcher
-    assert call(base, "/api/capabilities") == (200, {"launch": True, "propose": False})
+    assert call(base, "/api/capabilities") == (200, {"launch": True, "propose": False, "edit_map": None})
     body = {"run": "tiny", "rank": 1}
     assert call(base, "/api/launch", body, {**launch_headers(base), "Origin": "http://evil.example"})[0] == 403
     no_header = {k: v for k, v in launch_headers(base).items() if k != "X-Renasci-Launch"}
@@ -476,8 +476,8 @@ def promoter(tmp_path_factory):
 
 def test_capabilities_say_whether_promoting_is_possible(promoter, served):
     base, _, _ = promoter
-    assert call(base, "/api/capabilities") == (200, {"launch": True, "propose": True})
-    assert call(served[0], "/api/capabilities") == (200, {"launch": False, "propose": False})
+    assert call(base, "/api/capabilities") == (200, {"launch": True, "propose": True, "edit_map": None})
+    assert call(served[0], "/api/capabilities") == (200, {"launch": False, "propose": False, "edit_map": None})
 
 
 def test_an_event_is_promoted_with_the_causes_ticked_and_the_note_appears_in_the_vault(promoter):
