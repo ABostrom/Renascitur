@@ -15,6 +15,7 @@
 		type MapDelta,
 		type Traveller
 	} from '$lib/run/geography';
+	import { borders, colours } from '$lib/run/polities';
 	import { openRun, type Run } from '$lib/run/run';
 	import { HttpSource } from '$lib/run/source';
 
@@ -30,6 +31,7 @@
 	let partial = $state(false); // an unfinished run has no final state: no residents, no travellers
 	let deltas = $state<MapDelta[]>([]);
 	let step = $state<number | null>(null); // which moment the map shows (null: the end)
+	let polityNames = $state<Record<string, string>>({});
 
 	$effect(() => {
 		const n = name;
@@ -42,6 +44,7 @@
 		partial = false;
 		deltas = [];
 		step = null;
+		polityNames = {};
 		const source = new HttpSource();
 		Promise.all([openRun(source, n), loadGeography(source, n)])
 			.then(async ([r, g]) => {
@@ -50,15 +53,21 @@
 				geo = g;
 				missing = !g;
 				partial = r.manifest.meta.complete === false;
-				if (g?.changes?.length) {
+				const held = (g?.places ?? []).some((p) => p.control !== undefined); // (a world with polities, S8)
+				if (g && (g.changes?.length || held)) {
 					// (only a run whose map changes: it reads every state change once)
 					const ds = await loadMapDeltas(r, g);
 					if (stale) return;
 					deltas = ds;
 				}
 				if (g && !partial) {
-					const occ = occupancy(await finalState(r), g);
+					const state = await finalState(r);
+					const occ = occupancy(state, g);
 					if (stale) return;
+					// (the polities' names, from the final state: an unfinished run shows their ids)
+					polityNames = Object.fromEntries(
+						state.entities.filter((e: { kind: string }) => e.kind === 'polity').map((e: { id: string; fields: { name?: string } }) => [e.id, e.fields.name ?? e.id])
+					);
 					residents = occ.residents;
 					travellers = occ.travellers;
 				}
@@ -98,6 +107,10 @@
 		if (c.what === 'built' && r) return `${site(c.site)} built (${r.days} days)`;
 		if (c.what === 'moved') return `${site(c.site)} moved into ${regions[c.detail.slice(5)] ?? c.detail.slice(5)}`;
 		if (c.what === 'opened') return `${site(c.site)} reopened${c.detail ? `, now ${c.detail}` : ''}`;
+		if (c.what === 'taken') {
+			const by = c.detail.replace(/^held by /, '');
+			return `${site(c.site)} ${by === 'nobody' ? 'held by nobody' : `taken by ${polityName(by)}`}`;
+		}
 		return `${site(c.site)} ${WHAT[c.what]}${c.what === 'days' ? ` ${c.detail}` : ''}`;
 	}
 	const WHAT: Record<string, string> = {
@@ -109,6 +122,21 @@
 		changed: 'changed'
 	};
 	const names = $derived(Object.fromEntries((geo?.places ?? []).map((p) => [p.id, p.name ?? p.id])));
+	// Who holds what (S8 §10): a colour per polity that ever held a place in the run, borders on the routes between.
+	const holders = $derived(
+		[
+			...new Set([
+				...(geo?.places ?? []).map((p) => p.control),
+				...deltas.filter((d) => d.field === 'control').map((d) => d.new as string | null)
+			])
+		]
+			.filter((c): c is string => !!c)
+			.sort()
+	);
+	const tint = $derived(colours(holders));
+	const controlOf = $derived(Object.fromEntries((shown?.places ?? []).map((p) => [p.id, p.control ?? null])));
+	const border = $derived(shown ? borders(shown) : new Set<string>());
+	const polityName = (id: string) => polityNames[id] ?? id;
 	const regions = $derived(Object.fromEntries((geo?.regions ?? []).map((r) => [r.id, r.name ?? r.id])));
 	const regionOf = $derived(Object.fromEntries((shown?.places ?? []).map((p) => [p.id, p.region])));
 	const biggest = $derived(Math.max(1, ...Object.values(residents)));
@@ -127,7 +155,8 @@
 
 <p class="crumbs">
 	<a href="/">Runs</a> › <strong>{name}</strong> › map · <a href={`/run/${encodeURIComponent(name)}/events`}>events</a> ·
-	<a href={`/run/${encodeURIComponent(name)}/stories`}>stories</a>
+	<a href={`/run/${encodeURIComponent(name)}/stories`}>stories</a> ·
+	<a href={`/run/${encodeURIComponent(name)}/polities`}>polities</a>
 </p>
 
 {#if error}
@@ -159,8 +188,11 @@
 				{@const a = pos[r.ends[0]]}
 				{@const b = pos[r.ends[1]]}
 				{#if a && b}
+					{#if border.has(r.id)}
+						<line x1={a.x} y1={a.y} x2={b.x} y2={b.y} class="border" aria-hidden="true" />
+					{/if}
 					<line x1={a.x} y1={a.y} x2={b.x} y2={b.y} class={`route ${r.kind}`} class:vialux={r.vialux} class:closed={r.open === false}>
-						<title>{names[r.ends[0]]} – {names[r.ends[1]]}: {r.days} days by {r.kind}{r.vialux ? ' (the Vialux)' : ''}{r.open === false ? ', closed' : ''}</title>
+						<title>{names[r.ends[0]]} – {names[r.ends[1]]}: {r.days} days by {r.kind}{r.vialux ? ' (the Vialux)' : ''}{r.open === false ? ', closed' : ''}{border.has(r.id) ? ' (a border)' : ''}</title>
 					</line>
 					<text x={(a.x + b.x) / 2} y={(a.y + b.y) / 2 - 3} class="days">{r.days}</text>
 				{/if}
@@ -169,8 +201,8 @@
 				{@const at = pos[p.id]}
 				<a href={entity(p.id)} aria-label={names[p.id]}>
 					{#if p.kind === 'settlement'}
-						<circle cx={at.x} cy={at.y} r={atEnd ? radius(p.id) : 8} class="settlement">
-							<title>{names[p.id]} ({regions[regionOf[p.id]] ?? regionOf[p.id]}){atEnd ? `: ${residents[p.id] ?? 0} notables${onRoad[p.id] ? `, ${onRoad[p.id]} on the road` : ''}` : ''}</title>
+						<circle cx={at.x} cy={at.y} r={atEnd ? radius(p.id) : 8} class="settlement" style:fill={controlOf[p.id] ? tint[controlOf[p.id]!] : null}>
+							<title>{names[p.id]} ({regions[regionOf[p.id]] ?? regionOf[p.id]}){controlOf[p.id] ? `, held by ${polityName(controlOf[p.id]!)}` : ''}{atEnd ? `: ${residents[p.id] ?? 0} notables${onRoad[p.id] ? `, ${onRoad[p.id]} on the road` : ''}` : ''}</title>
 						</circle>
 					{:else}
 						<rect x={at.x - 4} y={at.y - 4} width="8" height="8" class={`place ${p.kind}`} transform={`rotate(45 ${at.x} ${at.y})`}>
@@ -201,6 +233,12 @@
 			<span><svg width="12" height="12" aria-hidden="true"><circle cx="6" cy="6" r="5" class="settlement" /></svg> settlement (size: notables)</span>
 			<span><svg width="12" height="12" aria-hidden="true"><rect x="2" y="2" width="8" height="8" class="place" /></svg> other place</span>
 			<span><svg width="12" height="12" aria-hidden="true"><circle cx="6" cy="6" r="3.5" class="traveller" /></svg> on the road</span>
+			{#if holders.length}
+				<span><svg width="18" height="10" aria-hidden="true"><line x1="0" y1="5" x2="18" y2="5" class="border" /></svg> border</span>
+				{#each holders as h (h)}
+					<span><svg width="12" height="12" aria-hidden="true"><circle cx="6" cy="6" r="5" class="settlement" style:fill={tint[h]} /></svg> {polityName(h)}</span>
+				{/each}
+			{/if}
 		</figcaption>
 	</figure>
 
@@ -278,6 +316,12 @@
 	}
 	.route.closed {
 		opacity: 0.3;
+	}
+	.border {
+		stroke: var(--text);
+		stroke-width: 7;
+		stroke-opacity: 0.18;
+		stroke-linecap: round;
 	}
 	.days {
 		font: 10px var(--sans);
