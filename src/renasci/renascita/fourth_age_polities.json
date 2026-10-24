@@ -2,7 +2,7 @@
   "about": "DRAFT, not canon (S8 spec §2, #120): the Fourth Age's polities, merged into the scenario when a recipe sets [world] polities = true. The Firebrand Empire (vault: Societies/Firebrand Empire) rules Pyrosia from Lion's Rest; its throne passes down the Imperial House (a placeholder name: the review queue, Q24, asks what the Emperors' house is called); the Imperial Council advises the Emperor (the vault says 'advises'; the draft timeline formalises it in 4A 80-95). The council's blocs are seeded from 'The 12 Great Houses.md', by its member lists (its table disagrees on Jorasco and Silverhand). Every number is a placeholder.",
   "draft": true,
   "houses": [
-    {"id": "v:house-imperial", "name": "the Imperial House", "seat": "v:lions-rest", "rank": 3, "rule": "male_preference_primogeniture", "draft": true}
+    {"id": "v:house-imperial", "name": "the Imperial House", "seat": "v:lions-rest", "rank": 3, "rule": "male_preference_primogeniture", "title": "v:emperors", "draft": true}
   ],
   "polities": [
     {"id": "v:firebrand-empire", "name": "the Firebrand Empire", "kind": "empire", "government": "advised",

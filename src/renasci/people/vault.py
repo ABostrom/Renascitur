@@ -23,8 +23,10 @@ Consecutive reigns' windows are narrowed so each ends no later than the next one
 `holders` (office -> character) records who holds each office when the run starts: the latest reign that
 began before it. Casting places them in office.
 
-A title office (an `organisation` with `kind: office`, such as the Emperors) has no office entity in the
-people model yet, so its reigns are reported as unsupported, not pinned.
+A title office (an `organisation` with `kind: office`, such as the Emperors) is pinned on the headship of
+the scenario house that names it as its `title` (`people_hook_for(scenario)`, #161). A title no scenario
+house carries is reported as unsupported, not pinned. (A polity office as a title is future: casting seats
+only house heads.)
 """
 
 from __future__ import annotations
@@ -43,7 +45,30 @@ def _window_json(w):
     return [d.to_json() for d in w] if w else None
 
 
-def people_hook(ctx) -> None:
+def titles(scenario: dict) -> dict[str, tuple[str, str | None]]:
+    """{a vault title office's id: (the headship that carries it, its house)}, from the houses that name a
+    `title`."""
+    out: dict[str, tuple[str, str | None]] = {}
+    for title, office, house in [(h["title"], f"{h['id']}-head", h["id"]) for h in scenario.get("houses") or []
+                                 if h.get("title")]:
+        if title in out:
+            raise ValueError(f"{title} is the title of both {out[title][0]} and {office}")
+        out[title] = (office, house)
+    return out
+
+
+def people_hook_for(scenario: dict):
+    """The people hook for a run of `scenario`: its title offices pinned on the offices that carry them."""
+    mapped = titles(scenario)
+
+    def hook(ctx) -> None:
+        people_hook(ctx, mapped)
+
+    hook.owns, hook.check = OWNS, people_check
+    return hook
+
+
+def people_hook(ctx, titles: dict | None = None) -> None:
     people: dict[str, dict] = {}
     for key, note in ctx.notes("character"):
         cid = ctx.id_of(key)
@@ -114,21 +139,21 @@ def people_hook(ctx) -> None:
             if onote is None or oid is None:
                 ctx.finding("office", key, f"{entry['office']!r} is not a canon house or office")
                 continue
-            if onote.type != "house":
-                ctx.report("unsupported", key, f"a reign of {oid}: title offices have no office entity yet (S2 §7)")
+            if onote.type != "house" and oid not in (titles or {}):
+                ctx.report("unsupported", key, f"a reign of {oid}: no scenario office carries this title (S2 §7, #161)")
                 continue
             start = ctx.date(key, entry.get("from"))
             if start is None:
                 ctx.finding("office", key, f"a reign of {oid} needs a `from` date")
                 continue
-            office = f"{oid}-head"
+            office, house = (f"{oid}-head", oid) if onote.type == "house" else titles[oid]
             if office in ctx.ids.values():
                 ctx.finding("office", key, f"{office} is also a note's id: rename one")
                 continue
             until = ctx.date(key, entry.get("to")) if entry.get("to") is not None else None
             row = {"office": office, "holder": cid, "key": key, "from": start, "to": until, "pin": None}
             ctx.out.reigns.append(row)
-            reigns.setdefault(office, []).append((start, cid, key, oid, row))
+            reigns.setdefault(office, []).append((start, cid, key, house, row))
 
     holders: dict[str, str] = {}
     for office, held in sorted(reigns.items()):
@@ -151,7 +176,7 @@ def people_hook(ctx) -> None:
                 ctx.finding("doomed_reign", key, f"a reign of {office} from before {cid} is born")
                 previous = None
                 continue
-            if p["house"] != house:
+            if house is not None and p["house"] != house:
                 ctx.finding("outside_house", key, f"{cid} reigns over {office} but isn't of that house: it will be forced")
             pin = ctx.pin(Pin(f"{cid}:reign:{office}:{n}", "event", window=window, payload={
                 "type": "people.succession", "roles": {"successor": [cid]}, "office": office}))

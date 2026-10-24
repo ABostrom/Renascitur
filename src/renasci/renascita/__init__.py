@@ -54,6 +54,7 @@ def _scenario(scenario: dict | None, scale: int = 1, beliefs: bool | None = None
         sc["houses"] = [*sc["houses"], *extra["houses"]]
         for key in ("polities", "factions", "offices"):
             sc[key] = [*(sc.get(key) or []), *extra.get(key, [])]
+        sc["params"] = {"cadet_size": 12, **sc.get("params", {})}  # (great houses branch: S8 §3.5, #161)
     for s in sc["settlements"]:
         for k in SCALED:
             if s.get(k) is not None:
