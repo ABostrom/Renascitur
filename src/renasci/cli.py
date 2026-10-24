@@ -376,21 +376,46 @@ def cmd_pack(args) -> int:
     from renasci.story.pack import Run, build
     from renasci.story.schema import PACK, validate
 
-    kinds = [(k, getattr(args, k)) for k in ("arc", "saga", "person", "event", "topic") if getattr(args, k)]
-    if len(kinds) != 1:
-        raise ValueError("name one subject: --arc, --saga, --person, --event or --topic")
+    kinds = [_subject(args)]
     run = Run(args.run)
     pack = build(run, kinds[0], args.pov)
     findings = validate(pack, PACK)
     if findings:
         raise ValueError(f"the pack doesn't fit its schema: {findings[:3]}")
-    safe = lambda s: "".join(c if c.isalnum() or c in "-." else "_" for c in s)  # noqa: E731
-    out = run.folder / "analysis" / "packs" / f"{kinds[0][0]}-{safe(kinds[0][1])}--{safe(args.pov)}.json"
+    out = run.folder / "analysis" / "packs" / f"{kinds[0][0]}-{_safe(kinds[0][1])}--{_safe(args.pov)}.json"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(canonical(pack) + "\n", encoding="utf-8", newline="\n")
     getattr(sys.stdout, "reconfigure", lambda **_: None)(errors="replace")  # (not under a captured stdout)
     print(f"pack: {pack['subject']['title']} from {pack['pov']['name']}: {len(pack['events'])} events, "
           f"{len(pack['people'])} people, {len(pack['beliefs'])} beliefs -> {out}")
+    return 0
+
+
+def _subject(args) -> tuple[str, str]:
+    kinds = [(k, getattr(args, k)) for k in ("arc", "saga", "person", "event", "topic") if getattr(args, k)]
+    if len(kinds) != 1:
+        raise ValueError("name one subject: --arc, --saga, --person, --event or --topic")
+    return kinds[0]
+
+
+def _safe(s: str) -> str:
+    return "".join(c if c.isalnum() or c in "-." else "_" for c in s)
+
+
+def cmd_chronicle(args) -> int:
+    """A POV chronicle (S12 §3, #116): a subject told as its author believes it, to analysis/chronicles/."""
+    from renasci.story.chronicle import chronicle
+    from renasci.story.pack import Run
+
+    subject = _subject(args)
+    run = Run(args.run)
+    doc = chronicle(run, subject, args.pov)
+    out = run.folder / "analysis" / "chronicles" / f"{subject[0]}-{_safe(subject[1])}--{_safe(args.pov)}.md"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(doc["text"], encoding="utf-8", newline="\n")
+    getattr(sys.stdout, "reconfigure", lambda **_: None)(errors="replace")
+    print(f"chronicle: {doc['title']}: "
+          f"{len(doc['divergence'])} departures from the truth -> {out}")
     return 0
 
 
@@ -913,6 +938,12 @@ def main(argv=None) -> int:
     for k in ("arc", "saga", "person", "event", "topic"):
         p.add_argument(f"--{k}", help=f"the subject: a {k} id")
     p.add_argument("--pov", default="omniscient", help="omniscient, or a person, house or settlement id")
+    p = sub.add_parser("chronicle", help="a POV chronicle: a subject told as its author believes it "
+                                          "(analysis/chronicles/)")
+    p.add_argument("run")
+    for k in ("arc", "saga", "person", "event", "topic"):
+        p.add_argument(f"--{k}", help=f"the subject: a {k} id")
+    p.add_argument("--pov", default="omniscient", help="omniscient, or a person, house or settlement id")
     p = sub.add_parser("mcp", help="an MCP server over runs and the vault, on stdio (for Claude)")
     p.add_argument("--runs", default="runs")
     p.add_argument("--vault", default=None, help="the vault folder its vault tools read (read-only)")
@@ -944,7 +975,7 @@ def main(argv=None) -> int:
     p.add_argument("--out", default="runs/_bench")
     args = parser.parse_args(argv)
     try:
-        commands = {"run": cmd_run, "replay": cmd_replay, "diff": cmd_diff, "inspect": cmd_inspect, "bench": cmd_bench, "latch": cmd_latch, "stories": cmd_stories, "claims": cmd_claims, "pack": cmd_pack, "mcp": cmd_mcp, "ripple": cmd_ripple, "map": cmd_map, "vault": cmd_vault,
+        commands = {"run": cmd_run, "replay": cmd_replay, "diff": cmd_diff, "inspect": cmd_inspect, "bench": cmd_bench, "latch": cmd_latch, "stories": cmd_stories, "claims": cmd_claims, "pack": cmd_pack, "chronicle": cmd_chronicle, "mcp": cmd_mcp, "ripple": cmd_ripple, "map": cmd_map, "vault": cmd_vault,
                     "observe": cmd_observe}
         return commands[args.command](args)
     except (ValueError, FileExistsError, FileNotFoundError) as err:
