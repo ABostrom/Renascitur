@@ -419,6 +419,31 @@ def cmd_chronicle(args) -> int:
     return 0
 
 
+def cmd_check_prose(args) -> int:
+    """A canon check (S12 §4, #117): prose read into claims and judged against the run, from a point of
+    view; the report to analysis/checks/<digest of the text>.json, the findings printed (contradictions first)."""
+    from renasci.core.canon import canonical
+    from renasci.story.check import MAX_TEXT, check, findings
+    from renasci.story.pack import Run
+
+    src = Path(args.file)
+    if src.stat().st_size > MAX_TEXT:
+        raise ValueError(f"{src.name} is over {MAX_TEXT // 1024} KB")
+    run = Run(args.run)
+    report = check(run, src.read_text(encoding="utf-8"), args.pov)
+    out = run.folder / "analysis" / "checks" / f"{report['text']}--{_safe(args.pov)}.json"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(canonical(report) + "\n", encoding="utf-8", newline="\n")
+    getattr(sys.stdout, "reconfigure", lambda **_: None)(errors="replace")
+    for f in findings(report):
+        what = f"{f['pred']} {f['args']}: {f['verdict']}" if "pred" in f else f"{f['mention']!r}: {f['why']} " \
+            f"({', '.join(c.get('name') or c['id'] for c in f['candidates'][:5])})"
+        print(f"{f['finding']:>13}  #{f['n']}  {what}  [{', '.join(f.get('events') or [])}]")
+    counts = ", ".join(f"{n} {k}" for k, n in report["counts"].items() if n)
+    print(f"check: {counts or 'no claims found'} -> {out}")
+    return 0
+
+
 def cmd_mcp(args) -> int:
     """The MCP server over runs and the vault (S12 §5, #118), on stdio."""
     from renasci.mcp import serve
@@ -944,6 +969,11 @@ def main(argv=None) -> int:
     for k in ("arc", "saga", "person", "event", "topic"):
         p.add_argument(f"--{k}", help=f"the subject: a {k} id")
     p.add_argument("--pov", default="omniscient", help="omniscient, or a person, house or settlement id")
+    p = sub.add_parser("check-prose", help="a canon check: prose read into claims and judged against a run "
+                                            "(analysis/checks/)")
+    p.add_argument("run")
+    p.add_argument("file", help="the prose (Markdown; `claims` blocks are read exactly)")
+    p.add_argument("--pov", default="omniscient", help="whose account it is: omniscient, or a person, house or settlement id")
     p = sub.add_parser("mcp", help="an MCP server over runs and the vault, on stdio (for Claude)")
     p.add_argument("--runs", default="runs")
     p.add_argument("--vault", default=None, help="the vault folder its vault tools read (read-only)")
@@ -975,7 +1005,7 @@ def main(argv=None) -> int:
     p.add_argument("--out", default="runs/_bench")
     args = parser.parse_args(argv)
     try:
-        commands = {"run": cmd_run, "replay": cmd_replay, "diff": cmd_diff, "inspect": cmd_inspect, "bench": cmd_bench, "latch": cmd_latch, "stories": cmd_stories, "claims": cmd_claims, "pack": cmd_pack, "chronicle": cmd_chronicle, "mcp": cmd_mcp, "ripple": cmd_ripple, "map": cmd_map, "vault": cmd_vault,
+        commands = {"run": cmd_run, "replay": cmd_replay, "diff": cmd_diff, "inspect": cmd_inspect, "bench": cmd_bench, "latch": cmd_latch, "stories": cmd_stories, "claims": cmd_claims, "pack": cmd_pack, "chronicle": cmd_chronicle, "check-prose": cmd_check_prose, "mcp": cmd_mcp, "ripple": cmd_ripple, "map": cmd_map, "vault": cmd_vault,
                     "observe": cmd_observe}
         return commands[args.command](args)
     except (ValueError, FileExistsError, FileNotFoundError) as err:
