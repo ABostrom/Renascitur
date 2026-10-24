@@ -35,8 +35,9 @@ def people_ruleset(name: str, scenario: dict, version: int = 1) -> Ruleset:
         systems += (Gossip(),)
     if scenario.get("polities"):  # relations between polities drift (S8 §4)
         from renasci.relations import Diplomacy
+        from renasci.war import War
 
-        systems += (Diplomacy(),)
+        systems += (Diplomacy(), War())
     disguises = (Illness(),)
     if scenario.get("geography"):  # a structural ripple changes the map (#114)
         from renasci import geo
