@@ -104,22 +104,27 @@ ripple can change: a border incident, a grievance, an ambitious ruler.
   - `ruler` (an office id);
   - `members` (houses), `founded`, `ended`;
   - derived stats (§6).
-- **`faction`** entity: `name`, `polity`, `kind` (bloc, guild, order, cult), `members` (houses or
-  people), `aims` (war, peace, a rival's ruin), `standing` (0–1).
+- **`faction`** entity: `name`, `polity`, `kind` (bloc, guild, order, cult), `members` (houses
+  in a scenario's data; people may join in a run), `aims` (war, peace, a rival's ruin), `standing` (0–1).
 - **Control:** a settlement's and a place's `control` field names the polity that holds it, or none.
   - It is distinct from S4's `region`: provinces don't move when a town changes hands.
   - A **border** is a route whose ends are controlled by different polities.
-- **Data:** a scenario's `polities`, `factions` and `offices` lists (S2's planned `offices` list, now
-  built), and `control` on settlements and places, or on a region as the default for its places.
-  - Validated at load: a missing seat, a control no polity claims, or an office for no house is an error.
+- **Data:** a scenario's `polities`, `factions` and `offices` lists (S2's planned `offices` list, built in
+  step 2). Each polity's `control` is a list of claims on regions (and so every place in them, down the
+  `within` tree) and single places; the most specific claim wins (a place named outright, else its
+  nearest claimed region). A run's `geography.json` carries each place's starting control.
+  - Validated at load (`renasci.polities.check`): a malformed record, an id another entity has, a seat the
+    polity doesn't hold, a claim on nothing or claimed twice, a house in two polities, a faction member
+    outside its polity, a change handing a place to no polity.
 - **Changing control** reuses S4's dated-change machinery. Four edits:
   1. `apply_change`'s `place` branch writes whichever of `region` and `control` the change carries (today
      it always writes `region`);
   2. `CHANGE_WRITES` gains `control`;
   3. `analysis/mapyear.geography_at` replays `control` as it replays `region`;
   4. the scenario's change validation and the structural ripple's params accept `control`.
-- **Relations are sparse:** a `relation` entity exists only for a pair in contact (sharing a border, or a
-  treaty) or at a stance other than neutral. Factions get relations only inside their own polity.
+- **Relations are sparse** (made by diplomacy, step 4): a `relation` entity exists only for a pair in
+  contact (sharing a border, or a treaty) or at a stance other than neutral. Factions get relations only
+  inside their own polity.
 - **Renascita draft data** (not canon, marked in the data):
   - the Firebrand Empire controls Pyrosia's settlements;
   - its council's blocs are seeded from `The 12 Great Houses.md` (which already describes them) and the
@@ -344,11 +349,11 @@ existence, event and ordering pins. That support is a separate ticket, not in S8
 
 **Part A (M5):**
 1. **Polities core:** entity kinds, data and validation, casting, `control` and the four `apply_change`
-   edits, control in the map by year, sparse relations.
+   edits, control in the map by year (Python and the Observatory). **Done (#120).**
 2. **Offices:** scope, `legitimacy`, the `choose` hook, appointment and election, the imperial house and
    the throne with its pins, advice and votes, cadet branches.
 3. **The pinned-office guard** (§3.4), in the director.
-4. **Diplomacy:** the ledger and its writers, drift, incidents, treaties, betrayal.
+4. **Diplomacy:** sparse relations, the ledger and its writers, drift, incidents, treaties, betrayal.
 5. **Coarse war:** declaration, the war entity, the yearly draw, peace.
 6. **The coarse fallbacks.** Then, as the S1 prerequisite, coarse execution in the engine.
 

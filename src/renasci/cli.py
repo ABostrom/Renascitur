@@ -108,9 +108,9 @@ def _write_geography(folder: Path, world, params: dict) -> None:
     """The geography a run used (S4 §3), for the Observatory: replays read routes from the checkpoint."""
     g = world.scenario(**params).get("geography") if world.scenario else None
     if isinstance(g, dict):
-        from renasci import geo
+        from renasci import geo, polities
 
-        geo.save(folder / "geography.json", g)
+        geo.save(folder / "geography.json", polities.annotate(g, world.scenario(**params)))
 
 
 def _run(recipe, out: Path, meta: dict | None = None, canon_doc: dict | None = None) -> Path:

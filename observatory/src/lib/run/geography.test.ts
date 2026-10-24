@@ -99,6 +99,14 @@ describe('the map by year', () => {
 		]);
 	});
 
+	it('replays who held a place (S8), and lists it as taken', () => {
+		const held = [...DELTAS, { ...delta([1, 7, 0], 't:c', 'control', 'v:clans', 'x5'), old: 'v:empire' }];
+		const geo = { ...GEO, places: GEO.places.map((p) => (p.id === 't:c' ? { ...p, control: 'v:empire' } : p)) };
+		expect(geographyAt(geo, held, key([1, 6, 0]), key).places.find((p) => p.id === 't:c')!.control).toBe('v:empire');
+		expect(geographyAt(geo, held, key([1, 8, 0]), key).places.find((p) => p.id === 't:c')!.control).toBe('v:clans');
+		expect(mapChanges(geo, held).at(-1)).toMatchObject({ event: 'x5', what: 'taken', detail: 'held by v:clans' });
+	});
+
 	it("reads the ward run's map changes from its state deltas", async () => {
 		const { NodeSource } = await import('./node-source');
 		const { openRun } = await import('./run');

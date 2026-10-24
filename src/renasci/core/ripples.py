@@ -79,8 +79,11 @@ class Ripple:
             days = self.params.get("days", 1)
             if isinstance(days, bool) or not isinstance(days, int) or days < 1:
                 raise ValueError(f"structural ripple {self.id}: days must be a positive whole number")
-        if self.kind == "structural" and not ({"open", "days", "region"} & set(self.params)):
-            raise ValueError(f"structural ripple {self.id} needs params.open, days or region")
+        if self.kind == "structural" and not ({"open", "days", "region", "control"} & set(self.params)):
+            raise ValueError(f"structural ripple {self.id} needs params.open, days, region or control")
+        if self.kind == "structural" and "control" in self.params and self.params["control"] is not None \
+                and not isinstance(self.params["control"], str):
+            raise ValueError(f"structural ripple {self.id}: control must be a polity id or null")
 
     @property
     def until(self) -> Date | None:

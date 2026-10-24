@@ -170,6 +170,8 @@ def save(path, doc: dict) -> None:
 #   {"date": [age, year, day], "route": <id>, "open": bool and/or "days": int, "why": str}
 #   {"date": ..., "build": <a route record>, "why": ...}
 #   {"date": ..., "place": <place id>, "region": <region id>, "why": ...}   (a border moves)
+#   {"date": ..., "place": <place id>, "control": <polity id or null>, "why": ...}   (it changes hands, S8;
+#    `region` and `control` may come together; `renasci.polities.check` checks the polity)
 # They happen on their dates in a run (`MapHistory`); the map as of a date is rebuilt from the run's state
 # changes (`renasci.analysis.mapyear`), so whatever else changes the map later (a war) shows up too.
 CHANGE_KEYS = ("route", "build", "place")
@@ -220,13 +222,15 @@ def _check_changes(changes, places, regions, routes) -> list[dict]:
                 out.append(_f("bad_change", None, f"{where} builds a route that isn't a new route between two places"))
             else:
                 built.add(r["id"])
-        elif c["place"] not in places or c.get("region") not in regions:
-            out.append(_f("bad_change", c.get("place"), f"{where} must move a place into a region"))
+        elif c["place"] not in places or not ("region" in c or "control" in c) \
+                or ("region" in c and c["region"] not in regions) \
+                or ("control" in c and c["control"] is not None and not _str(c["control"])):
+            out.append(_f("bad_change", c.get("place"), f"{where} must move a place into a region or hand it to a polity"))
     return out
 
 
 CHANGE_READS = frozenset({"ids:route", "ends"})
-CHANGE_WRITES = frozenset({"new:route", "open", "days", "region"})
+CHANGE_WRITES = frozenset({"new:route", "open", "days", "region", "control"})
 
 
 def changed_type():
@@ -257,7 +261,9 @@ def apply_change(ctx, c: dict) -> None:
     else:
         ctx.emit("geo.changed", {"site": (c["place"],)}, purpose="map", actor=c["place"], place=c["place"],
                  payload={"why": why, "change": c})
-        ctx.set(c["place"], "region", c["region"])
+        for f in ("region", "control"):  # (a border moves; a place changes hands)
+            if f in c:
+                ctx.set(c["place"], f, c[f])
 
 
 def map_history():
@@ -302,7 +308,8 @@ def upheaval():
 
     A ripple `{"kind": "structural", "target": <route>, "params": {"open"/"days", "why"}}` closes, reopens
     or re-times the route (a pass closes); `{"target": <place>, "params": {"region", "why"}}` moves a place
-    into another region. A harvest failing waits for S10's harvests."""
+    into another region, and `{"control": <polity or null>}` hands it to a polity (S8). A harvest failing waits
+    for S10's harvests."""
     from renasci.core.ripples import Disguise
 
     class Upheaval(Disguise):
@@ -314,11 +321,16 @@ def upheaval():
             p, target = ripple.params, ripple.target
             if not ctx.exists(target):
                 return False
-            if "region" in p:  # (a place or a settlement into a region)
-                if ctx.kind(target) not in ("place", "settlement") or not ctx.exists(p["region"]) \
-                        or ctx.kind(p["region"]) != "region":
+            if "region" in p or "control" in p:  # (a place or a settlement into a region, or to a polity)
+                if ctx.kind(target) not in ("place", "settlement"):
                     return False
-                apply_change(ctx, {"place": target, "region": p["region"], "why": p.get("why", "")})
+                if "region" in p and (not ctx.exists(p["region"]) or ctx.kind(p["region"]) != "region"):
+                    return False
+                if "control" in p and p["control"] is not None and (not ctx.exists(p["control"])
+                                                                    or ctx.kind(p["control"]) != "polity"):
+                    return False
+                apply_change(ctx, {"place": target, **{k: p[k] for k in ("region", "control") if k in p},
+                                   "why": p.get("why", "")})
             else:
                 if target not in ctx.ids("route"):
                     return False
@@ -561,13 +573,15 @@ def attach(scenario: dict, base) -> dict:
     return scenario
 
 
-def cast(engine, doc: dict) -> None:
-    """Cast regions, non-settlement places and routes (call before the run starts)."""
+def cast(engine, doc: dict, control: dict | None = None) -> None:
+    """Cast regions, non-settlement places and routes (call before the run starts); `control` (S8): who
+    holds each place, when the scenario has polities."""
     for r in doc.get("regions", []):
         engine.cast("region", r["id"], {"name": r.get("name", r["id"]), "within": r.get("within")})
     for p in doc.get("places", []):
         if p["kind"] != "settlement":
-            engine.cast("place", p["id"], {"name": p.get("name", p["id"]), "kind": p["kind"], "region": p["region"]})
+            engine.cast("place", p["id"], {"name": p.get("name", p["id"]), "kind": p["kind"], "region": p["region"],
+                                           **({"control": control.get(p["id"])} if control else {})})
     for r in doc.get("routes", []):
         engine.cast("route", r["id"], {"ends": list(r["ends"]), "days": r["days"], "kind": r["kind"],
                                        "vialux": bool(r.get("vialux", False)), "open": r.get("open", True),

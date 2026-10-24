@@ -2,7 +2,8 @@
 
 `geography_at(doc, deltas, date)` starts from the run's `geography.json` and replays the run's
 state changes (`state_deltas`) to routes (their ends, days, kind, Vialux, open, bars: a route built mid-run
-appears from its first), places and settlements (their region: a border moved) and regions (`within`).
+appears from its first), places and settlements (their region: a border moved; their control: who held
+them, S8) and regions (`within`).
 It doesn't read the geography's planned `changes`: whatever changed the map in the run (the plan, or a
 system) is in its state changes. The result is a geography without `changes`, as of the end of `date`.
 """
@@ -29,8 +30,8 @@ def geography_at(doc: dict, deltas, date: Date) -> dict:
         e, f, v = d["entity"], d["field"], d["new"]
         if e in routes and f in ROUTE_FIELDS:
             routes[e][f] = v
-        elif e in places and f == "region":
-            places[e]["region"] = v
+        elif e in places and f in ("region", "control"):  # (a border moved; a place changed hands, S8)
+            places[e][f] = v
         elif e in regions and f == "within":
             regions[e]["within"] = v
         elif e in built and f in ROUTE_FIELDS:

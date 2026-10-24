@@ -36,7 +36,7 @@ before the masses are cast, so conservation holds as it does for synthesised not
 
 from __future__ import annotations
 
-from renasci import geo
+from renasci import geo, polities
 from renasci.core.calendar import Date
 from renasci.people.genome import Catalogue, founder, inherit, keyed, phenotype
 from renasci.people.population import cast_masses
@@ -307,11 +307,15 @@ class _Builder:
         bad = [f for f in geo.check(g) if f["severity"] == "error"] or geo.check_scenario(self.sc, g)
         if bad:
             raise ValueError("geography: " + "; ".join(f"{f['kind']}: {f['message']}" for f in bad))
-        geo.cast(self.e, g)
+        geo.cast(self.e, g, polities.control_of(self.sc))
 
     # ------------------------------------------------------------ cast it all
 
     def build(self) -> None:
+        bad = polities.check(self.sc)
+        if bad:
+            raise ValueError("polities: " + "; ".join(f"{f['kind']}: {f['message']}" for f in bad))
+        control = polities.control_of(self.sc)
         settlements = {s["id"]: s for s in self.sc["settlements"]}
         for spec in self.sc["settlements"]:
             self.commoners(spec)
@@ -333,7 +337,7 @@ class _Builder:
                 "residents": sorted(residents[s]),
                 "capacity": None if capacity is None else capacity + max(0, extra),
                 "notable_target": None if target is None else target + max(0, extra),
-                "danger": spec.get("danger", 0.0)})
+                "danger": spec.get("danger", 0.0), **({"control": control.get(s)} if control else {})})
         cast_masses(self.e, {s: (spec["race"], spec["genome_group"], spec.get("masses", 0), len(residents[s]))
                              for s, spec in settlements.items()}, self.cat, self.races)
         self.geography()
@@ -350,6 +354,7 @@ class _Builder:
             self.e.cast("office", f"{house}-head", {"name": f"Head of {spec['name']}", "holder": heads[house],
                                                     "heir": None, "rule": spec.get("rule", "male_preference_primogeniture"),
                                                     "house": house})
+        polities.cast(self.e, self.sc, self.today)
 
 
 def synthesise(engine, scenario: dict, seed: int, canon: dict | None = None) -> None:
