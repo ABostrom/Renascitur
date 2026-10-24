@@ -54,16 +54,16 @@ def _kin() -> World:
 def _fourth_age() -> World:
     from renasci import renascita
 
-    def rulesets(scenario=None, scale=1, beliefs=None):
-        return renascita.rulesets(scenario, scale, beliefs)
+    def rulesets(scenario=None, scale=1, beliefs=None, polities=None):
+        return renascita.rulesets(scenario, scale, beliefs, polities)
 
-    def scenario(scenario=None, scale=1, beliefs=None):
-        return renascita._scenario(scenario, scale, beliefs)
+    def scenario(scenario=None, scale=1, beliefs=None, polities=None):
+        return renascita._scenario(scenario, scale, beliefs, polities)
 
     return World("fourth_age", renascita.CAL, renascita.new_engine, rulesets,
-                 frozenset({"scenario", "scale", "beliefs"}),
-                 start=lambda scenario=None, scale=1, beliefs=None: renascita.start_of(
-                     renascita._scenario(scenario, scale, beliefs)),
+                 frozenset({"scenario", "scale", "beliefs", "polities"}),
+                 start=lambda scenario=None, scale=1, beliefs=None, polities=None: renascita.start_of(
+                     renascita._scenario(scenario, scale, beliefs, polities)),
                  scenario=scenario)
 
 

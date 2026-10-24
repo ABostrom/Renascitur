@@ -351,7 +351,8 @@ existence, event and ordering pins. That support is a separate ticket, not in S8
 1. **Polities core:** entity kinds, data and validation, casting, `control` and the four `apply_change`
    edits, control in the map by year (Python and the Observatory). **Done (#120).**
 2. **Offices:** scope, `legitimacy`, the `choose` hook, appointment and election, the imperial house and
-   the throne with its pins, advice and votes, cadet branches.
+   the throne with its pins, advice and votes, cadet branches. **Done (#120)**, except cadet branches and
+   the vault's title-office reigns (#161).
 3. **The pinned-office guard** (§3.4), in the director.
 4. **Diplomacy:** sparse relations, the ledger and its writers, drift, incidents, treaties, betrayal.
 5. **Coarse war:** declaration, the war entity, the yearly draw, peace.

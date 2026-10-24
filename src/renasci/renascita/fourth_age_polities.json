@@ -1,0 +1,25 @@
+{
+  "about": "DRAFT, not canon (S8 spec §2, #120): the Fourth Age's polities, merged into the scenario when a recipe sets [world] polities = true. The Firebrand Empire (vault: Societies/Firebrand Empire) rules Pyrosia from Lion's Rest; its throne passes down the Imperial House (a placeholder name: the review queue, Q24, asks what the Emperors' house is called); the Imperial Council advises the Emperor (the vault says 'advises'; the draft timeline formalises it in 4A 80-95). The council's blocs are seeded from 'The 12 Great Houses.md', by its member lists (its table disagrees on Jorasco and Silverhand). Every number is a placeholder.",
+  "draft": true,
+  "houses": [
+    {"id": "v:house-imperial", "name": "the Imperial House", "seat": "v:lions-rest", "rank": 3, "rule": "male_preference_primogeniture", "draft": true}
+  ],
+  "polities": [
+    {"id": "v:firebrand-empire", "name": "the Firebrand Empire", "kind": "empire", "government": "advised",
+     "seat": "v:lions-rest", "ruler": "v:house-imperial-head", "control": ["v:pyrosia"], "draft": true,
+     "members": ["v:house-imperial", "v:house-cannith", "v:house-deneith", "v:house-jorasco", "v:house-kundarak",
+                 "v:house-lyrandar", "v:house-medani", "v:house-orien", "v:house-phiarlan", "v:house-silverhand",
+                 "v:house-sivis", "v:house-tharashk", "v:house-vadalis"]}
+  ],
+  "factions": [
+    {"id": "v:bloc-stability", "name": "the Stability Bloc", "polity": "v:firebrand-empire", "kind": "bloc",
+     "members": ["v:house-cannith", "v:house-orien", "v:house-silverhand", "v:house-sivis", "v:house-deneith", "v:house-jorasco"],
+     "aims": ["order", "expansion"], "standing": 0.5},
+    {"id": "v:bloc-hardliners", "name": "the Hardliners and Watchers", "polity": "v:firebrand-empire", "kind": "bloc",
+     "members": ["v:house-medani", "v:house-deneith", "v:house-sivis"], "aims": ["control"], "standing": 0.5},
+    {"id": "v:bloc-wild-front", "name": "the Wild Front", "polity": "v:firebrand-empire", "kind": "bloc",
+     "members": ["v:house-tharashk", "v:house-vadalis", "v:house-jorasco"], "aims": ["frontier"], "standing": 0.5},
+    {"id": "v:bloc-outliers", "name": "the Outliers and Hidden Powers", "polity": "v:firebrand-empire", "kind": "bloc",
+     "members": ["v:house-phiarlan", "v:house-lyrandar", "v:house-kundarak"], "aims": ["influence"], "standing": 0.5}
+  ]
+}
