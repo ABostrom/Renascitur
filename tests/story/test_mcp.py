@@ -98,6 +98,40 @@ def test_a_pack_comes_back_as_a_summary_and_a_handle_to_fetch(server, m4run):
     assert err
 
 
+def test_a_chronicle_comes_back_as_a_summary_and_a_handle(server, m4run, m4):
+    fail = next(e for e in m4run.events if e["type"] == "ward.failure")
+    err, c = tool(server, "chronicle", run="m4", subject="event", id=fail["id"], pov="v:lux-oescus")
+    assert not err and c["handle"] and c["divergence"] >= 1 and "text" not in c
+    assert (m4 / "analysis" / "chronicles" / c["file"]).exists()
+    err, page = tool(server, "fetch", handle=c["handle"], section="text")
+    assert not err and "type: chronicle" in "".join(page["items"])
+    err, div = tool(server, "fetch", handle=c["handle"], section="divergence")
+    assert not err and div["items"][0]["event"] == fail["id"]
+
+
+def test_a_brief_through_its_handle(server, m4run):
+    saga = m4run.stories["sagas"][0]["id"]
+    err, b = tool(server, "brief", run="m4", subject="saga", id=saga)
+    assert not err and b["npcs"] >= 1
+    pages, cursor = [], 0
+    while cursor is not None:
+        err, page = tool(server, "fetch", handle=b["handle"], section="text", cursor=cursor)
+        pages += page["items"]
+        cursor = page["next"]
+    assert "## Hooks" in "".join(pages)
+
+
+def test_check_prose_judges_text_and_pages_its_findings(server, m4):
+    text = "In 4A 9, Bessa of House Silverhand slew Hask of House Silverhand. Ivor of House Sivis died in 4A 2."
+    err, r = tool(server, "check_prose", run="m4", text=text)
+    assert not err and r["counts"]["contradiction"] == 1 and r["counts"]["consistent"] >= 1
+    assert any((m4 / "analysis" / "checks").glob("*.json"))
+    err, f = tool(server, "fetch", handle=r["handle"], section="findings")
+    assert not err and f["items"][0]["finding"] == "contradiction"
+    err, big = tool(server, "check_prose", run="m4", text="x" * (256 * 1024 + 1))
+    assert err
+
+
 def test_the_vault(server):
     err, found = tool(server, "vault_search", query="")
     assert not err and found["notes"]
@@ -108,7 +142,10 @@ def test_the_vault(server):
 
 @pytest.mark.parametrize("name, args", [("run_summary", {"run": "../m4"}), ("run_summary", {"run": "C:/x"}),
                                         ("run_summary", {"run": "nope"}), ("event", {"run": "m4", "id": "x nope"}),
-                                        ("vault_note", {"note": "../../secret"})])
+                                        ("vault_note", {"note": "../../secret"}),
+                                        ("chronicle", {"run": "m4", "subject": "topic", "id": "x\x85 CON ?*:why", "pov": "omniscient"}),
+                                        ("brief", {"run": "m4", "subject": "event", "id": "a" * 300}),
+                                        ("chronicle", {"run": "m4", "subject": "event", "id": "x", "pov": "../x"})])
 def test_bad_arguments_are_tool_errors_not_crashes(server, name, args):
     err, data = tool(server, name, **args)
     assert err and data["error"]
