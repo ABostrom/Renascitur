@@ -354,7 +354,9 @@ class Ctx:
     # ------------------------------------------------------------ pins
 
     def _protector(self, entity: str):
-        pin = self._engine.director.guard_pin(entity, self.today)
+        # (the offices it holds, read without a recorded read: the guard's own read records the outcome)
+        offices = self._engine.store.get(entity, "offices") if self._engine.store.exists(entity) else None
+        pin = self._engine.director.guard_pin(entity, self.today, offices or ())
         ripple = None if pin is not None else self._engine.protection(entity, self.today)
         return pin, ripple
 
