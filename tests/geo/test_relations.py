@@ -130,3 +130,68 @@ def test_a_world_without_polities_has_no_relations():
     e = kin.new_engine(seed=3)
     e.run(until=Date(1, 2, 0))
     assert not e.store.ids("relation") and not [ev for ev in e.events if ev.type.startswith("polity.")]
+
+
+# ---------------------------------------------------------------- treaties (part 2)
+
+def ruled(relations=(), treaties=(), government="advised"):
+    sc = scenario(relations)
+    sc["polities"][0].update(ruler=f"{HOUSES[0]}-head", government=government)
+    sc["polities"][1].update(ruler=f"{HOUSES[10]}-head", government="ruler")
+    sc["treaties"] = list(treaties)
+    return sc
+
+
+def test_friends_sign_a_trade_treaty_after_the_council_advises():
+    e = run(ruled([{"a": EMPIRE, "b": CLANS, "stance": "friendly"}]), 10)
+    signed = [ev for ev in e.events if ev.type == "polity.treaty"]
+    assert signed and signed[0].payload["kind"] in ("trade", "alliance")
+    tid = signed[0].payload["treaty"]
+    assert tid in e.store.get(rel_id(EMPIRE, CLANS), "treaties") or e.store.get(tid, "ended") is not None
+    advice = [ev for ev in e.events if ev.type == "polity.council" and ev.payload["polity"] == EMPIRE]
+    assert advice and len(advice[0].roles["adviser"]) >= 2  # (the Empire's member heads)
+    assert any(c.ref == advice[0].id for c in signed[0].causes) or any(
+        any(c.ref == a.id for c in signed[0].causes) for a in advice)
+
+
+def test_a_seeded_truce_ends_at_its_expiry():
+    e = run(ruled(treaties=[{"kind": "truce", "a": EMPIRE, "b": CLANS, "years": 2}]), 4)
+    ended = [ev for ev in e.events if ev.type == "polity.treaty_ended"]
+    assert ended and ended[0].date.year == START.year + 2
+    assert not e.store.get(rel_id(EMPIRE, CLANS), "treaties")
+
+
+def test_a_soured_pact_is_broken_and_the_betrayal_costs_trust():
+    e = run(ruled([{"a": EMPIRE, "b": CLANS, "stance": "hostile", "trust": -0.9}],
+                  [{"kind": "alliance", "a": EMPIRE, "b": CLANS, "years": 30}]), 10)
+    broken = [ev for ev in e.events if ev.type == "polity.treaty_broken"]
+    assert broken, "nobody broke a pact between enemies in ten years"
+    tid = broken[0].payload["treaty"]
+    assert e.store.get(tid, "broken_by") == broken[0].roles["by"][0]
+    drift = next(ev for ev in e.events if ev.type == "polity.drift" and ev.date >= broken[0].date)
+    assert any(c.ref == broken[0].id for c in drift.causes)  # (the betrayal is in that year's ledger)
+
+
+@pytest.mark.parametrize("bad", [{"kind": "marriage-of-convenience", "a": EMPIRE, "b": CLANS},
+                                 {"kind": "truce", "a": EMPIRE, "b": EMPIRE}, {"kind": "truce", "a": EMPIRE, "b": CLANS, "years": 0}])
+def test_bad_treaties_are_refused(bad):
+    assert "bad_treaty" in {f["kind"] for f in polities.check(ruled(treaties=[bad]))}
+
+
+def test_a_truce_isnt_soured_by_hostility_only_war_breaks_it():
+    e = run(ruled([{"a": EMPIRE, "b": CLANS, "stance": "hostile", "trust": -1.0}],
+                  [{"kind": "truce", "a": EMPIRE, "b": CLANS, "years": 30}]), 8)
+    assert not [ev for ev in e.events if ev.type == "polity.treaty_broken"]
+
+
+def test_a_treaty_outlasting_the_age_lasts_the_age_and_ids_never_collide():
+    from renasci import treaties
+    from renasci.core.calendar import Date
+
+    assert treaties._expires(CAL, Date(4, 250, 0), 20) is None
+    assert treaties._expires(CAL, Date(4, 5, 0), 20) == [4, 25, 0]
+    taken = {"tr:truce:a|b:1.0", "tr:truce:a|b:1.0:2"}
+    assert treaties.tid("truce", "b", "a", "1.0", taken.__contains__) == "tr:truce:a|b:1.0:3"
+    assert "bad_treaty" in {f["kind"] for f in polities.check(ruled(treaties=[
+        {"kind": "trade", "a": EMPIRE, "b": CLANS}, {"kind": "trade", "a": CLANS, "b": EMPIRE}]))}
+    assert "bad_treaty" in {f["kind"] for f in polities.check(ruled(treaties=[{"kind": "trade", "a": [EMPIRE], "b": CLANS}]))}
