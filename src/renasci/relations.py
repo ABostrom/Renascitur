@@ -29,7 +29,8 @@ from __future__ import annotations
 from renasci.core.events import Cause, EventType
 from renasci.core.systems import System
 
-WEIGHTS = {"killed": -0.15, "exposed": -0.1, "marriage": 0.12, "incident": -0.1, "betrayal": -0.5, "treaty": 0.1}
+WEIGHTS = {"killed": -0.15, "exposed": -0.1, "marriage": 0.12, "incident": -0.1, "betrayal": -0.5, "treaty": 0.1,
+           "pact": 0.015}  # (pact: a trade treaty that holds, each year; with trade it settles under friendly)
 STANCES = ((0.6, "allied"), (0.25, "friendly"), (-0.25, "neutral"), (-0.55, "cold"))  # else hostile
 FADE = 0.9  # (trust a year on, before what happened that year)
 TRADE = 0.012  # per open border route, up to TRADE_CAP a year: trade alone settles at neutral (10 x the cap, under
@@ -140,10 +141,18 @@ def cast(engine, sc: dict, today) -> None:
         for i, f in enumerate(sorted(fs)):
             for h in sorted(fs)[i + 1:]:
                 made.setdefault(rel_id(f, h), fields(f, h, "faction", today))
+    from renasci import treaties
+
+    pacts = treaties.cast(engine, sc, today)
     kinds = {p["id"]: "polity" for p in sc.get("polities") or []} | {f["id"]: "faction" for f in sc.get("factions") or []}
     for r in sc.get("relations") or []:  # (a stance without a trust brings its own; with one, they agree)
         trust = float(r["trust"]) if "trust" in r else SEEDED[r.get("stance") or "neutral"]
         made[rel_id(r["a"], r["b"])] = fields(r["a"], r["b"], kinds[r["a"]], today, r.get("stance") or stance_of(trust), trust)
+    for rid, ids in sorted(pacts.items()):  # (a seeded treaty's parties are related, if nothing else made them)
+        if rid not in made:
+            a, b = rid[len("rel:"):].split("|")
+            made[rid] = fields(a, b, "polity", today)
+        made[rid]["treaties"] = sorted(ids)
     for rid, f in sorted(made.items()):
         engine.cast("relation", rid, f)
 
@@ -192,10 +201,13 @@ class Diplomacy(System):
     """Relations drift a year at a time, and border incidents happen (see the module doc)."""
 
     name, cadence, priority = "polity.diplomacy", "yearly", 1  # (after people.houses: rulers settled)
+    from renasci import treaties as _t
+
     reads = frozenset({"ids:relation", "ids:route", "a", "b", "kind", "stance", "trust", "ledger", "ends", "control",
-                       "open"})
-    writes = frozenset({"stance", "trust", "ledger"})
-    event_types = EVENT_TYPES
+                       "open"}) | _t.READS
+    writes = frozenset({"stance", "trust", "ledger"}) | _t.WRITES
+    event_types = EVENT_TYPES + _t.EVENT_TYPES
+    del _t
 
     def run(self, ctx):
         rels = ctx.ids("relation")
@@ -207,6 +219,12 @@ class Diplomacy(System):
         a, b, kind = ctx.get(rid, "a"), ctx.get(rid, "b"), ctx.get(rid, "kind")
         stance, trust = ctx.get(rid, "stance"), float(ctx.get(rid, "trust") or 0.0)
         ledger = list(ctx.get(rid, "ledger") or [])
+        if kind == "polity":  # (treaties: expiries, betrayals, proposals; what they do goes in this year's ledger)
+            from renasci import treaties
+
+            for e in treaties.year(ctx, rid, a, b, stance, trust):
+                ledger.append({"kind": e["kind"], "weight": WEIGHTS[e["kind"]], "event": e["event"],
+                               "date": ctx.today.to_json()})
         routes = _border_routes(ctx, a, b) if kind == "polity" else []
         if stance in INCIDENT:
             for route in routes:
