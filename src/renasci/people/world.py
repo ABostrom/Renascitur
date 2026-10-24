@@ -33,6 +33,10 @@ def people_ruleset(name: str, scenario: dict, version: int = 1) -> Ruleset:
             systems += (geo.map_history()(),)
     if scenario.get("params", {}).get("beliefs"):  # gossip needs minds that hold beliefs (S6 §6)
         systems += (Gossip(),)
+    if scenario.get("polities"):  # relations between polities drift (S8 §4)
+        from renasci.relations import Diplomacy
+
+        systems += (Diplomacy(),)
     disguises = (Illness(),)
     if scenario.get("geography"):  # a structural ripple changes the map (#114)
         from renasci import geo

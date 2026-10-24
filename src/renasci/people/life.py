@@ -23,6 +23,7 @@ import json
 from renasci.core.canon import canonical
 from renasci.core.events import EventType
 from renasci.core.ripples import Disguise
+from renasci import relations
 from renasci.core.systems import System
 from renasci.people import beliefs, houses, population, ties
 from renasci.people.genome import Catalogue, inherit, keyed, phenotype
@@ -171,6 +172,8 @@ def die(ctx, person: str, settlement: str, cause: str, *, killer: str | None = N
         ctx.set(spouse, "spouse", None)
     houses.vacate(ctx, person)
     population.bump(ctx, settlement, died=1)  # explained by the death itself
+    if killer:  # (a killing across a border, or between a realm's blocs: their relation's ledger, S8 §4)
+        relations.across(ctx, killer, person, "killed", death.id)
     if killer:  # an attributed killing: the victim's close kin hold it against the killer (S7 §7)
         for kin in grieving(ctx, person):
             if kin != killer:  # (a son who kills his father in a duel holds nothing against himself)
@@ -209,8 +212,9 @@ _AMBITION_WRITES = frozenset({"ambitions", "cooldowns", "state", "resolved", "sc
 DIE_EVENTS = (DEATH, NEAR_MISS, _RESOLVED) + houses.EVENT_TYPES + (ties.TIE_ENDED,) + beliefs.EVENT_TYPES
 DIE_READS = (frozenset({"born", "residents", "spouse", "status", "flow:*", "mother", "father", "children", "grievances",
                          "need", "journey"})
-             | houses.READS | ties.READS | _AMBITION_READS | beliefs.PERCEIVE_READS)
-DIE_WRITES = frozenset({"status", "residents", "spouse", "flow:*", "grievances", "wound", "need", "journey"}) | houses.WRITES | ties.WRITES | _AMBITION_WRITES | beliefs.PERCEIVE_WRITES
+             | houses.READS | ties.READS | _AMBITION_READS | beliefs.PERCEIVE_READS | relations.NOTE_READS)
+DIE_WRITES = (frozenset({"status", "residents", "spouse", "flow:*", "grievances", "wound", "need", "journey"})
+              | houses.WRITES | ties.WRITES | _AMBITION_WRITES | beliefs.PERCEIVE_WRITES | relations.NOTE_WRITES)
 
 
 class Life(System):
