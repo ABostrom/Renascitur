@@ -180,3 +180,51 @@ def test_a_save_that_fails_part_way_leaves_every_file_as_it_was(editor, monkeypa
     assert status == 409
     assert {p: p.read_text(encoding="utf-8") for p in before} == before
     assert not list(world.parent.glob("*.tmp")) and not list(private.glob("*.tmp"))
+
+
+DRAFT = {"items": [
+    {"id": "d1", "kind": "region", "why": "the vault's note on the North", "region": {"id": "g:south", "name": "South"},
+     "cells": ["c:4,3"]},
+    {"id": "d2", "kind": "place", "why": "marker m3", "place": {"id": "g:camp", "name": "Camp", "kind": "waypoint"},
+     "cell": "c:3,3"}]}
+
+
+def test_the_draft_layer_is_read_and_a_save_drops_only_the_items_decided(editor):
+    base, _, private = editor
+    (private / "draft.json").write_text(json.dumps(DRAFT), encoding="utf-8")
+    s = state(base)
+    assert s["draft"] == DRAFT and s.get("draft_error") is None
+    # (meanwhile, a new item is drafted into the file: a save from the open editor mustn't lose it)
+    newer = {"items": DRAFT["items"] + [{"id": "d3", "kind": "terrain", "why": "x", "terrain": "hills", "cells": ["c:0,0"]}]}
+    (private / "draft.json").write_text(json.dumps(newer), encoding="utf-8")
+    body = {k: s[k] for k in ("geography", "grid", "layout")} | {"decided": ["d1"]}
+    assert call(base, "/api/map", body, method="PUT")[0] == 200
+    left = json.loads((private / "draft.json").read_text(encoding="utf-8"))["items"]
+    assert [i["id"] for i in left] == ["d2", "d3"]
+
+
+@pytest.mark.parametrize("bad", [{}, {"items": [{"id": "d1", "kind": "region", "why": "", "region": {"id": "g:x"}}]},
+                                 {"items": [{"id": "d1", "kind": "comet", "why": ""}]},
+                                 {"items": [DRAFT["items"][1], DRAFT["items"][1]]}])
+def test_a_malformed_draft_is_reported_on_load_and_left_alone(editor, bad):
+    base, _, private = editor
+    (private / "draft.json").write_text(json.dumps(bad), encoding="utf-8")
+    s = state(base)
+    assert s["draft"] == {"items": []} and s["draft_error"]
+    body = {k: s[k] for k in ("geography", "grid", "layout")} | {"decided": []}
+    assert call(base, "/api/map", body, method="PUT")[0] == 200
+    assert json.loads((private / "draft.json").read_text(encoding="utf-8")) == bad  # (not rewritten)
+
+
+def test_a_draft_items_repeated_cells_are_read_once(editor):
+    base, _, private = editor
+    item = {**DRAFT["items"][0], "cells": ["c:4,3", "c:4,3", "c:3,3"]}
+    (private / "draft.json").write_text(json.dumps({"items": [item]}), encoding="utf-8")
+    assert state(base)["draft"]["items"][0]["cells"] == ["c:4,3", "c:3,3"]
+
+
+def test_decided_must_be_a_list_of_ids(editor):
+    base, _, _ = editor
+    s = state(base)
+    body = {k: s[k] for k in ("geography", "grid", "layout")} | {"decided": "d1"}
+    assert call(base, "/api/map", body, method="PUT")[0] == 400

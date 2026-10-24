@@ -68,6 +68,10 @@ async function launchAndOpen(browser, errors) {
 	for (let c = 0; c < 10; c++) for (let r = 0; r < 6; r++) cells[`c:${c},${r}`] = { region: 'g:north' };
 	writeFileSync(resolve(editPrivate, 'grid.json'), JSON.stringify({ cols: 10, rows: 6, miles: 24, days_per_cell: 1.2, terrain: { plains: 1, hills: 2, water: null }, cells }));
 	writeFileSync(resolve(editPrivate, 'layout.json'), JSON.stringify({ places: { 't:a': { cell: 'c:1,1' }, 't:b': { cell: 'c:6,1' } }, routes: {} }));
+	writeFileSync(resolve(editPrivate, 'draft.json'), JSON.stringify({ items: [
+		{ id: 'd1', kind: 'place', why: 'marker m1', place: { id: 'g:camp', name: 'Camp', kind: 'waypoint' }, cell: 'c:8,4' },
+		{ id: 'd2', kind: 'region', why: 'a guess', region: { id: 'g:marsh', name: 'Marsh' }, cells: ['c:2,4'] }
+	] }));
 	launchServer = spawn(`uv run renasci observe "${runs}" --app "${resolve(app, 'build')}" --port ${lport} --no-browser --allow-launch --recipes "${recipes}" --vault "${vault}" --edit-map "${world}" --maps "${resolve(scratch, 'maps')}"`,
 		{ cwd: repo, stdio: 'ignore', shell: true });
 	for (let i = 0; i < 100; i++) {
@@ -133,6 +137,15 @@ async function launchAndOpen(browser, errors) {
 	await page.getByRole('status').filter({ hasText: /^Saved/ }).waitFor({ timeout: 15000 });
 	const painted = JSON.parse(readFileSync(world, 'utf8'));
 	if (painted.places.find((p) => p.id === 't:b')?.region !== 'g:south') throw new Error('the painted region was not baked into the town');
+	// the draft layer (#83): accept the drafted camp, reject the drafted marsh, save
+	await page.getByRole('button', { name: 'accept', exact: true }).first().click();
+	await page.getByRole('button', { name: 'reject', exact: true }).first().click();
+	await page.getByRole('button', { name: 'Save', exact: true }).click();
+	await page.getByRole('status').filter({ hasText: /^Saved/ }).waitFor({ timeout: 15000 });
+	const drafted = JSON.parse(readFileSync(world, 'utf8'));
+	if (!drafted.places.some((p) => p.id === 'g:camp') || drafted.regions.some((r) => r.id === 'g:marsh'))
+		throw new Error('the draft was not accepted and rejected as asked');
+	if (JSON.parse(readFileSync(resolve(editPrivate, 'draft.json'), 'utf8')).items.length !== 0) throw new Error('decided drafts were kept');
 	// promote: the canon run's near miss, with the pin that caused it kept, written to the vault
 	await page.goto(`http://127.0.0.1:${lport}/run/canon/strain`);
 	await page.getByRole('heading', { name: /^Strain, in order/ }).waitFor({ timeout: 20000 });
@@ -143,7 +156,7 @@ async function launchAndOpen(browser, errors) {
 	await page.getByText(/wrote _proposed\/event\//).waitFor({ timeout: 60000 });
 	const written = readdirSync(resolve(vault, '_proposed', 'event'));
 	if (written.length !== 1) throw new Error(`the vault has ${written.length} proposed events`);
-	return 'a run launched from a recipe and opened; a road drawn and a province painted in the map editor, saved and baked; a ripple authored on a person, replayed as a branch and diffed; an event proposed to the vault with its cause';
+	return 'a run launched from a recipe and opened; a road drawn, a province painted and a draft accepted and rejected in the map editor, saved and baked; a ripple authored on a person, replayed as a branch and diffed; an event proposed to the vault with its cause';
 }
 const browser = await (async () => {
 	await waitForServer();

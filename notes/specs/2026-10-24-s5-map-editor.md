@@ -155,6 +155,22 @@ maps/pyrosia/private/                   git-ignored, at the repo root (editor da
 - **With the image** (only if Aaron says yes to Q5): the same, also reading downsampled tiles.
 - The editor shows the draft as its own layer. Aaron accepts or rejects each item, or a whole kind, and only accepted items reach the grid, the layout and the baked geography. Nothing in a draft is canon.
 
+**As built (#83).**
+- `private/draft.json` is `{items: [{id, kind, why, …}]}`. The kinds are:
+  - `region` `{region: {id, name, within?}, cells}`;
+  - `terrain` `{terrain, cells}`;
+  - `place` `{place: {id, name, kind}, cell}`;
+  - `road` `{route: {ends, kind}, cells}`.
+- The editor draws the draft dashed, and its Draft panel accepts or rejects each item, or all of a kind. "All of a kind" is one undo step, and a road whose ends aren't placed yet stays on the draft.
+- Accepting becomes ordinary edits: a region is added if new and then painted; a place is added; a road is drawn through its cells. The checks and the bake treat it like anything drawn by hand.
+- **Saving:** a save sends the ids of the items decided, and the server drops just those from `draft.json` as it is on disk then. A draft written while the editor is open keeps its new items.
+- **Bad drafts:** a malformed draft is reported on load, shown as empty, and never rewritten.
+- **Accepting items:**
+  - A drafted road's cells are waypoints; the ends' own cells aren't repeated.
+  - A drafted road between places that already have one of its kind is refused, so a hand-drawn road isn't overwritten.
+  - A drafted place brings only its id, name and kind into the geography.
+- **The drafting itself** (writing `draft.json` for Pyrosia) waits for the import (#82) and the grid (#80). Claude then drafts from the vault's geography notes and the import's markers, and from the image only if Aaron says yes (Q22).
+
 ## 6. The editor (#84, #85)
 
 `/edit/<world>` in the Observatory, available when `observe` runs with `--edit-map`. The map pane shows the base image, hex cells, the mask outline, places, routes and the draft, each toggleable. A side pane shows the selection's attributes.

@@ -42,17 +42,65 @@ class MapFiles:
         markers = self._json("markers.json", {"markers": []})
         return {"world": self.world, "geography": json.loads(self.geography.read_text(encoding="utf-8")),
                 "grid": self._json("grid.json", None), "layout": self._json("layout.json", {"places": {}, "routes": {}}),
-                "markers": markers.get("markers", []), "base": (self.private / "base.png").is_file()}
+                "markers": markers.get("markers", []), "base": (self.private / "base.png").is_file(),
+                **self._draft()}
+
+    def _draft(self) -> dict:
+        """The draft layer, checked (a malformed file is said, shown as empty, and never rewritten), with
+        each item's cells read once."""
+        try:
+            draft = self._json("draft.json", {"items": []})
+        except ValueError as err:
+            return {"draft": {"items": []}, "draft_error": f"draft.json isn't JSON: {err}"}
+        bad = draft_problem(draft)
+        if bad:
+            return {"draft": {"items": []}, "draft_error": f"draft.json: {bad}"}
+        for item in draft["items"]:
+            if "cells" in item:
+                item["cells"] = list(dict.fromkeys(item["cells"]))
+        return {"draft": draft, "draft_error": None}
 
     def base(self) -> Path | None:
         path = self.private / "base.png"
         return path if path.is_file() else None
 
 
+def _strs(x, n=None) -> bool:
+    return isinstance(x, list) and all(isinstance(v, str) for v in x) and (n is None or len(x) == n)
+
+
+def draft_problem(draft) -> str | None:
+    """What's wrong with a draft layer (#83), or None: `{items: [{id, kind, why, ...}]}` with unique ids,
+    each kind with its own fields (S5 spec §5, "As built (#83)")."""
+    if not isinstance(draft, dict) or not isinstance(draft.get("items"), list):
+        return "a draft is {items: [...]}"
+    seen = set()
+    for i in draft["items"]:
+        if not isinstance(i, dict) or not isinstance(i.get("id"), str):
+            return "every draft item has a string id"
+        if i["id"] in seen:
+            return f"draft item {i['id']} appears twice"
+        seen.add(i["id"])
+        kind = i.get("kind")
+        ok = {"region": lambda: isinstance(i.get("region"), dict) and isinstance(i["region"].get("id"), str)
+                                and _strs(i.get("cells")),
+              "terrain": lambda: isinstance(i.get("terrain"), str) and _strs(i.get("cells")),
+              "place": lambda: isinstance(i.get("place"), dict)
+                               and all(isinstance(i["place"].get(k), str) for k in ("id", "name", "kind"))
+                               and isinstance(i.get("cell"), str),
+              "road": lambda: isinstance(i.get("route"), dict) and _strs(i["route"].get("ends"), 2)
+                              and isinstance(i["route"].get("kind"), str) and _strs(i.get("cells"))}.get(kind)
+        if ok is None or not ok():
+            return f"draft item {i['id']} isn't a well-formed {kind!r} (region, terrain, place or road)"
+    return None
+
+
 def shape(state) -> str | None:
     """What's wrong with a state's shape (before anything is checked), or None."""
-    if not isinstance(state, dict) or set(state) != set(STATE_KEYS):
-        return f"a map state is exactly {{{', '.join(STATE_KEYS)}}}"
+    if not isinstance(state, dict) or not set(STATE_KEYS) <= set(state) <= {*STATE_KEYS, "decided"}:
+        return f"a map state is {{{', '.join(STATE_KEYS)}}}, and optionally the draft items decided"
+    if "decided" in state and not _strs(state["decided"]):  # (#83: the draft items accepted or rejected)
+        return "decided is a list of draft item ids"
     if not isinstance(state["geography"], dict) or not isinstance(state["layout"], dict) \
             or not isinstance(state["grid"], (dict, type(None))):
         return "geography and layout are tables; grid is a table or null"
@@ -96,17 +144,18 @@ def _write_all(files: dict[Path, str]) -> None:
             tmps[path] = tmp
             if path.exists():
                 path.with_name(path.name + ".bak").write_bytes(path.read_bytes())
-        done = []
+        done: list[Path] = []
+        failing = None
         try:
-            for path, tmp in tmps.items():
-                os.replace(tmp, path)
-                done.append(path)
+            for failing, tmp in tmps.items():
+                os.replace(tmp, failing)
+                done.append(failing)
         except OSError as err:
-            for path in done:
-                bak = path.with_name(path.name + ".bak")
+            for back in done:
+                bak = back.with_name(back.name + ".bak")
                 if bak.exists():
-                    path.write_bytes(bak.read_bytes())
-            raise PermissionError(f"{path.name}: {err}") from err
+                    back.write_bytes(bak.read_bytes())
+            raise PermissionError(f"{failing.name if failing else '?'}: {err}") from err
     finally:
         for tmp in tmps.values():
             tmp.unlink(missing_ok=True)
@@ -139,5 +188,12 @@ def _save(files: MapFiles, state: dict) -> tuple[list[dict], list[str]]:
            files.private / "layout.json": json.dumps(state["layout"], indent=1, sort_keys=True) + "\n"}
     if state["grid"] is not None:
         out[files.private / "grid.json"] = json.dumps(state["grid"], indent=1, sort_keys=True) + "\n"
+    if state.get("decided"):  # (the items accepted or rejected leave the draft as it is on disk now, so a draft
+        draft_file = files.private / "draft.json"  # written while the editor was open keeps its new items)
+        draft = json.loads(draft_file.read_text(encoding="utf-8")) if draft_file.is_file() else None
+        if draft is not None and draft_problem(draft) is None:  # (a malformed file is left alone)
+            gone = set(state["decided"])
+            out[draft_file] = json.dumps({**draft, "items": [i for i in draft["items"] if i["id"] not in gone]},
+                                         indent=1, sort_keys=True) + "\n"
     _write_all(out)
     return findings, changed

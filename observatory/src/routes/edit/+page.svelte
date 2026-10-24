@@ -6,7 +6,10 @@
 	import { onMount } from 'svelte';
 
 	import {
+		acceptDraft,
 		descendants,
+		dropDraft,
+		type DraftItem,
 		addPlace,
 		addRegion,
 		addRoute,
@@ -47,6 +50,9 @@
 	let showBase = $state(true);
 	let showGrid = $state(true);
 	let showRegions = $state(true);
+	let showDraft = $state(true);
+	let picked = $state<string | null>(null); // (the draft item being looked at)
+	let drafted = new Set<string>(); // (the draft's item ids as loaded: those gone from it now were decided)
 	let paintWith = $state<{ terrain: string; region: string }>({ terrain: '', region: '' });
 	let radius = $state(0);
 	let flood = $state(false);
@@ -91,10 +97,20 @@
 			message = 'This world has no grid yet: run `renasci map grid` first.';
 			return;
 		}
-		s = { geography: r.geography, grid: r.grid, layout: r.layout };
+		s = { geography: r.geography, grid: r.grid, layout: r.layout, draft: r.draft ?? { items: [] } };
+		drafted = new Set((r.draft?.items ?? []).map((i: DraftItem) => i.id));
+		if (r.draft_error) message = r.draft_error;
 		saved = JSON.stringify(s);
 		check();
 	});
+
+	/** The state the server checks and saves: no draft (it stays on disk); on save, the drafted items decided. */
+	function body(withDecided: boolean) {
+		const { draft, ...rest } = s!;
+		if (!withDecided) return rest;
+		const left = new Set((draft?.items ?? []).map((i) => i.id));
+		return { ...rest, decided: [...drafted].filter((id) => !left.has(id)) };
+	}
 
 	let timer: ReturnType<typeof setTimeout> | null = null;
 	function check() {
@@ -103,7 +119,7 @@
 			if (!s) return;
 			const mine = ++checks;
 			try {
-				const r = await fetch('/api/map/check', { method: 'POST', headers: headers(), body: JSON.stringify(s) });
+				const r = await fetch('/api/map/check', { method: 'POST', headers: headers(), body: JSON.stringify(body(false)) });
 				const answer = r.ok ? await r.json() : [{ kind: 'server', id: null, message: await r.text(), severity: 'error' }];
 				if (mine === checks) findings = answer;
 			} catch (e) {
@@ -161,11 +177,12 @@
 	}
 	async function saveNow() {
 		if (!s) return;
-		const r = await fetch('/api/map', { method: 'PUT', headers: headers(), body: JSON.stringify(s) });
+		const r = await fetch('/api/map', { method: 'PUT', headers: headers(), body: JSON.stringify(body(true)) });
 		if (r.ok) {
 			const out = await r.json();
 			const fresh = await (await fetch('/api/map')).json(); // (the baked geography: days and regions)
-			s = { geography: fresh.geography, grid: fresh.grid, layout: fresh.layout };
+			s = { geography: fresh.geography, grid: fresh.grid, layout: fresh.layout, draft: fresh.draft ?? { items: [] } };
+			drafted = new Set((fresh.draft?.items ?? []).map((i: DraftItem) => i.id));
 			saved = JSON.stringify(s);
 			message = `Saved${out.changed.length ? `: ${out.changed.join(', ')} baked` : ''}.`;
 			check();
@@ -267,6 +284,37 @@
 		return Array.from({ length: rows * cols }, (_, i) => hexPath(`c:${i % cols},${Math.floor(i / cols)}`, miles)).join('');
 	};
 	const outline = $derived(size && showGrid ? outlineFor(size) : '');
+	const draftItems = $derived((s?.draft?.items ?? []) as DraftItem[]);
+	const draftKinds = $derived([...new Set(draftItems.map((d) => d.kind))]);
+	function draftLabel(d: DraftItem): string {
+		if (d.kind === 'region') return `${d.region.name || d.region.id} (${d.cells.length} cells)`;
+		if (d.kind === 'terrain') return `${d.terrain} (${d.cells.length} cells)`;
+		if (d.kind === 'place') return `${d.place.name} (${d.place.kind})`;
+		return `a ${d.route.kind}: ${name(d.route.ends[0])} – ${name(d.route.ends[1])}`;
+	}
+	const accept = (d: DraftItem) => edit((x) => dropDraft(acceptDraft(x, d), d.id));
+	const reject = (d: DraftItem) => edit((x) => dropDraft(x, d.id));
+	// (all of a kind is one undo step; an item that can't be accepted yet, a road whose ends aren't placed, stays)
+	function acceptAll(k: string) {
+		if (!s) return;
+		let out = s;
+		const stayed: string[] = [];
+		let accepted = 0;
+		for (const d of (s.draft?.items ?? []).filter((i) => i.kind === k)) {
+			try {
+				out = dropDraft(acceptDraft(out, d), d.id);
+				accepted++;
+			} catch (e) {
+				stayed.push(`${d.id}: ${(e as Error).message}`); // (left on the draft, to accept once it can be)
+			}
+		}
+		if (accepted) {
+			const done = out;
+			edit(() => done);
+		}
+		message = `${accepted} accepted${stayed.length ? `; still on the draft: ${stayed.join('; ')}` : ''}.`;
+	}
+	const rejectAll = (k: string) => edit((x) => ({ ...x, draft: { items: (x.draft?.items ?? []).filter((i) => i.kind !== k) } }));
 	const terrains = $derived(grid ? Object.keys(grid.terrain).filter((k) => k !== 'plains') : []);
 	$effect(() => {
 		// (the region picker starts on a region, not on clearing)
@@ -317,6 +365,7 @@
 		<label class="small"><input type="checkbox" bind:checked={showBase} disabled={!hasBase} /> map image</label>
 		<label class="small"><input type="checkbox" bind:checked={showGrid} /> cells</label>
 		<label class="small"><input type="checkbox" bind:checked={showRegions} /> regions</label>
+		{#if draftItems.length}<label class="small"><input type="checkbox" bind:checked={showDraft} /> draft ({draftItems.length})</label>{/if}
 	</div>
 	{#if tool === 'place'}
 		<div class="toolbar small">
@@ -390,6 +439,20 @@
 							onclick={(e) => { if (tool === 'select') { e.stopPropagation(); selected = { what: 'route', id: r.id }; } }} />
 					{/if}
 				{/each}
+				{#if showDraft}
+					{#each draftItems as d (d.id)}
+						{#if d.kind === 'region' || d.kind === 'terrain'}
+							{#each d.cells as c, i (i)}
+								<path d={hexPath(c, grid.miles)} class="draft" class:looked={picked === d.id}><title>draft {d.id}: {d.kind === 'region' ? d.region.name || d.region.id : d.terrain}</title></path>
+							{/each}
+						{:else if d.kind === 'road'}
+							<polyline points={pts(d.cells)} class="draft road" class:looked={picked === d.id}><title>draft {d.id}: a {d.route.kind}</title></polyline>
+						{:else}
+							{@const [x, y] = centre(d.cell, grid.miles)}
+							<circle cx={x} cy={y} r={grid.miles / 3} class="draft" class:looked={picked === d.id}><title>draft {d.id}: {d.place.name}</title></circle>
+						{/if}
+					{/each}
+				{/if}
 				{#if drawing && s.layout.places[drawing.from]}
 					<polyline points={pts([s.layout.places[drawing.from].cell, ...drawing.via])} class="drawing" />
 				{/if}
@@ -454,6 +517,28 @@
 						{/each}
 					</ul>
 				{/if}
+			{/if}
+			{#if draftItems.length}
+				<details class="drafts" open>
+					<summary><strong>Draft ({draftItems.length})</strong></summary>
+					<p class="small muted">Drafted from the vault and the import, not canon: accept what's right, reject the rest.</p>
+					{#each draftKinds as k (k)}
+						<p class="small kind">
+							<strong>{k}s</strong> ({draftItems.filter((d) => d.kind === k).length})
+							<button onclick={() => acceptAll(k)}>accept all</button>
+							<button onclick={() => rejectAll(k)}>reject all</button>
+						</p>
+						<ul class="small">
+							{#each draftItems.filter((d) => d.kind === k) as d (d.id)}
+								<li onmouseenter={() => (picked = d.id)} onmouseleave={() => (picked = null)}>
+									{draftLabel(d)} <span class="muted">({d.why})</span>
+									<button onclick={() => accept(d)} onfocus={() => (picked = d.id)} onblur={() => (picked = null)}>accept</button>
+									<button onclick={() => reject(d)} onfocus={() => (picked = d.id)} onblur={() => (picked = null)}>reject</button>
+								</li>
+							{/each}
+						</ul>
+					{/each}
+				</details>
 			{/if}
 			<details class="regions">
 				<summary><strong>Regions ({s.geography.regions.length})</strong></summary>
@@ -549,6 +634,24 @@
 		opacity: 0.35;
 		stroke: none;
 		pointer-events: none;
+	}
+	.draft {
+		fill: none;
+		stroke: var(--ripple);
+		stroke-width: 2;
+		stroke-dasharray: 4 3;
+		pointer-events: none;
+	}
+	.draft.looked {
+		stroke-width: 4;
+		fill: var(--ripple);
+		fill-opacity: 0.15;
+	}
+	.drafts li {
+		margin: 0.2rem 0;
+	}
+	.drafts .kind {
+		margin: 0.5rem 0 0.1rem;
 	}
 	.regions li {
 		display: flex;
