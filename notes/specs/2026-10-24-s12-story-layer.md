@@ -101,6 +101,26 @@ The schema is `schemas/pack.json`, with tests of known-bad packs.
 
 The person and omniscient POVs come first; house and settlement follow in the same ticket if time allows.
 
+**As built (#115).**
+- `renasci.story`:
+  - `text`: readings for each event type; plain wording for ties, ambition and scheme ends, deaths and failed actions;
+  - `pack`: `Run`, plus `Run.of` for tests; `build`;
+  - `schema`: the validator, with the schema at `schemas/pack.json`;
+  - `trace`.
+- `renasci pack <run> --arc|--saga|--person|--event|--topic ID [--pov …]` writes `analysis/packs/`.
+- State changes (`place`, `beliefs`, `shares`) are indexed by entity and field. A value "as it stood then" is:
+  - the last change on or before the date;
+  - before the first change, what that change replaced;
+  - with no changes, the final state's.
+- **The dead:** they learn nothing after their death, and their beliefs are as they died with them.
+- **Rival claims:** a person keeps theirs; a house keeps one per question.
+- **Topic packs** hold that question's claims, from everyone, titled "Who killed X?" or "Whose doing was …?".
+- **Roles:** POV packs carry no verdict-like roles (the ward-keeper isn't "accused").
+- **Not yet:**
+  - arc and saga spans are the events' dates, not whole years;
+  - travellers count as at their origin until they arrive;
+  - house membership is the final state's.
+
 ## 3. POV chronicles (#116)
 
 `renasci chronicle <run> --subject … --pov …` writes `analysis/chronicles/<subject>--<pov>.md`, built from the POV pack:
