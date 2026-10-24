@@ -32,12 +32,17 @@ START = Date.from_json(SCENARIO["start"])
 SCALED = ("masses", "commoners", "capacity", "notable_target")
 
 
-def _scenario(scenario: dict | None, scale: int = 1) -> dict:
+def _scenario(scenario: dict | None, scale: int = 1, beliefs: bool | None = None) -> dict:
     """The scenario (the draft unless given), with every settlement's population times `scale` (#75: M1
-    scale is about ten times the draft)."""
+    scale is about ten times the draft), and beliefs on or off when `beliefs` says (S12 §1a: a recipe's
+    `[world] beliefs = true`)."""
     if type(scale) is not int or scale < 1:
         raise ValueError(f"scale must be a positive int, got {scale!r}")
+    if beliefs is not None and type(beliefs) is not bool:
+        raise ValueError(f"beliefs must be true or false, got {beliefs!r}")
     sc = geo.attach(copy.deepcopy(SCENARIO if scenario is None else scenario), Path(__file__).parent)
+    if beliefs is not None:
+        sc["params"] = {**sc.get("params", {}), "beliefs": beliefs}
     for s in sc["settlements"]:
         for k in SCALED:
             if s.get(k) is not None:
@@ -53,8 +58,8 @@ def ruleset(scenario: dict | None = None):
     return _with_scripts(people_ruleset("fourth_age", _scenario(scenario)))
 
 
-def rulesets(scenario: dict | None = None, scale: int = 1):
-    sc = _scenario(scenario, scale)
+def rulesets(scenario: dict | None = None, scale: int = 1, beliefs: bool | None = None):
+    sc = _scenario(scenario, scale, beliefs)
     return [(start_of(sc), _with_scripts(people_ruleset("fourth_age", sc)))]
 
 
@@ -68,10 +73,10 @@ def _with_scripts(rs):
 
 
 def new_engine(seed: int = 1234, ripples=(), pins=(), scenario: dict | None = None, canon: dict | None = None,
-               end=None, scale: int = 1) -> Engine:
+               end=None, scale: int = 1, beliefs: bool | None = None) -> Engine:
     """The Fourth Age at the scenario's start, synthesised from the (draft) scenario with any canon placed
     (`renasci.people.casting`), before anything runs."""
-    sc = _scenario(scenario, scale)
+    sc = _scenario(scenario, scale, beliefs)
     e = Engine(CAL, seed=seed, rulesets=rulesets(sc))
     synthesise(e, sc, seed, canon)
     e.apply_pins(pins, end=end)  # (pins past the run's `end` are out of scope)

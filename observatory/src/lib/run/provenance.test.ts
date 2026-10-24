@@ -121,3 +121,17 @@ describe('provenance', () => {
 		expect(traced).toBeGreaterThan(10);
 	});
 });
+
+describe('the shared trace vectors (the same as renasci.story.trace)', async () => {
+	const { readFileSync } = await import('node:fs');
+	const vectors = JSON.parse(readFileSync(resolve(__dirname, '../../../../tests/fixtures/traces.json'), 'utf8'));
+	const ids = new Map(vectors.log.map((e: { id: string }) => [e.id, e]));
+	for (const c of vectors.cases) {
+		it(c.why, () => {
+			const steps = trace((id) => ids.get(id), c.from);
+			expect(steps.map((s) => s.event.id)).toEqual(c.ids);
+			expect(steps.map((s) => s.origin)).toEqual(c.origin);
+			expect(steps.map((s) => s.lie)).toEqual(c.lie);
+		});
+	}
+});
