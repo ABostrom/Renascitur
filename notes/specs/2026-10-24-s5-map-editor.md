@@ -47,8 +47,9 @@ Pyrosia's geography is a hand-typed draft (S4): places and routes with placehold
 src/renasci/renascita/pyrosia.json      committed: the S4 geography, as baked by the editor (no positions, no cells)
 maps/pyrosia/private/                   git-ignored, at the repo root (editor data, not package data)
   base.png         the image, reduced to about 4096 px wide, for the editor
-  mask.json        land/water per cell, from the import (and the traced coastline, for drawing)
-  markers.json     candidate settlement markers: position (in cells), size, confidence
+  mask.png         land (white) and water (black), from the import
+  markers.json     candidate settlement markers: position (as fractions of the map), size, confidence
+  import.json      what the import was asked and found
   grid.json        the cell grid (§3): every cell's terrain and region
   layout.json      each place's cell and position, each route's cell path
   draft.json       Claude's draft layer (§5): places, regions, roads, terrain to accept or reject
@@ -111,9 +112,28 @@ maps/pyrosia/private/                   git-ignored, at the repo root (editor da
    - The importer reports how many it found (the ticket expects about 15) and never decides which place is which.
 4. Positions are in cells, not pixels, so a different resolution of the same image imports the same layout.
 
+**As built (#82).**
+- `renasci map import <image> --world <w> --water x,y [--water …] --marker x,y` (module `renasci.mapimport`) writes `maps/<w>/private/`:
+  - `base.png`;
+  - `mask.png`: land and water as an image, 1024 px across, rather than traced polylines. The grid reads each cell's land or water from it, and the editor overlays it;
+  - `markers.json`;
+  - `import.json`.
+- Positions are **fractions of the map's width and height**: the scale is unknown (Q1), and they convert to cells when the grid is made (#80).
+- Markers:
+  - a blob counts as a marker when it is within half to twice the sampled marker's area and square (fill × aspect at least 0.88; a circle is about 0.78);
+  - connected components are found by row runs and union-find, in numpy, with no scipy.
+- The real import needs a water point and a marker point read off the image in a viewer, so Aaron runs it (Q22). The importer never sends the image anywhere.
+- After review:
+  - It writes only where git ignores, when inside the repo, and refuses otherwise.
+  - A marker point that misses an icon's fill (sea, outline, speck, round blob) is refused.
+  - Points are checked before the decode.
+  - The full image is reduced once, to the marker width, and every smaller layer comes from that.
+  - An earlier import is replaced only with `--force`.
+  - The mask at 1024 px loses islands under about 45 original px; raise `--mask-width` if one matters.
+
 ## 5. Claude's draft layer (#83)
 
-- **Without the image (the default):** Claude drafts from the vault's geography notes (provinces, cities, roads named in prose) and from `mask.json` and `markers.json` (land and candidate places).
+- **Without the image (the default):** Claude drafts from the vault's geography notes (provinces, cities, roads named in prose) and from `markers.json` and the land share in `import.json` (not from `mask.png`, which is an image of the map's shape).
   - It writes `private/draft.json`: proposed regions as cell sets, terrain as cell sets (coast, likely hills from the notes), roads as cell paths between places, and places the markers missed.
   - Each item has a `why` (which note or which marker) and `draft: true`.
 - **With the image** (only if Aaron says yes to Q5): the same, also reading downsampled tiles.

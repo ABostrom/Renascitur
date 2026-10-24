@@ -255,6 +255,24 @@ try {
 			} catch {}
 		} else s.kill();
 	}
+	// (on Windows `uv run` starts renasci outside that process tree: stop whatever still listens on our two
+	// fixed ports, which is our own servers; a server of yours on 8799 or 8800 would be stopped too)
+	if (process.platform === 'win32') {
+		let netstat = '';
+		try {
+			netstat = execSync('netstat -ano -p tcp', { encoding: 'utf8' });
+		} catch {}
+		const listening = netstat
+			.split('\n')
+			.map((l) => l.trim().split(/\s+/))
+			.filter((f) => f.length >= 5 && f[3] === '0.0.0.0:0' && [port, port + 1].some((p) => f[1] === `127.0.0.1:${p}`))
+			.map((f) => f.at(-1)); // (a listener's foreign address is 0.0.0.0:0, whatever the locale calls its state)
+		for (const pid of new Set(listening)) {
+			try {
+				execSync(`taskkill /pid ${pid} /T /F`, { stdio: 'ignore' });
+			} catch {}
+		}
+	}
 	try {
 		rmSync(scratch, { recursive: true, force: true });
 	} catch {}

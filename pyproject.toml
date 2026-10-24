@@ -7,6 +7,9 @@ dependencies = [
     "numpy>=2.5,<2.6",  # draws are part of the engine version; golden tests guard upgrades
 ]
 
+[project.optional-dependencies]
+map = ["pillow>=11"]  # (S5: `renasci map import` reads the Inkarnate image; the engine never imports it)
+
 [project.scripts]
 renasci = "renasci.cli:main"
 
@@ -14,6 +17,7 @@ renasci = "renasci.cli:main"
 dev = [
     "pytest>=8",
     "hypothesis>=6.100",
+    "pillow>=11",  # (the map importer's tests draw synthetic images)
 ]
 
 [build-system]

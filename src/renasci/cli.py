@@ -427,6 +427,53 @@ def _run_window(args):
     return cal, start, end, races
 
 
+REPO = Path(__file__).resolve().parents[2]  # (the checkout: maps/ lives at its root)
+
+
+def _refuse_unless_ignored(out: Path) -> None:
+    """Traced map data may be written inside the repo only where git ignores it (the repo is public)."""
+    if not (REPO / ".git").exists() or not out.is_relative_to(REPO):
+        return
+    import subprocess
+
+    probe = out / "markers.json"
+    try:
+        ignored = subprocess.run(["git", "check-ignore", "-q", str(probe)], cwd=REPO).returncode == 0
+    except FileNotFoundError:  # (no git: say so rather than risk it)
+        raise ValueError("can't check that the output is git-ignored (no git): pass --maps outside the repo") from None
+    if not ignored:
+        raise ValueError(f"{out} isn't git-ignored: traced map data must stay private (use maps/<world>/private)")
+
+
+def _point(text: str) -> tuple[int, int]:
+    try:
+        x, y = (int(v) for v in text.split(","))
+    except ValueError:
+        raise ValueError(f"a point is x,y in the image's pixels, got {text!r}") from None
+    return x, y
+
+
+def cmd_map(args) -> int:
+    """The map tools (S5): `import` reads the private Inkarnate image into a world's private layers."""
+    try:
+        import PIL  # noqa: F401
+    except ImportError:
+        raise ValueError("the map tools need Pillow: uv sync --extra map") from None
+    from renasci.io.recipe import check_run_name
+    from renasci.mapimport import import_map
+
+    maps = Path(args.maps) if args.maps else REPO / "maps"
+    out = (maps / check_run_name(args.world) / "private").resolve()
+    _refuse_unless_ignored(out)
+    report = import_map(Path(args.image), out, water=[_point(w) for w in args.water], marker=_point(args.marker),
+                        base_width=args.base_width, mask_width=args.mask_width, marker_width=args.marker_width,
+                        force=args.force)
+    w, h = report["source"]["size"]
+    print(f"imported {report['source']['name']} ({w}x{h}) into {out}: {report['land']:.0%} land, "
+          f"{report['markers']} markers (private: git-ignored)")
+    return 0
+
+
 def cmd_vault(args) -> int:
     from renasci.vault.loader import load
 
@@ -707,6 +754,20 @@ def main(argv=None) -> int:
     p.add_argument("--top", type=int, default=10)
     p.add_argument("--from", dest="from_", type=int, default=None)
     p.add_argument("--to", type=int, default=None)
+    p = sub.add_parser("map", help="the map tools (S5): import the private Inkarnate image")
+    msub = p.add_subparsers(dest="map_command", required=True)
+    m = msub.add_parser("import", help="read the map image into maps/<world>/private/ (needs: uv sync --extra map; "
+                                       "decoding the full map takes about 1 GB of memory)")
+    m.add_argument("image")
+    m.add_argument("--world", required=True)
+    m.add_argument("--maps", default=None, help="the maps folder (default: the repo's maps/, git-ignored inside)")
+    m.add_argument("--water", action="append", required=True, help="x,y of a water pixel (repeat for each sea colour)")
+    m.add_argument("--marker", required=True, help="x,y of a pixel inside one settlement marker")
+    m.add_argument("--base-width", type=int, default=4096, help="the editor's copy of the image, in pixels across")
+    m.add_argument("--mask-width", type=int, default=1024, help="land/water, in pixels across")
+    m.add_argument("--marker-width", type=int, default=8192,
+                   help="the width markers are found at (raise it if icons are under ~12 px in the original)")
+    m.add_argument("--force", action="store_true", help="replace an earlier import")
     p = sub.add_parser("vault", help="the vault bridge (S2): check")
     vsub = p.add_subparsers(dest="vault_command", required=True)
     v = vsub.add_parser("check", help="load the vault and report its notes and findings (read-only)")
@@ -772,7 +833,7 @@ def main(argv=None) -> int:
     p.add_argument("--out", default="runs/_bench")
     args = parser.parse_args(argv)
     try:
-        commands = {"run": cmd_run, "replay": cmd_replay, "diff": cmd_diff, "inspect": cmd_inspect, "bench": cmd_bench, "latch": cmd_latch, "stories": cmd_stories, "claims": cmd_claims, "ripple": cmd_ripple, "vault": cmd_vault,
+        commands = {"run": cmd_run, "replay": cmd_replay, "diff": cmd_diff, "inspect": cmd_inspect, "bench": cmd_bench, "latch": cmd_latch, "stories": cmd_stories, "claims": cmd_claims, "ripple": cmd_ripple, "map": cmd_map, "vault": cmd_vault,
                     "observe": cmd_observe}
         return commands[args.command](args)
     except (ValueError, FileExistsError, FileNotFoundError) as err:
