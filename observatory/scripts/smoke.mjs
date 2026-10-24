@@ -121,6 +121,18 @@ async function launchAndOpen(browser, errors) {
 	if (baked.routes.length !== 1 || baked.routes[0].days === 20) throw new Error('the editor did not save a baked route');
 	const layout = JSON.parse(readFileSync(resolve(editPrivate, 'layout.json'), 'utf8'));
 	if (!Object.values(layout.routes).some((r) => r.cells.includes('c:3,3'))) throw new Error('the drawn path was not saved');
+	// regions (#85): a new province painted under Brigg, saved: the town is in it, read as the sim reads it
+	await page.getByText(/^Regions \(/).click();
+	await page.getByLabel('New region id').fill('g:south');
+	await page.getByLabel('New region name').fill('The South');
+	await page.getByRole('button', { name: 'Add region' }).click();
+	await page.getByRole('button', { name: 'Paint region' }).click();
+	await page.getByLabel('Paint with region').selectOption('g:south');
+	await clickCell(6, 1);
+	await page.getByRole('button', { name: 'Save', exact: true }).click();
+	await page.getByRole('status').filter({ hasText: /^Saved/ }).waitFor({ timeout: 15000 });
+	const painted = JSON.parse(readFileSync(world, 'utf8'));
+	if (painted.places.find((p) => p.id === 't:b')?.region !== 'g:south') throw new Error('the painted region was not baked into the town');
 	// promote: the canon run's near miss, with the pin that caused it kept, written to the vault
 	await page.goto(`http://127.0.0.1:${lport}/run/canon/strain`);
 	await page.getByRole('heading', { name: /^Strain, in order/ }).waitFor({ timeout: 20000 });
@@ -131,7 +143,7 @@ async function launchAndOpen(browser, errors) {
 	await page.getByText(/wrote _proposed\/event\//).waitFor({ timeout: 60000 });
 	const written = readdirSync(resolve(vault, '_proposed', 'event'));
 	if (written.length !== 1) throw new Error(`the vault has ${written.length} proposed events`);
-	return 'a run launched from a recipe and opened; a road drawn in the map editor and saved, baked; a ripple authored on a person, replayed as a branch and diffed; an event proposed to the vault with its cause';
+	return 'a run launched from a recipe and opened; a road drawn and a province painted in the map editor, saved and baked; a ripple authored on a person, replayed as a branch and diffed; an event proposed to the vault with its cause';
 }
 const browser = await (async () => {
 	await waitForServer();

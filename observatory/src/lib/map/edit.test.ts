@@ -12,7 +12,7 @@ const S: MapState = {
 		],
 		routes: [{ id: 'g:a--b', ends: ['t:a', 't:b'], days: 3, kind: 'road' }]
 	},
-	grid: { cols: 10, rows: 8, miles: 24, days_per_cell: 1.2, terrain: { plains: 1, water: null }, cells: { 'c:6,6': { region: 'g:north' } } },
+	grid: { cols: 10, rows: 8, miles: 24, days_per_cell: 1.2, terrain: { plains: 1, hills: 2, water: null }, cells: { 'c:6,6': { region: 'g:north' } } },
 	layout: { places: { 't:a': { cell: 'c:1,1' }, 't:b': { cell: 'c:4,1' } }, routes: { 'g:a--b': { cells: ['c:1,1', 'c:2,1', 'c:3,1', 'c:4,1'] } } }
 };
 const walkable = (cells: string[]) => cells.every((c, i) => i === 0 || near(cells[i - 1], S.grid).includes(c));
@@ -76,5 +76,67 @@ describe('map edits', () => {
 		const t = setAttr(S, 'route', 'g:a--b', 'vialux', true);
 		expect(t.geography.routes[0].vialux).toBe(true);
 		expect(setAttr(t, 'route', 'g:a--b', 'vialux', '').geography.routes[0].vialux).toBeUndefined();
+	});
+});
+
+import { addRegion, brush, fill, paint, setRegion } from './edit';
+
+describe('painting', () => {
+	it('paints terrain or a region on cells, and plains clears the paint', () => {
+		let s = paint(S, ['c:2,2', 'c:3,2'], 'terrain', 'hills');
+		expect(s.grid.cells['c:2,2']).toEqual({ terrain: 'hills' });
+		s = paint(s, ['c:2,2'], 'region', 'g:north');
+		expect(s.grid.cells['c:2,2']).toEqual({ terrain: 'hills', region: 'g:north' });
+		s = paint(s, ['c:2,2'], 'terrain', 'plains');
+		expect(s.grid.cells['c:2,2']).toEqual({ region: 'g:north' });
+		s = paint(s, ['c:2,2'], 'region', null);
+		expect(s.grid.cells['c:2,2']).toBeUndefined();
+		expect(() => paint(S, ['c:1,1'], 'terrain', 'lava')).toThrow(/terrain/);
+		expect(() => paint(S, ['c:1,1'], 'region', 'g:land')).toThrow(/within/); // (a region with regions inside it)
+	});
+
+	it('brushes the cells within a radius', () => {
+		expect(brush('c:4,4', 0, S.grid)).toEqual(['c:4,4']);
+		const ring = brush('c:4,4', 1, S.grid);
+		expect(ring.length).toBe(7);
+		expect(brush('c:0,0', 1, S.grid).length).toBe(3); // (a corner)
+	});
+
+	it('fills the land cells joined to the one clicked that share its paint, not across water', () => {
+		const lake = paint(S, ['c:5,0', 'c:5,1', 'c:5,2', 'c:5,3', 'c:5,4', 'c:4,5', 'c:5,5', 'c:5,6', 'c:4,7', 'c:5,7'], 'terrain', 'water');
+		const s = fill(lake, 'c:1,1', 'region', 'g:north');
+		expect(s.grid.cells['c:1,1'].region).toBe('g:north');
+		expect(s.grid.cells['c:8,1']?.region).toBeUndefined(); // (beyond the water)
+		expect(s.grid.cells['c:5,2'].region).toBeUndefined(); // (the water itself)
+	});
+
+	it('adds, renames and nests regions', () => {
+		let s = addRegion(S, { id: 'g:south', name: 'The South', within: 'g:land' });
+		expect(s.geography.regions.at(-1)).toEqual({ id: 'g:south', name: 'The South', within: 'g:land' });
+		s = setRegion(s, 'g:south', 'name', 'Southlands');
+		expect(s.geography.regions.at(-1)?.name).toBe('Southlands');
+		expect(() => addRegion(S, { id: 'g:north', name: 'x' })).toThrow(/exists/);
+		expect(() => setRegion(s, 'g:land', 'within', 'g:south')).toThrow(/cycle/);
+	});
+});
+
+describe('painting, after review', () => {
+	const painted = () => paint(S, ['c:1,1', 'c:2,1'], 'region', 'g:north');
+
+	it("won't nest a region within one that is painted (its cells would be a region with regions in it)", () => {
+		expect(() => addRegion(painted(), { id: 'g:coast', name: 'Coast', within: 'g:north' })).toThrow(/painted on 3 cells/); // (two, and the fixture's own)
+		const s = addRegion(painted(), { id: 'g:coast', name: 'Coast' });
+		expect(() => setRegion(s, 'g:coast', 'within', 'g:north')).toThrow(/painted on 3 cells/);
+	});
+
+	it('keeps region ids apart from place and route ids, and drops an empty name', () => {
+		expect(() => addRegion(S, { id: 'g:a--b', name: 'x' })).toThrow(/exists/);
+		expect(addRegion(S, { id: 'g:wild', name: '' }).geography.regions.at(-1)).toEqual({ id: 'g:wild' });
+	});
+
+	it('paints by copying only what it changes', () => {
+		const s = paint(S, ['c:2,2'], 'terrain', 'hills');
+		expect(s.layout).toBe(S.layout); // (untouched parts are shared, not copied)
+		expect(S.grid.cells['c:2,2']).toBeUndefined();
 	});
 });
