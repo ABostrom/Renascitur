@@ -286,6 +286,10 @@ class Houses(System):
     writes = WRITES
     event_types = EVENT_TYPES
 
+    def coarse_fallback(self, ctx, years: int) -> None:
+        """A coarse step (S8 §7: rulers only): the yearly pass, once. Successions follow deaths, whenever."""
+        self.run(ctx)
+
     def run(self, ctx):
         for office in ctx.ids("office"):  # (a polity's offices: vacant ones filled, heirs named)
             if ctx.get(office, "scope") in (None, "house"):  # (scope and polity never change)

@@ -50,6 +50,12 @@ NOTE_READS = frozenset({"ids:polity", "ids:faction", "members", "house", "place"
 NOTE_WRITES = frozenset({"ledger", "new:relation"})
 
 
+def over(p: float, years: int) -> float:
+    """The odds of at least one in `years` independent years at `p` a year (a coarse step's draw, S8 §7);
+    exactly `p` for one year, so a fine year draws as it always did."""
+    return p if years == 1 else 1.0 - (1.0 - p) ** years
+
+
 def rel_id(a: str, b: str) -> str:
     x, y = sorted((a, b))
     return f"rel:{x}|{y}"
@@ -210,29 +216,46 @@ class Diplomacy(System):
     del _t
 
     def run(self, ctx):
+        self.step(ctx, 1)
+
+    def coarse_fallback(self, ctx, years: int) -> None:
+        """A coarse step of `years` (S8 §7): incidents drawn for each of its years; proposals and betrayals
+        compounded (`over`: at least one in that many years; a government decides once, so they come a
+        little rarer than fine); trust fades `FADE**years` and takes the recurring pull (trade, pacts, shared
+        enemies) summed geometrically, so a quiet coarse step lands where the fine years would. The stance,
+        expiries and what drives trade and incidents are read once, at the step's start (a band crossed
+        and recovered mid-step is lost; a treaty ends on the step's date, not its own)."""
+        self.step(ctx, years)
+
+    def step(self, ctx, years: int) -> None:
+        if type(years) is not int or years < 1:
+            raise ValueError(f"a step is a whole number of years, at least one; got {years!r}")
         rels = ctx.ids("relation")
         for rid in rels:
             with ctx.scope(rid):
-                self.drift(ctx, rid, rels)
+                self.drift(ctx, rid, rels, years)
 
-    def drift(self, ctx, rid: str, rels) -> None:
+    def drift(self, ctx, rid: str, rels, years: int = 1) -> None:
         a, b, kind = ctx.get(rid, "a"), ctx.get(rid, "b"), ctx.get(rid, "kind")
         stance, trust = ctx.get(rid, "stance"), float(ctx.get(rid, "trust") or 0.0)
         ledger = list(ctx.get(rid, "ledger") or [])
         if kind == "polity":  # (treaties: expiries, betrayals, proposals; what they do goes in this year's ledger)
             from renasci import treaties
 
-            for e in treaties.year(ctx, rid, a, b, stance, trust):
+            for e in treaties.year(ctx, rid, a, b, stance, trust, years):
                 ledger.append({"kind": e["kind"], "weight": WEIGHTS[e["kind"]], "event": e["event"],
-                               "date": ctx.today.to_json()})
+                               "date": ctx.today.to_json(), **({"recurring": True} if e.get("recurring") else {})})
         routes = _border_routes(ctx, a, b) if kind == "polity" else []
         if stance in INCIDENT:
             for route in routes:
                 if ctx.get(route, "open") is False:
                     continue
-                if ctx.chance(INCIDENT[stance], f"incident:{route}", owner=rid):
-                    side = ctx.choose(f"incident:{route}", list(ctx.get(route, "ends")), owner=rid)  # (either side)
-                    ev = ctx.emit("polity.incident", {"party": (a, b)}, purpose=f"incident:{route}", actor=rid,
+                for y in range(years):  # (a coarse step: a draw for each of its years)
+                    tag = f"incident:{route}" + (f":{y}" if y else "")
+                    if not ctx.chance(INCIDENT[stance], tag, owner=rid):
+                        continue
+                    side = ctx.choose(tag, list(ctx.get(route, "ends")), owner=rid)  # (either side)
+                    ev = ctx.emit("polity.incident", {"party": (a, b)}, purpose=tag, actor=rid,
                                   place=side, payload={"relation": rid, "route": route})
                     ledger.append({"kind": "incident", "weight": WEIGHTS["incident"], "event": ev.id,
                                    "date": ctx.today.to_json()})
@@ -246,8 +269,10 @@ class Diplomacy(System):
                      and stances.get(frozenset((b, c))) in hostile)
         trading = stance not in ("cold", "hostile", "war")  # (enemies don't trade: they raid)
         trade = min(TRADE_CAP, TRADE * sum(1 for r in routes if ctx.get(r, "open") is not False)) if trading else 0.0
-        moved = sum(e["weight"] for e in ledger) + SHARED_ENEMY * shared + trade
-        new = round(max(-1.0, min(1.0, trust * FADE + moved)), 6)
+        once = sum(e["weight"] for e in ledger if not e.get("recurring"))  # (what happened, once)
+        yearly = sum(e["weight"] for e in ledger if e.get("recurring")) + SHARED_ENEMY * shared + trade  # (a year's pull)
+        moved = once + yearly * (1 - FADE ** years) / (1 - FADE)  # (years=1: once + yearly)
+        new = round(max(-1.0, min(1.0, trust * FADE ** years + moved)), 6)
         if not ledger and abs(new - trust) < SETTLED:
             return  # (a quiet year that hardly moves it: settled, no event)
         why = tuple(sorted({Cause("event", e["event"]) for e in ledger if e.get("event")}, key=lambda c: c.ref))
