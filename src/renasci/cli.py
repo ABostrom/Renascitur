@@ -394,6 +394,14 @@ def cmd_pack(args) -> int:
     return 0
 
 
+def cmd_mcp(args) -> int:
+    """The MCP server over runs and the vault (S12 §5, #118), on stdio."""
+    from renasci.mcp import serve
+
+    serve(Path(args.runs).resolve(), Path(args.vault).resolve() if args.vault else None)
+    return 0
+
+
 def cmd_claims(args) -> int:
     """What the run's world believes, judged against what happened: analysis/claims.json (#106)."""
     from renasci.analysis.claims import claims_report
@@ -905,6 +913,9 @@ def main(argv=None) -> int:
     for k in ("arc", "saga", "person", "event", "topic"):
         p.add_argument(f"--{k}", help=f"the subject: a {k} id")
     p.add_argument("--pov", default="omniscient", help="omniscient, or a person, house or settlement id")
+    p = sub.add_parser("mcp", help="an MCP server over runs and the vault, on stdio (for Claude)")
+    p.add_argument("--runs", default="runs")
+    p.add_argument("--vault", default=None, help="the vault folder its vault tools read (read-only)")
     p = sub.add_parser("claims", help="what a run's world believes, judged against what happened "
                                        "(writes analysis/claims.json)")
     p.add_argument("run")
@@ -933,7 +944,7 @@ def main(argv=None) -> int:
     p.add_argument("--out", default="runs/_bench")
     args = parser.parse_args(argv)
     try:
-        commands = {"run": cmd_run, "replay": cmd_replay, "diff": cmd_diff, "inspect": cmd_inspect, "bench": cmd_bench, "latch": cmd_latch, "stories": cmd_stories, "claims": cmd_claims, "pack": cmd_pack, "ripple": cmd_ripple, "map": cmd_map, "vault": cmd_vault,
+        commands = {"run": cmd_run, "replay": cmd_replay, "diff": cmd_diff, "inspect": cmd_inspect, "bench": cmd_bench, "latch": cmd_latch, "stories": cmd_stories, "claims": cmd_claims, "pack": cmd_pack, "mcp": cmd_mcp, "ripple": cmd_ripple, "map": cmd_map, "vault": cmd_vault,
                     "observe": cmd_observe}
         return commands[args.command](args)
     except (ValueError, FileExistsError, FileNotFoundError) as err:
