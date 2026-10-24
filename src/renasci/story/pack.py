@@ -265,11 +265,24 @@ ROLE_NAMES = {"owner": "lead", "target": "target", "deceased": "victim", "killer
               "witness": "witness", "leader": "lead", "ordered_by": "schemer"}  # (no verdicts: a keeper is "involved")
 
 
+def _told(run: Run, own: set[str]) -> set[str]:
+    return {e for e in _with_causes(run, own) if reading(run.by_id[e], run.names, run.by_id)}
+
+
+def _end(run: Run, evs: set[str]) -> list:
+    return max((run.by_id[e]["date"] for e in evs), default=[0, 0, 0])
+
+
+def end_of(run: Run, subject: tuple[str, str]) -> list:
+    """The date a subject's beliefs are taken at, whatever the point of view: its last event's."""
+    return _end(run, _told(run, _subject_events(run, *subject)[1]))
+
+
 def build(run: Run, subject: tuple[str, str], pov: str = "omniscient") -> dict:
     sub, own, people = _subject_events(run, *subject)
     view, minds = _pov(run, pov)
-    evs = {e for e in _with_causes(run, own) if reading(run.by_id[e], run.names, run.by_id)}
-    end = max((run.by_id[e]["date"] for e in evs), default=[0, 0, 0])
+    evs = _told(run, own)
+    end = _end(run, evs)
     on_topic = subject[1] if subject[0] == "topic" else None
 
     def relevant(held: dict) -> dict:
