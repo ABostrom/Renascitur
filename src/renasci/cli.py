@@ -454,24 +454,74 @@ def _point(text: str) -> tuple[int, int]:
 
 
 def cmd_map(args) -> int:
-    """The map tools (S5): `import` reads the private Inkarnate image into a world's private layers."""
-    try:
-        import PIL  # noqa: F401
-    except ImportError:
-        raise ValueError("the map tools need Pillow: uv sync --extra map") from None
+    """The map tools (S5): `import` reads the private image into a world's private layers; `grid` makes the
+    world's cell grid from the import; `check` and `bake` set the map against a geography file."""
     from renasci.io.recipe import check_run_name
-    from renasci.mapimport import import_map
 
     maps = Path(args.maps) if args.maps else REPO / "maps"
-    out = (maps / check_run_name(args.world) / "private").resolve()
-    _refuse_unless_ignored(out)
-    report = import_map(Path(args.image), out, water=[_point(w) for w in args.water], marker=_point(args.marker),
-                        base_width=args.base_width, mask_width=args.mask_width, marker_width=args.marker_width,
-                        force=args.force)
-    w, h = report["source"]["size"]
-    print(f"imported {report['source']['name']} ({w}x{h}) into {out}: {report['land']:.0%} land, "
-          f"{report['markers']} markers (private: git-ignored)")
-    return 0
+    private = (maps / check_run_name(args.world) / "private").resolve()
+    _refuse_unless_ignored(private)
+    if args.map_command in ("import", "grid"):
+        try:
+            import PIL  # noqa: F401
+        except ImportError:
+            raise ValueError("the map tools need Pillow: uv sync --extra map") from None
+    if args.map_command == "import":
+        from renasci.mapimport import import_map
+
+        report = import_map(Path(args.image), private, water=[_point(w) for w in args.water],
+                            marker=_point(args.marker), base_width=args.base_width, mask_width=args.mask_width,
+                            marker_width=args.marker_width, force=args.force)
+        w, h = report["source"]["size"]
+        print(f"imported {report['source']['name']} ({w}x{h}) into {private}: {report['land']:.0%} land, "
+              f"{report['markers']} markers (private: git-ignored)")
+        return 0
+    from renasci import mapgrid
+
+    if args.map_command == "grid":
+        import numpy as np
+        from PIL import Image
+
+        if (private / "grid.json").exists():
+            raise ValueError(f"{private / 'grid.json'} exists: a grid is made once (a new scale is a regrid)")
+        if args.miles_across <= 0:
+            raise ValueError("--miles-across must be positive")
+        if not (private / "import.json").exists():
+            raise ValueError(f"no import in {private}: run `renasci map import` first")
+        report = json.loads((private / "import.json").read_text(encoding="utf-8"))
+        w, h = report["source"]["size"]
+        land = np.asarray(Image.open(private / "mask.png").convert("L")) > 127
+        g = mapgrid.new_grid(args.miles_across, h / w, land=land)
+        (private / "grid.json").write_text(json.dumps(g, indent=1, sort_keys=True), encoding="utf-8")
+        water = sum(1 for v in g["cells"].values() if v.get("terrain") == "water")
+        print(f"grid: {g['cols']} x {g['rows']} cells of {g['miles']} miles, {water} water (private: git-ignored)")
+        return 0
+    from renasci import geo
+
+    if not (private / "grid.json").exists():
+        raise ValueError(f"no grid in {private}: run `renasci map grid` first")
+    grid = json.loads((private / "grid.json").read_text(encoding="utf-8"))
+    layout_file = private / "layout.json"
+    layout = json.loads(layout_file.read_text(encoding="utf-8")) if layout_file.exists() else {}
+    doc = geo.load(args.geography)
+    if args.map_command == "check":
+        findings = mapgrid.check(doc, grid, layout)
+    else:
+        baked, findings = mapgrid.bake(doc, grid, layout)
+        if not any(f["severity"] == "error" for f in findings):
+            changed = [r["id"] for r, s in zip(baked["routes"], doc["routes"]) if r["days"] != s["days"]]
+            changed += [p["id"] for p, s in zip(baked["places"], doc["places"]) if p["region"] != s["region"]]
+            print(f"bake: {len(changed)} changed{': ' + ', '.join(changed) if changed else ''}")
+            if args.write:
+                geo.save(args.geography, baked)
+                print(f"wrote {args.geography}")
+            elif changed:
+                print("(a dry run: --write to save)")
+    for f in findings:
+        print(f"  {f['severity']}: {f['message']}")
+    if not findings:
+        print("map: ok")
+    return 1 if any(f["severity"] == "error" for f in findings) else 0
 
 
 def cmd_vault(args) -> int:
@@ -768,6 +818,18 @@ def main(argv=None) -> int:
     m.add_argument("--marker-width", type=int, default=8192,
                    help="the width markers are found at (raise it if icons are under ~12 px in the original)")
     m.add_argument("--force", action="store_true", help="replace an earlier import")
+    m = msub.add_parser("grid", help="make the world's cell grid from its import (once; private)")
+    m.add_argument("--world", required=True)
+    m.add_argument("--maps", default=None)
+    m.add_argument("--miles-across", type=float, required=True, help="how many miles the map is across (Q1)")
+    for name, what in (("check", "check a geography against the world's map"),
+                       ("bake", "write the map's route days and regions into a geography (a dry run unless --write)")):
+        m = msub.add_parser(name, help=what)
+        m.add_argument("--world", required=True)
+        m.add_argument("--maps", default=None)
+        m.add_argument("--geography", required=True, help="the geography file (e.g. src/renasci/renascita/pyrosia.json)")
+        if name == "bake":
+            m.add_argument("--write", action="store_true")
     p = sub.add_parser("vault", help="the vault bridge (S2): check")
     vsub = p.add_subparsers(dest="vault_command", required=True)
     v = vsub.add_parser("check", help="load the vault and report its notes and findings (read-only)")

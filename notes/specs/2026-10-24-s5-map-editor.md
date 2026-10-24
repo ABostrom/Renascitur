@@ -94,7 +94,23 @@ maps/pyrosia/private/                   git-ignored, at the repo root (editor da
 - a land path never crosses `water`;
 - every painted region exists and is a leaf;
 - every settlement's cell has a region;
-- the baked days and regions match what the geography says. A mismatch is a warning, so a file edited by hand still loads. A dated re-timing (#81 `changes`) is exempt.
+- the baked days and regions match what the geography says. A mismatch is a warning, so a file edited by hand still loads. These are the base days: a dated re-timing (#81 `changes`) changes them later in the run, so it doesn't excuse drift.
+
+**As built (#80).**
+- `renasci.mapgrid` holds the cells (ids, neighbours, centres, `at`, straight lines), `new_grid` (water painted from the import's mask), `days`, `check`, `bake` and `regrid`.
+- `layout.json` is `{places: {id: {cell, at?}}, routes: {id: {cells}}}`.
+- Commands:
+  - `renasci map grid --world w --miles-across N`: once, from `import.json` and `mask.png`;
+  - `renasci map check --world w --geography <file>`;
+  - `renasci map bake --world w --geography <file> [--write]`: a dry run by default; a map with errors bakes nothing.
+- The grid and layout stay private. Only the baked days and regions reach the geography file.
+- Pyrosia's own grid waits for the map scale (Q1) and Aaron's import (#82).
+- `regrid` is a library function for now, with no command.
+  - Paint goes to the cell under each old cell's centre, by majority.
+  - Paths are re-traced over land by the fewest cells.
+- A route with an empty path has no path.
+- A malformed grid is a finding, not a crash.
+- A place of any kind takes its cell's region when baked.
 
 ## 4. Import (#82)
 
