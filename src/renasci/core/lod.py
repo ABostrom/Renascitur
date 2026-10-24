@@ -1,11 +1,10 @@
 """Level of detail: how finely time and people are simulated.
 
 **Time.** A `ResolutionPolicy` says, for any date, whether the world runs `fine` (every system on
-its cadence) or `coarse` (big steps, for quiet centuries). Focus windows are always fine. S1 ships
-the interface only and runs everything fine; coarse execution and its tuning arrive with the First
-Age (M5). The rule that keeps formats stable is fixed now: a coarse step draws its randomness under
-its first canonical tick, plus a step ordinal. Systems already declare how they would behave
-coarsely: `coarse_ok` (it can integrate over a long step) or `coarse_fallback` (a summary update).
+its cadence) or `coarse` (big steps of whole years, for quiet centuries). Focus windows are always
+fine. Under coarse, a system with a `coarse_fallback(ctx, years)` runs it once a step, on the step's
+first day (its randomness under that canonical tick, plus ordinals); a step stops short at the year a
+focus window opens and at the age's end. A system without one keeps its own cadence (#157).
 
 **People.** Masses live as aggregates (numeric columns). `ctx.promote` pulls a named individual
 out of an aggregate when someone becomes interesting, with a causal id, and `ctx.demote` fades

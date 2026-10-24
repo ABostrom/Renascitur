@@ -46,8 +46,9 @@ class Engine:
                  resolution: ResolutionPolicy | None = None):
         check_environment()
         self.resolution = resolution or ResolutionPolicy()
-        if self.resolution.ever_coarse():
-            raise NotImplementedError("coarse time steps arrive with the First Age (M5); S1 runs fine")
+        step = self.resolution.default.step
+        if self.resolution.ever_coarse() and (step.days or step.years < 1):
+            raise ValueError(f"a coarse step is whole years (S8 §7), got {step}")
         if not rulesets:
             raise ValueError("an engine needs at least one ruleset")
         dates = [d for d, _ in rulesets]
@@ -401,13 +402,40 @@ class Engine:
             return
         ctx = Ctx(self, system, activation)
         if activation.purpose == "cadence":
-            system.run(ctx)
-            due = next_due(self.calendar, activation.date, system.cadence)
+            years, due = self._coarse_step(activation.date, system)
+            if years:
+                system.coarse_fallback(ctx, years)
+            else:
+                system.run(ctx)
+                due = next_due(self.calendar, activation.date, system.cadence)
             if due is not None:
                 self.scheduler.push(Activation(due, system.priority, system.name, "cadence", system.name, {}, ()))
         else:
             system.handle(ctx, activation)
         self.finish(ctx)
+
+    def _coarse_step(self, date: Date, system) -> tuple[int, Date | None]:
+        """A coarse step for `system` at `date` (#157): how many years, and when it runs next. (0, None)
+        means run fine: the date is fine, the system has no `coarse_fallback` (it keeps its own cadence, so
+        people still age and die), the date is mid-year (a sub-yearly system runs fine to the year's start),
+        or a focus window or a ruleset change comes within the year. A step runs to the start of a later
+        year: cut short where the next focus window's or ruleset's year starts, and at the end of the age.
+        (Pins, ripples and odds hooks dated inside a step act on a fallback only at the step's start: open a
+        focus window around them to see them year by year. `coarse_ok` has no effect yet.)"""
+        res = self.resolution.at(date)
+        if res.kind != "coarse" or system.coarse_fallback is None or date.day:
+            return 0, None
+        end = date.year + res.step.years
+        ahead = [start for start, _ in self.resolution.focus if start > date and start.age == date.age]
+        ahead += [start for start, _ in self.rulesets if start > date and start.age == date.age]
+        if ahead:
+            end = min(end, min(ahead).year)
+        if end <= date.year:
+            return 0, None
+        last = self.calendar._by_index[date.age].last_year
+        if last is not None and end > last:
+            return last - date.year + 1, None
+        return end - date.year, Date(date.age, end, 0)
 
     # ------------------------------------------------------------ checkpoints
 
