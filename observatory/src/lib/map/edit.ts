@@ -15,6 +15,7 @@ export interface MapState {
 	geography: Geography & { changes?: unknown[] };
 	grid: Grid;
 	layout: Layout;
+	draft?: { items: DraftItem[] }; // (#83: what's left of the draft layer; saved with the rest)
 }
 
 const copy = <T>(x: T): T => JSON.parse(JSON.stringify(x));
@@ -230,4 +231,39 @@ export function setRegion(s: MapState, id: string, key: 'name' | 'within', value
 	if (value === null || value === '') delete (r as unknown as Record<string, unknown>)[key];
 	else (r as unknown as Record<string, unknown>)[key] = value;
 	return out;
+}
+
+// ------------------------------------------------------------ the draft layer (#83)
+
+/** One drafted thing, to accept or reject: a region over cells, terrain on cells, a place on a cell, or
+ * a road through cells. Each says `why` (the vault note, or the marker, that suggested it). */
+export type DraftItem = { id: string; why: string } & (
+	| { kind: 'region'; region: { id: string; name: string; within?: string }; cells: string[] }
+	| { kind: 'terrain'; terrain: string; cells: string[] }
+	| { kind: 'place'; place: { id: string; name: string; kind: string }; cell: string }
+	| { kind: 'road'; route: { ends: [string, string]; kind: string }; cells: string[] }
+);
+
+/** Accept a draft item: it becomes ordinary edits (a region added if new, then painted; a place added; a
+ * road drawn through its cells), so the checks and the bake treat it like anything drawn by hand. */
+export function acceptDraft(s: MapState, item: DraftItem): MapState {
+	if (item.kind === 'region') {
+		const known = s.geography.regions.some((r) => r.id === item.region.id);
+		return paint(known ? s : addRegion(s, item.region), item.cells, 'region', item.region.id);
+	}
+	if (item.kind === 'terrain') return paint(s, item.cells, 'terrain', item.terrain);
+	if (item.kind === 'place') return addPlace(s, { id: item.place.id, name: item.place.name, kind: item.place.kind }, item.cell);
+	const [a, b] = item.route.ends;
+	if (s.geography.routes.some((r) => r.kind === item.route.kind && r.ends.includes(a) && r.ends.includes(b)))
+		throw new Error(`${a} and ${b} already have a ${item.route.kind}: redraw it by hand if the draft's is better`);
+	// (its cells are waypoints; the ends' own cells, if the draft lists them, aren't repeated)
+	let via = item.cells;
+	if (via[0] === s.layout.places[a]?.cell) via = via.slice(1);
+	if (via.at(-1) === s.layout.places[b]?.cell) via = via.slice(0, -1);
+	return addRoute(s, a, b, via, item.route.kind);
+}
+
+/** Take an item off the draft layer (accepted or rejected). */
+export function dropDraft(s: MapState, id: string): MapState {
+	return { ...s, draft: { items: (s.draft?.items ?? []).filter((i) => i.id !== id) } };
 }

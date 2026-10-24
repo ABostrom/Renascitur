@@ -140,3 +140,62 @@ describe('painting, after review', () => {
 		expect(S.grid.cells['c:2,2']).toBeUndefined();
 	});
 });
+
+import { acceptDraft, type DraftItem } from './edit';
+
+describe('the draft layer', () => {
+	const items: DraftItem[] = [
+		{ id: 'd1', kind: 'region', why: 'the vault', region: { id: 'g:south', name: 'South' }, cells: ['c:2,6', 'c:3,6'] },
+		{ id: 'd2', kind: 'terrain', why: 'the mask', terrain: 'hills', cells: ['c:7,2'] },
+		{ id: 'd3', kind: 'place', why: 'marker m2', place: { id: 'g:camp', name: 'Camp', kind: 'waypoint' }, cell: 'c:8,6' },
+		{ id: 'd4', kind: 'road', why: 'a road in the notes', route: { ends: ['t:a', 'g:camp'], kind: 'track' }, cells: ['c:1,1', 'c:8,6'] }
+	];
+
+	it('accepts each kind through the ordinary edits', () => {
+		let s = acceptDraft(S, items[0]);
+		expect(s.geography.regions.at(-1)?.id).toBe('g:south');
+		expect(s.grid.cells['c:2,6'].region).toBe('g:south');
+		s = acceptDraft(s, items[1]);
+		expect(s.grid.cells['c:7,2'].terrain).toBe('hills');
+		s = acceptDraft(s, items[2]);
+		expect(s.layout.places['g:camp'].cell).toBe('c:8,6');
+		s = acceptDraft(s, items[3]);
+		const r = s.geography.routes.find((x) => x.ends.includes('g:camp'))!;
+		expect(r.kind).toBe('track');
+		expect(s.layout.routes[r.id].cells[0]).toBe('c:1,1');
+		expect(s.layout.routes[r.id].cells.at(-1)).toBe('c:8,6');
+	});
+
+	it("paints a drafted region's cells even when the region already exists", () => {
+		const s = acceptDraft(S, { id: 'd9', kind: 'region', why: '', region: { id: 'g:north', name: 'North' }, cells: ['c:0,7'] });
+		expect(s.geography.regions.filter((r) => r.id === 'g:north')).toHaveLength(1);
+		expect(s.grid.cells['c:0,7'].region).toBe('g:north');
+	});
+
+	it("refuses a road whose ends aren't on the map yet", () => {
+		expect(() => acceptDraft(S, items[3])).toThrow(/placed/);
+	});
+});
+
+describe('the draft layer, after review', () => {
+	const placed = acceptDraft(S, { id: 'p', kind: 'place', why: '', place: { id: 'g:camp', name: 'Camp', kind: 'waypoint' }, cell: 'c:8,6' });
+
+	it("won't overwrite a road that's already there", () => {
+		expect(() => acceptDraft(S, { id: 'r', kind: 'road', why: '', route: { ends: ['t:a', 't:b'], kind: 'road' }, cells: ['c:1,1', 'c:4,1'] })).toThrow(/already/);
+	});
+
+	it('keeps drafted waypoints that are not the ends', () => {
+		const s = acceptDraft(placed, { id: 'r', kind: 'road', why: '', route: { ends: ['t:a', 'g:camp'], kind: 'track' }, cells: ['c:3,4', 'c:5,5'] });
+		const r = s.geography.routes.at(-1)!;
+		const p = s.layout.routes[r.id].cells;
+		expect(p[0]).toBe('c:1,1');
+		expect(p).toContain('c:3,4');
+		expect(p).toContain('c:5,5');
+		expect(p.at(-1)).toBe('c:8,6');
+	});
+
+	it("takes only a drafted place's id, name and kind into the geography", () => {
+		const s = acceptDraft(S, { id: 'p', kind: 'place', why: '', place: { id: 'g:camp', name: 'Camp', kind: 'waypoint', note: 'private!' } as never, cell: 'c:8,6' });
+		expect(s.geography.places.at(-1)).toEqual({ id: 'g:camp', name: 'Camp', kind: 'waypoint', region: 'g:north' });
+	});
+});
