@@ -30,7 +30,7 @@ from renasci.core.events import Cause, EventType
 from renasci.core.systems import System
 
 WEIGHTS = {"killed": -0.15, "exposed": -0.1, "marriage": 0.12, "incident": -0.1, "betrayal": -0.5, "treaty": 0.1,
-           "pact": 0.015}  # (pact: a trade treaty that holds, each year; with trade it settles under friendly)
+           "pact": 0.015, "war": -0.12}  # (pact: a trade treaty that holds, each year; with trade it settles under friendly)
 STANCES = ((0.6, "allied"), (0.25, "friendly"), (-0.25, "neutral"), (-0.55, "cold"))  # else hostile
 FADE = 0.9  # (trust a year on, before what happened that year)
 TRADE = 0.012  # per open border route, up to TRADE_CAP a year: trade alone settles at neutral (10 x the cap, under
@@ -205,7 +205,7 @@ class Diplomacy(System):
 
     reads = frozenset({"ids:relation", "ids:route", "a", "b", "kind", "stance", "trust", "ledger", "ends", "control",
                        "open"}) | _t.READS
-    writes = frozenset({"stance", "trust", "ledger"}) | _t.WRITES
+    writes = frozenset({"stance", "trust", "ledger", "news"}) | _t.WRITES
     event_types = EVENT_TYPES + _t.EVENT_TYPES
     del _t
 
@@ -251,9 +251,10 @@ class Diplomacy(System):
         if not ledger and abs(new - trust) < SETTLED:
             return  # (a quiet year that hardly moves it: settled, no event)
         why = tuple(sorted({Cause("event", e["event"]) for e in ledger if e.get("event")}, key=lambda c: c.ref))
-        ctx.emit("polity.drift", {"party": (a, b)}, purpose="drift", actor=rid,
-                 payload={"relation": rid, "trust": new, "moved": round(moved, 6)}, causes=why)
+        drifted = ctx.emit("polity.drift", {"party": (a, b)}, purpose="drift", actor=rid,
+                           payload={"relation": rid, "trust": new, "moved": round(moved, 6)}, causes=why)
         ctx.set(rid, "trust", new)
+        ctx.set(rid, "news", drifted.id)  # (the relation's latest: what a war, say, is declared over)
         if ledger:
             ctx.set(rid, "ledger", [])
         to = stance if stance == "war" else stance_of(new, stance)

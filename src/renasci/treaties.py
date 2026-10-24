@@ -51,6 +51,9 @@ WRITES = frozenset({"treaties", "new:treaty", "ended", "broken_by"})
 
 
 def ruler(ctx, polity: str) -> str | None:
+    """Who rules `polity` now (None: no one in office, or the polity has fallen)."""
+    if ctx.get(polity, "ended") is not None:
+        return None
     office = ctx.get(polity, "ruler")
     holder = ctx.get(office, "holder") if office else None
     return holder if holder and ctx.status(holder) == "active" else None
