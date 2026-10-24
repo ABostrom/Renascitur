@@ -369,6 +369,31 @@ def _adjusted(r: dict, args, cal) -> dict:
     return out
 
 
+def cmd_pack(args) -> int:
+    """A context pack (S12 §2, #115): one subject from one point of view, written to analysis/packs/ once
+    it passes the pack schema."""
+    from renasci.core.canon import canonical
+    from renasci.story.pack import Run, build
+    from renasci.story.schema import PACK, validate
+
+    kinds = [(k, getattr(args, k)) for k in ("arc", "saga", "person", "event", "topic") if getattr(args, k)]
+    if len(kinds) != 1:
+        raise ValueError("name one subject: --arc, --saga, --person, --event or --topic")
+    run = Run(args.run)
+    pack = build(run, kinds[0], args.pov)
+    findings = validate(pack, PACK)
+    if findings:
+        raise ValueError(f"the pack doesn't fit its schema: {findings[:3]}")
+    safe = lambda s: "".join(c if c.isalnum() or c in "-." else "_" for c in s)  # noqa: E731
+    out = run.folder / "analysis" / "packs" / f"{kinds[0][0]}-{safe(kinds[0][1])}--{safe(args.pov)}.json"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(canonical(pack) + "\n", encoding="utf-8", newline="\n")
+    getattr(sys.stdout, "reconfigure", lambda **_: None)(errors="replace")  # (not under a captured stdout)
+    print(f"pack: {pack['subject']['title']} from {pack['pov']['name']}: {len(pack['events'])} events, "
+          f"{len(pack['people'])} people, {len(pack['beliefs'])} beliefs -> {out}")
+    return 0
+
+
 def cmd_claims(args) -> int:
     """What the run's world believes, judged against what happened: analysis/claims.json (#106)."""
     from renasci.analysis.claims import claims_report
@@ -875,6 +900,11 @@ def main(argv=None) -> int:
     p.add_argument("--params", help="the kind's params as JSON, e.g. {\"until\": [4, 20, 359]}")
     p.add_argument("--name", help="the branch's run name (default: <run>-<kind><n>)")
     p.add_argument("--out", default="runs")
+    p = sub.add_parser("pack", help="a context pack: one subject from one point of view (analysis/packs/)")
+    p.add_argument("run")
+    for k in ("arc", "saga", "person", "event", "topic"):
+        p.add_argument(f"--{k}", help=f"the subject: a {k} id")
+    p.add_argument("--pov", default="omniscient", help="omniscient, or a person, house or settlement id")
     p = sub.add_parser("claims", help="what a run's world believes, judged against what happened "
                                        "(writes analysis/claims.json)")
     p.add_argument("run")
@@ -903,7 +933,7 @@ def main(argv=None) -> int:
     p.add_argument("--out", default="runs/_bench")
     args = parser.parse_args(argv)
     try:
-        commands = {"run": cmd_run, "replay": cmd_replay, "diff": cmd_diff, "inspect": cmd_inspect, "bench": cmd_bench, "latch": cmd_latch, "stories": cmd_stories, "claims": cmd_claims, "ripple": cmd_ripple, "map": cmd_map, "vault": cmd_vault,
+        commands = {"run": cmd_run, "replay": cmd_replay, "diff": cmd_diff, "inspect": cmd_inspect, "bench": cmd_bench, "latch": cmd_latch, "stories": cmd_stories, "claims": cmd_claims, "pack": cmd_pack, "ripple": cmd_ripple, "map": cmd_map, "vault": cmd_vault,
                     "observe": cmd_observe}
         return commands[args.command](args)
     except (ValueError, FileExistsError, FileNotFoundError) as err:

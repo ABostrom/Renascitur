@@ -1,0 +1,371 @@
+{
+ "about": "Belief traces (#107): shared by renasci.story.trace (pytest) and observatory provenance.ts (Vitest), so the two can't drift.",
+ "log": [
+  {
+   "id": "x:ripple",
+   "type": "ripple.inject",
+   "date": [
+    1,
+    2,
+    0
+   ],
+   "roles": {},
+   "payload": {},
+   "causes": []
+  },
+  {
+   "id": "x:journey",
+   "type": "people.journey",
+   "date": [
+    1,
+    2,
+    0
+   ],
+   "roles": {},
+   "payload": {},
+   "causes": []
+  },
+  {
+   "id": "x:death",
+   "type": "people.death",
+   "date": [
+    1,
+    2,
+    0
+   ],
+   "roles": {
+    "deceased": [
+     "p:v"
+    ]
+   },
+   "payload": {},
+   "causes": [
+    [
+     "event",
+     "x:poison"
+    ]
+   ]
+  },
+  {
+   "id": "x:poison",
+   "type": "people.action",
+   "date": [
+    1,
+    2,
+    0
+   ],
+   "roles": {},
+   "payload": {
+    "action": "Poison"
+   },
+   "causes": []
+  },
+  {
+   "id": "x:saw",
+   "type": "belief.perceived",
+   "date": [
+    1,
+    2,
+    0
+   ],
+   "roles": {
+    "holder": [
+     "p:a"
+    ]
+   },
+   "payload": {
+    "key": "c:1"
+   },
+   "causes": [
+    [
+     "event",
+     "x:death"
+    ],
+    [
+     "event",
+     "x:ripple"
+    ]
+   ]
+  },
+  {
+   "id": "x:told1",
+   "type": "belief.told",
+   "date": [
+    1,
+    2,
+    0
+   ],
+   "roles": {
+    "holder": [
+     "p:b"
+    ],
+    "teller": [
+     "p:a"
+    ]
+   },
+   "payload": {
+    "key": "c:1",
+    "intent": "honest"
+   },
+   "causes": [
+    [
+     "event",
+     "x:journey"
+    ],
+    [
+     "event",
+     "x:saw"
+    ]
+   ]
+  },
+  {
+   "id": "x:told2",
+   "type": "belief.told",
+   "date": [
+    1,
+    2,
+    0
+   ],
+   "roles": {
+    "holder": [
+     "p:me"
+    ],
+    "teller": [
+     "p:b"
+    ]
+   },
+   "payload": {
+    "key": "c:1",
+    "intent": "honest"
+   },
+   "causes": [
+    [
+     "event",
+     "x:told1"
+    ]
+   ]
+  },
+  {
+   "id": "x:slander",
+   "type": "people.action",
+   "date": [
+    1,
+    2,
+    0
+   ],
+   "roles": {},
+   "payload": {
+    "action": "Slander"
+   },
+   "causes": []
+  },
+  {
+   "id": "x:lie",
+   "type": "belief.told",
+   "date": [
+    1,
+    2,
+    0
+   ],
+   "roles": {
+    "holder": [
+     "p:me"
+    ],
+    "teller": [
+     "p:s"
+    ]
+   },
+   "payload": {
+    "key": "c:2",
+    "intent": "lie"
+   },
+   "causes": [
+    [
+     "event",
+     "x:ripple"
+    ],
+    [
+     "event",
+     "x:slander"
+    ]
+   ]
+  },
+  {
+   "id": "x:exposed",
+   "type": "people.action",
+   "date": [
+    1,
+    2,
+    0
+   ],
+   "roles": {},
+   "payload": {
+    "action": "BearWitness"
+   },
+   "causes": []
+  },
+  {
+   "id": "x:fixed",
+   "type": "belief.corrected",
+   "date": [
+    1,
+    2,
+    0
+   ],
+   "roles": {
+    "holder": [
+     "p:me"
+    ]
+   },
+   "payload": {
+    "key": "c:1"
+   },
+   "causes": [
+    [
+     "event",
+     "x:exposed"
+    ]
+   ]
+  },
+  {
+   "id": "x:news",
+   "type": "belief.news",
+   "date": [
+    1,
+    2,
+    0
+   ],
+   "roles": {
+    "settlement": [
+     "t:far"
+    ]
+   },
+   "payload": {
+    "key": "c:1"
+   },
+   "causes": []
+  },
+  {
+   "id": "x:arrived",
+   "type": "belief.news_arrived",
+   "date": [
+    1,
+    2,
+    0
+   ],
+   "roles": {
+    "settlement": [
+     "t:here"
+    ]
+   },
+   "payload": {
+    "key": "c:1"
+   },
+   "causes": [
+    [
+     "event",
+     "x:news"
+    ]
+   ]
+  },
+  {
+   "id": "x:heard",
+   "type": "belief.heard",
+   "date": [
+    1,
+    2,
+    0
+   ],
+   "roles": {
+    "holder": [
+     "p:me"
+    ]
+   },
+   "payload": {
+    "key": "c:1"
+   },
+   "causes": [
+    [
+     "event",
+     "x:arrived"
+    ],
+    [
+     "event",
+     "x:news"
+    ]
+   ]
+  }
+ ],
+ "cases": [
+  {
+   "why": "a told chain walks back through each telling to what was seen",
+   "from": "x:told2",
+   "ids": [
+    "x:told2",
+    "x:told1",
+    "x:saw",
+    "x:death"
+   ],
+   "origin": [
+    false,
+    false,
+    false,
+    true
+   ],
+   "lie": [
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  {
+   "why": "a lie stops at the scheme's step that told it",
+   "from": "x:lie",
+   "ids": [
+    "x:lie",
+    "x:slander"
+   ],
+   "origin": [
+    false,
+    true
+   ],
+   "lie": [
+    true,
+    false
+   ]
+  },
+  {
+   "why": "a correction ends at what exposed the truth",
+   "from": "x:fixed",
+   "ids": [
+    "x:fixed",
+    "x:exposed"
+   ],
+   "origin": [
+    false,
+    true
+   ],
+   "lie": [
+    false,
+    false
+   ]
+  },
+  {
+   "why": "news heard from the road ends at its arrival",
+   "from": "x:heard",
+   "ids": [
+    "x:heard",
+    "x:arrived"
+   ],
+   "origin": [
+    false,
+    true
+   ],
+   "lie": [
+    false,
+    false
+   ]
+  }
+ ]
+}

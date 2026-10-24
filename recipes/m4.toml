@@ -1,0 +1,19 @@
+# The M4 run (S12 story layer spec §1a): the Fourth Age with beliefs, and the ward failure at Lux Oescus.
+# The story layer (context packs, chronicles, briefs, canon checks) is built and tested on it.
+[run]
+name = "m4"
+engine = "0.1.0"
+seed = 1
+world = "fourth_age"
+end = "4A 25"
+checkpoint_every_years = 5
+
+[world]
+beliefs = true
+
+[[ripple]]
+id = "ward"
+kind = "inject"
+date = "4A 2"
+target = "v:lux-oescus"
+params = { script = "ward_failure" }
