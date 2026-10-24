@@ -13,6 +13,7 @@ export interface Place {
 	name?: string;
 	kind: string;
 	region: string;
+	control?: string | null; // the polity that holds it (S8), when the world has polities
 	at?: [number, number];
 }
 
@@ -173,7 +174,10 @@ function onMap(geo: Geography, deltas: MapDelta[]): MapDelta[] {
 	// The file's own values, cast at the start (old null, new as in the file): not a change.
 	const fileValue = new Map<string, unknown>();
 	for (const r of geo.routes) for (const [f, v] of Object.entries({ open: true, vialux: false, ...r })) fileValue.set(`${r.id}|${f}`, v);
-	for (const p of geo.places) fileValue.set(`${p.id}|region`, p.region);
+	for (const p of geo.places) {
+		fileValue.set(`${p.id}|region`, p.region);
+		fileValue.set(`${p.id}|control`, p.control ?? null);
+	}
 	for (const r of geo.regions) fileValue.set(`${r.id}|within`, r.within ?? null);
 	const cast = (d: MapDelta) =>
 		(d.old ?? null) === null &&
@@ -183,7 +187,7 @@ function onMap(geo: Geography, deltas: MapDelta[]): MapDelta[] {
 		(d) =>
 			!cast(d) &&
 			((routes.has(d.entity) && (ROUTE_FIELDS.has(d.field) || d.field === 'status')) ||
-			(places.has(d.entity) && d.field === 'region') ||
+			(places.has(d.entity) && (d.field === 'region' || d.field === 'control')) ||
 			(regions.has(d.entity) && d.field === 'within'))
 	);
 }
@@ -192,7 +196,7 @@ function onMap(geo: Geography, deltas: MapDelta[]): MapDelta[] {
 export async function loadMapDeltas(run: Run, geo: Geography): Promise<MapDelta[]> {
 	const rows: MapDelta[] = [];
 	for await (const d of readTable(run, 'state_deltas')) {
-		if (d.field === 'region' || d.field === 'within' || d.field === 'status' || ROUTE_FIELDS.has(d.field))
+		if (d.field === 'region' || d.field === 'control' || d.field === 'within' || d.field === 'status' || ROUTE_FIELDS.has(d.field))
 			rows.push({ date: d.date, entity: d.entity, field: d.field, old: d.old, new: d.new, event: d.event });
 	}
 	return onMap(geo, rows);
@@ -211,6 +215,7 @@ export function geographyAt(geo: Geography, deltas: MapDelta[], at: number, key:
 		if (key(d.date) > at) continue;
 		if (routes.has(d.entity) && ROUTE_FIELDS.has(d.field)) routes.get(d.entity)![d.field] = d.new;
 		else if (places.has(d.entity) && d.field === 'region') places.get(d.entity)!.region = d.new as string;
+		else if (places.has(d.entity) && d.field === 'control') places.get(d.entity)!.control = (d.new as string | null) ?? null;
 		else if (regions.has(d.entity) && d.field === 'within') regions.get(d.entity)!.within = d.new as string | null;
 		else if (ids.has(d.entity) && ROUTE_FIELDS.has(d.field)) {
 			const r = built.get(d.entity) ?? { id: d.entity };
@@ -226,7 +231,7 @@ export function geographyAt(geo: Geography, deltas: MapDelta[], at: number, key:
 export interface MapChange {
 	date: [number, number, number];
 	event: string;
-	what: 'built' | 'closed' | 'opened' | 'days' | 'moved' | 'changed';
+	what: 'built' | 'closed' | 'opened' | 'days' | 'moved' | 'taken' | 'changed';
 	site: string; // the route or place
 	detail: string;
 }
@@ -253,8 +258,10 @@ export function mapChanges(geo: Geography, deltas: MapDelta[]): MapChange[] {
 		else if (f.get('open') === true) what = 'opened';
 		else if (f.has('days')) what = 'days';
 		else if (f.has('region')) what = 'moved';
+		else if (f.has('control')) what = 'taken';
 		if (f.has('days') && what !== 'built') detail = `${f.get('days')} days`;
-		if (what === 'moved') detail = `into ${f.get('region')}`;
+		if (what === 'moved') detail = `into ${f.get('region')}${f.has('control') ? `, held by ${f.get('control') ?? 'nobody'}` : ''}`;
+		if (what === 'taken') detail = `held by ${f.get('control') ?? 'nobody'}`;
 		out.push({ date: first.date, event, what, site: first.entity, detail });
 	}
 	return out;
