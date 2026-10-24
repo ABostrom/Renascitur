@@ -31,7 +31,7 @@ from renasci import geo, treaties
 from renasci.core.events import Cause, EventType
 from renasci.core.systems import System
 from renasci.people import houses, life
-from renasci.relations import WEIGHTS, fields, rel_id
+from renasci.relations import WEIGHTS, fields, over, rel_id
 
 DECLARE = 0.12  # (a year, times how bitter: trust -1 is a 12% chance a ruler proposes war)
 TRUCE_SHAME = 0.25  # (a truce makes declaring that much rarer)
@@ -112,25 +112,38 @@ class War(System):
         houses.handle_succession(ctx, activation)
 
     def run(self, ctx):
+        self.step(ctx, 1)
+
+    def coarse_fallback(self, ctx, years: int) -> None:
+        """A coarse step of `years` (S8 §7: "war as one draw per year"): a declaration's odds for that many years
+        at once; each live war then fights a draw for each of those years (the front, exhaustion and peace as
+        a fine war's), all on the step's date."""
+        self.step(ctx, years)
+
+    def step(self, ctx, years: int) -> None:
+        if type(years) is not int or years < 1:
+            raise ValueError(f"a step is a whole number of years, at least one; got {years!r}")
         for rid in ctx.ids("relation"):
             with ctx.scope(rid):
                 if ctx.get(rid, "kind") == "polity" and ctx.get(rid, "stance") == "hostile":
-                    self.declare(ctx, rid)
+                    self.declare(ctx, rid, years)
         for war in ctx.ids("war"):
             with ctx.scope(war):
-                if ctx.get(war, "ended") is None:
+                for _ in range(years):
+                    if ctx.get(war, "ended") is not None:
+                        break
                     self.fight(ctx, war)
 
     # ------------------------------------------------------------ going to war
 
-    def declare(self, ctx, rid: str) -> None:
+    def declare(self, ctx, rid: str, years: int = 1) -> None:
         a, b, trust = ctx.get(rid, "a"), ctx.get(rid, "b"), float(ctx.get(rid, "trust") or 0.0)
         if ctx.get(a, "ended") is not None or ctx.get(b, "ended") is not None:
             return
         truces = [t for t in ctx.get(rid, "treaties") or [] if ctx.get(t, "kind") == "truce"]
         p = DECLARE * max(0.0, -trust) * (TRUCE_SHAME if truces else 1.0)
         for side in sorted((a, b)):
-            if p <= 0 or not ctx.chance(min(1.0, p), f"propose:war:{side}", owner=rid):
+            if p <= 0 or not ctx.chance(over(min(1.0, p), years), f"propose:war:{side}", owner=rid):
                 continue
             ok, why = treaties.decide(ctx, side, "war", 0.8, rid)
             if not ok:

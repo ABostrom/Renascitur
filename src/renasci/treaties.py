@@ -116,8 +116,11 @@ def _end(ctx, rid: str, treaty: str) -> None:
     ctx.set(rid, "treaties", [t for t in ctx.get(rid, "treaties") or [] if t != treaty])
 
 
-def year(ctx, rid: str, a: str, b: str, stance: str, trust: float) -> list[dict]:
-    """A polity relation's treaty year: expiries, betrayals, proposals. Returns ledger entries to add."""
+def year(ctx, rid: str, a: str, b: str, stance: str, trust: float, years: int = 1) -> list[dict]:
+    """A polity relation's treaty year (or a coarse step of `years`: each draw for that many years at once):
+    expiries, betrayals, proposals. Returns ledger entries to add (a pact's is a recurring pull)."""
+    from renasci.relations import over
+
     entries = []
     for t in list(ctx.get(rid, "treaties") or []):
         exp, kind = ctx.get(t, "expires"), ctx.get(t, "kind")
@@ -130,7 +133,7 @@ def year(ctx, rid: str, a: str, b: str, stance: str, trust: float) -> list[dict]
         if soured:  # (either side may break it, its ruler deciding)
             for side in sorted((a, b)):
                 who = ruler(ctx, side)
-                if who and ctx.chance(min(1.0, BREAK * -trust), f"break:{t}", owner=who):
+                if who and ctx.chance(over(min(1.0, BREAK * -trust), years), f"break:{t}", owner=who):
                     ev = ctx.emit("polity.treaty_broken", {"by": (side,), "party": (a, b)}, purpose=f"broken:{t}",
                                   actor=rid, payload={"treaty": t, "kind": kind})
                     ctx.set(t, "broken_by", side)
@@ -138,10 +141,11 @@ def year(ctx, rid: str, a: str, b: str, stance: str, trust: float) -> list[dict]
                     entries.append({"kind": "betrayal", "event": ev.id})
                     break
         elif kind == "trade":  # (a pact that holds: a little more trust each year, its signing the cause)
-            entries.append({"kind": "pact", "event": ctx.get(t, "event")})
+            entries.append({"kind": "pact", "event": ctx.get(t, "event"), "recurring": True})
     kinds_held = {ctx.get(t, "kind") for t in ctx.get(rid, "treaties") or []}
     for kind, stances in PROPOSE.items():
-        if stance not in stances or kind in kinds_held or not ctx.chance(ODDS[kind], f"propose:{kind}", owner=rid):
+        if stance not in stances or kind in kinds_held or not ctx.chance(over(ODDS[kind], years), f"propose:{kind}",
+                                                                          owner=rid):
             continue
         first = ctx.choose(f"proposer:{kind}", [a, b], owner=rid)
         other = b if first == a else a

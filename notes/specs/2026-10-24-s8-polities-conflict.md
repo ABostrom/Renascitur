@@ -355,9 +355,10 @@ existence, event and ordering pins. That support is a separate ticket, not in S8
    the throne with its pins, advice and votes, cadet branches. **Done (#120)**, except cadet branches and
    the vault's title-office reigns (#161).
 3. **The pinned-office guard** (§3.4), in the director. **Done (#120).**
-4. **Diplomacy:** sparse relations, the ledger and its writers, drift, incidents, treaties, betrayal.
-5. **Coarse war:** declaration, the war entity, the yearly draw, peace.
-6. **The coarse fallbacks.** Then, as the S1 prerequisite, coarse execution in the engine.
+4. **Diplomacy:** sparse relations, the ledger and its writers, drift, incidents, treaties, betrayal. **Done (#121).**
+5. **Coarse war:** declaration, the war entity, the yearly draw, peace. **Done (#122 Part A).**
+6. **The coarse fallbacks** (`coarse_fallback(ctx, years)`: a coarse step of N years for N fine ones; the derived
+   stats, `polity.stats`). **Done (#156).** Then, as the S1 prerequisite, coarse execution in the engine (#157).
 
 **Part B (M6):**
 
