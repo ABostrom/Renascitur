@@ -81,7 +81,7 @@ def _cast(recipe, world) -> dict:
     input and log. Kept in the run folder as canon.json, so a replay uses exactly this."""
     from renasci.people.casting import canon_from, castable
     from renasci.people.races import Race
-    from renasci.people.vault import people_hook
+    from renasci.people.vault import people_hook_for
     from renasci.vault.feasibility import check, feasible
     from renasci.vault.loader import load
     from renasci.vault.pins import extract
@@ -90,8 +90,9 @@ def _cast(recipe, world) -> dict:
     scenario = world.scenario(**recipe.params)
     start, end = world.start(**recipe.params), recipe.end
     races = {r["id"]: Race.from_json(r) for r in scenario["races"]}
-    found = extract(vault, world.calendar, start, end, hooks=[people_hook])
-    report = check(found, vault, start, end, hooks=[people_hook], races=races, calendar=world.calendar)
+    hook = people_hook_for(scenario)  # (its title offices: #161)
+    found = extract(vault, world.calendar, start, end, hooks=[hook])
+    report = check(found, vault, start, end, hooks=[hook], races=races, calendar=world.calendar)
     canon, log = canon_from(found, vault, scenario)
     pins, dropped = castable(feasible(found, report), scenario)
     return {"vault": recipe.vault["path"], "digest": vault.digest, "window": [start.to_json(), end.to_json()],
@@ -527,6 +528,20 @@ def _run_window(args):
     return cal, start, end, races
 
 
+def _hook(args):
+    """The people hook for a vault command's --world: the world's scenario's title offices (#161), with the
+    draft polities for the Fourth Age (where the Emperors' throne is)."""
+    from renasci.people.vault import people_hook_for
+
+    if args.world == "fourth_age":
+        from renasci import renascita
+
+        return people_hook_for(renascita._scenario(None, polities=True))
+    import importlib
+
+    return people_hook_for(getattr(importlib.import_module(f"renasci.{args.world}"), "SCENARIO", None) or {})
+
+
 REPO = Path(__file__).resolve().parents[2]  # (the checkout: maps/ lives at its root)
 
 
@@ -678,11 +693,10 @@ def cmd_vault(args) -> int:
         print(f"{len(found)} stale proposal(s); nothing was deleted" if found else "no stale proposals")
         return 0
     if args.vault_command == "pins":
-        from renasci.people.vault import people_hook
         from renasci.vault.pins import extract
 
         cal, start, end, _ = _run_window(args)
-        found = extract(vault, cal, start, end, hooks=[people_hook])
+        found = extract(vault, cal, start, end, hooks=[_hook(args)])
         sys.stdout.buffer.write(json.dumps(found.to_json(), ensure_ascii=False).encode("utf-8") + b"\n")
         sys.stdout.flush()
         return 0
@@ -699,13 +713,13 @@ def cmd_vault(args) -> int:
         return 0
     found = report = None
     if args.world:  # the pins a run over --from..--to would get, and whether they can all hold
-        from renasci.people.vault import people_hook
         from renasci.vault.feasibility import check
         from renasci.vault.pins import extract as extract_pins
 
         cal, start, end, races = _run_window(args)
-        found = extract_pins(vault, cal, start, end, hooks=[people_hook])
-        report = check(found, vault, start, end, hooks=[people_hook], races=races, calendar=cal)
+        hook = _hook(args)
+        found = extract_pins(vault, cal, start, end, hooks=[hook])
+        report = check(found, vault, start, end, hooks=[hook], races=races, calendar=cal)
     if args.json:  # UTF-8 whatever the console's code page (names like Yōkuro no Ki)
         data = vault.to_json()
         if report is not None:

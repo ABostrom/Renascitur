@@ -31,6 +31,16 @@ faction) and a `legitimacy` (lawful, or seized). A rule names its `candidates`, 
   keyed draw; each vote weighs by the voter's standing; ties go to the elder.
 
 An office cast vacant, or left vacant, is filled at `people.houses`'s yearly pass.
+
+**Cadet branches** (S8 spec §3.5, #161; on when the world sets `cadet_size`): at the yearly pass, a house
+of at least `cadet_size` living members (its head and their line) whose head has a grown younger son (not
+the heir, holding no office, plotting no seizure, not canon; a daughter where the house comes through the
+mother) founds a cadet house, at odds of `cadet_rate` for each member over the size less one (at most 0.5).
+The eldest such son heads it (`people.cadet_founded`): "the <his name> branch of <the root house>",
+`cadet_of` the parent, seated where he lives, a rank below, under the same rule. He, his spouse if of the
+parent house, and his descendants in it through him (by `house_from`) move to the cadet house, which joins
+every polity and faction the parent belongs to. (Cadets leave the parent's line; a cadet taking up an
+extinct parent is future. Canon people never move: a vault house is the vault's to change.)
 """
 
 from __future__ import annotations
@@ -38,6 +48,7 @@ from __future__ import annotations
 from renasci.core.calendar import Span
 from renasci.core.events import Cause, EventType
 from renasci.core.systems import System
+from renasci.people.races import age_years
 
 HEIR_NAMED = EventType("people.heir_named", 1, roles={"holder": (1, 1), "heir": (0, 1)}, payload={"office": "id"})
 SUCCESSION = EventType("people.succession", 1, roles={"predecessor": (0, 1), "successor": (1, 1)},
@@ -48,7 +59,10 @@ OFFICE_VACANT = EventType("people.office_vacant", 1, roles={"last": (1, 1)}, pay
                           dead_roles=("last",))
 VOTE = EventType("polity.vote", 1, roles={"voter": (1, 1000), "winner": (1, 1)}, payload={"office": "id", "tally": "json"})
 APPOINTED = EventType("polity.appointed", 1, roles={"by": (1, 1), "appointee": (1, 1)}, payload={"office": "id"})
-EVENT_TYPES = (HEIR_NAMED, SUCCESSION, HOUSE_EXTINCT, OFFICE_VACANT, VOTE, APPOINTED)
+CADET = EventType("people.cadet_founded", 1, roles={"founder": (1, 1), "head": (1, 1)},
+                  payload={"house": "str", "parent": "id"})
+EVENT_TYPES = (HEIR_NAMED, SUCCESSION, HOUSE_EXTINCT, OFFICE_VACANT, VOTE, APPOINTED, CADET)
+CADET_MAX = 0.5
 
 # What succession reads and writes; people.life declares these too, since it runs the follow-up.
 READS = frozenset({"offices", "headship", "holder", "heir", "rule", "house", "children", "father", "mother",
@@ -280,10 +294,71 @@ def succeed(ctx, office: str, predecessor: str | None) -> None:
         name_heir(ctx, office, successor)
 
 
+def cadet(ctx, house: str, office: str, holder: str) -> None:
+    """Perhaps found a cadet branch of `house` (in its scope): see the module's doc."""
+    size = ctx.params.get("cadet_size")
+    if not size:
+        return
+    rule = RULES[ctx.get(office, "rule")]
+    line = rule.candidates(ctx, office, holder)
+    if len(line) + 1 < size:
+        return
+    from renasci.people.life import world
+
+    races, _, _ = world(ctx)
+    heir = ctx.get(office, "heir")
+    via = "mother" if ctx.params.get("house_from") == "mother" else "father"
+    line_sex = "f" if via == "mother" else "m"  # (who passes the house on to their children)
+
+    def plotting(p) -> bool:
+        return any(ctx.get(a, "class") == "Seize" for a in ctx.get(p, "ambitions") or [])
+
+    sons = [c for c in ctx.get(holder, "children") or []
+            if c != heir and ctx.status(c) == "active" and ctx.get(c, "house") == house and not ctx.get(c, "offices")
+            and ctx.get(c, "sex") == line_sex and not c.startswith("v:") and not plotting(c)
+            and age_years(ctx.calendar, ctx.get(c, "born"), ctx.today) >= races[ctx.get(c, "race")].marriage[0]]
+    p = min(CADET_MAX, float(ctx.params.get("cadet_rate", 0.05)) * (len(line) + 2 - size))
+    if not sons or not ctx.chance(p, "cadet", owner=house):
+        return
+    founder = sons[0]  # (the eldest: children are in birth order)
+    new = f"{house}~{founder.replace(':', '.')}"
+    seat = ctx.get(founder, "place") or ctx.get(house, "seat")
+    root = house
+    while ctx.get(root, "cadet_of"):
+        root = ctx.get(root, "cadet_of")
+    name = f"the {ctx.get(founder, 'name') or founder} branch of {ctx.get(root, 'name')}"
+    ctx.emit("people.cadet_founded", {"founder": (founder,), "head": (holder,)}, purpose="cadet", actor=house,
+             place=seat, payload={"house": new, "parent": house})
+    ctx.create("house", new, {"name": name, "seat": seat, "rank": max(0, int(ctx.get(house, "rank") or 0) - 1),
+                              "founded": ctx.today.to_json(), "headship": f"{new}-head", "extinct": None,
+                              "cadet_of": house})
+    ctx.create("office", f"{new}-head", {"name": f"Head of {name}", "holder": founder, "heir": None,
+                                         "rule": rule.name, "house": new})
+    moving, todo = [founder], [founder]
+    spouse = ctx.get(founder, "spouse")
+    if spouse and ctx.get(spouse, "house") == house and not spouse.startswith("v:"):
+        moving.append(spouse)
+    while todo:  # (descendants through the line the house passes by, still of the parent house)
+        parent = todo.pop(0)
+        for c in ctx.get(parent, "children") or []:
+            if ctx.get(c, via) == parent and ctx.get(c, "house") == house and not c.startswith("v:") and c not in moving:
+                moving.append(c)
+                todo.append(c)
+    for who in moving:
+        ctx.set(who, "house", new)
+    ctx.set(founder, "offices", sorted((ctx.get(founder, "offices") or []) + [f"{new}-head"]))
+    for group in ctx.ids("polity") + ctx.ids("faction"):
+        members = ctx.get(group, "members") or []
+        if house in members:
+            ctx.set(group, "members", sorted(members + [new]))
+    name_heir(ctx, f"{new}-head", founder)
+
+
 class Houses(System):
     name, cadence = "people.houses", "yearly"
-    reads = READS | {"ids:house", "ids:office"}
-    writes = WRITES
+    reads = READS | {"ids:house", "ids:office", "ids:polity", "ids:faction", "race", "spouse", "place", "seat", "name",
+                     "cadet_of", "ambitions", "class"}
+    writes = WRITES | {"house", "members", "new:house", "new:office"}
     event_types = EVENT_TYPES
 
     def coarse_fallback(self, ctx, years: int) -> None:
@@ -310,3 +385,4 @@ class Houses(System):
                 holder = ctx.get(office, "holder")
                 if holder is not None and ctx.status(holder) == "active":  # a dead holder's succession is pending
                     name_heir(ctx, office, holder)
+                    cadet(ctx, house, office, holder)

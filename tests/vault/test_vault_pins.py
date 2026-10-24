@@ -187,3 +187,32 @@ def test_reigns_number_per_holder_and_windows_never_overlap_the_next(tmp_path):
 def test_a_mistyped_age_is_a_finding_not_out_of_calendar(tmp_path):
     got = write(tmp_path, {"People/Typo": "born: 4a 20"})
     assert ("date", "People/Typo") in finding_kinds(got)
+
+
+# ---------------------------------------------------------------- title offices (#161)
+
+IMPERIAL = {"houses": [{"id": "v:house-imperial", "title": "v:emperors"}]}
+
+
+def test_a_title_office_named_by_a_scenario_house_pins_its_reigns_on_that_headship():
+    from renasci.people.casting import castable
+    from renasci.people.vault import people_hook, people_hook_for, titles
+
+    assert titles(IMPERIAL) == {"v:emperors": ("v:house-imperial-head", "v:house-imperial")}
+    found = extract(load(FIXTURE), CAL, START, END, hooks=[people_hook_for(IMPERIAL)])
+    r = pin(found, "v:unus:reign:v:house-imperial-head:1")
+    assert r.payload == {"type": "people.succession", "roles": {"successor": ["v:unus"]},
+                         "office": "v:house-imperial-head"}
+    assert r.window[0] == Date(4, 12, 0)
+    assert not any(x["kind"] == "unsupported" and "v:emperors" in x["message"] for x in found.reports)
+    assert any(f["kind"] == "outside_house" and f["key"] == "People/Unus" for f in found.findings)
+    kept, _ = castable(found.pins, {"houses": [{"id": "v:house-imperial"}]})
+    assert r in kept
+    assert people_hook_for(IMPERIAL).check is people_hook.check
+
+
+def test_a_title_belongs_to_one_house():
+    from renasci.people.vault import titles
+
+    with pytest.raises(ValueError):
+        titles({"houses": [{"id": "a", "title": "v:x"}, {"id": "b", "title": "v:x"}]})
