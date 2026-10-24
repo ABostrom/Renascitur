@@ -444,6 +444,23 @@ def cmd_check_prose(args) -> int:
     return 0
 
 
+def cmd_brief(args) -> int:
+    """A campaign brief (S12 §6, #119): a saga or an event laid out for a game, to analysis/briefs/."""
+    from renasci.story.brief import brief
+    from renasci.story.pack import Run
+
+    subject = _subject(args)
+    run = Run(args.run)
+    doc = brief(run, subject)
+    out = run.folder / "analysis" / "briefs" / f"{subject[0]}-{_safe(subject[1])}.md"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(doc["text"], encoding="utf-8", newline="\n")
+    getattr(sys.stdout, "reconfigure", lambda **_: None)(errors="replace")
+    print(f"brief: {doc['pack']['subject']['title']}: {len(doc['pack']['events'])} events, {len(doc['npcs'])} NPCs, "
+          f"{len(doc['latch'])} latch points -> {out}")
+    return 0
+
+
 def cmd_mcp(args) -> int:
     """The MCP server over runs and the vault (S12 §5, #118), on stdio."""
     from renasci.mcp import serve
@@ -974,6 +991,10 @@ def main(argv=None) -> int:
     p.add_argument("run")
     p.add_argument("file", help="the prose (Markdown; `claims` blocks are read exactly)")
     p.add_argument("--pov", default="omniscient", help="whose account it is: omniscient, or a person, house or settlement id")
+    p = sub.add_parser("brief", help="a campaign brief: a saga or an event laid out for a game (analysis/briefs/)")
+    p.add_argument("run")
+    for k in ("arc", "saga", "person", "event", "topic"):
+        p.add_argument(f"--{k}", help=f"the subject: a {k} id")
     p = sub.add_parser("mcp", help="an MCP server over runs and the vault, on stdio (for Claude)")
     p.add_argument("--runs", default="runs")
     p.add_argument("--vault", default=None, help="the vault folder its vault tools read (read-only)")
@@ -1005,7 +1026,7 @@ def main(argv=None) -> int:
     p.add_argument("--out", default="runs/_bench")
     args = parser.parse_args(argv)
     try:
-        commands = {"run": cmd_run, "replay": cmd_replay, "diff": cmd_diff, "inspect": cmd_inspect, "bench": cmd_bench, "latch": cmd_latch, "stories": cmd_stories, "claims": cmd_claims, "pack": cmd_pack, "chronicle": cmd_chronicle, "check-prose": cmd_check_prose, "mcp": cmd_mcp, "ripple": cmd_ripple, "map": cmd_map, "vault": cmd_vault,
+        commands = {"run": cmd_run, "replay": cmd_replay, "diff": cmd_diff, "inspect": cmd_inspect, "bench": cmd_bench, "latch": cmd_latch, "stories": cmd_stories, "claims": cmd_claims, "pack": cmd_pack, "chronicle": cmd_chronicle, "check-prose": cmd_check_prose, "brief": cmd_brief, "mcp": cmd_mcp, "ripple": cmd_ripple, "map": cmd_map, "vault": cmd_vault,
                     "observe": cmd_observe}
         return commands[args.command](args)
     except (ValueError, FileExistsError, FileNotFoundError) as err:
