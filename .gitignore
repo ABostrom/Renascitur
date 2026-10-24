@@ -14,3 +14,8 @@ __pycache__/
 build/
 dist/
 runs/
+
+# the private Inkarnate map and everything traced from it (S5): never committed
+images/Renascitur.png
+maps/*/private/
+*.bak
