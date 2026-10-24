@@ -5,6 +5,7 @@
 	import { defaultBaseline } from '$lib/run/diff';
 	import { listRuns, openRun, type Manifest, type RunListing } from '$lib/run/run';
 	import { PickerSource } from '$lib/run/source';
+	import { branches } from '$lib/run/ripple';
 	import LaunchPanel from '$lib/ui/LaunchPanel.svelte';
 
 	let runs = $state<RunListing[] | null>(null);
@@ -73,10 +74,11 @@
 		<p class="card">No runs yet. Make one with <code>uv run renasci run recipes/toy-baseline.toml</code>.</p>
 	{:else}
 		<ul class="runs">
-			{#each runs as run (run.name)}
+			{#each branches(runs) as b (b.run.name)}
+				{@const run = b.run}
 				{@const m = run.manifest}
 				{@const recipe = m.meta.recipe?.run ?? {}}
-				<li class="card">
+				<li class="card" class:branch={b.depth > 0} style={`margin-left: ${1.5 * b.depth}rem`}>
 					<div class="head">
 						<a class="name" href={`/run/${encodeURIComponent(run.name)}/events`}>{run.name}</a>
 						<a class="diff-link" href={`/run/${enc(run.name)}/stories`}>stories</a>
@@ -99,6 +101,14 @@
 							<a class="diff-link" href={`/diff/${enc(defaultBaseline(m) ?? '')}/${enc(run.name)}`}>diff against {defaultBaseline(m)}</a>
 						{/if}
 					</div>
+					{#if b.parent && b.added.length}
+						<p class="added">
+							<span aria-hidden="true">↳</span> branch of <strong>{b.parent}</strong>:
+							{#each b.added as r, i (r.id)}{i ? '; ' : ''}<strong>{r.kind}</strong> <span class="mono">{r.target}</span> on {r.date}{/each}
+							· <a href={`/diff/${enc(b.parent)}/${enc(run.name)}`}>what changed</a>
+							· <a href={`/compare/${enc(b.parent)}/${enc(run.name)}`}>side by side</a>
+						</p>
+					{/if}
 					<dl>
 						<dt>world</dt><dd>{recipe.world ?? '—'}</dd>
 						<dt>seed</dt><dd class="mono">{recipe.seed ?? '—'}</dd>
@@ -218,5 +228,12 @@
 	}
 	.go {
 		padding: 0.35rem 0;
+	}
+	.branch {
+		border-left: 3px solid var(--ripple);
+	}
+	.added {
+		margin: 0.3rem 0 0.4rem;
+		font-size: 0.9rem;
 	}
 </style>

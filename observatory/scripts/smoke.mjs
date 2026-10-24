@@ -71,6 +71,18 @@ async function launchAndOpen(browser, errors) {
 	await page.getByRole('link', { name: 'open tiny' }).click({ timeout: 60000 });
 	await page.waitForURL(/\/run\/tiny\/events/, { timeout: 15000 });
 	await page.locator('.filters').waitFor({ timeout: 20000 }); // (indexed: the launched run's events are there)
+	// the full loop without code (#110): a ripple authored on a person's page, replayed as a branch, its diff
+	await page.goto(`http://127.0.0.1:${lport}/run/tiny/entity/${encodeURIComponent('t:Ashford-00')}`);
+	await page.getByText('Ripple this run…').click({ timeout: 20000 });
+	await page.getByLabel('Kind').selectOption('doom');
+	if ((await page.getByLabel('Target').inputValue()) !== 't:Ashford-00') throw new Error('the ripple panel did not take the page\'s entity');
+	await page.getByLabel('Date').fill('1X 2');
+	await page.getByLabel('Branch name').fill('tiny-doom');
+	await page.getByRole('button', { name: 'Replay with this ripple' }).click();
+	await page.getByRole('link', { name: 'what changed' }).click({ timeout: 90000 });
+	await page.getByRole('heading', { name: 'Causal wave' }).waitFor({ timeout: 20000 });
+	await page.goto(`http://127.0.0.1:${lport}/`);
+	await page.getByText(/branch of\s+tiny/).waitFor({ timeout: 15000 });
 	// promote: the canon run's near miss, with the pin that caused it kept, written to the vault
 	await page.goto(`http://127.0.0.1:${lport}/run/canon/strain`);
 	await page.getByRole('heading', { name: /^Strain, in order/ }).waitFor({ timeout: 20000 });
@@ -81,7 +93,7 @@ async function launchAndOpen(browser, errors) {
 	await page.getByText(/wrote _proposed\/event\//).waitFor({ timeout: 60000 });
 	const written = readdirSync(resolve(vault, '_proposed', 'event'));
 	if (written.length !== 1) throw new Error(`the vault has ${written.length} proposed events`);
-	return 'a run launched from a recipe and opened; an event proposed to the vault with its cause';
+	return 'a run launched from a recipe and opened; a ripple authored on a person, replayed as a branch and diffed; an event proposed to the vault with its cause';
 }
 const browser = await (async () => {
 	await waitForServer();

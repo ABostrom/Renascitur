@@ -1,9 +1,12 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 
+	import { page } from '$app/state';
+
 	import { openRun, readTable } from '$lib/run/run';
 	import { HttpSource } from '$lib/run/source';
 	import '$lib/theme.css';
+	import RipplePanel from '$lib/ui/RipplePanel.svelte';
 
 	let { children } = $props();
 
@@ -20,6 +23,10 @@
 
 <main>
 	{@render children()}
+	{#if page.params.name && page.route.id?.startsWith('/run/')}
+		<!-- (on every run page: author a ripple on this run, with this page's entity as its target, #110) -->
+		<RipplePanel run={page.params.name} target={page.route.id === '/run/[name]/entity/[id]' ? (page.params.id ?? '') : ''} />
+	{/if}
 </main>
 
 <style>

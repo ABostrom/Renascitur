@@ -23,7 +23,13 @@
 	let whole = $state(false);
 
 	type Ripple = { id: string; kind: string; date: string; target: string; params?: { until?: DateTuple } };
-	const ripple = $derived((variant?.run.manifest.meta.recipe?.ripple?.[0] as Ripple | undefined) ?? null);
+	// The ripple this branch added: the one `renasci ripple` names, else the first its baseline doesn't have.
+	const ripple = $derived.by(() => {
+		const mine = (variant?.run.manifest.meta.recipe?.ripple ?? []) as Ripple[];
+		const theirs = new Set(((base?.run.manifest.meta.recipe?.ripple ?? []) as Ripple[]).map((r) => JSON.stringify(r)));
+		const named = (variant?.run.manifest.meta as { ripple_of?: { ripple: string } } | undefined)?.ripple_of?.ripple;
+		return mine.find((r) => r.id === named) ?? mine.find((r) => !theirs.has(JSON.stringify(r))) ?? mine[0] ?? null;
+	});
 	const latchOf = $derived(variant?.run.manifest.meta.latch_of as { rank: number; kind: string } | undefined);
 
 	$effect(() => {

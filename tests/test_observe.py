@@ -514,3 +514,27 @@ def test_a_cause_ticked_twice_is_kept_once(promoter):
     status, job = call(base, "/api/propose", body, launch_headers(base))
     assert status == 202 and job["causes"] == ["pin:v:bryn-ardent:born"]
     wait_for(base, job)
+
+
+def test_a_ripple_is_authored_on_a_run_and_comes_back_as_a_diffed_branch(launcher, served):
+    _, runs = served
+    body = {"run": "tiny", "kind": "doom", "target": "t:Ashford-00", "date": "1X 3", "name": "tiny-authored"}
+    status, job = call(launcher, "/api/ripple", body, launch_headers(launcher))
+    assert status == 202 and job["job"] == "ripple"
+    done = wait_for(launcher, job)
+    assert done["state"] == "done" and done["variant"] == "tiny-authored", done["output"]
+    assert (runs / "tiny-authored" / "analysis" / "divergence.json").is_file()
+
+
+@pytest.mark.parametrize("body", [
+    {"run": "tiny", "kind": "smite", "target": "t:a", "date": "1X 3"},
+    {"run": "../tiny", "kind": "doom", "target": "t:a", "date": "1X 3"},
+    {"run": "tiny", "kind": "doom", "target": "t:a b", "date": "1X 3"},
+    {"run": "tiny", "kind": "doom", "target": "t:a", "date": "1X 3; rm"},
+    {"run": "tiny", "kind": "doom", "target": "t:a", "date": "1X 3", "params": [1]},
+    {"run": "tiny", "kind": "doom", "target": "t:a", "date": "1X 3", "name": "../x"},
+    {"run": "tiny", "kind": "doom", "target": "t:a", "date": "1X 3", "extra": 1},
+    {"run": "tiny", "kind": "doom", "target": "t:a"},
+])
+def test_a_ripple_request_is_validated(launcher, body):
+    assert call(launcher, "/api/ripple", body, launch_headers(launcher))[0] == 400

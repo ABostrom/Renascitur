@@ -297,6 +297,58 @@ def cmd_latch(args) -> int:
     return code
 
 
+def cmd_ripple(args) -> int:
+    """Author one ripple on a run (#110): fork it before the ripple with its own recipe plus the ripple,
+    then diff the new run against it. A branch of a branch keeps its parent's ripples."""
+    run = Path(args.run)
+    rf = _open_complete(run)
+    raw = rf.manifest["meta"]["recipe"]
+    cal = get_world(raw["run"]["world"]).calendar
+    try:
+        params = json.loads(args.params) if args.params else {}
+    except json.JSONDecodeError as e:
+        raise ValueError(f"--params must be a JSON object: {e}") from None
+    if not isinstance(params, dict):
+        raise ValueError("--params must be a JSON object")
+    state = json.loads(gzip.decompress((run / "state.json.gz").read_bytes()))
+    known = {e["id"] for e in state["entities"]}
+    geo_file = run / "geography.json"
+    if geo_file.exists():  # (routes and places are entities too, but a fork restores its parent's file)
+        g = json.loads(geo_file.read_text(encoding="utf-8"))
+        known |= {x["id"] for k in ("routes", "places", "regions") for x in g.get(k, [])}
+    if args.target not in known:
+        raise ValueError(f"{args.target!r} isn't anyone or anything in {run.name}")
+    have = raw.get("ripple", [])
+    rid = f"{args.kind}{len(have) + 1}"
+    while any(r["id"] == rid for r in have):
+        rid += "x"
+    out = Path(args.out)
+    name = args.name or f"{raw['run']['name']}-{rid}"
+    if not args.name:
+        n = 2
+        while (out / name).exists():
+            name, n = f"{raw['run']['name']}-{rid}-{n}", n + 1
+    elif (out / name).exists():  # (fail before any work; a failed attempt leaves its folder to be removed)
+        raise ValueError(f"{out / name} already exists: pick another name, or remove that folder")
+    variant = json.loads(json.dumps(raw))
+    variant["run"]["name"] = name
+    variant["ripple"] = [*have, {"id": rid, "kind": args.kind, "date": cal.format(cal.parse(args.date), "day"),
+                                 "target": args.target, "params": params}]
+    recipe = parse_recipe(variant)  # (checks the ripple's date and kind)
+    from renasci.core.ripples import Ripple
+
+    Ripple(rid, args.kind, cal.parse(args.date), args.target, params).check()  # (its params, before any work)
+    path = _replay(run, recipe, out, rerun=True, meta={"ripple_of": {"run": run.name, "ripple": rid}})
+    code = _diff(run, path)
+    if (run / "analysis" / "stories.json").exists():  # (so its stories sit next to the parent's)
+        found = stories(list(RunFolder.open(path).read("events")),
+                        json.loads(gzip.decompress((path / "state.json.gz").read_bytes())))
+        (path / "analysis" / "stories.json").write_text(json.dumps({"run": path.name, **found}, indent=1),
+                                                        encoding="utf-8")
+    print(f"ripple: launched {path.name}")
+    return code
+
+
 def _adjusted(r: dict, args, cal) -> dict:
     """The suggested ripple with any of --kind, --date, --until applied (dates as the calendar writes them)."""
     kind = args.kind or r["kind"]
@@ -685,6 +737,16 @@ def main(argv=None) -> int:
     v.add_argument("--world", default="fourth_age", help="whose calendar dates are read in")
     v.add_argument("--from", dest="from_", default="4A 1")
     v.add_argument("--to", default="4A 256")
+    from renasci.core.ripples import KINDS
+
+    p = sub.add_parser("ripple", help="add one ripple to a run and replay it as a branch, diffed against the run")
+    p.add_argument("run")
+    p.add_argument("--kind", required=True, choices=KINDS)
+    p.add_argument("--target", required=True, help="the entity (or route, or settlement) it acts on")
+    p.add_argument("--date", required=True, help="when, as the calendar writes it (e.g. '4A 12')")
+    p.add_argument("--params", help="the kind's params as JSON, e.g. {\"until\": [4, 20, 359]}")
+    p.add_argument("--name", help="the branch's run name (default: <run>-<kind><n>)")
+    p.add_argument("--out", default="runs")
     p = sub.add_parser("claims", help="what a run's world believes, judged against what happened "
                                        "(writes analysis/claims.json)")
     p.add_argument("run")
@@ -710,7 +772,7 @@ def main(argv=None) -> int:
     p.add_argument("--out", default="runs/_bench")
     args = parser.parse_args(argv)
     try:
-        commands = {"run": cmd_run, "replay": cmd_replay, "diff": cmd_diff, "inspect": cmd_inspect, "bench": cmd_bench, "latch": cmd_latch, "stories": cmd_stories, "claims": cmd_claims, "vault": cmd_vault,
+        commands = {"run": cmd_run, "replay": cmd_replay, "diff": cmd_diff, "inspect": cmd_inspect, "bench": cmd_bench, "latch": cmd_latch, "stories": cmd_stories, "claims": cmd_claims, "ripple": cmd_ripple, "vault": cmd_vault,
                     "observe": cmd_observe}
         return commands[args.command](args)
     except (ValueError, FileExistsError, FileNotFoundError) as err:
