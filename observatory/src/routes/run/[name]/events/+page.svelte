@@ -122,7 +122,7 @@
 	}
 </script>
 
-<p class="crumbs"><a href="/">Runs</a> › <strong>{name}</strong> › events · <a href={`/run/${encodeURIComponent(name)}/stories`}>stories</a> · <a href={`/run/${encodeURIComponent(name)}/houses`}>houses</a> · <a href={`/run/${encodeURIComponent(name)}/map`}>map</a> · <a href={`/run/${encodeURIComponent(name)}/strain`}>canon strain</a> · <a href={`/run/${encodeURIComponent(name)}/knowledge`}>knowledge</a></p>
+<p class="crumbs"><a href="/">Runs</a> › <strong>{name}</strong> › events · <a href={`/run/${encodeURIComponent(name)}/stories`}>stories</a> · <a href={`/run/${encodeURIComponent(name)}/houses`}>houses</a> · <a href={`/run/${encodeURIComponent(name)}/map`}>map</a> · <a href={`/run/${encodeURIComponent(name)}/strain`}>canon strain</a> · <a href={`/run/${encodeURIComponent(name)}/knowledge`}>knowledge</a> · <a href={`/run/${encodeURIComponent(name)}/check`}>canon check</a></p>
 
 {#if error}
 	<p class="card">{error}</p>

@@ -3,6 +3,7 @@
 
 	import { glyph, type Arc, type Saga } from '$lib/run/stories';
 	import { loadRunStories } from '$lib/runs';
+	import StoryPanel from '$lib/ui/StoryPanel.svelte';
 
 	const name = $derived(page.params.name ?? '');
 	const id = $derived(page.params.id ?? '');
@@ -51,6 +52,7 @@
 		Years {saga.span[0]}–{saga.span[1]} · {saga.arcs.length} arcs · {saga.people.length} people · salience {saga.salience.toFixed(1)}
 		· <a href={`/run/${enc(name)}/stories?from=${saga.span[0]}&to=${saga.span[1]}`}>see it on the river</a>
 	</p>
+	<StoryPanel run={name} subject="saga" id={saga.id} />
 	<section class="card">
 		<h2>Arcs, in order</h2>
 		<table>

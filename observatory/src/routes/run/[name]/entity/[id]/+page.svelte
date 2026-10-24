@@ -7,6 +7,7 @@
 	import type { DateTuple } from '$lib/run/calendar';
 	import { loadRun } from '$lib/runs';
 	import PersonView from '$lib/ui/PersonView.svelte';
+	import StoryPanel from '$lib/ui/StoryPanel.svelte';
 
 	const name = $derived(page.params.name ?? '');
 	const id = $derived(page.params.id ?? '');
@@ -76,6 +77,7 @@
 	<h1 class="mono">{id}</h1>
 	{#if everyone && detail.record?.kind === 'person'}
 		<PersonView ix={everyone} {id} run={name} {cal} changes={detail.changes} end={endOf(index)} lookup={eventOf(index)} />
+		<StoryPanel run={name} subject="person" {id} />
 	{/if}
 	<div class="grid">
 		<section class="card">

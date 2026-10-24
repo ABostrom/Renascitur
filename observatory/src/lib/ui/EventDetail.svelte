@@ -7,6 +7,7 @@
 
 	import CauseTree from './CauseTree.svelte';
 	import PromotePanel from './PromotePanel.svelte';
+	import StoryPanel from './StoryPanel.svelte';
 
 	let { index, id, onSelect }: { index: EventIndex; id: string; onSelect: (id: string) => void } = $props();
 
@@ -134,6 +135,7 @@
 			{#if event.type.startsWith('people.')}
 				<PromotePanel run={index.run.name} entity={event.id} causes={event.causes} />
 			{/if}
+			<StoryPanel run={index.run.name} subject="event" id={event.id} />
 		</section>
 
 		<section>

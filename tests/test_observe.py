@@ -538,3 +538,69 @@ def test_a_ripple_is_authored_on_a_run_and_comes_back_as_a_diffed_branch(launche
 ])
 def test_a_ripple_request_is_validated(launcher, body):
     assert call(launcher, "/api/ripple", body, launch_headers(launcher))[0] == 400
+
+
+# ---------------------------------------------------------------- the story layer: packs, chronicles, briefs, checks (#111)
+
+
+def _an_event(runs):
+    from renasci.story.pack import Run
+
+    run = Run(runs / "tiny")
+    from renasci.story.text import reading
+
+    return next(e["id"] for e in run.events if reading(e, run.names, run.by_id))
+
+
+@pytest.mark.parametrize("route, ext", [("/api/pack", ".json"), ("/api/chronicle", ".md"), ("/api/brief", ".md")])
+def test_a_story_document_is_made_as_a_job_and_named_by_its_file(launcher, served, route, ext):
+    _, runs = served
+    body = {"run": "tiny", "subject": "event", "id": _an_event(runs)}
+    status, job = call(launcher, route, body, launch_headers(launcher))
+    assert status == 202 and job["job"] == route.rsplit("/", 1)[1]
+    done = wait_for(launcher, job)
+    assert done["state"] == "done", done["output"]
+    assert done["file"].startswith("tiny/analysis/") and done["file"].endswith(ext)
+    assert (runs / done["file"]).is_file()
+
+
+def test_prose_is_checked_from_the_observatory(launcher, served):
+    _, runs = served
+    status, job = call(launcher, "/api/check", {"run": "tiny", "text": "Nobody of note died in 1X 2.", "pov": "omniscient"},
+                       launch_headers(launcher))
+    assert status == 202 and job["job"] == "check"
+    done = wait_for(launcher, job)
+    assert done["state"] == "done", done["output"]
+    report = json.loads((runs / done["file"]).read_text(encoding="utf-8"))
+    assert report["schema"] == "renasci.check/1"
+    assert list((runs / "tiny" / "analysis" / "checks").glob("*.md"))  # (the text, kept beside its report)
+
+
+@pytest.mark.parametrize("route, body", [
+    ("/api/pack", {"run": "tiny", "subject": "planet", "id": "x"}),
+    ("/api/pack", {"run": "../tiny", "subject": "event", "id": "x"}),
+    ("/api/pack", {"run": "tiny", "subject": "event", "id": "x y"}),
+    ("/api/chronicle", {"run": "tiny", "subject": "event", "id": "x", "pov": "../p"}),
+    ("/api/brief", {"run": "tiny", "subject": "event", "id": "x", "pov": "p:a"}),
+    ("/api/brief", {"run": "tiny", "subject": "event", "id": "x", "extra": 1}),
+    ("/api/check", {"run": "tiny", "text": 5}),
+    ("/api/check", {"run": "tiny", "text": "x", "pov": "a b"}),
+    ("/api/check", {"run": "nope", "text": "x"}),
+])
+def test_story_requests_are_validated(launcher, route, body):
+    assert call(launcher, route, body, launch_headers(launcher))[0] == 400
+
+
+def test_a_check_takes_more_than_a_launch_but_not_without_end(launcher):
+    big = {"run": "tiny", "text": "Nobody died. " * 2000}  # (~26 KB: over a launch's 4 KB)
+    status, job = call(launcher, "/api/check", big, launch_headers(launcher))
+    assert status == 202
+    wait_for(launcher, job)
+    over = {"run": "tiny", "text": "x" * (300 * 1024)}  # (a body the server reads, but a text over its cap)
+    assert call(launcher, "/api/check", over, launch_headers(launcher))[0] == 400
+    huge = {"run": "tiny", "text": "x" * (2 * 1024 * 1024)}  # (a body it won't read at all)
+    try:
+        assert call(launcher, "/api/check", huge, launch_headers(launcher))[0] == 413
+    except (ConnectionError, urllib.error.URLError):
+        pass  # (the server refused and closed before the client finished sending: refused all the same)
+    assert call(launcher, "/api/check", {"run": "tiny", "text": "x"}, {**launch_headers(launcher), "Origin": "http://evil.example"})[0] == 403

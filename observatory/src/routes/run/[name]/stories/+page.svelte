@@ -67,7 +67,7 @@
 
 <p class="crumbs">
 	<a href="/">Runs</a> › <a href={`/run/${enc(name)}/events`}>{name}</a> › stories ·
-	<a href={`/run/${enc(name)}/latch`}>latch points</a>
+	<a href={`/run/${enc(name)}/latch`}>latch points</a> · <a href={`/run/${enc(name)}/check`}>canon check</a>
 </p>
 
 {#if error}

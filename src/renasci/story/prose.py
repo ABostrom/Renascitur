@@ -112,7 +112,8 @@ class Lexicon:
         self.people = ppl
         self.byname: dict[str, list[str]] = {}
         for i in sorted(ppl):
-            self.byname.setdefault(ppl[i]["fields"]["name"], []).append(i)
+            if ppl[i]["fields"].get("name"):  # (a world may leave people unnamed)
+                self.byname.setdefault(ppl[i]["fields"]["name"], []).append(i)
         self.house_ids = {_clean(run.names(h)): h for h in sorted(run.names.houses) if run.names(h)}
         self.place_ids: dict[str, str] = {}
         for i, n in sorted(run.names.names.items()):
