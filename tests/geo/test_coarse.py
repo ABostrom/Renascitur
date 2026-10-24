@@ -1,5 +1,5 @@
-"""The coarse fallbacks of S8 Part A (spec §7, #156), each tested on its own (the engine can't run coarse
-yet, #157): a coarse step of N years stands in for N fine ones. And the derived stats (§6)."""
+"""The coarse fallbacks of S8 Part A (spec §7, #156), each tested on its own: a coarse step of N years stands
+in for N fine ones. The derived stats (§6). And a polity world run under a coarse policy (#157)."""
 
 import copy
 
@@ -8,6 +8,7 @@ import pytest
 from renasci import renascita
 from renasci.core.calendar import Span
 from renasci.core.engine import Engine
+from renasci.core.lod import Resolution, ResolutionPolicy
 from renasci.core.systems import Ruleset
 from renasci.people.scenario import synthesise
 from renasci.people.world import people_ruleset
@@ -39,11 +40,12 @@ def coarsely(cls, every):
     return Coarse()
 
 
-def engine(sc, swap=None, seed=5):
+def engine(sc, swap=None, seed=5, resolution=None):
     rs = people_ruleset("fourth_age", sc)
     systems = tuple(swap if swap is not None and s.name == swap.name else s for s in rs.systems)
     e = Engine(CAL, seed=seed, rulesets=[(START, Ruleset(rs.name, rs.version, systems, params=rs.params, forcers=rs.forcers,
-                                                        disguises=rs.disguises, conservation=rs.conservation))])
+                                                        disguises=rs.disguises, conservation=rs.conservation))],
+               resolution=resolution)
     synthesise(e, sc, seed)
     return e
 
@@ -90,3 +92,20 @@ def test_each_polity_gets_its_derived_stats():
         assert e.store.get(p, "strength") > 0 and 0 <= e.store.get(p, "stability") <= 1 and e.store.get(p, "wealth") >= 1
     assert e.store.get(EMPIRE, "wealth") > e.store.get(CLANS, "wealth")  # (it holds more of Pyrosia)
     assert [ev for ev in e.events if ev.type == "polity.stats"]
+
+
+def test_a_polity_world_runs_under_a_coarse_policy():
+    sc = scenario([{"a": EMPIRE, "b": CLANS, "stance": "hostile", "trust": -0.6}])
+    policy = ResolutionPolicy(default=Resolution.coarse(Span(years=5)),
+                              focus=[(CAL.add(START, Span(years=10)), CAL.add(START, Span(years=12, days=359)))])
+    until = CAL.add(START, Span(years=29, days=359))
+    runs = []
+    for _ in range(2):
+        e = engine(sc, resolution=policy)
+        e.run(until=until)
+        runs.append(e)
+    a, b = runs
+    assert [ev.id for ev in a.events] == [ev.id for ev in b.events] and a.state_hash() == b.state_hash()
+    drift = sorted({ev.date.year - START.year for ev in a.events if ev.type == "polity.drift"})
+    assert drift and set(drift) <= {0, 5, 10, 11, 12, 13, 18, 23, 28}  # (coarse, then fine in the window)
+    assert any(ev.type == "people.death" for ev in a.events)  # (people still live and die fine)

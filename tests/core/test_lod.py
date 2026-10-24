@@ -32,10 +32,98 @@ def test_policy_validates_windows_and_steps():
         Resolution("medium")
 
 
-def test_the_engine_refuses_coarse_policies_until_m5():
-    coarse = ResolutionPolicy(default=Resolution.coarse(Span(years=1)))
-    with pytest.raises(NotImplementedError):
-        Engine(CAL, seed=1, rulesets=[(START, Ruleset("r", 1, ()))], resolution=coarse)
+# ---------------------------------------------------------------- coarse execution (#157)
+
+CALLS: list = []
+
+
+class Stepper(System):
+    """(A yearly system with a coarse fallback: it records each call.)"""
+
+    name, cadence = "t.stepper", "yearly"
+
+    def run(self, ctx):
+        CALLS.append(("fine", ctx.today.year, 1))
+
+    def coarse_fallback(self, ctx, years):
+        CALLS.append(("coarse", ctx.today.year, years))
+
+
+class Plain(System):
+    """(A yearly system without one: it keeps its own cadence.)"""
+
+    name, cadence = "t.plain", "yearly"
+
+    def run(self, ctx):
+        CALLS.append(("plain", ctx.today.year, 1))
+
+
+def coarse_run(focus=(), until=Date(1, 29, 359), step=5):
+    CALLS.clear()
+    policy = ResolutionPolicy(default=Resolution.coarse(Span(years=step)), focus=focus)
+    e = Engine(CAL, seed=1, rulesets=[(START, Ruleset("r", 1, (Stepper(), Plain())))], resolution=policy)
+    e.run(until=until)
+    return list(CALLS)
+
+
+def test_a_fallback_steps_coarsely_and_stops_short_of_a_focus_window():
+    calls = coarse_run(focus=[(Date(1, 10, 0), Date(1, 14, 359))])
+    stepper = [(k, y, n) for k, y, n in calls if k != "plain"]
+    assert stepper == [("coarse", 1, 5), ("coarse", 6, 4), ("fine", 10, 1), ("fine", 11, 1), ("fine", 12, 1),
+                       ("fine", 13, 1), ("fine", 14, 1), ("coarse", 15, 5), ("coarse", 20, 5), ("coarse", 25, 5)]
+    assert [y for k, y, _ in calls if k == "plain"] == list(range(1, 30))  # (no fallback: its own cadence, always)
+
+
+def test_the_last_step_of_an_age_is_cut_to_the_age():
+    calls = coarse_run(until=Date(1, 60, 359), step=7)
+    stepper = [(y, n) for k, y, n in calls if k == "coarse"]
+    assert stepper[-1] == (57, 4)  # (years 57-60: the age ends at 60)
+    assert sum(n for _, n in stepper) == 60
+
+
+class Moved(Stepper):
+    priority = 7  # (a changed system: the switch drops its pending step and starts it afresh)
+
+
+class Monthly(Stepper):
+    name, cadence = "t.monthly", "monthly"
+
+
+def tiles(calls, kinds=("fine", "coarse")):
+    """The (year, years) steps cover each year once, in order."""
+    year = 1
+    for k, y, n in calls:
+        if k in kinds:
+            assert y == year, calls
+            year += n
+    return year
+
+
+@pytest.mark.parametrize("later", [Stepper(), Moved()])
+def test_a_step_stops_at_a_ruleset_change(later):
+    CALLS.clear()
+    policy = ResolutionPolicy(default=Resolution.coarse(Span(years=5)))
+    e = Engine(CAL, seed=1, rulesets=[(START, Ruleset("a", 1, (Stepper(),))), (Date(1, 13, 0), Ruleset("b", 1, (later,)))],
+               resolution=policy)
+    e.run(until=Date(1, 29, 359))
+    assert ("coarse", 11, 2) in CALLS and ("coarse", 13, 5) in CALLS
+    assert tiles(CALLS) == 33
+
+
+def test_a_sub_yearly_system_runs_fine_to_the_year_start_before_stepping():
+    CALLS.clear()
+    policy = ResolutionPolicy(default=Resolution.coarse(Span(years=5)), focus=[(Date(1, 6, 0), Date(1, 6, 150))])
+    e = Engine(CAL, seed=1, rulesets=[(START, Ruleset("r", 1, (Monthly(),)))], resolution=policy)
+    e.run(until=Date(1, 15, 359))
+    coarse = [(y, n) for k, y, n in CALLS if k == "coarse"]
+    assert coarse == [(1, 5), (7, 5), (12, 5)]  # (year 6 all fine, month by month, from the window to its end)
+    assert sum(1 for k, y, _ in CALLS if k == "fine" and y == 6) == 12
+
+
+def test_a_coarse_step_is_whole_years():
+    with pytest.raises(ValueError):
+        Engine(CAL, seed=1, rulesets=[(START, Ruleset("r", 1, ()))],
+               resolution=ResolutionPolicy(default=Resolution.coarse(Span(days=90))))
     Engine(CAL, seed=1, rulesets=[(START, Ruleset("r", 1, ()))], resolution=ResolutionPolicy())
 
 
