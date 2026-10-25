@@ -170,6 +170,13 @@ def holds(ctx, owner: str, tag: str, scheme: str | None = None) -> bool:
         return ctx.exists(ref) and ctx.status(ref) == "dead"
     if kind == "shamed":  # in disgrace (Shame is how it gets there)
         return ctx.exists(ref) and float(ctx.get(ref, "favour") or 0.0) < SHAMED
+    if kind == "hostile":  # (the realm the owner rules is hostile to, or at war with, `ref`)
+        from renasci.people.ambitions import ruled
+        from renasci.relations import rel_id
+
+        mine = ruled(ctx, owner)
+        rid = rel_id(mine, ref) if mine and mine != ref else None
+        return bool(rid) and ctx.exists(rid) and ctx.get(rid, "stance") in ("hostile", "war")
     if kind == "seized":  # (the owner holds an office taken from them)
         return any(ctx.get(o, "deposed") == ref for o in ctx.get(owner, "offices") or [])
     if kind == "accomplice":  # only a scheme has accomplices; a fresh plan recruits first

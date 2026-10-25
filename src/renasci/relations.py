@@ -30,7 +30,7 @@ from renasci.core.events import Cause, EventType
 from renasci.core.systems import System
 
 WEIGHTS = {"killed": -0.15, "exposed": -0.1, "marriage": 0.12, "incident": -0.1, "betrayal": -0.5, "treaty": 0.1,
-           "pact": 0.015, "war": -0.12}  # (pact: a trade treaty that holds, each year; with trade it settles under friendly)
+           "pact": 0.015, "war": -0.12, "raid": -0.15}  # (pact: a trade treaty that holds, each year; with trade it settles under friendly)
 STANCES = ((0.6, "allied"), (0.25, "friendly"), (-0.25, "neutral"), (-0.55, "cold"))  # else hostile
 FADE = 0.9  # (trust a year on, before what happened that year)
 TRADE = 0.012  # per open border route, up to TRADE_CAP a year: trade alone settles at neutral (10 x the cap, under

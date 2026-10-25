@@ -29,7 +29,8 @@ import math
 from renasci.core.events import Cause, EventType
 from renasci import geo
 from renasci.people import beliefs, courts, families, houses, life, minds, population, travel
-from renasci.people.ambitions import throne, trait
+from renasci import relations
+from renasci.people.ambitions import ruled, throne, trait
 from renasci.people.races import age_years
 
 ACTION = EventType("people.action", 1, roles={"actor": (1, 1), "target": (0, 1), "accomplice": (0, 1)},
@@ -38,6 +39,7 @@ SEIZED = EventType("polity.seized", 1, roles={"usurper": (1, 1), "deposed": (1, 
                    payload={"office": "id", "polity": "id"})
 COUP_FOILED = EventType("polity.coup_foiled", 1, roles={"usurper": (1, 1), "ruler": (1, 1)},
                         payload={"office": "id"})
+RAID = EventType("polity.raid", 1, roles={"raider": (1, 1), "party": (2, 2)}, payload={"relation": "id", "route": "id"})
 HEARD, FAVOURED = 0.2, 0.5
 SHAMED = -0.25  # in disgrace: below this (a lost duel or an exposed plot alone isn't enough)
 
@@ -409,6 +411,37 @@ class Coup(Action):
         _favour(ctx, actor, -0.3)
 
 
+class Raid(Action):
+    """A ruler's raid across a border (S8 §9): a border incident on purpose, a ledger entry that sours the
+    relation. `target` is the neighbouring polity; it achieves their hostility (a single raid seldom does:
+    a plot raids, and raids again)."""
+
+    name, achieves, duration_days = "Raid", "hostile:{target}", 60
+    reads = frozenset({"ids:polity", "ruler", "holder", "ended", "ids:route", "ends", "control"})
+
+    def _border(self, ctx, actor, target):
+        mine = ruled(ctx, actor) if _alive(ctx, actor) else None
+        if mine is None or target is None or target == mine or not ctx.exists(target) or ctx.kind(target) != "polity" \
+                or ctx.get(target, "ended") is not None:
+            return None
+        routes = [r for r in ctx.ids("route") if {ctx.get(e, "control") for e in ctx.get(r, "ends")} == {mine, target}]
+        return (mine, routes) if routes else None
+
+    def possible(self, ctx, actor, target, scheme):
+        return self._border(ctx, actor, target) is not None
+
+    def odds(self, ctx, actor, target, scheme):
+        return 0.5 + 0.3 * trait(ctx, actor, "temper")
+
+    def succeed(self, ctx, actor, target, scheme, event):
+        mine, routes = self._border(ctx, actor, target)
+        route = ctx.choose("raid", routes, owner=scheme or actor)
+        rid = relations.rel_id(mine, target)
+        ev = ctx.emit("polity.raid", {"raider": (actor,), "party": tuple(sorted((mine, target)))}, purpose="raid",
+                      actor=actor, payload={"relation": rid, "route": route}, causes=(Cause("event", event),))
+        relations.note(ctx, mine, target, "raid", ev.id)
+
+
 class Flee(Action):
     """Leave home: by road to any settlement within `flee_days` (S4 §5), else, in a world without routes,
     at once to another settlement of the region. The step is the decision; the journey takes the road's days."""
@@ -487,7 +520,7 @@ READS = (life.DIE_READS | families.Marriage.reads | population.COLUMN_READS | fr
 WRITES = (life.DIE_WRITES | families.Marriage.writes | travel.WRITES
           | frozenset({"favour", "wound", "need", "accomplices", "state", "holder", "legitimacy", "deposed", "offices",
                        "heir"}))
-EVENT_TYPES = (ACTION, SEIZED, COUP_FOILED) + life.DIE_EVENTS + (families.MARRIAGE,) + population.LOD_TYPES + travel.EVENT_TYPES
+EVENT_TYPES = (ACTION, SEIZED, COUP_FOILED, RAID) + life.DIE_EVENTS + (families.MARRIAGE,) + population.LOD_TYPES + travel.EVENT_TYPES
 
 
 def perform(ctx, action: Action, actor: str, target: str | None, scheme: str | None = None,

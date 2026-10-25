@@ -74,9 +74,10 @@ def _victims(steps) -> set[str]:
 
 
 def _involved(ctx, scheme: str) -> list[str]:
+    """The people a scheme touches (a polity it's aimed at, an Expand's, keeps no `plots`)."""
     target = ctx.get(scheme, "target")
-    return sorted({*([target] if target else []), *(ctx.get(scheme, "accomplices") or []),
-                   *_victims(ctx.get(scheme, "plan") or [])})
+    people = {*([target] if target else []), *(ctx.get(scheme, "accomplices") or []), *_victims(ctx.get(scheme, "plan") or [])}
+    return sorted(p for p in people if ctx.kind(p) == "person")
 
 
 def begin(ctx, amb: str, owner: str) -> str | None:
