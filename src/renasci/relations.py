@@ -207,13 +207,13 @@ class Diplomacy(System):
     """Relations drift a year at a time, and border incidents happen (see the module doc)."""
 
     name, cadence, priority = "polity.diplomacy", "yearly", 1  # (after people.houses: rulers settled)
-    from renasci import treaties as _t
+    from renasci import lines as _l, treaties as _t
 
     reads = frozenset({"ids:relation", "ids:route", "a", "b", "kind", "stance", "trust", "ledger", "ends", "control",
-                       "open"}) | _t.READS
-    writes = frozenset({"stance", "trust", "ledger", "news"}) | _t.WRITES
-    event_types = EVENT_TYPES + _t.EVENT_TYPES
-    del _t
+                       "open"}) | _t.READS | _l.READS
+    writes = frozenset({"stance", "trust", "ledger", "news"}) | _t.WRITES | _l.WRITES
+    event_types = EVENT_TYPES + _t.EVENT_TYPES + _l.EVENT_TYPES  # (a broken treaty's lines, #158)
+    del _l, _t
 
     def run(self, ctx):
         self.step(ctx, 1)

@@ -10,6 +10,8 @@ blames the agent's house for what the agent did (`houses`: person -> house, from
 - `caused(event, by)`: `by` is an agent (actor, killer, the one who ordered it) of the event or of an
   event among its causes, up to `DEPTH` steps back. Victims and bystanders are never agents.
 - `fault(event, party)`: as `caused`, or the party is the event's stated cause.
+- `started(war, by)`: the war's declaration names `by` its aggressor. `won(war, by)`: its peace names `by`
+  the winner, or a fall ended it with `by` the victor. `betrayed(treaty, by)`: its breaking names `by`.
 """
 
 from __future__ import annotations
@@ -101,4 +103,28 @@ def judge(claim: dict, events, houses: dict | None = None, log: Log | None = Non
         return _caused(by_id, args, also_stated=False, houses=houses)
     if pred == "fault":
         return _caused(by_id, args, also_stated=True, houses=houses)
+    if pred in WAR_FACTS:
+        return _war_fact(events, pred, args)
+    return "unknown", []
+
+
+# (pred: [(event type, the payload field naming the war or treaty, the role naming who)])
+WAR_FACTS = {"started": [("polity.war_declared", "war", "aggressor")],
+             "won": [("polity.peace", "war", "winner"), ("polity.fallen", "war", "victor")],
+             "betrayed": [("polity.treaty_broken", "treaty", "by")]}
+
+
+def _war_fact(events, pred, args):
+    what = args.get("war") or args.get("treaty")
+    leaders = set()  # (a war's aggressor and defender: only a leader's fall ends it, not an ally's)
+    for e in events:
+        if e["type"] == "polity.war_declared" and (e.get("payload") or {}).get("war") == what:
+            leaders = set(e["roles"].get("aggressor") or []) | set(e["roles"].get("defender") or [])
+    for e in events:
+        for kind, field, role in WAR_FACTS[pred]:
+            if e["type"] != kind or (e.get("payload") or {}).get(field) != what:
+                continue
+            if kind == "polity.fallen" and not set(e["roles"].get("polity") or []) & leaders:
+                continue
+            return ("true" if args["by"] in (e["roles"].get(role) or []) else "false"), [e["id"]]
     return "unknown", []

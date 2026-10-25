@@ -27,7 +27,7 @@ A fallen polity has no ruler (`treaties.ruler`): it declares, decides and betray
 
 from __future__ import annotations
 
-from renasci import geo, treaties
+from renasci import geo, lines, treaties
 from renasci.core.events import Cause, EventType
 from renasci.core.systems import System
 from renasci.people import houses, life
@@ -50,7 +50,7 @@ PEACE = EventType("polity.peace", 1, roles={"winner": (1, 1), "loser": (1, 1)}, 
 FALLEN = EventType("polity.fallen", 1, roles={"polity": (1, 1), "victor": (1, 1)}, payload={"war": "id"})
 STANCE = EventType("polity.stance", 1, roles={"party": (2, 2)}, payload={"relation": "id", "from": "str", "to": "str"})
 EVENT_TYPES = (DECLARED, JOINED, YEAR, PEACE, FALLEN, STANCE, geo.changed_type(), *treaties.EVENT_TYPES,
-               *life.DIE_EVENTS)
+               *life.DIE_EVENTS, lines.LINE)
 
 
 def strength(ctx, polity: str) -> int:
@@ -112,10 +112,10 @@ class War(System):
     reads = (frozenset({"ids:relation", "ids:war", "ids:settlement", "ids:place", "ids:route", "kind", "stance",
                         "trust", "news", "aggressor", "defender", "attackers", "defenders", "ended", "exhaustion",
                         "seat", "residents", "ends", "open", "control", "place", "started", "ledger"})
-             | treaties.READS | geo.CHANGE_READS | life.DIE_READS | CASUS_READS)
+             | treaties.READS | geo.CHANGE_READS | life.DIE_READS | CASUS_READS | lines.READS)
     writes = (frozenset({"stance", "new:war", "new:relation", "attackers", "defenders", "ended", "outcome",
                          "exhaustion", "control", "ledger"})
-              | treaties.WRITES | geo.CHANGE_WRITES | life.DIE_WRITES)
+              | treaties.WRITES | geo.CHANGE_WRITES | life.DIE_WRITES | lines.WRITES)
     event_types = EVENT_TYPES
 
     def handle(self, ctx, activation):
@@ -178,7 +178,10 @@ class War(System):
                 ctx.set(t, "broken_by", side)
                 treaties._end(ctx, rid, t)
                 _ledger(ctx, rid, "betrayal", broke.id)
+                lines.betrayal(ctx, (a, b), t, broke.id)
             _set_stance(ctx, a, b, "war", (Cause("event", ev.id),))
+            for teller, blamed in ((side, other), (other, side)):  # (each side: the other started it)
+                lines.official(ctx, teller, lines.beliefs.claim("started", war=ident, by=blamed), ev.id)
             self.call_allies(ctx, ident, other, side)
             return
 
@@ -206,6 +209,7 @@ class War(System):
                     ctx.set(t, "broken_by", ally)
                     treaties._end(ctx, rid, t)
                     _ledger(ctx, rid, "betrayal", broke.id)
+                    lines.betrayal(ctx, (ctx.get(rid, "a"), ctx.get(rid, "b")), t, broke.id)
                 break
 
     # ------------------------------------------------------------ a war's year
@@ -263,6 +267,8 @@ class War(System):
         for x in sides["attackers"]:
             for y in sides["defenders"]:
                 _set_stance(ctx, x, y, "hostile", (Cause("event", made.id),))
+        for side in (aggressor, defender):  # (each side: we won)
+            lines.official(ctx, side, lines.beliefs.claim("won", war=war, by=side), made.id)
 
     def fall(self, ctx, war: str, loser: str, victor: str, why: str) -> None:
         """`loser` holds no settlement: it falls. Its places go to `victor`, its treaties end, and its wars
@@ -274,6 +280,8 @@ class War(System):
         for w in over:
             self._end(ctx, w, victor if w == war else None)
         self._stand_down(ctx, over, fell.id)
+        if war in over:  # (an ally's fall doesn't end the war: nobody has won it yet)
+            lines.official(ctx, victor, lines.beliefs.claim("won", war=war, by=victor), fell.id)
         for rid in ctx.ids("relation"):
             if loser in (ctx.get(rid, "a"), ctx.get(rid, "b")):
                 for t in list(ctx.get(rid, "treaties") or []):
