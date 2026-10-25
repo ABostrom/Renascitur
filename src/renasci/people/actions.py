@@ -28,7 +28,7 @@ import math
 
 from renasci.core.events import Cause, EventType
 from renasci import geo
-from renasci.people import beliefs, families, houses, life, minds, population, travel
+from renasci.people import beliefs, courts, families, houses, life, minds, population, travel
 from renasci.people.ambitions import throne, trait
 from renasci.people.races import age_years
 
@@ -419,12 +419,18 @@ class Flee(Action):
     def duration(self, ctx, actor, target) -> int:
         return self.deciding_days if travel.has_routes(ctx) else self.duration_days
 
-    def _elsewhere(self, ctx, actor):
+    def _options(self, ctx, actor) -> dict[str, int]:
+        """Where they could go ({settlement: days}; 0 without routes), never a realm that exiled them."""
         home = ctx.get(actor, "place")
         if travel.has_routes(ctx):
-            return list(travel.destinations(ctx, home, int(ctx.params.get("flee_days", travel.FLEE_DAYS)), actor))
-        region = ctx.get(home, "region")
-        return [s for s in ctx.ids("settlement") if s != home and ctx.get(s, "region") == region]
+            found = travel.destinations(ctx, home, int(ctx.params.get("flee_days", travel.FLEE_DAYS)), actor)
+        else:
+            region = ctx.get(home, "region")
+            found = {s: 0 for s in ctx.ids("settlement") if s != home and ctx.get(s, "region") == region}
+        return {s: d for s, d in found.items() if not courts.barred(ctx, actor, s)}
+
+    def _elsewhere(self, ctx, actor):
+        return list(self._options(ctx, actor))
 
     def possible(self, ctx, actor, target, scheme):  # not the married, nor those who hold office (S4: families travel)
         return (_alive(ctx, actor) and ctx.get(actor, "spouse") is None and not ctx.get(actor, "offices")
@@ -434,18 +440,12 @@ class Flee(Action):
         return 0.8
 
     def succeed(self, ctx, actor, target, scheme, event):
-        home = ctx.get(actor, "place")
+        options = self._options(ctx, actor)
         if travel.has_routes(ctx):
-            options = travel.destinations(ctx, home, int(ctx.params.get("flee_days", travel.FLEE_DAYS)), actor)
             new = ctx.choose("flee", list(options), owner=scheme or actor, weights=[1.0 / d for d in options.values()])
             travel.depart(ctx, actor, new, "flee", causes=(Cause("event", event),) if event else ())
             return
-        new = ctx.choose("flee", self._elsewhere(ctx, actor), owner=scheme or actor)
-        ctx.set(home, "residents", [p for p in ctx.get(home, "residents") if p != actor])
-        ctx.set(new, "residents", sorted(ctx.get(new, "residents") + [actor]))
-        ctx.set(actor, "place", new)
-        population.bump(ctx, home, out=1)
-        population.bump(ctx, new, **{"in": 1})
+        travel.relocate(ctx, actor, ctx.choose("flee", list(options), owner=scheme or actor))
 
 
 class Confess(Action):
@@ -483,7 +483,7 @@ ACTIONS = library()
 
 READS = (life.DIE_READS | families.Marriage.reads | population.COLUMN_READS | frozenset({
     "favour", "wound", "place", "residents", "region", "accomplices", "state", "born", "traits", "race", "sex",
-    "spouse", "mother", "father", "ids:settlement", "offices", "plan", "step"}) | travel.READS)
+    "spouse", "mother", "father", "ids:settlement", "offices", "plan", "step"}) | travel.READS | courts.BAR_READS)
 WRITES = (life.DIE_WRITES | families.Marriage.writes | travel.WRITES
           | frozenset({"favour", "wound", "need", "accomplices", "state", "holder", "legitimacy", "deposed", "offices",
                        "heir"}))

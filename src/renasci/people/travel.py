@@ -66,6 +66,16 @@ def depart(ctx, person: str, to: str, why: str, causes=()) -> int | None:
     return days
 
 
+def relocate(ctx, person: str, new: str) -> None:
+    """Move at once, in a world without routes (the caller has emitted the event that moves them)."""
+    home = ctx.get(person, "place")
+    ctx.set(home, "residents", [p for p in ctx.get(home, "residents") if p != person])
+    ctx.set(new, "residents", sorted(ctx.get(new, "residents") + [person]))
+    ctx.set(person, "place", new)
+    population.bump(ctx, home, out=1)
+    population.bump(ctx, new, **{"in": 1})
+
+
 def _move(ctx, person: str, journey: dict) -> None:
     old, new = ctx.get(person, "place"), journey["to"]
     ctx.emit("people.arrive", {"traveller": (person,), "origin": (old,), "destination": (new,)}, purpose="arrive",
