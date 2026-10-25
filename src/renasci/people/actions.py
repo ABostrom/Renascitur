@@ -29,8 +29,8 @@ import math
 from renasci.core.events import Cause, EventType
 from renasci import geo
 from renasci.people import beliefs, courts, families, houses, life, minds, population, travel
-from renasci import relations
-from renasci.people.ambitions import ruled, throne, trait
+from renasci import lines, relations, war
+from renasci.people.ambitions import governed, ruled, throne, trait
 from renasci.people.races import age_years
 
 ACTION = EventType("people.action", 1, roles={"actor": (1, 1), "target": (0, 1), "accomplice": (0, 1)},
@@ -40,6 +40,8 @@ SEIZED = EventType("polity.seized", 1, roles={"usurper": (1, 1), "deposed": (1, 
 COUP_FOILED = EventType("polity.coup_foiled", 1, roles={"usurper": (1, 1), "ruler": (1, 1)},
                         payload={"office": "id"})
 RAID = EventType("polity.raid", 1, roles={"raider": (1, 1), "party": (2, 2)}, payload={"relation": "id", "route": "id"})
+SECEDED = EventType("polity.seceded", 1, roles={"leader": (1, 1), "from": (1, 1)},
+                    payload={"polity": "str", "seat": "id"})
 HEARD, FAVOURED = 0.2, 0.5
 SHAMED = -0.25  # in disgrace: below this (a lost duel or an exposed plot alone isn't enough)
 
@@ -442,6 +444,97 @@ class Raid(Action):
         relations.note(ctx, mine, target, "raid", ev.id)
 
 
+class Rally(Action):
+    """Win another house of the realm to one's cause (S8 §9, Recruit's cousin): politics, not friendship, so
+    no tie is needed. A keyed pick among the other house heads of the actor's realm (the slighted, out of
+    favour, likelier; never an enemy), who joins the scheme."""
+
+    name, achieves, secrecy, duration_days = "Rally", "rallied", 0.2, 90
+    reads = frozenset({"house", "headship", "holder", "ids:polity", "members", "ended", "favour", "ties", "a", "b",
+                       "kind"})
+
+    def _heads(self, ctx, actor):
+        mine = ctx.get(actor, "house")
+        realm = next((p for p in ctx.ids("polity") if ctx.get(p, "ended") is None and mine
+                      and mine in (ctx.get(p, "members") or [])), None)
+        if realm is None:
+            return []
+        ruler = ctx.get(ctx.get(realm, "ruler"), "holder") if ctx.get(realm, "ruler") else None
+        skip = {mine, ctx.get(ruler, "house") if ruler else None}  # (not the ruler's own: they'd hardly rise with you)
+        enemies = {ctx.get(t, "a") if ctx.get(t, "b") == actor else ctx.get(t, "b")
+                   for t in ctx.get(actor, "ties") or [] if ctx.get(t, "kind") == "enemy"}
+        out = []
+        for h in sorted(ctx.get(realm, "members") or []):
+            who = ctx.get(ctx.get(h, "headship"), "holder") if h not in skip else None
+            if who and who != ruler and who not in enemies and _alive(ctx, who):
+                out.append(who)
+        return out
+
+    def possible(self, ctx, actor, target, scheme):
+        return _alive(ctx, actor) and bool(self._heads(ctx, actor))
+
+    def odds(self, ctx, actor, target, scheme):
+        return 0.3 + 0.4 * trait(ctx, actor, "charm")
+
+    def succeed(self, ctx, actor, target, scheme, event):
+        heads = [h for h in self._heads(ctx, actor) if h not in (ctx.get(scheme, "accomplices") or [] if scheme else [])]
+        if not heads or not scheme:
+            return
+        pick = ctx.choose("rally", heads, owner=scheme,
+                          weights=[1.0 + max(0.0, -float(ctx.get(h, "favour") or 0.0)) * 2 for h in heads])
+        ctx.set(scheme, "accomplices", sorted(set(ctx.get(scheme, "accomplices") or []) | {pick}))
+
+
+class Revolt(Action):
+    """Rise against the realm (S8 §9): `target` is the realm. The house's seat becomes a realm of its own,
+    ruled by its head (`polity.seceded`), and the realm goes to war to crush it (`war.crush`). A failed
+    rising is treason before the ruler (`courts.trial`)."""
+
+    name, requires, achieves, duration_days, stakes = "Revolt", frozenset({"rallied"}), "seceded:{target}", 60, 3.0
+    reads = frozenset({"house", "headship", "holder", "seat", "control", "ended", "members", "ruler", "name",
+                       "offices", "polity", "ids:route", "ends"})
+
+    def possible(self, ctx, actor, target, scheme):
+        found = governed(ctx, actor) if _alive(ctx, actor) else None
+        return found is not None and found[0] == target
+
+    def odds(self, ctx, actor, target, scheme):
+        return 0.3 + 0.3 * trait(ctx, actor, "wits")
+
+    def succeed(self, ctx, actor, target, scheme, event):
+        _, house = governed(ctx, actor)
+        seat = ctx.get(house, "seat")
+        new, n = f"pol:{house.replace(':', '.')}:{ctx.today.year}", 1
+        while ctx.exists(new):  # (risen again the same year, under a new head)
+            n += 1
+            new = f"pol:{house.replace(':', '.')}:{ctx.today.year}.{n}"
+        for office in sorted(ctx.get(actor, "offices") or []):  # (the realm's offices they held are left behind)
+            if ctx.get(office, "polity") == target:
+                ctx.emit("people.office_vacant", {"last": (actor,)}, purpose="vacant", actor=office,
+                         payload={"office": office}, causes=(Cause("event", event),))
+                ctx.set(office, "holder", None)
+                ctx.set(office, "heir", None)
+                ctx.set(actor, "offices", [o for o in ctx.get(actor, "offices") or [] if o != office])
+        rose = ctx.emit("polity.seceded", {"leader": (actor,), "from": (target,)}, purpose="seceded", actor=actor,
+                        place=seat, payload={"polity": new, "seat": seat}, causes=(Cause("event", event),))
+        ctx.create("polity", new, {"name": f"the free lands of {ctx.get(seat, 'name') or seat}", "kind": "free city",
+                                   "government": "ruler", "seat": seat, "ruler": ctx.get(house, "headship"),
+                                   "members": [house], "founded": ctx.today.to_json(), "ended": None, "draft": False,
+                                   "seceded_from": target})
+        ctx.set(target, "members", [m for m in ctx.get(target, "members") or [] if m != house])
+        geo.apply_change(ctx, {"place": seat, "control": new, "why": f"{new} rose against {target}"})
+        for route in ctx.ids("route"):  # (its other neighbours across the seat's roads: a neutral first acquaintance)
+            ends = ctx.get(route, "ends")
+            if seat in ends:
+                other = ctx.get(ends[1] if ends[0] == seat else ends[0], "control")
+                if other and other not in (new, target) and not ctx.exists(relations.rel_id(new, other)):
+                    ctx.create("relation", relations.rel_id(new, other), relations.fields(new, other, "polity", ctx.today))
+        war.crush(ctx, target, new, rose.id)
+
+    def fail(self, ctx, actor, target, scheme, event):
+        courts.trial(ctx, actor, ctx.get(ctx.get(target, "ruler"), "holder"), event, grave=1.0, scheme=scheme)
+
+
 class Flee(Action):
     """Leave home: by road to any settlement within `flee_days` (S4 §5), else, in a world without routes,
     at once to another settlement of the region. The step is the decision; the journey takes the road's days."""
@@ -519,8 +612,11 @@ READS = (life.DIE_READS | families.Marriage.reads | population.COLUMN_READS | fr
     "spouse", "mother", "father", "ids:settlement", "offices", "plan", "step"}) | travel.READS | courts.BAR_READS)
 WRITES = (life.DIE_WRITES | families.Marriage.writes | travel.WRITES
           | frozenset({"favour", "wound", "need", "accomplices", "state", "holder", "legitimacy", "deposed", "offices",
-                       "heir"}))
-EVENT_TYPES = (ACTION, SEIZED, COUP_FOILED, RAID) + life.DIE_EVENTS + (families.MARRIAGE,) + population.LOD_TYPES + travel.EVENT_TYPES
+                       "heir", "new:polity", "members", "new:war", "new:relation", "stance"})
+          | geo.CHANGE_WRITES | lines.WRITES)  # (a revolt: a realm, a war)
+READS = READS | geo.CHANGE_READS | lines.READS
+EVENT_TYPES = ((ACTION, SEIZED, COUP_FOILED, RAID, SECEDED) + life.DIE_EVENTS + (families.MARRIAGE,) + population.LOD_TYPES
+               + travel.EVENT_TYPES + (war.DECLARED, war.STANCE, geo.changed_type(), lines.LINE))
 
 
 def perform(ctx, action: Action, actor: str, target: str | None, scheme: str | None = None,

@@ -170,6 +170,13 @@ def holds(ctx, owner: str, tag: str, scheme: str | None = None) -> bool:
         return ctx.exists(ref) and ctx.status(ref) == "dead"
     if kind == "shamed":  # in disgrace (Shame is how it gets there)
         return ctx.exists(ref) and float(ctx.get(ref, "favour") or 0.0) < SHAMED
+    if kind == "rallied":  # (a house head of the realm won to the scheme)
+        return bool(scheme) and any(ctx.get(ctx.get(ctx.get(p, "house"), "headship"), "holder") == p
+                                    for p in ctx.get(scheme, "accomplices") or [] if ctx.get(p, "house"))
+    if kind == "seceded":  # (the owner's house is no longer the realm's)
+        house = ctx.get(owner, "house")
+        return ctx.exists(ref) and ctx.kind(ref) == "polity" and bool(house) \
+            and house not in (ctx.get(ref, "members") or [])
     if kind == "hostile":  # (the realm the owner rules is hostile to, or at war with, `ref`)
         from renasci.people.ambitions import ruled
         from renasci.relations import rel_id
