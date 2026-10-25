@@ -285,6 +285,13 @@ existence, event and ordering pins. That support is a separate ticket, not in S8
   - `Treat` negotiates a treaty;
   - `Raid` makes a border incident on purpose;
   - `Coup` seizes an office: a violent action with exposure. The office's `legitimacy` becomes `seized`.
+    **As built (#158):** `Usurp` forms for the head or heir of a realm's member house (not the ruler's own
+    house, which is `Seize`'s), hot-tempered or wanting status, while canon names no successor to the
+    throne (`ctx.succession_pinned`). Its goal is `seized:<ruler>`; its plot is a `Coup` (needs an accomplice,
+    secret, in person, stakes 3). Success: `polity.seized`, the usurper holds the office, `deposed` names the
+    old holder (alive); a guarded ruler foils it (`polity.coup_foiled`); failure costs favour. Where the
+    usurper's own line can't hold the office (another house's headship), the deposed and then their line
+    come next, so a restoration can follow; a lawful succession clears the seizure.
   - (Bribe is cut: `CourtFavour` covers it.)
 - **Beliefs:**
   - new predicates: `started(war, by)`, `betrayed(treaty, by)`, `won(war, by)`;
@@ -363,7 +370,8 @@ existence, event and ordering pins. That support is a separate ticket, not in S8
 **Part B (M6):**
 
 7. Campaigns, battles, sieges, razing.
-8. Usurp, Expand, Secede; Rally, Treat, Raid, Coup; beliefs; courts.
+8. Usurp, Expand, Secede; Rally, Treat, Raid, Coup; beliefs; courts. Usurp and Coup, with the deposed line's
+   return, **done (#158)**.
 9. The Observatory views, the Frontier clans draft data, and the golden scenario.
 
 **Risky bits:**

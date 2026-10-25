@@ -170,6 +170,8 @@ def holds(ctx, owner: str, tag: str, scheme: str | None = None) -> bool:
         return ctx.exists(ref) and ctx.status(ref) == "dead"
     if kind == "shamed":  # in disgrace (Shame is how it gets there)
         return ctx.exists(ref) and float(ctx.get(ref, "favour") or 0.0) < SHAMED
+    if kind == "seized":  # (the owner holds an office taken from them)
+        return any(ctx.get(o, "deposed") == ref for o in ctx.get(owner, "offices") or [])
     if kind == "accomplice":  # only a scheme has accomplices; a fresh plan recruits first
         return bool(scheme and ctx.get(scheme, "accomplices"))
     return False
