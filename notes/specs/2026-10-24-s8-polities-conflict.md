@@ -285,6 +285,13 @@ existence, event and ordering pins. That support is a separate ticket, not in S8
     2.5× likelier to propose war (`war.casus_belli`, a cause of the declaration). Won when a claimed place
     is the realm's.
   - `Secede`: a governed settlement's leading house wants out, and its revolt is a small war.
+    **As built (#158):** the head of a member house seated in a town the realm holds (not its capital, not
+    the ruler's house), hot-blooded and out of favour or wanting status. The plot: `Rally` (Recruit's
+    variant: another house head of the realm joins) then `Revolt` (needs `rallied`): a new draft realm at the
+    seat (`polity.seceded`, `seceded_from`), the seat's control, and `war.crush` (the realm declares on it;
+    no allies called). A failed revolt is treason before the ruler (`courts.trial`). A rising crushed (its
+    realm falls to the one it left) returns its houses to the realm. A plot against a realm, exposed, wrongs
+    its ruler.
 - **Actions:**
   - `Rally` is a variant of S7's `Recruit`: it wins a faction's or a council member's support;
   - `Treat` negotiates a treaty;
@@ -387,8 +394,8 @@ existence, event and ordering pins. That support is a separate ticket, not in S8
 
 7. Campaigns, battles, sieges, razing.
 8. Usurp, Expand, Secede; Rally, Treat, Raid, Coup; beliefs; courts. Usurp and Coup, with the deposed line's
-   return, courts and exile, Expand and Raid, and the
-   official lines, **done (#158)**.
+   return, courts and exile, Expand and Raid, the official
+   lines, and Secede with Rally and Revolt, **done (#158)**.
 9. The Observatory views, the Frontier clans draft data, and the golden scenario.
 
 **Risky bits:**

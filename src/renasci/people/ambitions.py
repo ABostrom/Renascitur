@@ -347,6 +347,59 @@ class Expand(Ambition):
         return f"take the borderlands of {ctx.get(target, 'name') or target}"
 
 
+def governed(ctx, person: str) -> tuple[str, str] | None:
+    """(the realm, the house) for a house head whose seat a realm governs but doesn't rule from: not the
+    ruler's own house, nor seated in the realm's capital. A Secede ambition's ground."""
+    house = ctx.get(person, "house")
+    if house is None or ctx.get(ctx.get(house, "headship"), "holder") != person:
+        return None
+    seat = ctx.get(house, "seat")
+    polity = ctx.get(seat, "control") if seat else None
+    if polity is None or ctx.get(polity, "ended") is not None or house not in (ctx.get(polity, "members") or []):
+        return None
+    if seat == ctx.get(polity, "seat") or ctx.get(polity, "ruler") == ctx.get(house, "headship"):
+        return None
+    ruler = ctx.get(ctx.get(polity, "ruler"), "holder") if ctx.get(polity, "ruler") else None
+    if ruler and ctx.get(ruler, "house") == house:  # (the ruler's own house, whatever office the realm is ruled by)
+        return None
+    return polity, house
+
+
+class Secede(Ambition):
+    """A house seated in a governed town wants out (S8 §9): its head, hot-blooded and out of favour (or
+    wanting status), rallies another house (`Rally`) and rises (`Revolt`): a realm of its own at its seat,
+    and a war to crush it. Won when the house is no longer the realm's."""
+
+    name, cooldown_years = "Secede", 20
+    reads = frozenset({"house", "headship", "holder", "seat", "control", "ended", "members", "ruler", "favour",
+                       "traits", "drives"})
+
+    def eligible(self, ctx, person):
+        found = governed(ctx, person)
+        if found is None:
+            return None
+        status = (ctx.get(person, "drives") or {}).get("status", 1.0)
+        if trait(ctx, person, "temper") < 0.6 or (float(ctx.get(person, "favour") or 0.0) >= 0.0 and status >= 0.5):
+            return None  # (hot-blooded, and slighted: out of favour, or wanting standing)
+        return Formation(found[0], ("drive", "status"))
+
+    def urge(self, ctx, person):
+        return 0.02 + 0.08 * trait(ctx, person, "temper")
+
+    def subgoals(self, ctx, amb):
+        return [frozenset({f"seceded:{ctx.get(amb, 'target')}"})]
+
+    def satisfied(self, ctx, amb):
+        house = ctx.get(ctx.get(amb, "owner"), "house")
+        return bool(house) and house not in (ctx.get(ctx.get(amb, "target"), "members") or [])
+
+    def moot(self, ctx, amb):
+        return ctx.get(ctx.get(amb, "target"), "ended") is not None
+
+    def text(self, ctx, owner, target):
+        return f"break free of {ctx.get(target, 'name') or target}"
+
+
 class Vengeance(Ambition):
     """Answer an attributed harm: the killer of one's kin, or whoever plotted against one."""
 
@@ -437,7 +490,7 @@ class Ruin(Ambition):
         return f"see {ctx.get(target, 'name') or target} brought low"
 
 
-STARTER = (Expand(), Marry(), Protect(), Ruin(), Seize(), Standing(), Usurp(), Vengeance())
+STARTER = (Expand(), Marry(), Protect(), Ruin(), Secede(), Seize(), Standing(), Usurp(), Vengeance())
 
 
 LIBRARY: dict[str, Ambition] = {a.name: a for a in STARTER}

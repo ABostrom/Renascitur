@@ -105,16 +105,35 @@ def casus_belli(ctx, polity: str, other: str) -> str | None:
     return None
 
 
+def crush(ctx, realm: str, rebels: str, cause: str) -> str:
+    """A realm goes to war on a rising (S8 §9, `Revolt`): `realm` the aggressor, `rebels` the defender, the
+    rising its cause. No allies are called: it's the realm's own affair. Returns the war's id."""
+    ident = f"war:{min(realm, rebels)}|{max(realm, rebels)}:{ctx.today.year}"
+    rid = rel_id(realm, rebels)
+    if not ctx.exists(rid):  # (a new realm: bitter from the first, made by the rising)
+        ctx.create("relation", rid, fields(realm, rebels, "polity", ctx.today, "hostile", -0.75))
+    ev = ctx.emit("polity.war_declared", {"aggressor": (realm,), "defender": (rebels,)}, purpose=f"war:{rebels}",
+                  actor=realm, payload={"war": ident, "relation": rid}, causes=(Cause("event", cause),))
+    ctx.create("war", ident, {"aggressor": realm, "defender": rebels, "attackers": [realm], "defenders": [rebels],
+                              "started": ctx.today.to_json(), "ended": None, "outcome": None,
+                              "exhaustion": {realm: 0.0, rebels: 0.0}, "cause": ev.id})
+    _set_stance(ctx, realm, rebels, "war", (Cause("event", ev.id),))
+    for teller, blamed in ((realm, rebels), (rebels, realm)):
+        lines.official(ctx, teller, lines.beliefs.claim("started", war=ident, by=blamed), ev.id)
+    return ident
+
+
 class War(System):
     """Wars declared, fought a year at a time, and ended (see the module doc)."""
 
     name, cadence, priority = "polity.war", "yearly", 2  # (after polity.diplomacy)
     reads = (frozenset({"ids:relation", "ids:war", "ids:settlement", "ids:place", "ids:route", "kind", "stance",
                         "trust", "news", "aggressor", "defender", "attackers", "defenders", "ended", "exhaustion",
-                        "seat", "residents", "ends", "open", "control", "place", "started", "ledger"})
+                        "seat", "residents", "ends", "open", "control", "place", "started", "ledger",
+                        "seceded_from", "members"})
              | treaties.READS | geo.CHANGE_READS | life.DIE_READS | CASUS_READS | lines.READS)
     writes = (frozenset({"stance", "new:war", "new:relation", "attackers", "defenders", "ended", "outcome",
-                         "exhaustion", "control", "ledger"})
+                         "exhaustion", "control", "ledger", "members"})
               | treaties.WRITES | geo.CHANGE_WRITES | life.DIE_WRITES | lines.WRITES)
     event_types = EVENT_TYPES
 
@@ -290,6 +309,11 @@ class War(System):
                     ctx.set(rid, "stance", "hostile")
         for p in _holds(ctx, loser):
             geo.apply_change(ctx, {"place": p, "control": victor, "why": f"{loser} fell"})
+        home = ctx.get(loser, "seceded_from")
+        if home and ctx.get(home, "ended") is None:  # (a rising crushed: its houses are the realm's they left again)
+            ctx.set(home, "members", sorted(set(ctx.get(home, "members") or []) | set(ctx.get(loser, "members") or [])))
+        if home:
+            ctx.set(loser, "members", [])
 
     def _stand_down(self, ctx, wars, why: str | None) -> None:
         """The allies of wars that ended with a side's fall go back to hostile, unless still at war elsewhere."""
