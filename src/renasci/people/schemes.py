@@ -38,7 +38,7 @@ from renasci.core.calendar import Span
 from renasci.core.events import Cause, EventType
 from renasci.core.systems import System
 from renasci.people import actions as A
-from renasci.people import ambitions, beliefs, houses, minds, ties, travel
+from renasci.people import ambitions, beliefs, courts, houses, minds, ties, travel
 from renasci.people.ambitions import ADULT, classes, resolve
 from renasci.people.life import add_grievance, grieving
 from renasci.people.planner import holds, plan_for
@@ -190,6 +190,10 @@ def _exposed(ctx, scheme: str, owner: str, amb: str, action: str, aimed_at: str 
     end(ctx, scheme, "exposed", causes=(Cause("event", event.id),))
     if ctx.get(amb, "state") == "active":
         resolve(ctx, amb, "thwarted", causes=(Cause("event", event.id),))
+    if victim and ctx.get(victim, "offices"):  # (S8 §9: a plot against an office holder goes before the ruler)
+        grave = 1.0 if any(A.ACTIONS[s["action"]].achieves.startswith(("dead:", "seized:"))
+                           for s in ctx.get(scheme, "plan") or []) else 0.3
+        courts.trial(ctx, owner, victim, event.id, grave=grave, scheme=scheme)
 
 
 def step(ctx, scheme: str) -> None:
@@ -250,9 +254,11 @@ class Schemes(System):
     priority = 7  # after ambitions (6)
     reads = (READS | A.READS | ambitions.Ambitions.reads | houses.READS
              | frozenset({"ids:settlement", "residents", "born", "status", "ambitions", "favour", "traits", "spouse",
-                          "ties", "a", "b"}).union(*(a.reads for a in A.ACTIONS.values())) | relations.NOTE_READS)
-    writes = WRITES | A.WRITES | ambitions.WRITES | houses.WRITES | ties.WRITES | relations.NOTE_WRITES
-    event_types = EVENT_TYPES + A.EVENT_TYPES + ambitions.EVENT_TYPES + (ties.TIE_FORMED,)
+                          "ties", "a", "b"}).union(*(a.reads for a in A.ACTIONS.values())) | relations.NOTE_READS
+             | courts.READS)
+    writes = (WRITES | A.WRITES | ambitions.WRITES | houses.WRITES | ties.WRITES | relations.NOTE_WRITES
+              | courts.WRITES)
+    event_types = EVENT_TYPES + A.EVENT_TYPES + ambitions.EVENT_TYPES + (ties.TIE_FORMED,) + (courts.TRIAL,)
 
     def run(self, ctx):
         rate = float(ctx.params.get("scheme_rate", 0.5))

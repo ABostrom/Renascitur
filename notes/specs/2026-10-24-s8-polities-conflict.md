@@ -303,6 +303,12 @@ existence, event and ordering pins. That support is a separate ticket, not in S8
   - The verdict is **pardon**, **fine** (favour), **exile** or **execution** (a death, cause "executed",
     subject to §3.4).
   - Exile moves the person out of the polity's control and bars their return while that ruler reigns.
+  - **As built (#158):** `people.courts`. The court is the realm controlling where the accused lives (else
+    their house's realm), the judge its ruler (never the ruler themselves). Verdict weights: pardon from
+    favour, friendship and kinship with the judge; exile and execution from the plot's gravity (a killing or
+    seizure 1, a shaming 0.3), execution also from the judge's temper and a plot against the judge or their
+    kin. Exile with nowhere outside the realm is a fine. Flee honours the bar; other moves (marriage,
+    migration) don't yet, and an openly killed kin of the ruler isn't tried yet.
 
 ## 10. Observatory (S13)
 
@@ -371,7 +377,7 @@ existence, event and ordering pins. That support is a separate ticket, not in S8
 
 7. Campaigns, battles, sieges, razing.
 8. Usurp, Expand, Secede; Rally, Treat, Raid, Coup; beliefs; courts. Usurp and Coup, with the deposed line's
-   return, **done (#158)**.
+   return, and courts and exile, **done (#158)**.
 9. The Observatory views, the Frontier clans draft data, and the golden scenario.
 
 **Risky bits:**
