@@ -39,6 +39,10 @@ def people_ruleset(name: str, scenario: dict, version: int = 1) -> Ruleset:
         from renasci.war import War
 
         systems += (Diplomacy(), War(), Stats())
+        if scenario.get("params", {}).get("campaigns"):  # wars fought a season at a time (S8 §8, #122)
+            from renasci.campaigns import Campaigns
+
+            systems += (Campaigns(),)
     disguises = (Illness(),)
     if scenario.get("geography"):  # a structural ripple changes the map (#114)
         from renasci import geo
