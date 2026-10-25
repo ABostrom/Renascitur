@@ -75,7 +75,7 @@ def world_params(races: list, catalogue: dict, house_from: str = "father", kin_d
                  exposure_base: float = 0.15, wound_years: int = 10, needs: dict | None = None,
                  flee_days: int | None = None, migration_rate: float | None = None,
                  beliefs: bool | None = None, routing: bool | dict | None = None,
-                 cadet_size: int | None = None, cadet_rate: float = 0.05) -> dict:
+                 cadet_size: int | None = None, cadet_rate: float = 0.05, campaigns: bool | None = None) -> dict:
     """Ruleset params for the people systems, checked now rather than at the first activation."""
     if type(kin_degree) is not int or kin_degree < 0:
         raise ValueError("kin_degree must be a non-negative int")
@@ -117,6 +117,10 @@ def world_params(races: list, catalogue: dict, house_from: str = "father", kin_d
         if type(cadet_rate) not in (int, float) or not 0 <= cadet_rate <= 1:
             raise ValueError(f"cadet_rate must be a probability, got {cadet_rate!r}")
         params["cadet_size"], params["cadet_rate"] = cadet_size, cadet_rate
+    if campaigns is not None:  # (S8 §8, #122: wars a season at a time; only when set)
+        if type(campaigns) is not bool:
+            raise ValueError(f"campaigns must be true or false, got {campaigns!r}")
+        params["campaigns"] = campaigns
     if beliefs is not None:  # (S6: only when set, so worlds without it keep their params)
         if type(beliefs) is not bool:
             raise ValueError(f"beliefs must be true or false, got {beliefs!r}")

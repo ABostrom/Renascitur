@@ -142,7 +142,7 @@ class War(System):
         houses.handle_succession(ctx, activation)
 
     def run(self, ctx):
-        self.step(ctx, 1)
+        self.step(ctx, 1, fine=True)
 
     def coarse_fallback(self, ctx, years: int) -> None:
         """A coarse step of `years` (S8 §7: "war as one draw per year"): a declaration's odds for that many years
@@ -150,13 +150,15 @@ class War(System):
         a fine war's), all on the step's date."""
         self.step(ctx, years)
 
-    def step(self, ctx, years: int) -> None:
+    def step(self, ctx, years: int, fine: bool = False) -> None:
         if type(years) is not int or years < 1:
             raise ValueError(f"a step is a whole number of years, at least one; got {years!r}")
         for rid in ctx.ids("relation"):
             with ctx.scope(rid):
                 if ctx.get(rid, "kind") == "polity" and ctx.get(rid, "stance") == "hostile":
                     self.declare(ctx, rid, years)
+        if fine and ctx.params.get("campaigns"):
+            return  # (a fine year is fought a season at a time: `renasci.campaigns`)
         for war in ctx.ids("war"):
             with ctx.scope(war):
                 for _ in range(years):

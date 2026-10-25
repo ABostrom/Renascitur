@@ -287,7 +287,7 @@ existence, event and ordering pins. That support is a separate ticket, not in S8
   - `Secede`: a governed settlement's leading house wants out, and its revolt is a small war.
     **As built (#158):** the head of a member house seated in a town the realm holds (not its capital, not
     the ruler's house), hot-blooded and out of favour or wanting status. The plot: `Rally` (Recruit's
-    variant: another house head of the realm joins) then `Revolt` (needs `rallied`): a new draft realm at the
+    variant: another house head of the realm joins) then `Revolt` (needs `rallied`): a new realm at the
     seat (`polity.seceded`, `seceded_from`), the seat's control, and `war.crush` (the realm declares on it;
     no allies called). A failed revolt is treason before the ruler (`courts.trial`). A rising crushed (its
     realm falls to the one it left) returns its houses to the realm. A plot against a realm, exposed, wrongs
@@ -392,7 +392,9 @@ existence, event and ordering pins. That support is a separate ticket, not in S8
 
 **Part B (M6):**
 
-7. Campaigns, battles, sieges, razing.
+7. Campaigns, battles, sieges, razing. Seasonal campaigns, battles and sieges (`renasci.campaigns`, behind
+   `campaigns: true`) **done (#122, slice 1)**; razing, commanders and notables in the field, supply, and levy
+   losses among the masses next.
 8. Usurp, Expand, Secede; Rally, Treat, Raid, Coup; beliefs; courts. Usurp and Coup, with the deposed line's
    return, courts and exile, Expand and Raid, the official
    lines, and Secede with Rally and Revolt, **done (#158)**.
