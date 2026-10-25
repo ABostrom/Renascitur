@@ -143,7 +143,7 @@ class Seize(Ambition):
 
     name, cooldown_years = "Seize", 10
     reads = frozenset({"house", "headship", "holder", "rule", "children", "father", "mother", "sex", "status",
-                       "drives", "traits", "offices", "extinct"})
+                       "drives", "traits", "offices", "extinct", "legitimacy", "deposed"})
 
     def _ahead(self, ctx, person):
         from renasci.people.houses import RULES
@@ -190,6 +190,63 @@ class Seize(Ambition):
     def text(self, ctx, owner, target):
         house = ctx.get(owner, "house")
         return f"take the seat of House {ctx.get(house, 'name') or house}"
+
+
+def throne(ctx, person: str) -> tuple[str, str] | None:
+    """The first realm (by id) whose ruler's office `person` could plot to take: (polity, office). They must
+    head or be heir to a member house; not of the ruler's own house (that's Seize), nor its holder; and the
+    office isn't already seized, nor one canon names a successor to."""
+    house = ctx.get(person, "house")
+    if house is None:
+        return None
+    headship = ctx.get(house, "headship")
+    if person not in (ctx.get(headship, "holder"), ctx.get(headship, "heir")):
+        return None
+    for polity in ctx.ids("polity"):
+        office = ctx.get(polity, "ruler")
+        if not office or ctx.get(polity, "ended") is not None or house not in (ctx.get(polity, "members") or []):
+            continue
+        holder = ctx.get(office, "holder")
+        if holder is None or holder == person or ctx.status(holder) != "active" or ctx.get(office, "house") == house                 or ctx.get(holder, "house") == house or ctx.get(office, "legitimacy") == "seized"                 or ctx.succession_pinned(office):  # (a seized throne is the deposed line's to win back)
+            continue
+        return polity, office
+    return None
+
+
+class Usurp(Ambition):
+    """Take a realm's ruling office (S8 §9): Seize's ambition, beyond one's own house. Its plot is a Coup."""
+
+    name, cooldown_years = "Usurp", 15
+    reads = frozenset({"house", "headship", "holder", "heir", "ids:polity", "ruler", "ended", "members", "status",
+                       "drives", "traits", "deposed", "offices", "legitimacy"})
+
+    def eligible(self, ctx, person):
+        found = throne(ctx, person)
+        if found is None:
+            return None
+        status = (ctx.get(person, "drives") or {}).get("status", 1.0)
+        if trait(ctx, person, "temper") < 0.6 and status >= 0.5:
+            return None  # content, or not hot-blooded enough
+        return Formation(ctx.get(found[1], "holder"), ("drive", "status"))
+
+    def urge(self, ctx, person):
+        return 0.02 + 0.1 * trait(ctx, person, "temper")
+
+    def subgoals(self, ctx, amb):
+        return [frozenset({f"seized:{ctx.get(amb, 'target')}"})]
+
+    def satisfied(self, ctx, amb):  # (they hold the office they took from its holder: `seized:<target>`)
+        target = ctx.get(amb, "target")
+        return any(ctx.get(o, "deposed") == target for o in ctx.get(ctx.get(amb, "owner"), "offices") or [])
+
+    def moot(self, ctx, amb):  # (a plot under way decides; else the ruler gone, or no longer the ruler, ends it)
+        if ctx.get(amb, "scheme") is not None:
+            return False
+        found = throne(ctx, ctx.get(amb, "owner"))
+        return found is None or ctx.get(found[1], "holder") != ctx.get(amb, "target")
+
+    def text(self, ctx, owner, target):
+        return f"take the realm's rule from {ctx.get(target, 'name') or target}"
 
 
 class Vengeance(Ambition):
@@ -282,7 +339,7 @@ class Ruin(Ambition):
         return f"see {ctx.get(target, 'name') or target} brought low"
 
 
-STARTER = (Marry(), Protect(), Ruin(), Seize(), Standing(), Vengeance())
+STARTER = (Marry(), Protect(), Ruin(), Seize(), Standing(), Usurp(), Vengeance())
 
 
 LIBRARY: dict[str, Ambition] = {a.name: a for a in STARTER}

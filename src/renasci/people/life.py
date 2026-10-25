@@ -214,7 +214,7 @@ _crowding = crowding  # (the name tests used first)
 # What `die` touches. Every system (or forcer) that calls `die` declares these, and handles the
 # succession follow-ups `die` schedules through `houses.handle_succession`.
 _AMBITION_READS = frozenset({"ambitions", "cooldowns", "owner", "class", "state", "scheme", "spouse", "favour",
-                             "target", "house", "headship", "holder"})  # (and whatever any `satisfied` reads)
+                             "target", "house", "headship", "holder", "offices", "deposed"})  # (and whatever any `satisfied` reads)
 _AMBITION_WRITES = frozenset({"ambitions", "cooldowns", "state", "resolved", "scheme"})
 DIE_EVENTS = (DEATH, NEAR_MISS, _RESOLVED) + houses.EVENT_TYPES + (ties.TIE_ENDED,) + beliefs.EVENT_TYPES
 DIE_READS = (frozenset({"born", "residents", "spouse", "status", "flow:*", "mother", "father", "children", "grievances",

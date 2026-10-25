@@ -28,12 +28,16 @@ import math
 
 from renasci.core.events import Cause, EventType
 from renasci import geo
-from renasci.people import beliefs, families, life, minds, population, travel
-from renasci.people.ambitions import trait
+from renasci.people import beliefs, families, houses, life, minds, population, travel
+from renasci.people.ambitions import throne, trait
 from renasci.people.races import age_years
 
 ACTION = EventType("people.action", 1, roles={"actor": (1, 1), "target": (0, 1), "accomplice": (0, 1)},
                    payload={"action": "str", "outcome": "str"})
+SEIZED = EventType("polity.seized", 1, roles={"usurper": (1, 1), "deposed": (1, 1)},
+                   payload={"office": "id", "polity": "id"})
+COUP_FOILED = EventType("polity.coup_foiled", 1, roles={"usurper": (1, 1), "ruler": (1, 1)},
+                        payload={"office": "id"})
 HEARD, FAVOURED = 0.2, 0.5
 SHAMED = -0.25  # in disgrace: below this (a lost duel or an exposed plot alone isn't enough)
 
@@ -366,6 +370,45 @@ class BearWitness(Action):
             minds.wound(ctx, target, "shame", event)
 
 
+class Coup(Action):
+    """Seize a realm's ruling office from its holder (S8 §9): a violent, secret action that needs a
+    following. The usurper holds it, `legitimacy` seized and the old holder `deposed` (alive: where the
+    usurper's own line can't hold it, the deposed line comes back). A failed coup costs favour."""
+
+    name, requires, achieves, secrecy, duration_days, stakes = ("Coup", frozenset({"accomplice"}), "seized:{target}",
+                                                                 0.5, 120, 3.0)
+    present = True
+    reads = frozenset({"ids:polity", "ruler", "ended", "members", "headship", "heir", "deposed", "name"})
+
+    def _office(self, ctx, actor, target):
+        found = throne(ctx, actor)
+        return found if found and ctx.get(found[1], "holder") == target else None
+
+    def possible(self, ctx, actor, target, scheme):
+        return super().possible(ctx, actor, target, scheme) and target is not None             and self._office(ctx, actor, target) is not None
+
+    def odds(self, ctx, actor, target, scheme):
+        return 0.2 + 0.3 * trait(ctx, actor, "wits")
+
+    def succeed(self, ctx, actor, target, scheme, event):
+        polity, office = self._office(ctx, actor, target)
+        if ctx.guarded(target):  # (canon, or a ripple, needs them on the throne)
+            ctx.emit("polity.coup_foiled", {"usurper": (actor,), "ruler": (target,)}, purpose="coup_foiled",
+                     actor=office, payload={"office": office}, causes=(Cause("event", event),))
+            return False
+        ctx.emit("polity.seized", {"usurper": (actor,), "deposed": (target,)}, purpose="seized", actor=office,
+                 payload={"office": office, "polity": polity}, causes=(Cause("event", event),))
+        ctx.set(office, "holder", actor)
+        ctx.set(office, "legitimacy", "seized")
+        ctx.set(office, "deposed", target)
+        ctx.set(target, "offices", [o for o in ctx.get(target, "offices") or [] if o != office])
+        ctx.set(actor, "offices", sorted((ctx.get(actor, "offices") or []) + [office]))
+        houses.name_heir(ctx, office, actor)
+
+    def fail(self, ctx, actor, target, scheme, event):
+        _favour(ctx, actor, -0.3)
+
+
 class Flee(Action):
     """Leave home: by road to any settlement within `flee_days` (S4 §5), else, in a world without routes,
     at once to another settlement of the region. The step is the decision; the journey takes the road's days."""
@@ -442,8 +485,9 @@ READS = (life.DIE_READS | families.Marriage.reads | population.COLUMN_READS | fr
     "favour", "wound", "place", "residents", "region", "accomplices", "state", "born", "traits", "race", "sex",
     "spouse", "mother", "father", "ids:settlement", "offices", "plan", "step"}) | travel.READS)
 WRITES = (life.DIE_WRITES | families.Marriage.writes | travel.WRITES
-          | frozenset({"favour", "wound", "need", "accomplices", "state"}))
-EVENT_TYPES = (ACTION,) + life.DIE_EVENTS + (families.MARRIAGE,) + population.LOD_TYPES + travel.EVENT_TYPES
+          | frozenset({"favour", "wound", "need", "accomplices", "state", "holder", "legitimacy", "deposed", "offices",
+                       "heir"}))
+EVENT_TYPES = (ACTION, SEIZED, COUP_FOILED) + life.DIE_EVENTS + (families.MARRIAGE,) + population.LOD_TYPES + travel.EVENT_TYPES
 
 
 def perform(ctx, action: Action, actor: str, target: str | None, scheme: str | None = None,

@@ -101,6 +101,7 @@ class SuccessionForcer(Forcer):
         ctx.set(office, "holder", successor)
         if ctx.get(office, "legitimacy") not in (None, "lawful"):  # (as `houses.succeed`: lawful again)
             ctx.set(office, "legitimacy", "lawful")
+            ctx.set(office, "deposed", None)
         ctx.set(successor, "offices", sorted((ctx.get(successor, "offices") or []) + [office]))
         houses.name_heir(ctx, office, successor)
         return True

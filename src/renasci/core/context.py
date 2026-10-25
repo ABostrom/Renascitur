@@ -374,6 +374,15 @@ class Ctx:
         self._note((entity, "guard"), f"pin:{pin.id}" if pin else f"ripple:{ripple.id}" if ripple else None)
         return pin is not None or ripple is not None
 
+    def succession_pinned(self, office: str) -> bool:
+        """Does an open canon pin name who next succeeds to `office`? A recorded read (of `(office,
+        "pinned")`, its value the pin). For plots that would take a canon office out of its line (a coup)."""
+        director = self._engine.director
+        pins = sorted(p.id for p in director.pins if p.kind == "event" and director.status.get(p.id) == "open"
+                      and p.payload.get("type") == "people.succession" and p.payload.get("office") == office)
+        self._note((office, "pinned"), pins[0] if pins else None)
+        return bool(pins)
+
     def guarded(self, entity: str) -> bool:
         """Ask before a fatal outcome: True means canon needs `entity` alive, so write a near miss.
 

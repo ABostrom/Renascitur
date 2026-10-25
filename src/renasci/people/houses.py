@@ -67,8 +67,8 @@ CADET_MAX = 0.5
 # What succession reads and writes; people.life declares these too, since it runs the follow-up.
 READS = frozenset({"offices", "headship", "holder", "heir", "rule", "house", "children", "father", "mother",
                    "sex", "status", "extinct", "scope", "polity", "members", "appointer", "rank", "favour", "ties",
-                   "a", "b", "kind", "born", "legitimacy"})
-WRITES = frozenset({"holder", "heir", "offices", "extinct", "legitimacy"})
+                   "a", "b", "kind", "born", "legitimacy", "deposed"})
+WRITES = frozenset({"holder", "heir", "offices", "extinct", "legitimacy", "deposed"})
 
 
 def line_of_succession(get, status, holder: str, house: str | None, male_first: bool, reach: int = 3,
@@ -112,7 +112,14 @@ class SuccessionRule:
 
     def candidates(self, ctx, office: str, holder: str) -> list[str]:
         via = "mother" if ctx.params.get("house_from") == "mother" else "father"
-        return line_of_succession(ctx.get, ctx.status, holder, ctx.get(office, "house"), self.male_first, via=via)
+        house = ctx.get(office, "house")
+        line = line_of_succession(ctx.get, ctx.status, holder, house, self.male_first, via=via)
+        deposed = ctx.get(office, "deposed") if not line and ctx.get(office, "legitimacy") == "seized" else None
+        if deposed:  # (a usurper of another house: the deposed, then their line, S8 §9)
+            back = [deposed] if deposed != holder and ctx.status(deposed) == "active" else []
+            line = back + [p for p in line_of_succession(ctx.get, ctx.status, deposed, house, self.male_first, via=via)
+                           if p != holder]
+        return line
 
     def choose(self, ctx, office: str, predecessor: str | None, line: list[str]) -> tuple[str | None, tuple]:
         """(who takes the office now, or None: nobody yet, the office waits; the events that decided it)."""
@@ -147,7 +154,7 @@ def _heads(ctx, polity: str) -> list[str]:
     for house in sorted(ctx.get(polity, "members") or []):
         office = ctx.get(house, "headship")
         holder = ctx.get(office, "holder") if office else None
-        if holder and ctx.status(holder) == "active":
+        if holder and ctx.status(holder) == "active" and holder not in out:  # (a usurper may head two houses)
             out.append(holder)
     return out
 
@@ -290,6 +297,7 @@ def succeed(ctx, office: str, predecessor: str | None) -> None:
         ctx.set(office, "holder", successor)
         if ctx.get(office, "legitimacy") not in (None, "lawful"):  # (a lawful succession ends a seizure)
             ctx.set(office, "legitimacy", "lawful")
+            ctx.set(office, "deposed", None)
         ctx.set(successor, "offices", sorted((ctx.get(successor, "offices") or []) + [office]))
         name_heir(ctx, office, successor)
 
