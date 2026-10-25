@@ -279,6 +279,11 @@ existence, event and ordering pins. That support is a separate ticket, not in S8
 - **Ambitions:**
   - `Usurp` **generalises S7's `Seize`** from house headships to any office, a throne or a council seat;
   - `Expand`: a ruler wants a neighbour's places, which adds a casus belli;
+    **As built (#158):** a ruler (hot-tempered or wanting status) with a cold, hostile or warring neighbour
+    across a border route claims its border places (`claims`); the plot is `Raid`s (each a `polity.raid`
+    and a ledger entry, weight −0.15) until the relation is hostile; the ambition makes the ruler's realm
+    2.5× likelier to propose war (`war.casus_belli`, a cause of the declaration). Won when a claimed place
+    is the realm's.
   - `Secede`: a governed settlement's leading house wants out, and its revolt is a small war.
 - **Actions:**
   - `Rally` is a variant of S7's `Recruit`: it wins a faction's or a council member's support;
@@ -377,7 +382,8 @@ existence, event and ordering pins. That support is a separate ticket, not in S8
 
 7. Campaigns, battles, sieges, razing.
 8. Usurp, Expand, Secede; Rally, Treat, Raid, Coup; beliefs; courts. Usurp and Coup, with the deposed line's
-   return, and courts and exile, **done (#158)**.
+   return, courts and exile, and Expand and Raid,
+   **done (#158)**.
 9. The Observatory views, the Frontier clans draft data, and the golden scenario.
 
 **Risky bits:**

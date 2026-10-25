@@ -249,6 +249,104 @@ class Usurp(Ambition):
         return f"take the realm's rule from {ctx.get(target, 'name') or target}"
 
 
+def ruled(ctx, person: str) -> str | None:
+    """The realm `person` rules (holds its ruler's office), if any (the first by id). Someone who holds no
+    office reads nothing more."""
+    held = ctx.get(person, "offices") or []
+    if not held:
+        return None
+    for polity in ctx.ids("polity"):
+        if ctx.get(polity, "ruler") in held and ctx.get(polity, "ended") is None:
+            return polity
+    return None
+
+
+def border_places(ctx, mine: str, other: str) -> list[str]:
+    """`other`'s places at the end of a route whose far end `mine` holds: what a war with them would take."""
+    out = set()
+    for route in ctx.ids("route"):
+        a, b = ctx.get(route, "ends")
+        held = (ctx.get(a, "control"), ctx.get(b, "control"))
+        if held == (mine, other):
+            out.add(b)
+        elif held == (other, mine):
+            out.add(a)
+    return sorted(out)
+
+
+class Expand(Ambition):
+    """A ruler wants a neighbour's border places (S8 §9): their plot is raids across the line, souring the
+    relation to hostile, and the ambition itself is a casus belli (`war.casus_belli`). Won when a place
+    claimed at its forming (`claims`) is held by the ruler's realm."""
+
+    name, cooldown_years = "Expand", 12
+    reads = frozenset({"ids:polity", "ruler", "holder", "ended", "ids:relation", "a", "b", "kind", "stance", "ids:route",
+                       "ends", "control", "traits", "drives", "claims", "offices"})
+    WANTING = ("cold", "hostile", "war")
+
+    def _wanted(self, ctx, mine, other) -> bool:
+        """Still a neighbour worth taking from: at odds, and bordering."""
+        from renasci.relations import rel_id
+
+        rid = rel_id(mine, other)
+        return ctx.exists(rid) and ctx.get(rid, "stance") in self.WANTING and ctx.get(other, "ended") is None \
+            and bool(border_places(ctx, mine, other))
+
+    def _neighbour(self, ctx, person):
+        mine = ruled(ctx, person)
+        if mine is None:
+            return None
+        for rid in ctx.ids("relation"):
+            if ctx.get(rid, "kind") != "polity" or ctx.get(rid, "stance") not in self.WANTING:
+                continue
+            a, b = ctx.get(rid, "a"), ctx.get(rid, "b")
+            if mine not in (a, b):
+                continue
+            other = b if a == mine else a
+            if self._wanted(ctx, mine, other):
+                return mine, other
+        return None
+
+    def claims(self, ctx, mine, other):
+        return border_places(ctx, mine, other)
+
+    def eligible(self, ctx, person):
+        found = self._neighbour(ctx, person)
+        if found is None:
+            return None
+        status = (ctx.get(person, "drives") or {}).get("status", 1.0)
+        if trait(ctx, person, "temper") < 0.6 and status >= 0.5:
+            return None
+        return Formation(found[1], ("drive", "status"))
+
+    def urge(self, ctx, person):
+        return 0.05 + 0.2 * trait(ctx, person, "temper")
+
+    def formed(self, ctx, amb, formation):
+        mine = ruled(ctx, ctx.get(amb, "owner"))
+        ctx.set(amb, "claims", {"polity": mine, "places": self.claims(ctx, mine, formation.target)})
+
+    def subgoals(self, ctx, amb):
+        return [frozenset({f"hostile:{ctx.get(amb, 'target')}"})]
+
+    def satisfied(self, ctx, amb):
+        claims = ctx.get(amb, "claims") or {}
+        return any(ctx.get(p, "control") == claims.get("polity") for p in claims.get("places") or [])
+
+    def moot(self, ctx, amb):  # (the neighbour has fallen, or the owner no longer rules the realm that claimed)
+        return ctx.get(ctx.get(amb, "target"), "ended") is not None \
+            or ruled(ctx, ctx.get(amb, "owner")) != (ctx.get(amb, "claims") or {}).get("polity")
+
+    def keeps(self, ctx, amb):  # (a plot under way decides; else while this neighbour is still at odds and bordering)
+        if ctx.get(amb, "scheme") is not None:
+            return True
+        mine = (ctx.get(amb, "claims") or {}).get("polity")
+        return bool(mine) and self._wanted(ctx, mine, ctx.get(amb, "target"))
+
+    def text(self, ctx, owner, target):
+        return f"take the borderlands of {ctx.get(target, 'name') or target}"
+
+
 class Vengeance(Ambition):
     """Answer an attributed harm: the killer of one's kin, or whoever plotted against one."""
 
@@ -339,7 +437,7 @@ class Ruin(Ambition):
         return f"see {ctx.get(target, 'name') or target} brought low"
 
 
-STARTER = (Marry(), Protect(), Ruin(), Seize(), Standing(), Usurp(), Vengeance())
+STARTER = (Expand(), Marry(), Protect(), Ruin(), Seize(), Standing(), Usurp(), Vengeance())
 
 
 LIBRARY: dict[str, Ambition] = {a.name: a for a in STARTER}
@@ -383,7 +481,7 @@ def on_death(ctx, person: str, death_event: str) -> None:
 
 
 READS = frozenset({"ambitions", "cooldowns", "owner", "class", "target", "status", "state", "scheme"})
-WRITES = frozenset({"ambitions", "cooldowns", "state", "resolved", "scheme", "new:ambition", "grievances"})
+WRITES = frozenset({"ambitions", "cooldowns", "state", "resolved", "scheme", "new:ambition", "grievances", "claims"})
 
 
 class Ambitions(System):

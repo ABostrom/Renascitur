@@ -38,6 +38,8 @@ TRUCE_SHAME = 0.25  # (a truce makes declaring that much rarer)
 JOIN = 0.7  # (an ally's odds of honouring the call)
 FALL = 0.08  # (a year, that a loser's ruler falls in battle)
 EXHAUSTED = 1.0
+CASUS = 2.5  # (a ruler who wants the other's borderlands: that much likelier to propose war)
+CASUS_READS = frozenset({"ambitions", "class", "target", "state", "ruler", "holder", "ended", "status"})
 WON, LOST = 0.1, 0.25  # (exhaustion a year)
 
 DECLARED = EventType("polity.war_declared", 1, roles={"aggressor": (1, 1), "defender": (1, 1)},
@@ -94,6 +96,15 @@ def _set_stance(ctx, a: str, b: str, to: str, causes=()) -> None:
         ctx.set(rid, "stance", to)
 
 
+def casus_belli(ctx, polity: str, other: str) -> str | None:
+    """The active Expand ambition of `polity`'s ruler against `other`, if any (S8 §9)."""
+    who = treaties.ruler(ctx, polity)
+    for amb in (ctx.get(who, "ambitions") or []) if who else []:
+        if ctx.get(amb, "class") == "Expand" and ctx.get(amb, "state") == "active" and ctx.get(amb, "target") == other:
+            return amb
+    return None
+
+
 class War(System):
     """Wars declared, fought a year at a time, and ended (see the module doc)."""
 
@@ -101,7 +112,7 @@ class War(System):
     reads = (frozenset({"ids:relation", "ids:war", "ids:settlement", "ids:place", "ids:route", "kind", "stance",
                         "trust", "news", "aggressor", "defender", "attackers", "defenders", "ended", "exhaustion",
                         "seat", "residents", "ends", "open", "control", "place", "started", "ledger"})
-             | treaties.READS | geo.CHANGE_READS | life.DIE_READS)
+             | treaties.READS | geo.CHANGE_READS | life.DIE_READS | CASUS_READS)
     writes = (frozenset({"stance", "new:war", "new:relation", "attackers", "defenders", "ended", "outcome",
                          "exhaustion", "control", "ledger"})
               | treaties.WRITES | geo.CHANGE_WRITES | life.DIE_WRITES)
@@ -141,14 +152,18 @@ class War(System):
         if ctx.get(a, "ended") is not None or ctx.get(b, "ended") is not None:
             return
         truces = [t for t in ctx.get(rid, "treaties") or [] if ctx.get(t, "kind") == "truce"]
-        p = DECLARE * max(0.0, -trust) * (TRUCE_SHAME if truces else 1.0)
+        base = DECLARE * max(0.0, -trust) * (TRUCE_SHAME if truces else 1.0)
         for side in sorted((a, b)):
+            other = b if side == a else a
+            casus = casus_belli(ctx, side, other) if base > 0 else None
+            p = base * (CASUS if casus else 1.0)
             if p <= 0 or not ctx.chance(over(min(1.0, p), years), f"propose:war:{side}", owner=rid):
                 continue
             ok, why = treaties.decide(ctx, side, "war", 0.8, rid)
             if not ok:
                 continue
-            other = b if side == a else a
+            if casus:
+                why = why + (Cause("ambition", casus),)
             ident = f"war:{min(a, b)}|{max(a, b)}:{ctx.today.year}"
             news = ctx.get(rid, "news")
             ev = ctx.emit("polity.war_declared", {"aggressor": (side,), "defender": (other,)}, purpose="war",
@@ -199,6 +214,7 @@ class War(System):
         sides = {k: [p for p in ctx.get(war, k) if ctx.get(p, "ended") is None] for k in ("attackers", "defenders")}
         if not sides["attackers"] or not sides["defenders"]:  # (a side has fallen: nothing left to fight)
             self._end(ctx, war, (sides["attackers"] or sides["defenders"] or [None])[0])
+            self._stand_down(ctx, [war], None)
             return
         might = {p: strength(ctx, p) for k in sides for p in sides[k]}
         total = {k: sum(might[p] for p in v) + 1 for k, v in sides.items()}  # (+1: a war of the empty still ends)
@@ -251,12 +267,13 @@ class War(System):
     def fall(self, ctx, war: str, loser: str, victor: str, why: str) -> None:
         """`loser` holds no settlement: it falls. Its places go to `victor`, its treaties end, and its wars
         too where it led a side."""
-        ctx.emit("polity.fallen", {"polity": (loser,), "victor": (victor,)}, purpose="fallen", actor=war,
-                 payload={"war": war}, causes=(Cause("event", why),))
+        fell = ctx.emit("polity.fallen", {"polity": (loser,), "victor": (victor,)}, purpose="fallen", actor=war,
+                        payload={"war": war}, causes=(Cause("event", why),))
         ctx.set(loser, "ended", ctx.today.to_json())
-        for w in ctx.ids("war"):
-            if ctx.get(w, "ended") is None and loser in (ctx.get(w, "aggressor"), ctx.get(w, "defender")):
-                self._end(ctx, w, victor if w == war else None)
+        over = [w for w in ctx.ids("war") if ctx.get(w, "ended") is None and loser in (ctx.get(w, "aggressor"), ctx.get(w, "defender"))]
+        for w in over:
+            self._end(ctx, w, victor if w == war else None)
+        self._stand_down(ctx, over, fell.id)
         for rid in ctx.ids("relation"):
             if loser in (ctx.get(rid, "a"), ctx.get(rid, "b")):
                 for t in list(ctx.get(rid, "treaties") or []):
@@ -265,6 +282,20 @@ class War(System):
                     ctx.set(rid, "stance", "hostile")
         for p in _holds(ctx, loser):
             geo.apply_change(ctx, {"place": p, "control": victor, "why": f"{loser} fell"})
+
+    def _stand_down(self, ctx, wars, why: str | None) -> None:
+        """The allies of wars that ended with a side's fall go back to hostile, unless still at war elsewhere."""
+        live = [w for w in ctx.ids("war") if ctx.get(w, "ended") is None]
+        for w in wars:
+            for x in ctx.get(w, "attackers"):
+                for y in ctx.get(w, "defenders"):
+                    rid = rel_id(x, y)
+                    if not ctx.exists(rid) or ctx.get(rid, "stance") != "war":
+                        continue
+                    if any((x in ctx.get(v, "attackers") and y in ctx.get(v, "defenders"))
+                           or (y in ctx.get(v, "attackers") and x in ctx.get(v, "defenders")) for v in live):
+                        continue  # (they fight on in another war)
+                    _set_stance(ctx, x, y, "hostile", (Cause("event", why),) if why else ())
 
     def _end(self, ctx, war: str, outcome: str | None) -> None:
         ctx.set(war, "ended", ctx.today.to_json())
