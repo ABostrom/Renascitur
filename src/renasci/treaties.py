@@ -139,6 +139,9 @@ def year(ctx, rid: str, a: str, b: str, stance: str, trust: float, years: int = 
                     ctx.set(t, "broken_by", side)
                     _end(ctx, rid, t)
                     entries.append({"kind": "betrayal", "event": ev.id})
+                    from renasci import lines
+
+                    lines.betrayal(ctx, (a, b), t, ev.id)
                     break
         elif kind == "trade":  # (a pact that holds: a little more trust each year, its signing the cause)
             entries.append({"kind": "pact", "event": ctx.get(t, "event"), "recurring": True})

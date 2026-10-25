@@ -303,6 +303,11 @@ existence, event and ordering pins. That support is a separate ticket, not in S8
   - each side's **official line** spreads through its settlements' `shares`, as the ward failure's lie
     does;
   - news of battles travels by road.
+  - **As built (#158):** `renasci.lines`. At a declaration each side's line blames the other (`started`); at
+    peace each side claims the victory, and a fall's victor does (`won`); a broken treaty is the other
+    side's betrayal (`betrayed`). A line is a `polity.line` event, a 0.4 share of the claim in each of the
+    realm's settlements (`beliefs.seeded`), and the ruler holding it; news by road does the rest.
+    `analysis.truth` judges the three predicates against the log. Only with beliefs on.
 - **Courts and exile** (from S7): a trial goes before the polity's ruler (`polity.trial`). It is held over
   an exposed scheme against an office holder, or the killing of a ruler's kin.
   - The verdict is **pardon**, **fine** (favour), **exile** or **execution** (a death, cause "executed",
@@ -382,8 +387,8 @@ existence, event and ordering pins. That support is a separate ticket, not in S8
 
 7. Campaigns, battles, sieges, razing.
 8. Usurp, Expand, Secede; Rally, Treat, Raid, Coup; beliefs; courts. Usurp and Coup, with the deposed line's
-   return, courts and exile, and Expand and Raid,
-   **done (#158)**.
+   return, courts and exile, Expand and Raid, and the
+   official lines, **done (#158)**.
 9. The Observatory views, the Frontier clans draft data, and the golden scenario.
 
 **Risky bits:**

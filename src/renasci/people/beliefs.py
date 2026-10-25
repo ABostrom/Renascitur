@@ -176,6 +176,42 @@ class Fault(Predicate):
         return f"it was the fault of {names.get(args['party'], args['party'])}"
 
 
+class Started(Predicate):
+    """`by` (a polity) started `war` (S8 §9: each side's official line blames the other)."""
+
+    name, args, base_salience = "started", ("war", "by"), 0.7
+
+    def topic(self, args):
+        return f"started:{args['war']}"
+
+    def text(self, args, names):
+        return f"{names.get(args['by'], args['by'])} started the war"
+
+
+class Won(Predicate):
+    """`by` won `war`."""
+
+    name, args, base_salience = "won", ("war", "by"), 0.6
+
+    def topic(self, args):
+        return f"won:{args['war']}"
+
+    def text(self, args, names):
+        return f"{names.get(args['by'], args['by'])} won the war"
+
+
+class Betrayed(Predicate):
+    """`by` broke `treaty`."""
+
+    name, args, base_salience = "betrayed", ("treaty", "by"), 0.7
+
+    def topic(self, args):
+        return f"betrayed:{args['treaty']}"
+
+    def text(self, args, names):
+        return f"{names.get(args['by'], args['by'])} broke faith"
+
+
 def predicates() -> dict[str, Predicate]:
     found, todo = {}, list(Predicate.__subclasses__())
     while todo:
@@ -731,6 +767,20 @@ RUMOUR = EventType("belief.rumour", 1, roles={"settlement": (1, 1)},
                    payload={"claim": "json", "key": "str", "share": "float"})
 
 
+def seeded(shares: dict, c: dict, share: float) -> dict:
+    """A town's `shares` with `c` given `share` of its masses (pure): rival answers to the same question make
+    room, other topics are untouched."""
+    k, t = key(c), topic(c)
+    shares = {s: v for s, v in shares.items() if s != k}
+    rivals = [s for s, v in shares.items() if topic(v["claim"]) == t]  # (other answers to the same question)
+    rest = sum(shares[s]["share"] for s in rivals)
+    if rest + share > 1:  # (the claim takes its share from them, not from other topics)
+        for s in rivals:
+            shares[s] = {**shares[s], "share": shares[s]["share"] * (1 - share) / rest}
+    shares[k] = {"claim": c, "share": float(share)}
+    return _normalised(shares)
+
+
 class PlantRumour(Disguise):
     """The people world's `plant` disguise (#114): a rumour starts in a town's talk.
 
@@ -759,15 +809,8 @@ class PlantRumour(Disguise):
         if not enabled(ctx) or town not in ctx.ids("settlement"):
             return False
         c = claim(c["pred"], **c["args"])  # (its canonical form)
-        k, t = key(c), topic(c)
-        shares = {s: v for s, v in (ctx.get(town, "shares") or {}).items() if s != k}
-        rivals = [s for s, v in shares.items() if topic(v["claim"]) == t]  # (other answers to the same question)
-        rest = sum(shares[s]["share"] for s in rivals)
-        if rest + share > 1:  # (the rumour takes its share from them, not from other topics)
-            for s in rivals:
-                shares[s] = {**shares[s], "share": shares[s]["share"] * (1 - share) / rest}
-        shares[k] = {"claim": c, "share": float(share)}
-        shares = _normalised(shares)
+        k = key(c)
+        shares = seeded(ctx.get(town, "shares") or {}, c, share)
         held = shares.get(k, {}).get("share", 0.0)  # (what the town holds: floored, maybe crowded out)
         ctx.emit("belief.rumour", {"settlement": (town,)}, purpose="rumour", actor=town, place=town,
                  payload={"claim": c, "key": k, "share": held})
