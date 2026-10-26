@@ -393,8 +393,9 @@ existence, event and ordering pins. That support is a separate ticket, not in S8
 **Part B (M6):**
 
 7. Campaigns, battles, sieges, razing. Seasonal campaigns, battles and sieges (`renasci.campaigns`, behind
-   `campaigns: true`) **done (#122, slice 1)**; razing, commanders and notables in the field, supply, and levy
-   losses among the masses next.
+   `campaigns: true`) **done (#122, slice 1)**; razing (a sacked town's notables killed or fled, `razed`) and
+   a ruler falling with a lost battle **done (slice 2)**; a commander's office and rulers journeying with the
+   army, supply, a razed town's routes, and levy losses among the masses next.
 8. Usurp, Expand, Secede; Rally, Treat, Raid, Coup; beliefs; courts. Usurp and Coup, with the deposed line's
    return, courts and exile, Expand and Raid, the official
    lines, and Secede with Rally and Revolt, **done (#158)**.
