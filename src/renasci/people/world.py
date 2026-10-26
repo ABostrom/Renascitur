@@ -24,6 +24,10 @@ def people_ruleset(name: str, scenario: dict, version: int = 1) -> Ruleset:
                           **{k: v for k, v in scenario.get("params", {}).items() if k != "aggregates"})
     systems = (Population(), Births(), Life(), Marriage(), Houses(), Lod(), Ties(), Drives(), Ambitions(), Schemes(),
                Minds())
+    if scenario.get("params", {}).get("crafts"):  # jobs, skills and wealth (S9 §2, #123)
+        from renasci.people.work import Work
+
+        systems += (Work(),)
     if scenario.get("geography"):  # journeys need routes (S4 §5)
         systems += (Migration(),)
         if scenario["geography"].get("changes"):  # the map by year (S4 §8, #81)
