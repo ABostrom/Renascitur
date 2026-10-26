@@ -140,3 +140,48 @@ def test_a_coarse_span_fights_by_the_yearly_draw_and_a_focus_window_by_seasons()
             assert not (window[0] <= x.date <= window[1]), x.date
             seen.add("year")
     assert seen == {"season", "year"}
+
+
+def forced(**params):
+    """The campaigning world with some odds pinned (to see what they do)."""
+    for seed in (5, 6, 7, 8):
+        sc = scenario(balanced=params.pop("balanced", False))
+        sc["params"].update(params)
+        e = renascita.new_engine(seed=seed, scenario=sc)
+        e.run(until=CAL.add(START, Span(years=25)))
+        yield e
+
+
+def test_a_sacked_town_is_razed_its_people_killed_or_fled():
+    for e in forced(raze_rate=1.0):
+        razed = kinds(e, "settlement.razed")
+        if not razed:
+            continue
+        r = razed[0]
+        town = r.roles["settlement"][0]
+        fell = next(s for s in kinds(e, "polity.siege") if s.payload["place"] == town and s.payload["outcome"] == "fell")
+        assert ("event", fell.id) in {(c.kind, c.ref) for c in r.causes}
+        assert e.store.get(town, "razed") == r.date.to_json()
+        dead = [x for x in kinds(e, "people.death") if x.date == r.date and x.payload["cause"] == "killed in the sack"]
+        fled = [x for x in kinds(e, "people.depart") if x.date == r.date and x.payload["why"] == "fled the sack"]
+        assert dead or fled
+        for x in fled:
+            to = x.roles["destination"][0]
+            assert e.store.get(to, "control") == fell.roles["held_by"][0]  # (to a town their side still holds)
+        return
+    raise AssertionError("no town fell and was razed, on four seeds")
+
+
+def test_a_ruler_may_fall_with_a_lost_battle():
+    for e in forced(battle_fall=1.0, balanced=True):
+        falls = [x for x in kinds(e, "people.death") if x.payload["cause"] == "fell in battle"]
+        if falls:
+            battle = next(b for b in kinds(e, "polity.battle") if b.date == falls[0].date)
+            assert ("event", battle.id) in {(c.kind, c.ref) for c in falls[0].causes}
+            return
+    raise AssertionError("no ruler fell in a lost battle, on four seeds")
+
+
+def test_by_default_nothing_is_razed_without_its_odds():
+    e = next(forced(raze_rate=0.0))
+    assert not kinds(e, "settlement.razed")

@@ -24,17 +24,25 @@ Each season, for each live war (`polity.campaigns`, seasonal, `ctx.scope(war)`):
    (`polity.siege`): each season a keyed draw, likelier the longer it lasts and the bigger the army against
    the garrison (the town's people, and any army shut in). A fall hands the town over
    (`geo.apply_change`) and loses the army inside; a polity left with no settlement falls (`War.fall`).
-5. **Peace:** every side tires `EX_SEASON` a season; a side exhausted, or an army routed (below `ROUTED` of
+   A town that falls may be **sacked** (`raze_rate`, default `RAZE`): `settlement.razed`, the town marked
+   `razed` (once: a ruin isn't sacked again; nothing yet rebuilds it); each notable living there is killed in
+   the sack (`SACK_DEATH`) or flees by road to the nearest town their side still holds that no enemy army
+   is marching on (`people.depart`, "fled the sack"); with nowhere to go, they stay.
+5. **A lost battle** may cost the loser's ruler their life (`battle_fall`, default `BATTLE_FALL`): "fell in
+   battle", through `life.die`, so a guarded ruler survives (a near miss).
+6. **Peace:** every side tires `EX_SEASON` a season; a side exhausted, or an army routed (below `ROUTED` of
    what it raised), brings peace (`War.peace`).
 
-(Razing, a commander and a ruler in the field, supply and levy losses among the masses are next.)
+(A commander's office and rulers on a journey with the army, supply, a razed town's routes closing, and
+levy losses among the masses are next.)
 """
 
 from __future__ import annotations
 
-from renasci import geo, lines
+from renasci import geo, lines, treaties
 from renasci.core.events import Cause, EventType
 from renasci.core.systems import System
+from renasci.people import life, travel
 from renasci.war import EVENT_TYPES as WAR_EVENTS, EXHAUSTED, War, strength
 
 SEASON_DAYS = 90
@@ -46,13 +54,15 @@ ROUTED = 0.15
 SHUT_IN = 0.3  # (an army this much smaller than its foe, in a town its side holds, stays behind the walls)
 RELIEVE = 0.6  # (a defender marches to relieve a town only with at least this much of the attacker's strength)
 SIEGE = 0.2
+RAZE, SACK_DEATH, BATTLE_FALL = 0.25, 0.3, 0.1
 
 CAMPAIGN = EventType("polity.campaign", 1, roles={"party": (2, 64)}, payload={"war": "id", "armies": "json"})
 BATTLE = EventType("polity.battle", 1, roles={"winner": (1, 1), "loser": (1, 1)},
                    payload={"war": "id", "place": "id", "losses": "json"})
 SIEGE_T = EventType("polity.siege", 1, roles={"besieger": (1, 1), "held_by": (1, 1)},
                     payload={"war": "id", "place": "id", "seasons": "int", "outcome": "str"})
-EVENT_TYPES = (CAMPAIGN, BATTLE, SIEGE_T) + WAR_EVENTS + lines.EVENT_TYPES
+RAZED = EventType("settlement.razed", 1, roles={"settlement": (1, 1), "by": (1, 1)}, payload={"war": "id"})
+EVENT_TYPES = (CAMPAIGN, BATTLE, SIEGE_T, RAZED) + WAR_EVENTS + lines.EVENT_TYPES + travel.EVENT_TYPES
 
 
 def enabled(ctx) -> bool:
@@ -100,12 +110,15 @@ class Campaigns(System):
     """A war's seasons (see the module doc)."""
 
     name, cadence, priority = "polity.campaigns", "seasonal", 3  # (after polity.war's yearly declarations)
-    reads = War.reads | geo.READS | frozenset({"armies"})
-    writes = War.writes | frozenset({"armies"})
+    reads = War.reads | geo.READS | travel.READS | frozenset({"armies", "razed", "journey"})
+    writes = War.writes | travel.WRITES | frozenset({"armies", "razed"})
     event_types = EVENT_TYPES
 
     def handle(self, ctx, activation):
-        War().handle(ctx, activation)
+        if activation.purpose == "arrive":  # (one who fled a sack reaches safety)
+            travel.arrive(ctx, activation)
+        else:
+            War().handle(ctx, activation)
 
     def coarse_fallback(self, ctx, years: int) -> None:
         """A coarse step: the war is fought by `polity.war`'s yearly draws; armies in the field go home (a
@@ -194,7 +207,8 @@ class Campaigns(System):
                 inside = [q for q in sides[enemy[k]] if armies[q]["at"] == here]
                 if p in fought or holder not in sides[enemy[k]] or ctx.get(war, "ended") is not None                         or any(q not in shut for q in inside):
                     continue
-                last = self.siege(ctx, war, p, holder, armies[p], last, [armies[q] for q in inside]) or last
+                threatened = {a[x] for q, a in armies.items() if q in sides[k] for x in ("at", "target") if a[x]}
+                last = self.siege(ctx, war, p, holder, armies[p], last, [armies[q] for q in inside], threatened) or last
         if ctx.get(war, "ended") is not None:
             ctx.set(war, "armies", {})
             return
@@ -230,9 +244,29 @@ class Campaigns(System):
         armies[loser]["target"], armies[loser]["siege"] = None, 0  # (season() sends it home)
         ex[loser] = round(ex.get(loser, 0.0) + EX_LOSE, 6)
         ex[winner] = round(ex.get(winner, 0.0) + EX_WIN, 6)
+        lord = treaties.ruler(ctx, loser)
+        if lord and ctx.chance(float(ctx.params.get("battle_fall", BATTLE_FALL)), "falls", owner=war):
+            life.die(ctx, lord, ctx.get(lord, "place"), "fell in battle", causes=(Cause("event", ev.id),))
         return ev.id
 
-    def siege(self, ctx, war, att, holder, army, cause, inside=()) -> str:
+    def raze(self, ctx, war, place, by, holder, cause, threatened=frozenset()) -> None:
+        """A sack (see the module doc)."""
+        rz = ctx.emit("settlement.razed", {"settlement": (place,), "by": (by,)}, purpose=f"razed:{place}", actor=war,
+                      place=place, payload={"war": war}, causes=(Cause("event", cause),))
+        ctx.set(place, "razed", ctx.today.to_json())
+        refuges = [s for s in ctx.ids("settlement") if s != place and ctx.get(s, "control") == holder
+                   and not ctx.get(s, "razed") and s not in threatened]  # (not a town the enemy is marching on)
+        refuge = _nearest(ctx, place, refuges) if travel.has_routes(ctx) else None
+        why = (Cause("event", rz.id),)
+        for p in sorted(ctx.get(place, "residents") or []):
+            if ctx.status(p) != "active" or ctx.get(p, "journey"):
+                continue
+            if ctx.chance(SACK_DEATH, f"sack:{p}", owner=war) and life.die(ctx, p, place, "killed in the sack", causes=why):
+                continue
+            if refuge:  # (the spared flee too, a near miss among them)
+                travel.depart(ctx, p, refuge, "fled the sack", causes=why)
+
+    def siege(self, ctx, war, att, holder, army, cause, inside=(), threatened=frozenset()) -> str:
         place = army["at"]
         army["siege"] = int(army.get("siege") or 0) + 1
         garrison = 5 + len(ctx.get(place, "residents") or []) + sum(a["size"] for a in inside)
@@ -246,6 +280,8 @@ class Campaigns(System):
             army["target"], army["siege"] = None, 0
             for a in inside:  # (an army shut in a town that falls is lost with it)
                 a["size"] = 0
+            if not ctx.get(place, "razed") and ctx.chance(float(ctx.params.get("raze_rate", RAZE)), f"raze:{place}", owner=war):
+                self.raze(ctx, war, place, att, holder, ev.id, threatened)
             if not any(ctx.get(s, "control") == holder for s in ctx.ids("settlement")):
                 War().fall(ctx, war, holder, att, ev.id)
         return ev.id
