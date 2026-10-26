@@ -28,6 +28,10 @@ def people_ruleset(name: str, scenario: dict, version: int = 1) -> Ruleset:
         from renasci.people.work import Work
 
         systems += (Work(),)
+        if scenario["params"]["crafts"].get("materials"):  # materials, stock and masterworks (S9 §3, #124)
+            from renasci.people.crafts import Crafts
+
+            systems += (Crafts(),)
     if scenario.get("geography"):  # journeys need routes (S4 §5)
         systems += (Migration(),)
         if scenario["geography"].get("changes"):  # the map by year (S4 §8, #81)

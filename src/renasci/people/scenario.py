@@ -345,6 +345,9 @@ class _Builder:
 
             work.cast(self.e, sorted(settlements), {s: spec.get("masses", 0) for s, spec in settlements.items()},
                       self.sc["params"]["crafts"])
+            from renasci.people import crafts
+
+            crafts.cast(self.e, sorted(settlements), self.sc["params"]["crafts"])
         self.geography()
         for pid in sorted(self.people):
             person = self.people[pid]

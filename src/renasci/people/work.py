@@ -166,3 +166,25 @@ def check(crafts) -> None:
             raise ValueError(f"job {j!r}: demand must be a positive number, got {d!r}")
         if not number(inc) or inc < 0:
             raise ValueError(f"job {j!r}: income must be a number of at least 0, got {inc!r}")
+    mats, types = crafts.get("materials") or {}, crafts.get("types") or {}
+    for m, spec in mats.items():  # (S9 §3, #124)
+        if not isinstance(spec, dict) or not isinstance(spec.get("yield", {}), dict):
+            raise ValueError(f"material {m!r} must be a table with a `yield` table")
+        unknown = sorted(set(spec.get("by") or []) - set(crafts["jobs"]))
+        if unknown:
+            raise ValueError(f"material {m!r} is yielded by jobs the catalogue doesn't have: {unknown}")
+        if not all(number(v) and v >= 0 for v in spec.get("yield", {}).values()) or not number(spec.get("value", 1)) \
+                or spec.get("value", 1) < 0:
+            raise ValueError(f"material {m!r}: yields and value must be numbers of at least 0")
+    for t, spec in types.items():
+        if not isinstance(spec, dict) or spec.get("material") not in mats:
+            raise ValueError(f"type {t!r} must name one of the catalogue's materials, got {spec!r}")
+        if isinstance(spec.get("cost"), bool) or not isinstance(spec.get("cost"), int) or spec["cost"] < 1:
+            raise ValueError(f"type {t!r}: cost must be a whole number of at least 1")
+    if types:
+        for j, spec in crafts["jobs"].items():
+            odd = sorted(set(spec.get("makes") or []) - set(types))
+            if odd:
+                raise ValueError(f"job {j!r} makes types the catalogue doesn't have: {odd}")
+    if not number(crafts.get("master_rate", 0)) or crafts.get("master_rate", 0) < 0:
+        raise ValueError("master_rate must be a number of at least 0")
