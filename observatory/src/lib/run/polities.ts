@@ -45,6 +45,25 @@ export interface WarYear {
 	event: string;
 }
 
+export interface Battle {
+	date: DateTuple;
+	winner: string;
+	loser: string;
+	place: string;
+	losses: Record<string, number>;
+	event: string;
+}
+
+export interface Siege {
+	date: DateTuple;
+	besieger: string;
+	heldBy: string;
+	place: string;
+	seasons: number;
+	outcome: string; // held, fell
+	event: string;
+}
+
 export interface War {
 	id: string;
 	aggressor: string;
@@ -54,8 +73,14 @@ export interface War {
 	joined: { ally: string; side: string; date: DateTuple; event: string }[];
 	years: WarYear[];
 	falls: { polity: string; victor: string; date: DateTuple; event: string }[]; // (allies that fell, the war going on)
+	battles: Battle[]; // (a campaigning war's seasons, S8 §8)
+	sieges: Siege[];
+	razed: { place: string; by: string; date: DateTuple; event: string }[];
 	end: { how: 'peace' | 'fallen' | 'ended'; winner: string | null; loser: string | null; date: DateTuple; event: string | null } | null;
 }
+
+/** A realm's intrigue and justice (S8 §9): what the page lists beside its wars. */
+export const INTRIGUE = ['polity.seized', 'polity.coup_foiled', 'polity.trial', 'polity.raid', 'polity.seceded'];
 
 /** The polity events the polities page shows. */
 export const SHOWN = new Set([
@@ -66,7 +91,11 @@ export const SHOWN = new Set([
 	'polity.fallen',
 	'polity.treaty',
 	'polity.treaty_ended',
-	'polity.treaty_broken'
+	'polity.treaty_broken',
+	'polity.battle',
+	'polity.siege',
+	'settlement.razed',
+	...INTRIGUE
 ]);
 
 const one = (e: PolityEvent, role: string) => e.roles[role]?.[0] ?? '';
@@ -80,7 +109,20 @@ export function wars(events: PolityEvent[], ended: Record<string, DateTuple> = {
 		const id = e.payload.war as string | undefined;
 		if (!id) continue;
 		if (e.type === 'polity.war_declared') {
-			out.set(id, { id, aggressor: one(e, 'aggressor'), defender: one(e, 'defender'), date: e.date, event: e.id, joined: [], years: [], falls: [], end: null });
+			out.set(id, {
+				id,
+				aggressor: one(e, 'aggressor'),
+				defender: one(e, 'defender'),
+				date: e.date,
+				event: e.id,
+				joined: [],
+				years: [],
+				falls: [],
+				battles: [],
+				sieges: [],
+				razed: [],
+				end: null
+			});
 			continue;
 		}
 		const w = out.get(id);
@@ -88,6 +130,26 @@ export function wars(events: PolityEvent[], ended: Record<string, DateTuple> = {
 		if (e.type === 'polity.joined') w.joined.push({ ally: one(e, 'ally'), side: one(e, 'side'), date: e.date, event: e.id });
 		else if (e.type === 'polity.war_year')
 			w.years.push({ date: e.date, winner: one(e, 'winner'), loser: one(e, 'loser'), place: (e.payload.place as string | null) ?? null, event: e.id });
+		else if (e.type === 'polity.battle')
+			w.battles.push({
+				date: e.date,
+				winner: one(e, 'winner'),
+				loser: one(e, 'loser'),
+				place: e.payload.place as string,
+				losses: (e.payload.losses as Record<string, number>) ?? {},
+				event: e.id
+			});
+		else if (e.type === 'polity.siege')
+			w.sieges.push({
+				date: e.date,
+				besieger: one(e, 'besieger'),
+				heldBy: one(e, 'held_by'),
+				place: e.payload.place as string,
+				seasons: (e.payload.seasons as number) ?? 1,
+				outcome: e.payload.outcome as string,
+				event: e.id
+			});
+		else if (e.type === 'settlement.razed') w.razed.push({ place: one(e, 'settlement'), by: one(e, 'by'), date: e.date, event: e.id });
 		else if (e.type === 'polity.peace' && !w.end) w.end = { how: 'peace', winner: one(e, 'winner'), loser: one(e, 'loser'), date: e.date, event: e.id };
 		else if (e.type === 'polity.fallen' && !w.end) {
 			const fell = one(e, 'polity');
@@ -98,6 +160,12 @@ export function wars(events: PolityEvent[], ended: Record<string, DateTuple> = {
 	for (const w of out.values())
 		if (!w.end && ended[w.id]) w.end = { how: 'ended', winner: null, loser: null, date: ended[w.id], event: null };
 	return [...out.values()];
+}
+
+/** The realm's intrigue and justice, in the order it happened. */
+export function intrigue(events: PolityEvent[]): PolityEvent[] {
+	const kinds = new Set(INTRIGUE);
+	return events.filter((e) => kinds.has(e.type));
 }
 
 export interface RelationDelta {
@@ -157,6 +225,7 @@ export async function loadPolities(
 			events.push({ id: e.id, type: e.type, date: e.date, roles: e.roles ?? {}, payload: e.payload ?? {} });
 			for (const members of Object.values((e.roles ?? {}) as Record<string, string[]>)) for (const m of members) ids.add(m);
 			if (typeof e.payload?.place === 'string') ids.add(e.payload.place); // (a place taken in a war)
+			if (typeof e.payload?.polity === 'string') ids.add(e.payload.polity); // (a realm risen, or tried in)
 		}
 	const deltas: RelationDelta[] = [];
 	const every = new Map<string, string>(); // (every entity's latest name: a relation's parties are known only at its end)
