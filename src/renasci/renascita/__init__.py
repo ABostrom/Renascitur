@@ -33,13 +33,16 @@ SCALED = ("masses", "commoners", "capacity", "notable_target")
 
 
 POLITIES: dict = json.loads((Path(__file__).parent / "fourth_age_polities.json").read_text(encoding="utf-8"))
+FRONTIER: dict = json.loads((Path(__file__).parent / "frontier_clans.json").read_text(encoding="utf-8"))
 
 
-def _scenario(scenario: dict | None, scale: int = 1, beliefs: bool | None = None, polities: bool | None = None) -> dict:
+def _scenario(scenario: dict | None, scale: int = 1, beliefs: bool | None = None, polities: bool | str | None = None) -> dict:
     """The scenario (the draft unless given), with every settlement's population times `scale` (#75: M1
     scale is about ten times the draft), beliefs on or off when `beliefs` says (S12 §1a: a recipe's
     `[world] beliefs = true`), and the draft polities (the Empire, its Imperial House and council blocs:
-    `fourth_age_polities.json`, S8 #120) when `polities` is true."""
+    `fourth_age_polities.json`, S8 #120) when `polities` is true; `polities = "frontier"` adds the war-prone
+    draft (the Frontier Clans of `frontier_clans.json`, S8 #160: their holds, houses and roads, an old
+    bitterness with the Empire, and campaigns on unless the scenario's own params say otherwise)."""
     if type(scale) is not int or scale < 1:
         raise ValueError(f"scale must be a positive int, got {scale!r}")
     if beliefs is not None and type(beliefs) is not bool:
@@ -47,14 +50,31 @@ def _scenario(scenario: dict | None, scale: int = 1, beliefs: bool | None = None
     sc = geo.attach(copy.deepcopy(SCENARIO if scenario is None else scenario), Path(__file__).parent)
     if beliefs is not None:
         sc["params"] = {**sc.get("params", {}), "beliefs": beliefs}
-    if polities is not None and type(polities) is not bool:
-        raise ValueError(f"polities must be true or false, got {polities!r}")
+    if polities is not None and type(polities) is not bool and polities != "frontier":
+        raise ValueError(f"polities must be true, false or \"frontier\", got {polities!r}")
     if polities:
         extra = copy.deepcopy(POLITIES)
         sc["houses"] = [*sc["houses"], *extra["houses"]]
         for key in ("polities", "factions", "offices"):
             sc[key] = [*(sc.get(key) or []), *extra.get(key, [])]
         sc["params"] = {"cadet_size": 12, **sc.get("params", {})}  # (great houses branch: S8 §3.5, #161)
+    if polities == "frontier":
+        war = copy.deepcopy(FRONTIER)
+        known = {pl["id"] for pl in (sc.get("geography") or {}).get("places", [])} if isinstance(sc.get("geography"), dict) else set()
+        missing = sorted({e for r in war["routes"] for e in r["ends"] if not e.startswith("v:draft-")} - known)
+        if missing:
+            raise ValueError(f"the frontier draft joins Pyrosia's map at {missing}, which this scenario's geography lacks")
+        sc["settlements"] = [*sc["settlements"], *war["settlements"]]
+        regions = dict(sc.get("regions") or {})
+        for s in war["settlements"]:
+            regions[s["region"]] = [*regions.get(s["region"], []), s["id"]]
+        sc["regions"] = regions
+        g = sc["geography"]
+        sc["geography"] = {**g, "places": [*g["places"], *war["places"]], "routes": [*g["routes"], *war["routes"]]}
+        sc["houses"] = [*sc["houses"], *war["houses"]]
+        sc["polities"] = [*sc["polities"], *war["polities"]]
+        sc["relations"] = [*(sc.get("relations") or []), *war["relations"]]
+        sc["params"] = {**war["params"], **sc["params"]}
     for s in sc["settlements"]:
         for k in SCALED:
             if s.get(k) is not None:
@@ -70,7 +90,7 @@ def ruleset(scenario: dict | None = None):
     return _with_scripts(people_ruleset("fourth_age", _scenario(scenario)))
 
 
-def rulesets(scenario: dict | None = None, scale: int = 1, beliefs: bool | None = None, polities: bool | None = None):
+def rulesets(scenario: dict | None = None, scale: int = 1, beliefs: bool | None = None, polities: bool | str | None = None):
     sc = _scenario(scenario, scale, beliefs, polities)
     return [(start_of(sc), _with_scripts(people_ruleset("fourth_age", sc)))]
 
@@ -85,7 +105,7 @@ def _with_scripts(rs):
 
 
 def new_engine(seed: int = 1234, ripples=(), pins=(), scenario: dict | None = None, canon: dict | None = None,
-               end=None, scale: int = 1, beliefs: bool | None = None, polities: bool | None = None) -> Engine:
+               end=None, scale: int = 1, beliefs: bool | None = None, polities: bool | str | None = None) -> Engine:
     """The Fourth Age at the scenario's start, synthesised from the (draft) scenario with any canon placed
     (`renasci.people.casting`), before anything runs."""
     sc = _scenario(scenario, scale, beliefs, polities)

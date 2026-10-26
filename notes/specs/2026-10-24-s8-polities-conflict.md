@@ -399,7 +399,10 @@ existence, event and ordering pins. That support is a separate ticket, not in S8
 8. Usurp, Expand, Secede; Rally, Treat, Raid, Coup; beliefs; courts. Usurp and Coup, with the deposed line's
    return, courts and exile, Expand and Raid, the official
    lines, and Secede with Rally and Revolt, **done (#158)**.
-9. The Observatory views, the Frontier clans draft data, and the golden scenario.
+9. The Observatory views, the Frontier clans draft data, and the golden scenario. The Observatory's campaign and intrigue views **done (#122)**; the draft
+   Frontier Clans (`renascita/frontier_clans.json`, `polities = "frontier"`) and the golden
+   (`tests/golden/test_frontier_war.py`, seeds 4 and 5) **done (#160)**, bar the commander ripple (commanders
+   aren't built yet) and the chronicles' disagreement (S12).
 
 **Risky bits:**
 - **Emergence vs tuning:** wars must emerge without being forced. The exit criteria ask for emergence in
