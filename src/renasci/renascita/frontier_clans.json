@@ -1,0 +1,36 @@
+{
+  "about": "DRAFT, not canon (S8 spec §12-13, #160): the war-prone scenario's enemy, merged when a recipe sets [world] polities = \"frontier\". The vault calls Frontier's Edge war-torn, with border clans; everything here is invented to give the Firebrand Empire a neighbour to fight: the Frontier Clans, their three holds, two clan houses, the roads between, and an old bitterness with the Empire. Every name and number is a placeholder (review queue Q24 asks who the Empire's real enemy is). Ids carry `draft` so no vault id is ever taken.",
+  "draft": true,
+  "settlements": [
+    {"id": "v:draft-thornwall", "name": "Thornwall", "region": "v:frontiers-edge", "race": "r:human", "genome_group": "pyrosia",
+     "masses": 900, "commoners": 20, "capacity": 3000, "notable_target": 22, "danger": 0.2, "draft": true},
+    {"id": "v:draft-redcairn", "name": "Redcairn", "region": "v:frontiers-edge", "race": "r:human", "genome_group": "pyrosia",
+     "masses": 600, "commoners": 15, "capacity": 2000, "notable_target": 15, "danger": 0.25, "draft": true},
+    {"id": "v:draft-ashford", "name": "Ashford", "region": "v:frontiers-edge", "race": "r:human", "genome_group": "pyrosia",
+     "masses": 500, "commoners": 12, "capacity": 1800, "notable_target": 12, "danger": 0.15, "draft": true}
+  ],
+  "places": [
+    {"id": "v:draft-thornwall", "kind": "settlement", "name": "Thornwall", "region": "v:frontiers-edge", "draft": true},
+    {"id": "v:draft-redcairn", "kind": "settlement", "name": "Redcairn", "region": "v:frontiers-edge", "draft": true},
+    {"id": "v:draft-ashford", "kind": "settlement", "name": "Ashford", "region": "v:frontiers-edge", "draft": true}
+  ],
+  "routes": [
+    {"id": "g:magnus-rest--draft-ashford", "ends": ["v:magnus-rest", "v:draft-ashford"], "days": 5, "kind": "road", "draft": true},
+    {"id": "g:draft-ashford--draft-thornwall", "ends": ["v:draft-ashford", "v:draft-thornwall"], "days": 4, "kind": "track", "draft": true},
+    {"id": "g:draft-thornwall--draft-redcairn", "ends": ["v:draft-thornwall", "v:draft-redcairn"], "days": 3, "kind": "track", "draft": true},
+    {"id": "g:draft-redcairn--old-westgate", "ends": ["v:draft-redcairn", "v:old-westgate"], "days": 7, "kind": "pass", "draft": true}
+  ],
+  "houses": [
+    {"id": "v:draft-clan-hurn", "name": "Clan Hurn", "seat": "v:draft-thornwall", "rank": 1, "rule": "male_preference_primogeniture", "draft": true},
+    {"id": "v:draft-clan-vey", "name": "Clan Vey", "seat": "v:draft-redcairn", "rank": 1, "rule": "absolute_primogeniture", "draft": true}
+  ],
+  "polities": [
+    {"id": "v:draft-frontier-clans", "name": "the Frontier Clans", "kind": "clans", "government": "advised",
+     "seat": "v:draft-thornwall", "ruler": "v:draft-clan-hurn-head", "control": ["v:frontiers-edge"], "draft": true,
+     "members": ["v:draft-clan-hurn", "v:draft-clan-vey"]}
+  ],
+  "relations": [
+    {"a": "v:firebrand-empire", "b": "v:draft-frontier-clans", "stance": "hostile", "trust": -0.6}
+  ],
+  "params": {"campaigns": true}
+}
