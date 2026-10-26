@@ -1,17 +1,154 @@
 {
-  "about": "DRAFT, not canon (S9 spec §2-3, #123): the Fourth Age's trades, merged when a recipe asks for crafts. A short list to start (review queue Q25); demand is each trade's share of a town's people, income a year's earnings in abstract coin. The Lux Faber guild's wardens arrive with S10.",
+  "about": "DRAFT, not canon (S9 spec §2-3, #123): the Fourth Age's trades, merged when a recipe asks for crafts. A short list to start; materials yield per worker a year, and a type's cost is its material in a masterwork (review queue Q25); demand is each trade's share of a town's people, income a year's earnings in abstract coin. The Lux Faber guild's wardens arrive with S10.",
   "draft": true,
   "jobs": {
-    "farmer": {"name": "farmer", "demand": 0.40, "income": 1.0},
-    "herder": {"name": "herder", "demand": 0.10, "income": 1.0},
-    "smith": {"name": "smith", "demand": 0.05, "income": 3.0, "makes": ["blade", "armour", "tool"]},
-    "weaver": {"name": "weaver", "demand": 0.06, "income": 2.0, "makes": ["cloth"]},
-    "mason": {"name": "mason", "demand": 0.05, "income": 2.0},
-    "merchant": {"name": "merchant", "demand": 0.06, "income": 4.0},
-    "soldier": {"name": "soldier", "demand": 0.12, "income": 2.0},
-    "scholar": {"name": "scholar", "demand": 0.03, "income": 2.5, "makes": ["book"]},
-    "priest": {"name": "priest", "demand": 0.04, "income": 1.5},
-    "steward": {"name": "steward", "demand": 0.04, "income": 3.0},
-    "labourer": {"name": "labourer", "demand": 0.05, "income": 0.8}
-  }
+    "farmer": {
+      "name": "farmer",
+      "demand": 0.4,
+      "income": 1.0
+    },
+    "herder": {
+      "name": "herder",
+      "demand": 0.1,
+      "income": 1.0
+    },
+    "smith": {
+      "name": "smith",
+      "demand": 0.05,
+      "income": 3.0,
+      "makes": [
+        "blade",
+        "armour",
+        "tool"
+      ]
+    },
+    "weaver": {
+      "name": "weaver",
+      "demand": 0.06,
+      "income": 2.0,
+      "makes": [
+        "cloth"
+      ]
+    },
+    "mason": {
+      "name": "mason",
+      "demand": 0.05,
+      "income": 2.0
+    },
+    "merchant": {
+      "name": "merchant",
+      "demand": 0.06,
+      "income": 4.0
+    },
+    "soldier": {
+      "name": "soldier",
+      "demand": 0.12,
+      "income": 2.0
+    },
+    "scholar": {
+      "name": "scholar",
+      "demand": 0.03,
+      "income": 2.5,
+      "makes": [
+        "book"
+      ]
+    },
+    "priest": {
+      "name": "priest",
+      "demand": 0.04,
+      "income": 1.5
+    },
+    "steward": {
+      "name": "steward",
+      "demand": 0.04,
+      "income": 3.0
+    },
+    "labourer": {
+      "name": "labourer",
+      "demand": 0.05,
+      "income": 0.8
+    },
+    "miner": {
+      "name": "miner",
+      "demand": 0.04,
+      "income": 1.5
+    },
+    "woodcutter": {
+      "name": "woodcutter",
+      "demand": 0.04,
+      "income": 1.0
+    }
+  },
+  "materials": {
+    "food": {
+      "name": "food",
+      "by": [
+        "farmer",
+        "herder"
+      ],
+      "yield": {
+        "*": 2.0
+      },
+      "value": 1
+    },
+    "wool": {
+      "name": "wool",
+      "by": [
+        "herder"
+      ],
+      "yield": {
+        "*": 0.5
+      },
+      "value": 2
+    },
+    "iron": {
+      "name": "iron",
+      "by": [
+        "miner"
+      ],
+      "yield": {
+        "*": 0.4,
+        "v:ember-peaks": 1.0
+      },
+      "value": 5
+    },
+    "timber": {
+      "name": "timber",
+      "by": [
+        "woodcutter"
+      ],
+      "yield": {
+        "*": 0.6
+      },
+      "value": 2
+    }
+  },
+  "types": {
+    "blade": {
+      "name": "blade",
+      "material": "iron",
+      "cost": 4
+    },
+    "armour": {
+      "name": "armour",
+      "material": "iron",
+      "cost": 8
+    },
+    "tool": {
+      "name": "tool",
+      "material": "iron",
+      "cost": 2
+    },
+    "cloth": {
+      "name": "cloth",
+      "material": "wool",
+      "cost": 3
+    },
+    "book": {
+      "name": "book",
+      "material": "timber",
+      "cost": 2
+    }
+  },
+  "master_rate": 0.05
 }
