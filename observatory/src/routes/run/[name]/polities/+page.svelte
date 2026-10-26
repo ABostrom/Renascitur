@@ -2,7 +2,7 @@
 	import { page } from '$app/state';
 
 	import type { DateTuple } from '$lib/run/calendar';
-	import { loadPolities, wars as warsOf, type PolityEvent, type Relation, type War } from '$lib/run/polities';
+	import { intrigue, loadPolities, wars as warsOf, type PolityEvent, type Relation, type War } from '$lib/run/polities';
 	import { openRun, type Run } from '$lib/run/run';
 	import { HttpSource } from '$lib/run/source';
 
@@ -50,6 +50,25 @@
 			: `/run/${encodeURIComponent(name)}/entity/${encodeURIComponent(id)}`;
 	const treaties = $derived(events.filter((e) => e.type === 'polity.treaty' || e.type === 'polity.treaty_ended' || e.type === 'polity.treaty_broken'));
 	const TREATY: Record<string, string> = { 'polity.treaty': 'signed', 'polity.treaty_ended': 'ended', 'polity.treaty_broken': 'broken' };
+	const plots = $derived(intrigue(events));
+	const who = (e: PolityEvent, role: string) => nameOf(e.roles[role]?.[0] ?? '');
+	/** One line of intrigue or justice, in words. */
+	function told(e: PolityEvent): string {
+		switch (e.type) {
+			case 'polity.seized':
+				return `${who(e, 'usurper')} seizes the rule of ${nameOf(String(e.payload.polity ?? ''))} from ${who(e, 'deposed')}`;
+			case 'polity.coup_foiled':
+				return `${who(e, 'usurper')}'s coup against ${who(e, 'ruler')} is foiled`;
+			case 'polity.trial':
+				return `${who(e, 'accused')} is tried before ${who(e, 'judge')}: ${String(e.payload.verdict ?? '?')}`;
+			case 'polity.raid':
+				return `${who(e, 'raider')} raids across the border (${(e.roles.party ?? []).map(nameOf).join(' and ')})`;
+			case 'polity.seceded':
+				return `${who(e, 'leader')} leads a rising against ${who(e, 'from')}: ${nameOf(String(e.payload.polity ?? ''))}`;
+			default:
+				return e.type;
+		}
+	}
 
 	// A relation's trust, -1..1, as a strip: one axis, a zero line, hover a point for its date and stance.
 	const SW = 320;
@@ -109,6 +128,23 @@
 								<a href={href('entity', y.place)}>{nameOf(y.place)}</a>{/if} · <a href={href('events', y.event)}>why</a>
 						</li>
 					{/each}
+					{#each w.battles as b (b.event)}
+						<li>
+							<span class="mono">{when(b.date)}</span> battle at <a href={href('entity', b.place)}>{nameOf(b.place)}</a>: {nameOf(b.winner)}
+							beats {nameOf(b.loser)}{#if Object.keys(b.losses).length} (losses {Object.entries(b.losses).map(([p, n]) => `${nameOf(p)} ${n}`).join(', ')}){/if} ·
+							<a href={href('events', b.event)}>why</a>
+						</li>
+					{/each}
+					{#each w.sieges as s (s.event)}
+						<li>
+							<span class="mono">{when(s.date)}</span> {nameOf(s.besieger)} besieges <a href={href('entity', s.place)}>{nameOf(s.place)}</a>
+							({s.seasons === 1 ? 'a season' : `${s.seasons} seasons`}): {s.outcome === 'fell' ? 'it falls' : 'it holds'} ·
+							<a href={href('events', s.event)}>why</a>
+						</li>
+					{/each}
+					{#each w.razed as r (r.event)}
+						<li><span class="mono">{when(r.date)}</span> {nameOf(r.by)} sacks <a href={href('entity', r.place)}>{nameOf(r.place)}</a> · <a href={href('events', r.event)}>why</a></li>
+					{/each}
 					{#each w.falls as f (f.event)}
 						<li><span class="mono">{when(f.date)}</span> {nameOf(f.polity)}, an ally, falls to {nameOf(f.victor)} · <a href={href('events', f.event)}>why</a></li>
 					{/each}
@@ -158,6 +194,26 @@
 			</table>
 		</div>
 	</section>
+
+	{#if plots.length}
+		<section class="card">
+			<h2>Intrigue and justice ({plots.length})</h2>
+			<div class="scroll">
+				<table>
+					<thead><tr><th>When</th><th>What</th><th></th></tr></thead>
+					<tbody>
+						{#each plots as e (e.id)}
+							<tr>
+								<td class="mono">{when(e.date)}</td>
+								<td>{told(e)}</td>
+								<td><a href={href('events', e.id)}>why</a></td>
+							</tr>
+						{/each}
+					</tbody>
+				</table>
+			</div>
+		</section>
+	{/if}
 
 	{#if treaties.length}
 		<section class="card">

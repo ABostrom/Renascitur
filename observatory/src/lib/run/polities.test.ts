@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import type { Geography } from './geography';
-import { borders, colours, relationSeries, wars, type PolityEvent, type RelationDelta } from './polities';
+import { borders, colours, intrigue, relationSeries, wars, type PolityEvent, type RelationDelta } from './polities';
 
 const ev = (id: string, type: string, year: number, roles: Record<string, string[]>, payload: Record<string, unknown> = {}): PolityEvent => ({
 	id,
@@ -82,6 +82,37 @@ describe('wars', () => {
 	it('ends a war its state says ended, with no event of its own (a side fell in another war)', () => {
 		const [, b] = wars(events, { 'war:2': [4, 21, 0] });
 		expect(b.end).toEqual({ how: 'ended', winner: null, loser: null, date: [4, 21, 0], event: null });
+	});
+});
+
+describe('campaigns', () => {
+	const events = [
+		ev('e1', 'polity.war_declared', 10, { aggressor: ['p:x'], defender: ['p:y'] }, { war: 'war:1', relation: 'rel:p:x|p:y' }),
+		ev('e2', 'polity.battle', 10, { winner: ['p:x'], loser: ['p:y'] }, { war: 'war:1', place: 's:b', losses: { 'p:x': 2, 'p:y': 5 } }),
+		ev('e3', 'polity.siege', 11, { besieger: ['p:x'], held_by: ['p:y'] }, { war: 'war:1', place: 's:c', seasons: 1, outcome: 'held' }),
+		ev('e4', 'polity.siege', 11, { besieger: ['p:x'], held_by: ['p:y'] }, { war: 'war:1', place: 's:c', seasons: 2, outcome: 'fell' }),
+		ev('e5', 'settlement.razed', 11, { settlement: ['s:c'], by: ['p:x'] }, { war: 'war:1' })
+	];
+
+	it("gathers a war's battles and sieges, and the towns it razed", () => {
+		const [w] = wars(events);
+		expect(w.battles).toEqual([{ date: [4, 10, 0], winner: 'p:x', loser: 'p:y', place: 's:b', losses: { 'p:x': 2, 'p:y': 5 }, event: 'e2' }]);
+		expect(w.sieges.map((s) => [s.place, s.seasons, s.outcome])).toEqual([['s:c', 1, 'held'], ['s:c', 2, 'fell']]);
+		expect(w.razed).toEqual([{ place: 's:c', by: 'p:x', date: [4, 11, 0], event: 'e5' }]);
+	});
+});
+
+describe('intrigue', () => {
+	it('lists seizures, foiled coups, trials, raids and secessions in order, and nothing else', () => {
+		const events = [
+			ev('a', 'polity.seized', 3, { usurper: ['u'], deposed: ['k'] }, { office: 'o', polity: 'p:x' }),
+			ev('b', 'polity.trial', 4, { accused: ['u'], judge: ['k2'], victim: ['k'] }, { verdict: 'exile', polity: 'p:x' }),
+			ev('c', 'polity.battle', 4, { winner: ['p:x'], loser: ['p:y'] }, { war: 'war:1', place: 's:b', losses: {} }),
+			ev('d', 'polity.raid', 5, { raider: ['k2'], party: ['p:x', 'p:y'] }, { relation: 'rel', route: 'r' }),
+			ev('e', 'polity.coup_foiled', 6, { usurper: ['v'], ruler: ['k2'] }, { office: 'o' }),
+			ev('f', 'polity.seceded', 7, { leader: ['w'], from: ['p:x'] }, { polity: 'pol:h:7', seat: 's:z' })
+		];
+		expect(intrigue(events).map((e) => e.id)).toEqual(['a', 'b', 'd', 'e', 'f']);
 	});
 });
 
