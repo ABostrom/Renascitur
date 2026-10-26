@@ -340,6 +340,11 @@ class _Builder:
                 "danger": spec.get("danger", 0.0), **({"control": control.get(s)} if control else {})})
         cast_masses(self.e, {s: (spec["race"], spec["genome_group"], spec.get("masses", 0), len(residents[s]))
                              for s, spec in settlements.items()}, self.cat, self.races)
+        if (self.sc.get("params") or {}).get("crafts"):  # (S9: the masses' job columns, #123)
+            from renasci.people import work
+
+            work.cast(self.e, sorted(settlements), {s: spec.get("masses", 0) for s, spec in settlements.items()},
+                      self.sc["params"]["crafts"])
         self.geography()
         for pid in sorted(self.people):
             person = self.people[pid]
