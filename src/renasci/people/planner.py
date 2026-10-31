@@ -170,6 +170,8 @@ def holds(ctx, owner: str, tag: str, scheme: str | None = None) -> bool:
         return ctx.exists(ref) and ctx.status(ref) == "dead"
     if kind == "shamed":  # in disgrace (Shame is how it gets there)
         return ctx.exists(ref) and float(ctx.get(ref, "favour") or 0.0) < SHAMED
+    if kind == "holds":  # (the owner has the object in hand)
+        return ctx.exists(ref) and ctx.kind(ref) == "object" and ctx.get(ref, "owner") == owner
     if kind == "rallied":  # (a house head of the realm won to the scheme)
         return bool(scheme) and any(ctx.get(ctx.get(ctx.get(p, "house"), "headship"), "holder") == p
                                     for p in ctx.get(scheme, "accomplices") or [] if ctx.get(p, "house"))
