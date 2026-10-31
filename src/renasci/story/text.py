@@ -10,7 +10,7 @@ through their predicate (`beliefs.PREDICATES`), with an event named by its own r
 from __future__ import annotations
 
 BOOKKEEPING = {
-    "deity.renewed",
+    "deity.renewed", "night.season", "night.toll",
     "people.population", "people.drives", "people.minds", "people.ties", "belief.reinforced", "belief.shares",
     "belief.faded", "engine.cast", "engine.cast_column", "lod.promote", "lod.demote", "people.scheme_replanned",
     "burial.season", "disease.season", "disease.passed",
@@ -104,6 +104,9 @@ TEMPLATES = {
                                   f"{'was' if len(ev['roles'].get('child', [])) == 1 else 'were'} born to "
                                   f"{n.full(_one(ev, 'mother'))}{(' and ' + n.full(_one(ev, 'father'))) if _one(ev, 'father') else ''}{_at(ev, n)}",
     "people.death": _death,
+    "night.surge": lambda ev, n: f"Aberrations surged around {n(_one(ev, 'settlement'))}",
+    "ward.failed": lambda ev, n: f"The wards of {n(_one(ev, 'settlement'))} failed",
+    "ward.mended": lambda ev, n: f"The wards of {n(_one(ev, 'settlement'))} were made whole",
     "deity.blessed": lambda ev, n: f"{n(_one(ev, 'deity'))} blessed {n.full(_one(ev, 'person'))}",
     "deity.cursed": lambda ev, n: f"{n(_one(ev, 'deity'))} cursed {n.full(_one(ev, 'person'))}",
     "deity.omen": lambda ev, n: f"An omen of {n(_one(ev, 'deity'))} was seen in {n(_one(ev, 'place'))}",
