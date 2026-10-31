@@ -18,6 +18,7 @@ dev = [
     "pytest>=8",
     "hypothesis>=6.100",
     "pillow>=11",  # (the map importer's tests draw synthetic images)
+    "pytest-xdist>=3.8.0",
 ]
 
 [build-system]
