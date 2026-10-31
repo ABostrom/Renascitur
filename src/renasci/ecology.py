@@ -38,6 +38,14 @@ hungry by itself.
 them; the share they take is its `labour`, which comes off that season's harvest, as hunger does. What's left rots
 by the season, slowly in winter. Time it didn't see (a coarse step) has done that work: only a season's share of the
 pile is still lying, so a focus window doesn't open on years of ordinary dead. A coarse step takes no labour.
+
+`ecology.disease` (seasonal; `{"disease": false}` turns it off; a list replaces the draft catalogue, `DISEASES`) reads
+conditions and knows nothing of what made them. A town's chance of an outbreak rises with the dead lying per head,
+and an outbreak cites them. In a town's `disease`, `{id: {sick, immune, event}}`: each season the susceptible catch it
+(`catching`, more readily when hungry), the sick recover or die (`population.kill`), and a notable may die of it. A
+town's sick share is its `ill`: the sick don't work or bury, so plague starves itself of hands. An outbreak ends when
+nobody is sick. A town remembers: its `immunity`, `{id: [immune, tick]}`, fades by `wane` a season and is reckoned
+when the next outbreak comes. A coarse step has no seasons, so a town it strikes has one wave and it's over.
 """
 
 from __future__ import annotations
@@ -58,6 +66,14 @@ HUNGER = 0.08  # (the masses' extra deaths a season, in a town short of all its 
 FRAIL = 2.0  # (the young, under 5, and the old, 60 and over, die of it this many times as readily)
 BURIAL: dict = {"bury": 4.0, "rot": 0.3, "winter": 0.05}  # (bodies a pair of hands buries a season; the share of
 # what's left that rots away a season, and in a season that keeps them)
+DISEASES: list = [{"id": "flux", "name": "the flux", "beta": 1.4, "lethality": 0.15, "duration": 2.0, "wane": 0.02,
+                   "tires": 0.8, "base": 0.0005, "filth": 0.5}]  # (a draft: spread a season, who dies of it, seasons
+# sick, the share of the immune who lose it a season, how its spread weakens each season as people learn to shun the
+# sick, a town's odds of an outbreak, and how much the dead lying per head add)
+MOST_LIKELY = 0.5  # (a town's odds of an outbreak in a season never pass this)
+SEED = 0.005  # (the share of a town first sick)
+FEVERED = 1.0  # (a town short of all its food catches it this much more readily)
+WAVE = 0.4  # (the share a coarse step's outbreak strikes)
 ABLE = 0.6  # (the share of a town's people fit to work)
 SPARE = 0.5  # (at most this share of the able are taken from their work to bury the dead)
 WEAK = 0.5  # (how much of its strength a town short of all its food loses)
@@ -72,7 +88,7 @@ FAILED_TYPE = EventType("harvest.failed", 1, roles={"settlement": (1, 1)},
                         payload={"produced": "int", "factor": "float"})
 EVENT_TYPES = (SEASON, REAPED, FAILED_TYPE)
 READS = frozenset({"ids:region", "ids:settlement", "region", "climate", "blight", "residents", "job", "journey",
-                   "yield_carry", "job:*", "stock:*", "goods:*", "labour", "hunger", "pop:*"})
+                   "yield_carry", "job:*", "stock:*", "goods:*", "labour", "hunger", "ill", "pop:*"})
 WRITES = frozenset({"climate", "blight", "yield_carry", "harvest", "stock:*", "goods:*"})
 
 
@@ -103,6 +119,20 @@ def check(eco: dict, crafts: dict | None) -> None:
                 or (k != "bury" and v > 1):
             raise ValueError(f"ecology.burial.{k} must be one of {sorted(BURIAL)}: a non-negative number, a share "
                              f"for rot and winter; got {v!r}")
+    d = eco.get("disease", [])
+    if d is not False and not isinstance(d, list):
+        raise ValueError("ecology.disease is a list of diseases, false for none, or absent for the draft")
+    for x in d or []:
+        if not isinstance(x, dict) or not x.get("id") or not x.get("name"):
+            raise ValueError(f"a disease needs an id and a name, got {x!r}")
+        for k in ("beta", "lethality", "duration", "wane", "tires", "base", "filth"):
+            v = x.get(k)
+            if isinstance(v, bool) or not isinstance(v, (int, float)) or v < 0 \
+                    or (k in ("lethality", "wane", "tires", "base") and v > 1) or (k == "duration" and v < 1):
+                raise ValueError(f"disease {x.get('id')!r}: bad {k}: {v!r}")
+    ids = [x["id"] for x in d or []]
+    if len(set(ids)) != len(ids):
+        raise ValueError(f"disease ids must differ: {ids}")
     f = eco.get("famine")
     if f is not None:
         if not isinstance(f, dict):
@@ -124,9 +154,143 @@ def burying(dead: float, able: float, bury: float) -> tuple[float, float]:
     return round(hands / able, 6), min(dead, hands * bury)
 
 
-def able_share(labour: float, hunger: float) -> float:
-    """The share of a town's work left once its dead and its hunger have had theirs (pure)."""
-    return (1.0 - labour) * (1.0 - WEAK * hunger)
+def able_share(labour: float, hunger: float, ill: float = 0.0) -> float:
+    """The share of a town's work left once its dead, its hunger and its sick have had theirs (pure)."""
+    return (1.0 - labour) * (1.0 - WEAK * hunger) * (1.0 - ill)
+
+
+def outbreak_odds(spec: dict, dead: float, people: int) -> float:
+    """A town's chance of an outbreak this season, from the dead lying per head (pure)."""
+    filth = dead / people if people else 0.0
+    return min(MOST_LIKELY, float(spec["base"]) + float(spec["filth"]) * filth)
+
+
+def catching(beta: float, sick: int, people: int, hunger: float) -> float:
+    """A susceptible person's chance of catching it this season (pure)."""
+    if not sick or not people:
+        return 0.0
+    return 1.0 - math.exp(-beta * (1.0 + FEVERED * hunger) * sick / people)
+
+
+def tick(ctx) -> int:
+    """The season, counted from the age's start: for reckoning what time has done since."""
+    return ctx.today.year * 4 + ctx.calendar.season(ctx.today)
+
+
+def remembered(immune: int, wane: float, seasons: int) -> int:
+    """How many of a town's immune still are, `seasons` after it last counted them (pure)."""
+    return int(immune * (1.0 - wane) ** max(0, seasons))
+
+
+def disease_system():
+    from renasci.core.systems import System
+    from renasci.people import houses, life, population
+    from renasci.people.races import BANDS
+
+    class Disease(System):
+        """Sickness in a town (see the module doc)."""
+
+        name, cadence = "ecology.disease", "seasonal"
+        priority = 2  # (after burial: what's still lying is what breeds it)
+        reads = DISEASE_READS | life.DIE_READS
+        writes = DISEASE_WRITES | life.DIE_WRITES
+        event_types = (OUTBREAK, SEASON_SICK, ENDED_SICK, *life.DIE_EVENTS)
+
+        def handle(self, ctx, activation):
+            houses.handle_succession(ctx, activation)  # (the follow-up `life.die` schedules)
+
+        def run(self, ctx):
+            self.step(ctx, 1)
+
+        def coarse_fallback(self, ctx, years: int) -> None:
+            self.step(ctx, 4 * years)
+
+        def step(self, ctx, seasons: int) -> None:
+            eco = ctx.params.get("ecology") or {}
+            catalogue = eco.get("disease") if eco.get("disease") is not None else DISEASES
+            for s in ctx.ids("settlement"):
+                with ctx.scope(s):
+                    state = dict(ctx.get(s, "disease") or {})
+                    for spec in catalogue:
+                        d = spec["id"]
+                        people = population.masses(ctx, s)
+                        if seasons > 1 and d in state:  # (coarse time doesn't carry an outbreak)
+                            self.ended(ctx, s, state, d)
+                        if d in state:
+                            self.season(ctx, s, spec, state, people)
+                        elif self.strikes(ctx, s, spec, people, seasons):
+                            ev = ctx.emit("disease.outbreak", {"settlement": (s,)}, purpose=f"outbreak:{d}", actor=s,
+                                          place=s, payload={"disease": d, "name": spec["name"]},
+                                          causes=stocks.because(ctx, s, "corpses", 3))
+                            first = min(max(1, int(people * SEED)), people)
+                            held, at = (ctx.get(s, "immunity") or {}).get(d, (0, 0))
+                            kept = min(remembered(int(held), float(spec["wane"]), tick(ctx) - int(at)), people - first)
+                            state[d] = {"sick": first, "immune": kept, "event": ev.id}
+                            ctx.set(s, "disease", dict(state))
+                            if seasons > 1:
+                                self.wave(ctx, s, spec, state, people, ev.id)
+                    people = population.masses(ctx, s)
+                    ill = round(min(1.0, sum(v["sick"] for v in state.values()) / people), 6) if people else 0.0
+                    if ill != float(ctx.get(s, "ill") or 0.0) and ctx.current_event:
+                        ctx.set(s, "ill", ill)
+
+        def strikes(self, ctx, s, spec, people, seasons) -> bool:
+            if people <= 0:
+                return False
+            p = outbreak_odds(spec, stocks.level(ctx, s, "corpses"), people)
+            return ctx.chance(1.0 - (1.0 - p) ** seasons, f"outbreak:{spec['id']}", owner=s)
+
+        def wave(self, ctx, s, spec, state, people, event) -> None:
+            changes, died = population.kill(ctx, s, [WAVE * float(spec["lethality"])] * BANDS, f"wave:{spec['id']}")
+            ctx.emit("disease.season", {"settlement": (s,)}, purpose=f"wave:{spec['id']}", actor=s, place=s,
+                     payload={"disease": spec["id"], "sick": 0, "new": int(people * WAVE), "died": died, "people": people},
+                     causes=(Cause("event", event),))
+            if died:
+                ctx.write_columns(s, changes)
+                population.fell(ctx, s, died)
+            self.ended(ctx, s, state, spec["id"])
+
+        def season(self, ctx, s, spec, state, people) -> None:
+            d = spec["id"]
+            now = state[d]
+            hunger = float(ctx.get(s, "hunger") or 0.0)
+            rng = ctx.rng(f"disease:{d}", s)
+            sick = min(int(now["sick"]), people)
+            immune = min(int(now["immune"]), people - sick)
+            age = int(now.get("age", 0))
+            odds = catching(float(spec["beta"]) * float(spec["tires"]) ** age, sick, people, hunger)
+            new = rng.binomial(people - sick - immune, odds)
+            out = rng.binomial(sick, 1.0 / float(spec["duration"]))
+            rate = out * float(spec["lethality"]) / people if people else 0.0
+            changes, died = population.kill(ctx, s, [rate] * BANDS, f"disease:{d}:dead") if out else ({}, 0)
+            lost = rng.binomial(immune, float(spec["wane"]))
+            ctx.emit("disease.season", {"settlement": (s,)}, purpose=f"sick:{d}", actor=s, place=s,
+                     payload={"disease": d, "sick": sick + new - out, "new": new, "died": died, "people": people},
+                     causes=(Cause("event", now["event"]),))
+            if died:
+                ctx.write_columns(s, changes)
+                population.fell(ctx, s, died)
+            left = people - died
+            state[d] = {**now, "age": age + 1, "sick": max(0, min(sick + new - out, left)),
+                        "immune": max(0, min(immune + out - died - lost, left)), "event": now["event"]}
+            over = not state[d]["sick"]
+            if over:
+                self.ended(ctx, s, state, d)
+            else:
+                ctx.set(s, "disease", dict(state))
+            for p in sorted(ctx.get(s, "residents") or []):
+                if ctx.status(p) == "active" and not ctx.get(p, "journey") \
+                        and ctx.chance(odds * float(spec["lethality"]), f"plague:{d}", owner=p):
+                    life.die(ctx, p, s, spec["name"], causes=(Cause("event", now["event"]),))
+
+        def ended(self, ctx, s, state, d) -> None:
+            ctx.emit("disease.ended", {"settlement": (s,)}, purpose=f"over:{d}", actor=s, place=s, payload={"disease": d},
+                     causes=(Cause("event", state[d]["event"]),))
+            ctx.set(s, "immunity", {**(ctx.get(s, "immunity") or {}), d: [int(state[d]["immune"]), tick(ctx)]})
+            del state[d]
+            ctx.set(s, "disease", dict(state))
+
+    return Disease
 
 
 def burial_system():
@@ -140,7 +304,7 @@ def burial_system():
 
         name, cadence = "ecology.burial", "seasonal"
         priority = 1  # (before the harvest: who buries doesn't reap)
-        reads = stocks.READS | frozenset({"ids:settlement", "residents", "hunger", "labour", "buried_at", "pop:*"})
+        reads = stocks.READS | frozenset({"ids:settlement", "residents", "hunger", "labour", "buried_at", "ill", "pop:*"})
         writes = stocks.WRITES | frozenset({"labour", "buried_at"})
         event_types = (BURIED,)
 
@@ -153,24 +317,25 @@ def burial_system():
         def step(self, ctx, fine: bool) -> None:
             spec = {**BURIAL, **((ctx.params.get("ecology") or {}).get("burial") or {})}
             season = ctx.calendar.season(ctx.today)
-            tick = ctx.today.year * 4 + season
+            now = tick(ctx)
             rot = float(spec["winter" if season == 3 else "rot"])
             for s in ctx.ids("settlement"):
                 with ctx.scope(s):
                     dead, was = stocks.level(ctx, s, "corpses"), float(ctx.get(s, "labour") or 0.0)
                     if not dead and not was:
                         continue
-                    lying = dead / max(1, tick - int(ctx.get(s, "buried_at") or tick - 1))  # (see the module doc)
+                    lying = dead / max(1, now - int(ctx.get(s, "buried_at") or now - 1))  # (see the module doc)
                     people = len(ctx.get(s, "residents")) + masses(ctx, s)
                     hunger = float(ctx.get(s, "hunger") or 0.0) if fine else 0.0
-                    share, buried = burying(lying, people * ABLE * (1.0 - WEAK * hunger), float(spec["bury"]))
+                    ill = float(ctx.get(s, "ill") or 0.0) if fine else 0.0
+                    share, buried = burying(lying, people * ABLE * able_share(0.0, hunger, ill), float(spec["bury"]))
                     share = share if fine else 0.0
                     ctx.emit("burial.season", {"settlement": (s,)}, purpose="burial", actor=s, place=s,
                              payload={"buried": round(buried, 3), "left": round(lying - buried, 3), "labour": share},
                              causes=stocks.because(ctx, s, "corpses", 3))
                     if share != was:
                         ctx.set(s, "labour", share)
-                    ctx.set(s, "buried_at", tick)
+                    ctx.set(s, "buried_at", now)
                     stocks.take(ctx, s, "corpses", dead - lying + buried)
                     stocks.fade(ctx, s, "corpses", rot)
 
@@ -326,7 +491,8 @@ def climate_system():
                 hands *= min(1.0, population.masses(ctx, s) / held)
             workers = hands + sum(notables.count(j) for j in jobs)
             if not coarse:  # (labour and hunger are a fine season's)
-                workers *= able_share(float(ctx.get(s, "labour") or 0.0), float(ctx.get(s, "hunger") or 0.0))
+                workers *= able_share(float(ctx.get(s, "labour") or 0.0), float(ctx.get(s, "hunger") or 0.0),
+                                      float(ctx.get(s, "ill") or 0.0))
             if not workers or not rate:
                 return
             carry = dict(ctx.get(s, "yield_carry") or {})
@@ -349,6 +515,13 @@ EATEN = EventType("goods.eaten", 1, roles={"settlement": (1, 1)},
                   payload={"eaten": "int", "need": "int", "short": "float", "died": "int", "spoiled": "int"})
 BURIED = EventType("burial.season", 1, roles={"settlement": (1, 1)},
                    payload={"buried": "float", "left": "float", "labour": "float"})
+OUTBREAK = EventType("disease.outbreak", 1, roles={"settlement": (1, 1)}, payload={"disease": "str", "name": "str"})
+SEASON_SICK = EventType("disease.season", 1, roles={"settlement": (1, 1)},
+                        payload={"disease": "str", "sick": "int", "new": "int", "died": "int", "people": "int"})
+ENDED_SICK = EventType("disease.ended", 1, roles={"settlement": (1, 1)}, payload={"disease": "str"})
+DISEASE_READS = stocks.READS | frozenset({"ids:settlement", "residents", "race", "hunger", "disease", "ill", "journey", "immunity",
+                                          "pop:*", "allele:*", "flow:*"})
+DISEASE_WRITES = stocks.WRITES | frozenset({"disease", "ill", "immunity", "pop:*", "allele:*", "flow:*"})
 BEGAN = EventType("famine.began", 1, roles={"settlement": (1, 1)}, payload={"short": "float"})
 ENDED = EventType("famine.ended", 1, roles={"settlement": (1, 1)}, payload={"since": "json"})
 FAMINE_READS = frozenset({"ids:settlement", "residents", "race", "famine", "harvest", "hunger", "pop:*", "allele:*",
