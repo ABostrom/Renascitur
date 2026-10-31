@@ -543,6 +543,21 @@
     }
    },
    {
+    "id": "resistance",
+    "variants": [
+     "+",
+     "-"
+    ],
+    "model": "additive",
+    "mutation": 1e-05,
+    "traits": {
+     "resistance": {
+      "+": 0.25,
+      "-": -0.25
+     }
+    }
+   },
+   {
     "id": "gift",
     "variants": [
      "g",
@@ -612,6 +627,10 @@
     "temper": {
      "+": 0.5,
      "-": 0.5
+    },
+    "resistance": {
+     "+": 0.1,
+     "-": 0.9
     },
     "gift": {
      "g": 0.12,
@@ -686,6 +705,13 @@
     ]
    },
    "temper": {
+    "base": 0.5,
+    "range": [
+     0,
+     1
+    ]
+   },
+   "resistance": {
     "base": 0.5,
     "range": [
      0,

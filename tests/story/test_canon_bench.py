@@ -42,10 +42,12 @@ def test_renasci_check_prose(m4, tmp_path, capsys):
     prose = tmp_path / "tale.md"
     prose.write_text("# A tale\n\nIn 4A 9, Bessa of House Silverhand slew Hask of House Silverhand.\n\n"
                      "Ivor of House Sivis died in 4A 2.\n", encoding="utf-8")
+    checks = m4 / "analysis" / "checks"
+    before = set(checks.glob("*.json"))  # (the run is shared: others may have checked prose too)
     assert main(["check-prose", str(m4), str(prose)]) == 0
     out = capsys.readouterr().out
     assert "contradiction" in out.split("\n")[0]
-    [report] = (m4 / "analysis" / "checks").glob("*.json")
+    [report] = set(checks.glob("*.json")) - before
     rep = json.loads(report.read_text(encoding="utf-8"))
     assert rep["counts"]["contradiction"] == 1 and rep["counts"]["consistent"] >= 1
     assert main(["check-prose", str(m4), str(prose), "--pov", "p:nobody"]) != 0

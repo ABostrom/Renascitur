@@ -44,7 +44,10 @@ conditions and knows nothing of what made them. A town's chance of an outbreak r
 and an outbreak cites them. In a town's `disease`, `{id: {sick, immune, event}}`: each season the susceptible catch it
 (`catching`, more readily when hungry), the sick recover or die (`population.kill`), and a notable may die of it. A
 town's sick share is its `ill`: the sick don't work or bury, so plague starves itself of hands. An outbreak ends when
-nobody is sick. A town remembers: its `immunity`, `{id: [immune, tick]}`, fades by `wane` a season and is reckoned
+nobody is sick. Some are born resistant: a disease's `resist` names a genome locus and variant, so it is drawn at birth
+and inherited. A town's share of that variant slows the spread (`spare`), and a notable's trait of it lowers their
+odds; the dead take fewer of its copies with them, so plague leaves a town hardier for generations. A world whose
+catalogue lacks the locus has no resistance. A town remembers: its `immunity`, `{id: [immune, tick]}`, fades by `wane` a season and is reckoned
 when the next outbreak comes. A coarse step has no seasons, so a town it strikes has one wave and it's over.
 
 A sick town sends it on: down each open route, and with each traveller on the road, a draw at its sick share (`ROADS`)
@@ -72,7 +75,8 @@ FRAIL = 2.0  # (the young, under 5, and the old, 60 and over, die of it this man
 BURIAL: dict = {"bury": 4.0, "rot": 0.3, "winter": 0.05}  # (bodies a pair of hands buries a season; the share of
 # what's left that rots away a season, and in a season that keeps them)
 DISEASES: list = [{"id": "flux", "name": "the flux", "beta": 1.4, "lethality": 0.15, "duration": 2.0, "wane": 0.02,
-                   "tires": 0.8, "base": 0.0005, "filth": 0.5}]  # (a draft: spread a season, who dies of it, seasons
+                   "tires": 0.8, "base": 0.0005, "filth": 0.5,
+                   "resist": {"locus": "resistance", "variant": "+", "trait": "resistance", "spare": 0.8}}]  # (a draft: spread a season, who dies of it, seasons
 # sick, the share of the immune who lose it a season, how its spread weakens each season as people learn to shun the
 # sick, a town's odds of an outbreak, and how much the dead lying per head add)
 MOST_LIKELY = 0.5  # (a town's odds of breeding an outbreak in a season never pass this; arrivals add their own)
@@ -137,6 +141,12 @@ def check(eco: dict, crafts: dict | None) -> None:
             if isinstance(v, bool) or not isinstance(v, (int, float)) or v < 0 \
                     or (k in ("lethality", "wane", "tires", "base") and v > 1) or (k == "duration" and v < 1):
                 raise ValueError(f"disease {x.get('id')!r}: bad {k}: {v!r}")
+        r = x.get("resist")
+        if r is not None:
+            spare = r.get("spare") if isinstance(r, dict) else None
+            if not isinstance(r, dict) or not all(isinstance(r.get(k), str) for k in ("locus", "variant", "trait")) \
+                    or isinstance(spare, bool) or not isinstance(spare, (int, float)) or not 0 <= spare <= 1:
+                raise ValueError(f"disease {x.get('id')!r}: resist is {{locus, variant, trait, spare}}, spare a share")
     ids = [x["id"] for x in d or []]
     if len(set(ids)) != len(ids):
         raise ValueError(f"disease ids must differ: {ids}")
@@ -172,6 +182,26 @@ def outbreak_odds(spec: dict, dead: float, people: int) -> float:
     return min(MOST_LIKELY, float(spec["base"]) + float(spec["filth"]) * filth)
 
 
+def resistant_share(ctx, s: str, spec: dict) -> tuple[float, dict]:
+    """A town's share of the variant that resists this disease, and what `population.kill` needs to spare it. Each copy
+    is half of `spare`, as a notable's trait is, so a copy is spared by how its carriers fare against the rest's."""
+    from renasci.people.life import world
+    from renasci.people.population import allele_column
+
+    r = spec.get("resist")
+    locus = next((lo for lo in world(ctx)[1].loci if r and lo.id == r["locus"]), None)
+    if locus is None:
+        return 0.0, {}
+    cols = [allele_column(locus.id, v) for v in locus.variants]
+    have = ctx.read_columns(s, cols)
+    total = sum(int(v) for v in have.values())
+    mine = allele_column(locus.id, r["variant"])
+    if mine not in have:
+        raise ValueError(f"disease {spec['id']!r}: {locus.id} has no variant {r['variant']!r}")
+    share, s = (int(have[mine]) / total if total else 0.0), float(r["spare"])
+    return share, {mine: 1.0 - (1.0 - s * (1.0 + share) / 2.0) / (1.0 - s * share / 2.0)}
+
+
 def arrival_odds(carried: float) -> float:
     """A town's chance of an outbreak from those who have brought it since its last step (pure)."""
     return 1.0 - (1.0 - TAKES) ** carried
@@ -197,6 +227,7 @@ def remembered(immune: int, wane: float, seasons: int) -> int:
 def disease_system():
     from renasci.core.systems import System
     from renasci.people import houses, life, population
+    from renasci.people.life import world
     from renasci.people.races import BANDS
 
     class Disease(System):
@@ -273,9 +304,12 @@ def disease_system():
                     stocks.add(ctx, to, f"carried:{d}", 1.0)
 
         def wave(self, ctx, s, spec, state, people, event) -> None:
-            changes, died = population.kill(ctx, s, [WAVE * float(spec["lethality"])] * BANDS, f"wave:{spec['id']}")
+            share, spared = resistant_share(ctx, s, spec)
+            guard = 1.0 - float((spec.get("resist") or {}).get("spare", 0.0)) * share if spared else 1.0
+            rate = WAVE * float(spec["lethality"]) * guard
+            changes, died = population.kill(ctx, s, [rate] * BANDS, f"wave:{spec['id']}", spared)
             ctx.emit("disease.season", {"settlement": (s,)}, purpose=f"wave:{spec['id']}", actor=s, place=s,
-                     payload={"disease": spec["id"], "sick": 0, "new": int(people * WAVE), "died": died, "people": people},
+                     payload={"disease": spec["id"], "sick": 0, "new": int(people * WAVE * guard), "died": died, "people": people},
                      causes=(Cause("event", event),))
             if died:
                 ctx.write_columns(s, changes)
@@ -290,11 +324,14 @@ def disease_system():
             sick = min(int(now["sick"]), people)
             immune = min(int(now["immune"]), people - sick)
             age = int(now.get("age", 0))
-            odds = catching(float(spec["beta"]) * float(spec["tires"]) ** age, sick, people, hunger)
+            share, spared = resistant_share(ctx, s, spec)
+            guard = 1.0 - float((spec.get("resist") or {}).get("spare", 0.0)) * share if spared else 1.0
+            bare = catching(float(spec["beta"]) * float(spec["tires"]) ** age, sick, people, hunger)
+            odds = bare * guard
             new = rng.binomial(people - sick - immune, odds)
             out = rng.binomial(sick, 1.0 / float(spec["duration"]))
             rate = out * float(spec["lethality"]) / people if people else 0.0
-            changes, died = population.kill(ctx, s, [rate] * BANDS, f"disease:{d}:dead") if out else ({}, 0)
+            changes, died = population.kill(ctx, s, [rate] * BANDS, f"disease:{d}:dead", spared) if out else ({}, 0)
             lost = rng.binomial(immune, float(spec["wane"]))
             ctx.emit("disease.season", {"settlement": (s,)}, purpose=f"sick:{d}", actor=s, place=s,
                      payload={"disease": d, "sick": sick + new - out, "new": new, "died": died, "people": people},
@@ -315,8 +352,15 @@ def disease_system():
                 ctx.set(s, "disease", dict(state))
             for p in sorted(ctx.get(s, "residents") or []):
                 if ctx.status(p) == "active" and not ctx.get(p, "journey") \
-                        and ctx.chance(odds * float(spec["lethality"]), f"plague:{d}", owner=p):
+                        and ctx.chance(bare * float(spec["lethality"]) * self.unspared(ctx, p, spec), f"plague:{d}", owner=p):
                     life.die(ctx, p, s, spec["name"], causes=(Cause("event", now["event"]),))
+
+        def unspared(self, ctx, person, spec) -> float:
+            """How exposed a notable is, by their own blood."""
+            r = spec.get("resist")
+            if not r or not any(lo.id == r["locus"] for lo in world(ctx)[1].loci):
+                return 1.0
+            return 1.0 - float(r["spare"]) * float((ctx.get(person, "traits") or {}).get(r["trait"], 0.0))
 
         def ended(self, ctx, s, state, d) -> None:
             ctx.emit("disease.ended", {"settlement": (s,)}, purpose=f"over:{d}", actor=s, place=s, payload={"disease": d},
@@ -555,7 +599,7 @@ SEASON_SICK = EventType("disease.season", 1, roles={"settlement": (1, 1)},
                         payload={"disease": "str", "sick": "int", "new": "int", "died": "int", "people": "int"})
 ENDED_SICK = EventType("disease.ended", 1, roles={"settlement": (1, 1)}, payload={"disease": "str"})
 PASSED = EventType("disease.passed", 1, roles={"settlement": (1, 1)}, payload={"disease": "str"})
-DISEASE_READS = stocks.READS | frozenset({"ids:settlement", "ids:route", "ends", "open", "residents", "race", "hunger", "disease", "ill", "journey", "immunity",
+DISEASE_READS = stocks.READS | frozenset({"traits", "ids:settlement", "ids:route", "ends", "open", "residents", "race", "hunger", "disease", "ill", "journey", "immunity",
                                           "pop:*", "allele:*", "flow:*"})
 DISEASE_WRITES = stocks.WRITES | frozenset({"disease", "ill", "immunity", "pop:*", "allele:*", "flow:*"})
 BEGAN = EventType("famine.began", 1, roles={"settlement": (1, 1)}, payload={"short": "float"})
