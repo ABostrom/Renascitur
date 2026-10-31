@@ -27,6 +27,13 @@ A run keeps a copy of its truth file (`truths.json`), as it keeps its canon: a r
 that has changed since. `renasci keep` gives what it keeps an id of its own, so a re-run that makes the same thing again
 makes a twin, not a clash. It keeps objects and people, whose kin, marks and memories stay in the run they came from.
 A town is already in the world it came from.
+
+A **god** in `pantheon` wants things and acts on the world from the first day, spending its `power` (S11):
+
+    {"pantheon": [{"id": "g:ash", "name": "Ash", "domains": ["death"], "rivals": ["g:dawn"], "power": 0.5},
+                  {"id": "g:dawn", "name": "Dawn", "domains": ["light"], "rivals": ["g:ash"]}]}
+
+A world's real gods are its canon: a truth file is how to try gods out without deciding that.
 """
 
 from __future__ import annotations
@@ -44,9 +51,9 @@ def load(path) -> dict:
 
 def check(doc: dict, scenario: dict) -> None:
     """Refuse a truth file the scenario can't hold, naming what's wrong."""
-    if not isinstance(doc, dict) or set(doc) - {"about", "places", "objects", "people"} \
-            or not all(isinstance(doc.get(k, []), list) for k in ("places", "objects", "people")):
-        raise ValueError("a truth file is {about, places: [...], objects: [...], people: [...]}")
+    if not isinstance(doc, dict) or set(doc) - {"about", "places", "objects", "people", "pantheon"} \
+            or not all(isinstance(doc.get(k, []), list) for k in ("places", "objects", "people", "pantheon")):
+        raise ValueError("a truth file is {about, places: [...], objects: [...], people: [...], pantheon: [...]}")
     geography = scenario.get("geography")
     known = {p["id"] for p in (geography or {}).get("places", [])}
     regions = {r["id"] for r in (geography or {}).get("regions", [])}
@@ -78,6 +85,12 @@ def check(doc: dict, scenario: dict) -> None:
             raise ValueError(f"truths: {o['id']} is made of something the world doesn't know: {o.get('material')!r}")
         if o.get("place") not in known | set(mine):
             raise ValueError(f"truths: {o['id']} lies nowhere known: {o.get('place')!r}")
+    gods = [g.get("id") for g in doc.get("pantheon", [])]
+    if len(set(gods)) != len(gods) or not all(gods) or not all(g.get("name") for g in doc.get("pantheon", [])):
+        raise ValueError(f"truths: a god has its own id and a name: {gods}")
+    for g in doc.get("pantheon", []):
+        if set(g.get("rivals", [])) - set(gods):
+            raise ValueError(f"truths: {g['id']} has an unknown rival: {g['rivals']}")
     towns = {s["id"] for s in scenario.get("settlements", [])} | {p["id"] for p in doc.get("places", []) if p["kind"] == "village"}
     races = {r["id"] for r in scenario.get("races", [])}
     houses = {h["id"] for h in scenario.get("houses", [])}
@@ -117,6 +130,8 @@ def apply(scenario: dict, doc: dict) -> dict:
         sc["objects"] = [*(sc.get("objects") or []), *doc["objects"]]
     if doc.get("people"):
         sc["kept_people"] = doc["people"]
+    if doc.get("pantheon"):
+        sc["pantheon"] = doc["pantheon"]
     return sc
 
 

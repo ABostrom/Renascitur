@@ -26,6 +26,7 @@ from dataclasses import dataclass
 from renasci.core.events import Cause, EventType
 from renasci.core.pools import pools
 from renasci.core.systems import System
+from renasci.core import stocks
 from renasci.people.races import age_years
 
 SHAMED = -0.25  # (actions.SHAMED: in disgrace)
@@ -37,7 +38,11 @@ RESOLVED = EventType("people.ambition_resolved", 1, roles={"owner": (1, 1), "amb
                      payload={"status": "str"}, dead_roles=("owner",))
 WHISPERS = EventType("object.whispers", 1, roles={"object": (1, 1), "bearer": (1, 1), "against": (1, 1)}, payload={},
                      visibility="secret")
-EVENT_TYPES = (FORMED, RESOLVED, WHISPERS)
+BLESSED = EventType("deity.blessed", 1, roles={"deity": (1, 1), "person": (1, 1)}, payload={})
+CURSED = EventType("deity.cursed", 1, roles={"deity": (1, 1), "person": (1, 1)}, payload={})
+OMEN = EventType("deity.omen", 1, roles={"deity": (1, 1), "place": (1, 1)}, payload={})
+RENEWED = EventType("deity.renewed", 1, roles={"deity": (1, 1)}, payload={})
+EVENT_TYPES = (FORMED, RESOLVED, WHISPERS, BLESSED, CURSED, OMEN)
 ADULT = 16
 
 
@@ -473,6 +478,102 @@ class Leave(Ambition):
         return f"escape the famine in {ctx.get(target, 'name') or target}"
 
 
+class Divine(Ambition):
+    """What a god wants (S11 §2). A god has no hands either: each year it may spend `power` on one `deed`. Power is what
+    keeps gods few and slow; until faith feeds it (#132) it returns by itself (`Power`)."""
+
+    held_by, cooldown_years = ("deity",), 20
+    reads = frozenset({"power", "rivals", "born", "favour", "level:dread", "why:dread"})
+    cost, odds = 0.2, 0.3
+
+    def urge(self, ctx, god):
+        return 0.5
+
+    def subgoals(self, ctx, amb):
+        return []
+
+    def satisfied(self, ctx, amb):
+        return False
+
+    def moot(self, ctx, amb):
+        return ctx.status(ctx.get(amb, "target")) != "active"
+
+    def keeps(self, ctx, amb):  # (it stays with its target till `moot`: asking `eligible` again would read everyone)
+        return True
+
+    def deed(self, ctx, god, target, because) -> None:
+        raise NotImplementedError
+
+    def act(self, ctx, amb) -> None:
+        god = ctx.get(amb, "owner")
+        power = float(ctx.get(god, "power") or 0.0)
+        if power >= self.cost and ctx.status(ctx.get(amb, "target")) == "active" and ctx.chance(self.odds, "deed", owner=god):
+            self.deed(ctx, god, ctx.get(amb, "target"), (Cause("ambition", amb),))
+            ctx.set(god, "power", round(power - self.cost, 6))
+
+
+def _favour(ctx, person: str, by: float) -> None:
+    ctx.set(person, "favour", round(max(-1.0, min(1.0, float(ctx.get(person, "favour") or 0.0) + by)), 2))
+
+
+@LIBRARY.add
+class Champion(Divine):
+    """A god takes up a mortal, and favours them while they live."""
+
+    name = "Champion"
+
+    def eligible(self, ctx, god):
+        adults = [p for p in ctx.ids("person", "active") if age_years(ctx.calendar, ctx.get(p, "born"), ctx.today) >= ADULT]
+        woke = agent(ctx, god)
+        return Formation(ctx.choose("champion", adults, owner=god), ("event", woke)) if adults and woke else None
+
+    def text(self, ctx, owner, target):
+        return f"raise up {ctx.get(target, 'name') or target}"
+
+    def deed(self, ctx, god, target, because):
+        ctx.emit("deity.blessed", {"deity": (god,), "person": (target,)}, purpose="bless", actor=god, causes=because)
+        _favour(ctx, target, 0.1)
+
+
+@LIBRARY.add
+class Smite(Divine):
+    """A god goes after a rival's champion. The cursed take it as a mortal takes any near thing: it shakes them."""
+
+    name, cost = "Smite", 0.3
+
+    def eligible(self, ctx, god):
+        for rival in sorted(ctx.get(god, "rivals") or []):
+            for amb in ctx.get(rival, "ambitions") or []:
+                if ctx.get(amb, "class") == "Champion" and ctx.status(ctx.get(amb, "target")) == "active":
+                    return Formation(ctx.get(amb, "target"), ("event", agent(ctx, god)))
+        return None
+
+    def text(self, ctx, owner, target):
+        return f"bring down {ctx.get(target, 'name') or target}"
+
+    def deed(self, ctx, god, target, because):
+        ctx.emit("deity.cursed", {"deity": (god,), "person": (target,)}, purpose="curse", actor=god, causes=because)
+        _favour(ctx, target, -0.1)
+        stocks.add(ctx, target, "dread", 1.0)
+
+
+@LIBRARY.add
+class Spread(Divine):
+    """A god makes itself known to a town. What a sign does to belief comes with faith (#132)."""
+
+    name, cost = "Spread", 0.1
+
+    def eligible(self, ctx, god):
+        towns, woke = ctx.ids("settlement"), agent(ctx, god)
+        return Formation(ctx.choose("omen", towns, owner=god), ("event", woke)) if towns and woke else None
+
+    def text(self, ctx, owner, target):
+        return f"be known in {ctx.get(target, 'name') or target}"
+
+    def deed(self, ctx, god, target, because):
+        ctx.emit("deity.omen", {"deity": (god,), "place": (target,)}, purpose="omen", actor=god, place=target, causes=because)
+
+
 @LIBRARY.add
 class Thirst(Ambition):
     """A thing that wants blood, through whoever carries it. It has no hands, so it holds no scheme: it `act`s, setting
@@ -724,11 +825,32 @@ def agent(ctx, entity: str) -> str | None:
                  if getattr(marks.get(m["id"]), "agency", False)), None)
 
 
+POWER_CAP = 1.0
 READS = frozenset({"ambitions", "cooldowns", "owner", "class", "target", "status", "state", "scheme"})
-WRITES = frozenset({"ambitions", "cooldowns", "state", "resolved", "scheme", "new:ambition", "grievances", "claims"})
+WRITES = frozenset({"ambitions", "cooldowns", "state", "resolved", "scheme", "new:ambition", "grievances", "claims",
+                    "power", "favour", "level:dread", "why:dread"})
+
+
+class Power(System):
+    """A god's strength comes back with the years, up to `POWER_CAP`. Only in a world with a pantheon."""
+
+    name, cadence = "divine.power", "yearly"
+    reads = frozenset({"ids:deity", "power"})
+    writes = frozenset({"power"})
+    event_types = (RENEWED,)
+    gain = 0.1
+
+    def run(self, ctx):
+        for god in ctx.ids("deity", "active"):
+            now = float(ctx.get(god, "power") or 0.0)
+            if now < POWER_CAP:
+                with ctx.scope(god):
+                    ctx.emit("deity.renewed", {"deity": (god,)}, purpose="power", actor=god)
+                    ctx.set(god, "power", round(min(POWER_CAP, now + self.gain), 6))
 
 
 class Ambitions(System):
+    feeds = ("dread",)
     name, cadence = "people.ambitions", "yearly"
     priority = 6  # after drives (5)
     reads = READS | frozenset({"ids:*", "residents", "born", "formed", "traits", "acquired"}).union(
@@ -751,8 +873,8 @@ class Ambitions(System):
         """Anything else that wants things: it forms ambitions as a person does, and acts on them itself. What's gone,
         or has stopped wanting, gives its ambitions up: nothing else will."""
         for kind in sorted({k for c in library.values() for k in c.held_by} - {"person"}):
-            with ctx.scope(kind):
-                for entity in ctx.ids(kind):
+            for entity in ctx.ids(kind):
+                with ctx.scope(entity):
                     wants = ctx.status(entity) == "active" and agent(ctx, entity)
                     if not wants:
                         for amb in list(ctx.get(entity, "ambitions") or []):

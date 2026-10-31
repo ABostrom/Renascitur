@@ -71,6 +71,10 @@ def people_ruleset(name: str, scenario: dict, version: int = 1) -> Ruleset:
         from renasci.marks import Marks
 
         systems += (Marks(),)
+    if scenario.get("pantheon"):  # (gods: S11 #131)
+        from renasci.people.ambitions import Power
+
+        systems += (Power(),)
     disguises = (Illness(),)
     if scenario.get("geography"):  # a structural ripple changes the map (#114)
         from renasci import geo

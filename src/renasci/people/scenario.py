@@ -38,6 +38,7 @@ from __future__ import annotations
 
 from renasci import geo, polities
 from renasci.core.calendar import Date
+from renasci.core.ids import event_id
 from renasci.people.genome import Catalogue, founder, inherit, keyed, phenotype
 from renasci.people.population import cast_masses
 from renasci.people.races import BAND_YEARS, Race, age_years
@@ -360,6 +361,12 @@ class _Builder:
             crafts.cast(self.e, sorted(settlements), self.sc["params"]["crafts"],
                         ecology.stores(self.sc["params"], {s: spec.get("masses", 0) + len(residents[s])
                                                            for s, spec in settlements.items()}))
+        for g in self.sc.get("pantheon") or []:  # (S11 #131: wanting comes of the mark they're cast with)
+            self.e.cast("deity", g["id"], {
+                "name": g["name"], "domains": g.get("domains", []), "traits": g.get("traits", {}), "rivals": g.get("rivals", []),
+                "power": float(g.get("power", 0.5)), "state": "active", "ambitions": [], "acquired": [
+                    {"id": "divine", "since": self.e.start.to_json(), "moved": {},
+                     "event": event_id("engine", g["id"], "cast", self.e.start, 0)}]})
         self.geography()
         for pid in sorted(self.people):
             person = self.people[pid]
