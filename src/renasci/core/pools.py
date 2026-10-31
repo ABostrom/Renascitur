@@ -127,6 +127,7 @@ class Pools(Mapping):
 pools = Pools()
 pools.define("event_types").freeze()  # (those extensions add; the engine's own stay with their systems for now)
 pools.define("reactions").freeze()  # (authored beats: see `Reaction`)
+pools.define("links").freeze()  # (authored links in the possible graph: see `analysis.graph.Link`)
 
 
 @dataclass(frozen=True)

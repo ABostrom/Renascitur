@@ -78,6 +78,7 @@ class Engine:
         self.pools = base_pools  # this run's pools; `extend` swaps in its own set (#162)
         self.extensions: list = []  # [[name, source digest], ...]
         self.reactions: dict = {}  # event type: [Reaction, ...], in name order
+        self.fed: set = set()  # (system, stock) moved so far (`System.feeds`: analysis.graph)
         self.granted_reads: frozenset = frozenset()  # what extensions' entries declare they read and write
         self.granted_writes: frozenset = frozenset()
         self.odds_hooks: list = []  # (ctx, p, purpose, owner) -> (p, cause or None): ripples, director

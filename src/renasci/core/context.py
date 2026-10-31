@@ -315,6 +315,9 @@ class Ctx:
             self._due.append((event, self._depth + 1))
         return event
 
+    def note_stock(self, name: str) -> None:
+        self._engine.fed.add((self.system.name, name))
+
     def run_reactions(self) -> None:
         """Answer this activation's events, now its system has finished with them (see `core.pools.Reaction`), each
         reaction starting clean: nothing it draws or asks reaches the next one."""

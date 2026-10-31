@@ -116,6 +116,7 @@ def cast_masses(engine, settlements: dict, catalogue, races) -> None:
 
 class Population(System):
     name, cadence = "people.population", "seasonal"
+    feeds = ("corpses",)
     priority = -2  # before births and deaths of notables
     reads = COLUMN_READS | stocks.READS | {"ids:settlement", "race", "residents", "capacity"}
     writes = frozenset({"pop:*", "allele:*", "flow:*"}) | stocks.WRITES

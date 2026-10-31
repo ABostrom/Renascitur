@@ -229,7 +229,7 @@ def test_checkpoint_refuses_stateful_disguises():
         name = "mini.counting"
 
         def apply(self, ctx, ripple):
-            self.uses = getattr(self, "uses", 0) + 1
+            self.count = getattr(self, "count", 0) + 1
             return super().apply(ctx, ripple)
 
     e = engine([Ripple("r", "inject", Date(1, 2, 0), "t:sky")], disguises=(Counting(),), systems=())
