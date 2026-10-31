@@ -21,7 +21,7 @@ import functools
 import json
 
 from renasci.core.canon import canonical
-from renasci.core.events import EventType
+from renasci.core.events import Cause, EventType
 from renasci.core.ripples import Disguise
 from renasci import relations
 from renasci.core.systems import System
@@ -168,6 +168,21 @@ def add_grievance(ctx, holder: str, against: str, event: str, kind: str) -> None
     ctx.set(holder, "grievances", grievances)
 
 
+AWAY = ("fell in battle", "killed in the sack", "fell in a duel")  # (a death far from home, S9: and any journey)
+EXPLOIT = EventType("people.exploit", 1, roles={"hero": (1, 1)}, payload={"kind": "str", "deed": "str"})
+
+
+def exploit(ctx, person: str, kind: str, event: str, place: str | None) -> None:
+    """Note a deed for what `person` carries now (S9 #126: those objects earn it at the yearly pass)."""
+    held = ctx.get(person, "possessions") if ctx.params.get("crafts") else None
+    if not held or ctx.status(person) != "active":
+        return
+    ctx.emit("people.exploit", {"hero": (person,)}, purpose=f"exploit:{event}", actor=person, place=place,
+             payload={"kind": kind, "deed": event}, causes=(Cause("event", event),))
+    ctx.set(person, "exploits", [*(ctx.get(person, "exploits") or []),
+                                 {"kind": kind, "event": event, "place": place, "held": sorted(held)}])
+
+
 KIN_CONF = 0.8  # how surely the victim's close kin take in how they died (S6: above the grievance bar)
 
 
@@ -181,11 +196,15 @@ def die(ctx, person: str, settlement: str, cause: str, *, killer: str | None = N
         miss = ctx.emit("people.near_miss", {"survivor": (person,)}, purpose="near_miss", actor=person,
                         place=settlement, causes=causes, payload={"would_have": cause})
         minds.wound(ctx, person, "terror", miss.id)
+        exploit(ctx, person, "survived", miss.id, settlement)
         return False
     death = ctx.emit("people.death", {"deceased": (person,), "killer": (killer,) if killer else ()}, purpose="death",
                      actor=person, place=settlement, causes=causes,
                      payload={"age": age_years(ctx.calendar, ctx.get(person, "born"), ctx.today), "cause": cause})
     ctx.set_status(person, "dead")
+    if ctx.params.get("crafts") and ctx.get(person, "possessions"):  # (S9 #126: where they fell, for what they held)
+        ctx.set(person, "fell", {"place": settlement, "event": death.id, "cause": cause,
+                                 "away": bool(ctx.get(person, "journey")) or cause in AWAY})
     if ctx.get(person, "journey"):  # a death on the road ends the journey (S4 §5)
         ctx.set(person, "journey", None)
     ctx.set(settlement, "residents", [p for p in ctx.get(settlement, "residents") if p != person])
@@ -232,11 +251,11 @@ _AMBITION_READS = frozenset({"ambitions", "cooldowns", "owner", "class", "state"
                              "target", "house", "headship", "holder", "offices", "deposed", "claims", "control",
                              "ended", "ruler"})  # (and whatever any `satisfied` reads)
 _AMBITION_WRITES = frozenset({"ambitions", "cooldowns", "state", "resolved", "scheme"})
-DIE_EVENTS = (DEATH, NEAR_MISS, _RESOLVED) + houses.EVENT_TYPES + (ties.TIE_ENDED,) + beliefs.EVENT_TYPES
+DIE_EVENTS = (DEATH, NEAR_MISS, _RESOLVED, EXPLOIT) + houses.EVENT_TYPES + (ties.TIE_ENDED,) + beliefs.EVENT_TYPES
 DIE_READS = (frozenset({"born", "residents", "spouse", "status", "flow:*", "mother", "father", "children", "grievances",
-                         "need", "journey"})
+                         "need", "journey", "possessions", "exploits"})
              | houses.READS | ties.READS | _AMBITION_READS | beliefs.PERCEIVE_READS | relations.NOTE_READS)
-DIE_WRITES = (frozenset({"status", "residents", "spouse", "flow:*", "grievances", "wound", "need", "journey"})
+DIE_WRITES = (frozenset({"status", "residents", "spouse", "flow:*", "grievances", "wound", "need", "journey", "fell", "exploits"})
               | houses.WRITES | ties.WRITES | _AMBITION_WRITES | beliefs.PERCEIVE_WRITES | relations.NOTE_WRITES)
 
 

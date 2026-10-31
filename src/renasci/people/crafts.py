@@ -18,8 +18,20 @@ invariant, exact, is initial + produced + traded_in = stock + used + traded_out 
    the maker (the maker may keep it): `object.given`; a buyer pays its price (`value x cost`, more for quality),
    or what wealth they have if less, to the maker. Yields carry their fractions year to year (`yield_carry`).
 
-This system is the spec's `objects` system: the only writer of an object's fields (#126 adds what happens to
-objects after). A coarse step yields N years and draws "a masterwork in N years".
+4. **Biographies** (S9 §5, #126), each object in its own scope:
+   - an owner gone (dead): it passes to their heir (the eldest living child, else the spouse:
+     `object.inherited`), unless they fell far from home (`life.die` notes `fell`: on a journey, in battle, a
+     sack, a duel), where it may be lost (`lose_rate`); with no heir, it is lost where they fell
+     (`object.lost`);
+   - a lost object may be found by someone living where it lies (`find_rate`, likelier the more famous it is:
+     `object.found`);
+   - an owner's `exploits` (a duel won, a near miss survived: noted by S7 and `life.die`) become each of
+     their objects' deeds (`object.deed`, `DEED_FAME` each); at `NAMED` fame a thing earns a name from where
+     its last deed was done (`object.named`: "the Blade of Redcairn").
+   Owners of objects are kept as notables (S3's LOD spares them).
+
+This system is the spec's `objects` system: the only writer of an object's fields. A coarse step yields N years
+and draws "a masterwork in N years" and "found in N years".
 """
 
 from __future__ import annotations
@@ -31,6 +43,8 @@ from renasci.relations import over
 
 FLOWS = ("initial", "produced", "used", "traded_in", "traded_out", "destroyed")
 MASTER_RATE = 0.05
+LOSE_RATE, FIND_RATE = 0.5, 0.05  # (an owner fallen far from home loses it there; a year's chance it's found)
+DEED_FAME, NAMED = 0.25, 0.5  # (fame a deed brings; the fame at which a thing earns a name)
 ADULT = 16
 TIE = 4.0  # (a friend of the maker is likelier to get it)
 
@@ -39,10 +53,20 @@ MADE = EventType("object.made", 1, roles={"maker": (1, 1), "object": (1, 1)},
                  payload={"type": "str", "material": "str", "quality": "float"})
 GIVEN = EventType("object.given", 1, roles={"giver": (0, 1), "owner": (1, 1), "object": (1, 1)},
                   payload={"price": "float"})
-EVENT_TYPES = (YIELD, MADE, GIVEN)
+INHERITED = EventType("object.inherited", 1, roles={"from": (1, 1), "owner": (1, 1), "object": (1, 1)}, payload={},
+                      dead_roles=("from",))
+LOST = EventType("object.lost", 1, roles={"owner": (1, 1), "object": (1, 1)}, payload={"place": "id"},
+                 dead_roles=("owner",))
+FOUND = EventType("object.found", 1, roles={"finder": (1, 1), "object": (1, 1)}, payload={"place": "id"})
+DEED = EventType("object.deed", 1, roles={"owner": (1, 1), "object": (1, 1)}, payload={"deed": "str", "kind": "str"})
+NAMED_T = EventType("object.named", 1, roles={"object": (1, 1)}, payload={"name": "str"})
+EVENT_TYPES = (YIELD, MADE, GIVEN, INHERITED, LOST, FOUND, DEED, NAMED_T)
 READS = frozenset({"ids:settlement", "residents", "region", "born", "job", "skills", "wealth", "ties", "a", "b",
-                   "kind", "journey", "possessions", "yield_carry", "stock:*", "goods:*", "job:*"})
-WRITES = frozenset({"stock:*", "goods:*", "new:object", "owner", "wealth", "possessions", "yield_carry"})
+                   "kind", "journey", "possessions", "yield_carry", "stock:*", "goods:*", "job:*",
+                   "ids:object", "owner", "status", "fell", "children", "spouse", "place", "lost", "fame", "deeds",
+                   "exploits", "name", "type"})
+WRITES = frozenset({"stock:*", "goods:*", "new:object", "owner", "wealth", "possessions", "yield_carry",
+                    "place", "lost", "fame", "deeds", "exploits", "name"})
 FRIENDLY = ("friend", "mentor", "lover")
 
 
@@ -65,6 +89,14 @@ def cast(engine, settlements: list[str], crafts: dict) -> None:
             engine.cast_column(f"goods:{m}:{f}", "int64", settlements, [0] * len(settlements))
 
 
+def place_name(ctx, place: str | None) -> str:
+    """A place's name; without one, its id made readable ("v:raining-bay" -> "Raining Bay")."""
+    if not place:
+        return "nowhere"
+    name = ctx.get(place, "name") if ctx.exists(place) else None
+    return name or place.split(":", 1)[-1].replace("-", " ").title()
+
+
 class Crafts(System):
     name, cadence = "people.crafts", "yearly"
     priority = 5  # (after people.work: this year's workers and skills)
@@ -82,6 +114,7 @@ class Crafts(System):
             with ctx.scope(s):
                 self.produce(ctx, s, cat, years)
                 self.make(ctx, s, cat, years)
+        self.biographies(ctx, cat, years)
 
     def produce(self, ctx, s, cat, years) -> None:
         mats = cat.get("materials") or {}
@@ -164,3 +197,87 @@ class Crafts(System):
         if price:
             ctx.set(owner, "wealth", round(float(ctx.get(owner, "wealth") or 0.0) - price, 2))
             ctx.set(maker, "wealth", round(float(ctx.get(maker, "wealth") or 0.0) + price, 2))
+
+    # ------------------------------------------------------------ biographies (S9 §5, #126)
+
+    def biographies(self, ctx, cat, years) -> None:
+        """What became of each object this year: an owner gone, a lost thing found, deeds done."""
+        lose = float(cat.get("lose_rate", LOSE_RATE))
+        find = float(cat.get("find_rate", FIND_RATE))
+        owners = sorted({ctx.get(o, "owner") for o in ctx.ids("object")} - {None})
+        for p in owners:  # (deeds first: one who did great things and then fell still gave them to what they bore)
+            if ctx.get(p, "exploits"):
+                with ctx.scope(p):
+                    self.deeds(ctx, p)
+        for o in ctx.ids("object"):
+            with ctx.scope(o):
+                owner = ctx.get(o, "owner")
+                if owner and ctx.status(owner) != "active":
+                    self.bequeath(ctx, o, owner, lose)
+                elif owner is None and ctx.get(o, "lost") is not None:
+                    self.find(ctx, o, find, years)
+
+    def _hand(self, ctx, o, frm, to) -> None:
+        """An object moves from one holder to another (either may be None): their possessions follow."""
+        if frm and ctx.exists(frm):
+            ctx.set(frm, "possessions", [x for x in ctx.get(frm, "possessions") or [] if x != o])
+        ctx.set(o, "owner", to)
+        if to:
+            ctx.set(to, "possessions", sorted((ctx.get(to, "possessions") or []) + [o]))
+            ctx.set(o, "place", ctx.get(to, "place"))
+
+    def bequeath(self, ctx, o, owner, lose) -> None:
+        fell = ctx.get(owner, "fell") or {}
+        where = fell.get("place") or ctx.get(o, "place")
+        heir = next((c for c in [*(ctx.get(owner, "children") or []), ctx.get(owner, "spouse")]
+                     if c and ctx.exists(c) and ctx.status(c) == "active"), None)
+        if heir is None or (fell.get("away") and ctx.chance(lose, "lose", owner=o)):
+            ev = ctx.emit("object.lost", {"owner": (owner,), "object": (o,)}, purpose="lost", actor=o, place=where,
+                          payload={"place": where},
+                          causes=(Cause("event", fell["event"]),) if fell.get("event") else ())
+            self._hand(ctx, o, owner, None)
+            ctx.set(o, "place", where)
+            ctx.set(o, "lost", ctx.today.to_json())
+            return
+        ctx.emit("object.inherited", {"from": (owner,), "owner": (heir,), "object": (o,)}, purpose="inherited",
+                 actor=o, place=ctx.get(heir, "place"),
+                 causes=(Cause("event", fell["event"]),) if fell.get("event") else ())
+        self._hand(ctx, o, owner, heir)
+
+    def find(self, ctx, o, rate, years) -> None:
+        place = ctx.get(o, "place")
+        if not place or ctx.kind(place) != "settlement":
+            return
+        here = [p for p in sorted(ctx.get(place, "residents") or [])
+                if age_years(ctx.calendar, ctx.get(p, "born"), ctx.today) >= ADULT and not ctx.get(p, "journey")]
+        p = min(1.0, rate * (1.0 + 3.0 * float(ctx.get(o, "fame") or 0.0)))
+        if not here or not ctx.chance(over(p, years), "find", owner=o):
+            return
+        finder = ctx.choose("finder", here, owner=o)
+        ctx.emit("object.found", {"finder": (finder,), "object": (o,)}, purpose="found", actor=o, place=place,
+                 payload={"place": place})
+        self._hand(ctx, o, None, finder)
+        ctx.set(o, "lost", None)
+
+    def deeds(self, ctx, person) -> None:
+        exploits = list(ctx.get(person, "exploits") or [])
+        for o in sorted(ctx.get(person, "possessions") or []):
+            mine = [x for x in exploits if o in x.get("held", [])]  # (only what they bore when they did it)
+            if not mine:
+                continue
+            fame = float(ctx.get(o, "fame") or 0.0)
+            deeds = list(ctx.get(o, "deeds") or [])
+            for x in mine:
+                ctx.emit("object.deed", {"owner": (person,), "object": (o,)}, purpose=f"deed:{x['event']}", actor=o,
+                         place=x.get("place"), payload={"deed": x["event"], "kind": x["kind"]},
+                         causes=(Cause("event", x["event"]),))
+                deeds.append(x["event"])
+                fame = round(min(1.0, fame + DEED_FAME), 3)
+            ctx.set(o, "deeds", deeds)
+            ctx.set(o, "fame", fame)
+            if fame >= NAMED and not ctx.get(o, "name"):
+                at = mine[-1].get("place") or ctx.get(person, "place")
+                name = f"the {str(ctx.get(o, 'type')).title()} of {place_name(ctx, at)}"
+                ctx.emit("object.named", {"object": (o,)}, purpose="named", actor=o, place=at, payload={"name": name})
+                ctx.set(o, "name", name)
+        ctx.set(person, "exploits", [])

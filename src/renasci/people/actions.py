@@ -239,13 +239,17 @@ class Duel(Action):
         return 1.0 / (1.0 + math.exp(-3.0 * edge))
 
     def succeed(self, ctx, actor, target, scheme, event):
-        return life.die(ctx, target, ctx.get(target, "place"), "fell in a duel", killer=actor,
-                        causes=(Cause("event", event),))
+        place = ctx.get(target, "place")
+        won = life.die(ctx, target, place, "fell in a duel", killer=actor, causes=(Cause("event", event),))
+        if won:
+            life.exploit(ctx, actor, "duel", event, place)  # (S9: a deed for what the victor carries)
+        return won
 
     def fail(self, ctx, actor, target, scheme, event):
         if ctx.chance(0.5, "duel_loss", owner=scheme or actor):
-            life.die(ctx, actor, ctx.get(actor, "place"), "fell in a duel", killer=target,
-                     causes=(Cause("event", event),))
+            place = ctx.get(actor, "place")
+            if life.die(ctx, actor, place, "fell in a duel", killer=target, causes=(Cause("event", event),)):
+                life.exploit(ctx, target, "duel", event, place)  # (the challenged won it: theirs the deed)
         else:
             _favour(ctx, actor, -0.2)
 

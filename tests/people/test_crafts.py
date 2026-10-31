@@ -62,7 +62,7 @@ def test_a_skilled_smith_makes_a_masterwork_and_it_finds_an_owner(made):
         assert made.store.get(maker, "job") == "smith"
         assert made.store.get(o, "type") == "blade" and made.store.get(o, "material") == "iron"
         assert 0 < made.store.get(o, "quality") <= 1
-        assert owner and made.store.kind(owner) == "person"
+        assert (owner and made.store.kind(owner) == "person") or made.store.get(o, "lost") is not None  # (#126: lost)
     first = next(x for x in made.events if x.type == "object.made")
     given = next(x for x in made.events if x.type == "object.given" and x.roles["object"] == first.roles["object"])
     assert given.date == first.date
