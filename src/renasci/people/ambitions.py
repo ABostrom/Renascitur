@@ -28,6 +28,7 @@ from renasci.core.systems import System
 from renasci.people.races import age_years
 
 SHAMED = -0.25  # (actions.SHAMED: in disgrace)
+HUNGRY_RISING = 0.15  # (Secede's urge in a house whose seat is starving)
 
 FORMED = EventType("people.ambition_formed", 1, roles={"owner": (1, 1), "ambition": (1, 1), "target": (0, 1)},
                    payload={"class": "str", "text": "str"})
@@ -372,7 +373,7 @@ class Secede(Ambition):
 
     name, cooldown_years = "Secede", 20
     reads = frozenset({"house", "headship", "holder", "seat", "control", "ended", "members", "ruler", "favour",
-                       "traits", "drives"})
+                       "traits", "drives", "famine"})
 
     def eligible(self, ctx, person):
         found = governed(ctx, person)
@@ -384,7 +385,11 @@ class Secede(Ambition):
         return Formation(found[0], ("drive", "status"))
 
     def urge(self, ctx, person):
-        return 0.02 + 0.08 * trait(ctx, person, "temper")
+        hungry = 0.0
+        if (ctx.params.get("ecology") or {}).get("famine") is not None:  # (a starving seat stirs it: S10 #129)
+            seat = ctx.get(ctx.get(person, "house"), "seat")
+            hungry = HUNGRY_RISING if seat and ctx.get(seat, "famine") else 0.0
+        return 0.02 + 0.08 * trait(ctx, person, "temper") + hungry
 
     def subgoals(self, ctx, amb):
         return [frozenset({f"seceded:{ctx.get(amb, 'target')}"})]
@@ -398,6 +403,45 @@ class Secede(Ambition):
 
     def text(self, ctx, owner, target):
         return f"break free of {ctx.get(target, 'name') or target}"
+
+
+class Leave(Ambition):
+    """A notable starving in a famine wants out (S10 §3, #129): unwed and holding no office (families and
+    officers stay: S4), they flee (`Flee`) to a town within reach. Won once they live elsewhere; dropped when
+    the famine ends."""
+
+    name, cooldown_years = "Leave", 3
+    reads = frozenset({"drives", "place", "famine", "spouse", "offices", "journey", "plots"})
+
+    def eligible(self, ctx, person):
+        from renasci.people.drives import Food
+
+        if (ctx.params.get("ecology") or {}).get("famine") is None:
+            return None
+        home = ctx.get(person, "place")
+        if not home or not ctx.get(home, "famine") or ctx.get(person, "spouse") or ctx.get(person, "offices") \
+                or ctx.get(person, "journey"):  # (as Flee asks: one already on the road isn't fleeing)
+            return None
+        if ctx.get(person, "plots") or ctx.protected(person):  # (as Migration leaves them be)
+            return None
+        if (ctx.get(person, "drives") or {}).get("food", 1.0) > Food.STARVING:
+            return None
+        return Formation(home, ("drive", "food"))
+
+    def urge(self, ctx, person):
+        return 0.4
+
+    def subgoals(self, ctx, amb):
+        return [frozenset({"safe"})]
+
+    def satisfied(self, ctx, amb):
+        return ctx.get(ctx.get(amb, "owner"), "place") != ctx.get(amb, "target")
+
+    def moot(self, ctx, amb):
+        return not ctx.get(ctx.get(amb, "target"), "famine")
+
+    def text(self, ctx, owner, target):
+        return f"escape the famine in {ctx.get(target, 'name') or target}"
 
 
 class Covet(Ambition):
@@ -550,7 +594,7 @@ class Ruin(Ambition):
         return f"see {ctx.get(target, 'name') or target} brought low"
 
 
-STARTER = (Covet(), Expand(), Marry(), Protect(), Ruin(), Secede(), Seize(), Standing(), Usurp(), Vengeance())
+STARTER = (Covet(), Expand(), Leave(), Marry(), Protect(), Ruin(), Secede(), Seize(), Standing(), Usurp(), Vengeance())
 
 
 LIBRARY: dict[str, Ambition] = {a.name: a for a in STARTER}

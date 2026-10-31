@@ -43,9 +43,11 @@ travels the roads, and the dark, where night terrors take whoever is far from a 
 pressure on the masses (numbers) with sharp edges for notables (a death, a flight, a feud over grain).
 
 **Opt-in by catalogue and switch.** A world without an `ecology` section runs as today, with identical events
-and state and the same recipe hash. Each part has its own switch (`climate`, `disease`, `famine`, `night`).
-A system's extra reads (a hunger factor on `people.life`, a shortfall on a siege) are added only when its
-switch is on, as `campaigns: true` adds its system, so manifests of other worlds don't change.
+and state. Each part has its own switch (`climate`, `disease`, `famine`, `night`): an added system comes only
+when its switch is on, as `campaigns: true` adds its system. *As built (#127, #129):* the extra reads and writes
+on existing systems (`hunger` on `people.life` and a siege, `famine` on drives and ambitions, `blight` on the map
+disguise) are declared statically, as S8 and S9 did, so other worlds' recipe hashes changed once with S10;
+their history (events, ids, state) does not, and the effects are gated on the switch at run time.
 
 **The masses need aggregates:** S10's effects on the masses require `aggregates: true` (`population.bump` does
 nothing without it). A world without aggregates gets only the notables' side.
@@ -159,7 +161,8 @@ with journeys, which only fine time makes; a coarse step applies an aggregate to
   - an unscripted `ward.failed` (decay or sabotage) on at least one of the chosen seeds;
   - S3's population ledger, the `died:*` sum, and S9's goods ledger balance every season.
 - A structural harvest ripple makes a recorded difference traced to it by divergence analysis.
-- Worlds without an ecology catalogue are unchanged: identical events and state, and the same recipe hash.
+- Worlds without an ecology catalogue are unchanged: identical events and state (recipe hashes changed once
+  with S10: see §1).
 - Budget: ecology adds at most 30% to a 4A 1–100 run.
 
 ## 9. Open questions (defaults chosen; on the review queue)
