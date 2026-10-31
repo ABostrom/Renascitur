@@ -38,6 +38,7 @@ from __future__ import annotations
 
 import math
 
+from renasci.core import stocks
 from renasci.core.calendar import Date
 from renasci.core.events import Cause, EventType
 
@@ -83,6 +84,8 @@ def check(eco: dict, crafts: dict | None) -> None:
         raise ValueError("ecology.harvest needs a season: Spring, Summer, Autumn or Winter")
     if h.get("material") not in ((crafts or {}).get("materials") or {}):
         raise ValueError(f"ecology.harvest's material {h.get('material')!r} isn't among the crafts materials")
+    if eco.get("burial") is not None and not isinstance(eco["burial"], dict):
+        raise ValueError("ecology.burial is a catalogue: {} for the defaults")
     f = eco.get("famine")
     if f is not None:
         if not isinstance(f, dict):
@@ -259,8 +262,8 @@ EATEN = EventType("goods.eaten", 1, roles={"settlement": (1, 1)},
 BEGAN = EventType("famine.began", 1, roles={"settlement": (1, 1)}, payload={"short": "float"})
 ENDED = EventType("famine.ended", 1, roles={"settlement": (1, 1)}, payload={"since": "json"})
 FAMINE_READS = frozenset({"ids:settlement", "residents", "race", "famine", "harvest", "hunger", "pop:*", "allele:*",
-                          "flow:*", "stock:*", "goods:*"})
-FAMINE_WRITES = frozenset({"famine", "hunger", "pop:*", "allele:*", "flow:*", "stock:*", "goods:*"})
+                          "flow:*", "stock:*", "goods:*"}) | stocks.READS
+FAMINE_WRITES = frozenset({"famine", "hunger", "pop:*", "allele:*", "flow:*", "stock:*", "goods:*"}) | stocks.WRITES
 
 
 def famine_system():
@@ -304,6 +307,7 @@ def famine_system():
             changes, died = population.kill(ctx, s, hunger_rates(short, seasons), "hunger") if short else ({}, 0)
             ctx.emit("goods.eaten", {"settlement": (s,)}, purpose="eaten", actor=s, place=s,
                      payload={"eaten": eaten, "need": need, "short": short, "died": died, "spoiled": spoiled})
+            population.fell(ctx, s, died)
             ctx.write_columns(s, {**changes, f"stock:{m}": int(g[f"stock:{m}"]) - eaten - spoiled,
                                   f"goods:{m}:used": int(g[f"goods:{m}:used"]) + eaten,
                                   f"goods:{m}:destroyed": int(g[f"goods:{m}:destroyed"]) + spoiled})
