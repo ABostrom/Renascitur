@@ -1,4 +1,4 @@
-"""Cards: a person, a thing or a town with a real past, found in a finished run (#165).
+"""Cards: a person, a thing, a town or a house with a real past, found in a finished run (#165).
 
 `renasci gen person --run runs/m4 --house medani --age 30-50` finds what fits and writes a card: who they are, their
 kin, what they've become, what they want, who hates them, what they carry, and what happened to them. It generates
@@ -162,7 +162,24 @@ class Village(Generator):
                 **_told(run, entity)}
 
 
-for _g in (Person, Thing, Village):
+class House(Generator):
+    name, kind, takes = "house", "house", ("mark", "extinct")
+
+    def fits(self, run, entity, f, wants):
+        out = {"mark": any(m["id"] == wants.get("mark") for m in f.get("acquired") or [])}
+        if "extinct" in wants:
+            out["extinct"] = (f.get("extinct") is not None) == yes(wants["extinct"], "--extinct")
+        return out
+
+    def card(self, run, entity, f):
+        head = run.ents.get(f.get("headship"), {}).get("fields", {}).get("holder")
+        members = sorted(p for p, h in run.houses.items() if h == entity and run.ents[p]["status"] == "active")
+        return {"kind": "house", "id": entity, "name": run.names(entity), "extinct": f.get("extinct"),
+                "head": {"id": head, "name": run.names(head)} if head else None, "members": len(members),
+                "people": [{"id": p, "name": run.names(p)} for p in members[:8]], "marks": _marks(f), **_told(run, entity)}
+
+
+for _g in (Person, Thing, Village, House):
     GENERATORS.add(_g)
 GENERATORS.freeze()
 

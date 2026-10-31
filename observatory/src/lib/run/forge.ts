@@ -10,7 +10,7 @@ export interface Line {
 }
 
 export interface Card {
-	kind: 'person' | 'object' | 'settlement';
+	kind: 'person' | 'object' | 'settlement' | 'house';
 	id: string;
 	name: string | null;
 	status?: string;
@@ -29,6 +29,7 @@ export interface Found {
 export interface Truths {
 	places?: { id: string; name: string; kind: string; region: string }[];
 	objects?: { id: string; name: string | null; type: string; place: string; from?: string }[];
+	people?: { id: string; name: string; race: string; age: number; home: string; from?: string }[];
 }
 
 export interface Search {
@@ -42,7 +43,8 @@ export interface Search {
 export const FILTERS: Record<string, string[]> = {
 	person: ['race', 'house', 'age', 'job', 'mark', 'status'],
 	object: ['type', 'fame', 'mark', 'lost'],
-	village: ['region', 'mark']
+	village: ['region', 'mark'],
+	house: ['mark', 'extinct']
 };
 
 function trimmed(filters: Record<string, string>): Record<string, string> {
@@ -99,7 +101,7 @@ export const forge = {
 };
 
 /** What a card can be kept as today: the truth file takes objects. */
-export const keepable = (c: Card): boolean => c.kind === 'object' && c.status === 'active';
+export const keepable = (c: Card): boolean => (c.kind === 'object' || c.kind === 'person') && c.status === 'active';
 
 /** A card's facts, in the order worth reading. */
 export function facts(c: Card): [string, string][] {

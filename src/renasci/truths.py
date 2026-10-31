@@ -17,9 +17,16 @@ lies there waits for someone from a town a road away. An **object** lies lost wh
 for lost things applies: someone may find it, and its story starts there. `from` is where it came from: another
 run, or an older age, which is how ages hand down to each other.
 
+A **person** lives at `home` from the first day, at the `age` given, with no kin unless a `house` is named. Name, race and
+sex are required; `genome` and `traits`, as `renasci keep` writes them, carry over, so their children take after them:
+
+    {"people": [{"id": "t:ulf", "name": "Ulf", "race": "r:dwarf", "sex": "m", "age": 40, "home": "v:ashfall",
+                 "from": "a run where he lost everything"}]}
+
 A run keeps a copy of its truth file (`truths.json`), as it keeps its canon: a replay uses that copy, and refuses a file
 that has changed since. `renasci keep` gives what it keeps an id of its own, so a re-run that makes the same thing again
-makes a twin, not a clash. It keeps objects; a town is already in the world it came from.
+makes a twin, not a clash. It keeps objects and people, whose kin, marks and memories stay in the run they came from.
+A town is already in the world it came from.
 """
 
 from __future__ import annotations
@@ -37,9 +44,9 @@ def load(path) -> dict:
 
 def check(doc: dict, scenario: dict) -> None:
     """Refuse a truth file the scenario can't hold, naming what's wrong."""
-    if not isinstance(doc, dict) or set(doc) - {"about", "places", "objects"} \
-            or not all(isinstance(doc.get(k, []), list) for k in ("places", "objects")):
-        raise ValueError("a truth file is {about, places: [...], objects: [...]}")
+    if not isinstance(doc, dict) or set(doc) - {"about", "places", "objects", "people"} \
+            or not all(isinstance(doc.get(k, []), list) for k in ("places", "objects", "people")):
+        raise ValueError("a truth file is {about, places: [...], objects: [...], people: [...]}")
     geography = scenario.get("geography")
     known = {p["id"] for p in (geography or {}).get("places", [])}
     regions = {r["id"] for r in (geography or {}).get("regions", [])}
@@ -71,6 +78,21 @@ def check(doc: dict, scenario: dict) -> None:
             raise ValueError(f"truths: {o['id']} is made of something the world doesn't know: {o.get('material')!r}")
         if o.get("place") not in known | set(mine):
             raise ValueError(f"truths: {o['id']} lies nowhere known: {o.get('place')!r}")
+    towns = {s["id"] for s in scenario.get("settlements", [])} | {p["id"] for p in doc.get("places", []) if p["kind"] == "village"}
+    races = {r["id"] for r in scenario.get("races", [])}
+    houses = {h["id"] for h in scenario.get("houses", [])}
+    ids = [p.get("id") for p in doc.get("people", [])]
+    if len(set(ids)) != len(ids):
+        raise ValueError(f"truths: people's ids must differ: {ids}")
+    for p in doc.get("people", []):
+        if not p.get("id") or not p.get("name") or p.get("race") not in races or p.get("sex") not in ("m", "f"):
+            raise ValueError(f"truths: a person has an id, a name, a sex (m or f) and a race the world knows: {p!r}")
+        if p.get("home") not in towns:
+            raise ValueError(f"truths: {p['id']} lives nowhere anyone can: {p.get('home')!r}")
+        if not isinstance(p.get("age"), int) or isinstance(p.get("age"), bool) or p["age"] < 0:
+            raise ValueError(f"truths: {p['id']}'s age must be a whole number, not {p.get('age')!r}")
+        if p.get("house") is not None and p["house"] not in houses:
+            raise ValueError(f"truths: {p['id']} is of an unknown house: {p['house']!r}")
 
 
 def apply(scenario: dict, doc: dict) -> dict:
@@ -93,6 +115,8 @@ def apply(scenario: dict, doc: dict) -> dict:
         sc.update(settlements=settlements, regions=regions, geography={**g, "places": places, "routes": routes})
     if doc.get("objects"):
         sc["objects"] = [*(sc.get("objects") or []), *doc["objects"]]
+    if doc.get("people"):
+        sc["kept_people"] = doc["people"]
     return sc
 
 
@@ -111,17 +135,22 @@ def object_fields(o: dict, start: list) -> dict:
             "fame": float(o.get("fame", 0.0)), "lost": start, "origin": o.get("from")}
 
 
-def keep(state: dict, entity: str, run: str) -> tuple[str, dict]:
-    """A truth from a finished run: (the section it goes in, the entry)."""
+def keep(state: dict, entity: str, run: str, year: int | None = None) -> tuple[str, dict]:
+    """A truth from a finished run: (the section it goes in, the entry). `year`: when the run ended, for a person's age."""
     records = {e["id"]: e for e in state["entities"]}
     found = records.get(entity)
     if found is None:
         raise ValueError(f"{entity} isn't in that run's final state")
-    if found.get("kind") != "object":
-        raise ValueError(f"keeping a {found.get('kind')} isn't built yet: objects are")
+    if found.get("kind") not in ("object", "person"):
+        raise ValueError(f"keeping a {found.get('kind')} isn't built yet: objects and people are")
     if found.get("status") != "active":
         raise ValueError(f"{entity} no longer exists in that run")
     f = found["fields"]
+    if found["kind"] == "person":
+        slug = re.sub(r"[^a-z0-9]+", "-", f"{f.get('name') or ''} {entity}".lower()).strip("-")  # (names repeat)
+        return "people", {"id": f"t:{slug}", "name": f.get("name"), "race": f["race"], "sex": f["sex"], "home": f["place"],
+                          "age": max(0, (year if year is not None else f["born"][1]) - f["born"][1]),
+                          "house": f.get("house"), "genome": f.get("genome"), "traits": f.get("traits"), "from": run}
     owner = records.get(f.get("owner"))
     place = (owner["fields"].get("place") if owner else None) or f["place"]
     slug = re.sub(r"[^a-z0-9]+", "-", str(f.get("name") or f"{f['type']}-{entity}").lower()).strip("-")
