@@ -960,6 +960,22 @@ def cmd_keep(args) -> int:
     return 0
 
 
+def cmd_gen(args) -> int:
+    from renasci.story import cards
+    from renasci.story.pack import Run
+
+    wants = {k: getattr(args, k) for k in ("race", "house", "age", "job", "mark", "status", "type", "fame", "lost", "region")}
+    for pair in args.where:
+        key, eq, value = pair.partition("=")
+        if not eq:
+            raise ValueError(f"--where is key=value, not {pair!r}")
+        wants[key] = value
+    found = cards.generate(Run(args.run), load_pools(args.extensions).generators, args.what, wants, args.seed, args.count)
+    sys.stdout.buffer.write(json.dumps(found, indent=1, ensure_ascii=False).encode("utf-8") + b"\n")
+    sys.stdout.flush()
+    return 0
+
+
 def cmd_pools(args) -> int:
     print(json.dumps(load_pools(args.extensions).describe(), indent=1))
     return 0
@@ -980,6 +996,15 @@ def main(argv=None) -> int:
     p.add_argument("--ecology", action="store_true", help="with the draft ecology (and crafts)")
     p.add_argument("--polities", action="store_true", help="with polities and campaigns")
     p.add_argument("--beliefs", action="store_true", help="with beliefs")
+    p.add_argument("--extensions", nargs="*", default=[], help="extensions to include")
+    p = sub.add_parser("gen", help="a person, an object or a village with a real past, from a finished run (story.cards)")
+    p.add_argument("what", help="what to find: `renasci pools` lists the generators")
+    p.add_argument("--run", required=True)
+    p.add_argument("--seed", type=int, default=0)
+    p.add_argument("--count", type=int, default=1)
+    for name in ("race", "house", "age", "job", "mark", "status", "type", "fame", "lost", "region"):
+        p.add_argument(f"--{name}")
+    p.add_argument("--where", action="append", default=[], help="key=value, for a generator's own filters")
     p.add_argument("--extensions", nargs="*", default=[], help="extensions to include")
     p = sub.add_parser("keep", help="keep a thing from a run as a hard truth in a truth file (renasci.truths)")
     p.add_argument("run")
@@ -1134,7 +1159,7 @@ def main(argv=None) -> int:
     p.add_argument("--out", default="runs/_bench")
     args = parser.parse_args(argv)
     try:
-        commands = {"keep": cmd_keep, "graph": cmd_graph, "pools": cmd_pools, "run": cmd_run, "replay": cmd_replay, "diff": cmd_diff, "inspect": cmd_inspect, "bench": cmd_bench, "latch": cmd_latch, "stories": cmd_stories, "claims": cmd_claims, "pack": cmd_pack, "chronicle": cmd_chronicle, "check-prose": cmd_check_prose, "brief": cmd_brief, "mcp": cmd_mcp, "ripple": cmd_ripple, "map": cmd_map, "vault": cmd_vault,
+        commands = {"gen": cmd_gen, "keep": cmd_keep, "graph": cmd_graph, "pools": cmd_pools, "run": cmd_run, "replay": cmd_replay, "diff": cmd_diff, "inspect": cmd_inspect, "bench": cmd_bench, "latch": cmd_latch, "stories": cmd_stories, "claims": cmd_claims, "pack": cmd_pack, "chronicle": cmd_chronicle, "check-prose": cmd_check_prose, "brief": cmd_brief, "mcp": cmd_mcp, "ripple": cmd_ripple, "map": cmd_map, "vault": cmd_vault,
                     "observe": cmd_observe}
         return commands[args.command](args)
     except (ValueError, FileExistsError, FileNotFoundError) as err:

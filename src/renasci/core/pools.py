@@ -27,7 +27,8 @@ from typing import Any
 
 BASE = "base"
 EXTENSION = re.compile(r"[A-Za-z_][A-Za-z0-9_]*(\.[A-Za-z_][A-Za-z0-9_]*)*")
-HOMES = ("renasci.people.actions", "renasci.people.ambitions", "renasci.people.planner", "renasci.marks")  # (what defines the base pools: see `base`)
+HOMES = ("renasci.people.actions", "renasci.people.ambitions", "renasci.people.planner", "renasci.marks",
+         "renasci.story.cards")  # (what defines the base pools: see `base`)
 
 
 def _name(entry: Any) -> str:
