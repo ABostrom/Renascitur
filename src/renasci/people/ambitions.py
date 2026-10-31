@@ -24,6 +24,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from renasci.core.events import Cause, EventType
+from renasci.core.pools import pools
 from renasci.core.systems import System
 from renasci.people.races import age_years
 
@@ -50,6 +51,9 @@ def trait(ctx, person: str, role: str) -> float:
 class Formation:
     target: str | None
     born_of: tuple[str, str]  # a cause: ("drive", "belonging"), ("event", id), ("wound", kind)
+
+
+LIBRARY = pools.define("ambitions")  # (a class joins with `@LIBRARY.add`)
 
 
 class Ambition:
@@ -85,6 +89,7 @@ class Ambition:
         return self.name.lower()
 
 
+@LIBRARY.add
 class Marry(Ambition):
     name, cooldown_years = "Marry", 3
     reads = frozenset({"spouse", "drives", "race", "born"})
@@ -113,6 +118,7 @@ class Marry(Ambition):
         return "find a spouse"
 
 
+@LIBRARY.add
 class Standing(Ambition):
     name, cooldown_years = "Standing", 6
     reads = frozenset({"house", "drives", "favour", "name"})
@@ -139,6 +145,7 @@ class Standing(Ambition):
         return f"raise House {ctx.get(house, 'name') or house} high at court"
 
 
+@LIBRARY.add
 class Seize(Ambition):
     """A succession plot: take the house's headship by removing those ahead in the line (up to three)."""
 
@@ -214,6 +221,7 @@ def throne(ctx, person: str) -> tuple[str, str] | None:
     return None
 
 
+@LIBRARY.add
 class Usurp(Ambition):
     """Take a realm's ruling office (S8 §9): Seize's ambition, beyond one's own house. Its plot is a Coup."""
 
@@ -275,6 +283,7 @@ def border_places(ctx, mine: str, other: str) -> list[str]:
     return sorted(out)
 
 
+@LIBRARY.add
 class Expand(Ambition):
     """A ruler wants a neighbour's border places (S8 §9): their plot is raids across the line, souring the
     relation to hostile, and the ambition itself is a casus belli (`war.casus_belli`). Won when a place
@@ -366,6 +375,7 @@ def governed(ctx, person: str) -> tuple[str, str] | None:
     return polity, house
 
 
+@LIBRARY.add
 class Secede(Ambition):
     """A house seated in a governed town wants out (S8 §9): its head, hot-blooded and out of favour (or
     wanting status), rallies another house (`Rally`) and rises (`Revolt`): a realm of its own at its seat,
@@ -405,6 +415,7 @@ class Secede(Ambition):
         return f"break free of {ctx.get(target, 'name') or target}"
 
 
+@LIBRARY.add
 class Leave(Ambition):
     """A notable starving in a famine wants out (S10 §3, #129): unwed and holding no office (families and
     officers stay: S4), they flee (`Flee`) to a town within reach. Won once they live elsewhere; dropped when
@@ -444,6 +455,7 @@ class Leave(Ambition):
         return f"escape the famine in {ctx.get(target, 'name') or target}"
 
 
+@LIBRARY.add
 class Covet(Ambition):
     """Want a famous thing someone else holds (S9 §5, #126): one in one's own town, or one famous enough to be
     known everywhere. The plot is a theft (`Steal`). Only where crafts make objects, and only once a famous one
@@ -504,6 +516,7 @@ class Covet(Ambition):
         return f"have {ctx.get(target, 'name') or 'a famous ' + str(ctx.get(target, 'type'))}"
 
 
+@LIBRARY.add
 class Vengeance(Ambition):
     """Answer an attributed harm: the killer of one's kin, or whoever plotted against one."""
 
@@ -550,6 +563,7 @@ class Vengeance(Ambition):
         return f"avenge themselves on {ctx.get(target, 'name') or target}"
 
 
+@LIBRARY.add
 class Protect(Vengeance):
     """Strike first at whoever plotted against one's own (a kin's exposed plot)."""
 
@@ -563,6 +577,7 @@ class Protect(Vengeance):
         return f"protect their own from {ctx.get(target, 'name') or target}"
 
 
+@LIBRARY.add
 class Ruin(Ambition):
     """Bring a rival or an enemy low: see them shamed (S6 §8, #98). Only in a world with beliefs, where
     shame can be had by testimony, slander or a frame as well as at court."""
@@ -594,10 +609,7 @@ class Ruin(Ambition):
         return f"see {ctx.get(target, 'name') or target} brought low"
 
 
-STARTER = (Covet(), Expand(), Leave(), Marry(), Protect(), Ruin(), Secede(), Seize(), Standing(), Usurp(), Vengeance())
-
-
-LIBRARY: dict[str, Ambition] = {a.name: a for a in STARTER}
+LIBRARY.freeze()
 
 
 def classes(ctx) -> dict[str, Ambition]:
@@ -645,7 +657,7 @@ class Ambitions(System):
     name, cadence = "people.ambitions", "yearly"
     priority = 6  # after drives (5)
     reads = READS | frozenset({"ids:settlement", "residents", "born", "formed", "traits"}).union(
-        *(a.reads for a in STARTER))
+        *(a.reads for a in LIBRARY.values()))
     writes = WRITES
     event_types = EVENT_TYPES
 

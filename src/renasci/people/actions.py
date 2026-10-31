@@ -26,6 +26,7 @@ from __future__ import annotations
 
 import math
 
+from renasci.core.pools import pools
 from renasci.core.events import Cause, EventType
 from renasci import geo
 from renasci.people import beliefs, courts, crafts, families, houses, life, minds, population, travel
@@ -641,7 +642,10 @@ def library() -> dict[str, Action]:
     return {n: found[n]() for n in sorted(found)}
 
 
-ACTIONS = library()
+ACTIONS = pools.define("actions")
+for _action in library().values():
+    ACTIONS.add(_action)
+ACTIONS.freeze()
 
 READS = (life.DIE_READS | families.Marriage.reads | population.COLUMN_READS | frozenset({
     "favour", "wound", "place", "residents", "region", "accomplices", "state", "born", "traits", "race", "sex",
