@@ -158,6 +158,7 @@
 	<a href={`/run/${encodeURIComponent(name)}/stories`}>stories</a> ·
 	<a href={`/run/${encodeURIComponent(name)}/polities`}>polities</a> ·
 	<a href={`/run/${encodeURIComponent(name)}/objects`}>objects</a>
+	<a href={`/run/${encodeURIComponent(name)}/forge`}>forge</a>
 </p>
 
 {#if error}
