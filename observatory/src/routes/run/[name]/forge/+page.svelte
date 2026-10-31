@@ -6,6 +6,7 @@
 	/** The Forge (#165): find what's worth having in a run, read its card, keep it for the next. */
 	const name = $derived(page.params.name ?? '');
 	const base = $derived(`/run/${encodeURIComponent(name)}`);
+	const hooksOf = (c: Card) => (c.hooks as string[] | undefined) ?? [];
 	const why = (id: string) => `${base}/events?e=${encodeURIComponent(id)}`;
 
 	let on = $state(false);
@@ -107,6 +108,10 @@
 				</dl>
 				{#if chosen.marks.length}
 					<p>Marked: {#each chosen.marks as m, i}{i ? ', ' : ''}<a href={why(m.event)}>{m.mark}</a>{/each}</p>
+				{/if}
+				{#if hooksOf(chosen).length}
+					<h3>Hooks</h3>
+					<ul>{#each hooksOf(chosen) as h}<li>{h}</li>{/each}</ul>
 				{/if}
 				<h3>What happened{chosen.told > chosen.history.length ? ` (${chosen.history.length} of ${chosen.told})` : ''}</h3>
 				<ol>

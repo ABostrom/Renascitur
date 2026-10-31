@@ -24,6 +24,21 @@ def test_a_person_card_tells_their_life_from_the_run(m4run, generators):
         assert line["event"] in m4run.by_id  # (every line has an event behind it)
 
 
+def test_a_person_card_says_what_they_want_believe_and_where_a_story_could_start(m4run, generators):
+    found = cards.generate(m4run, generators, "person", {}, 1, 12, True)["cards"]
+    assert all(isinstance(c["hooks"], list) and isinstance(c["believes"], list) for c in found)
+    json.dumps(found)  # (it all still writes out)
+    assert any(c["hooks"] for c in found)
+
+
+def test_hooks_come_from_the_card():
+    card = {"wants": ["take the seat"], "enemies": [{"name": "Ulf"}], "carries": [{"name": "the Thirster"}, {"name": None}],
+            "grievances": [{"against": {"name": "Hela"}, "kind": "killed"}, {"against": None, "kind": "x"}],
+            "believes": [{"text": "Ulf killed Hela", "truth": "false"}, {"text": "it rained", "truth": "true"}]}
+    assert cards.hooks(card) == ["Wants to take the seat", "Believes, wrongly, that Ulf killed Hela",
+                                 "Holds Hela to blame (killed)", "Has an enemy in Ulf", "Carries the Thirster"]
+
+
 def test_the_same_seed_gives_the_same_card_and_another_a_different_one(m4run, generators):
     pick = lambda seed: cards.generate(m4run, generators, "person", {}, seed=seed)["cards"][0]["id"]  # noqa: E731
     assert pick(1) == pick(1)
