@@ -100,7 +100,8 @@ def casus_belli(ctx, polity: str, other: str) -> str | None:
     """The active Expand ambition of `polity`'s ruler against `other`, if any (S8 §9)."""
     who = treaties.ruler(ctx, polity)
     for amb in (ctx.get(who, "ambitions") or []) if who else []:
-        if ctx.get(amb, "class") == "Expand" and ctx.get(amb, "state") == "active" and ctx.get(amb, "target") == other:
+        if getattr(ctx.pools.ambitions.get(ctx.get(amb, "class")), "casus_belli", False) \
+                and ctx.get(amb, "state") == "active" and ctx.get(amb, "target") == other:
             return amb
     return None
 

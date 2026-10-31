@@ -77,6 +77,19 @@ class Action:
     writes: frozenset[str] = frozenset()
     present = False  # the actor must go where the target lives (S4 §6)
 
+    # What it means, for what reads it. By default from what it achieves; an extension's action can just say.
+    @property
+    def harms(self) -> bool:  # (its target is a victim)
+        return self.achieves.startswith(("dead:", "shamed:"))
+
+    @property
+    def grave(self) -> bool:  # (a plot with this in it is a capital matter in court)
+        return self.achieves.startswith(("dead:", "seized:"))
+
+    @property
+    def kills(self) -> bool:  # (a secret one is known to those in on it)
+        return self.achieves.startswith("dead:")
+
     def road(self, ctx, actor, target) -> int | None:
         """The days to the target's settlement for an action done in person: 0 when there's no need (or no
         geography), None when there's no way there."""
@@ -686,7 +699,7 @@ def perform(ctx, action: Action, actor: str, target: str | None, scheme: str | N
         return "failure"
     if action.succeed(ctx, actor, target, scheme, event.id) is False:
         return "foiled"  # the blow landed and the target lived (a near miss follows the action event)
-    if beliefs.enabled(ctx) and action.secrecy and action.achieves.startswith("dead:") and target \
+    if beliefs.enabled(ctx) and action.secrecy and action.kills and target \
             and ctx.status(target) == "dead":  # (S6: those in a secret killing know who did it)
         beliefs.perceive(ctx, event.id, None, _knew(ctx, actor, scheme),
                          beliefs.claim("killed", victim=target, by=actor), secret=True)

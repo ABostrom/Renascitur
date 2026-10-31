@@ -57,6 +57,8 @@ LIBRARY = pools.define("ambitions")  # (a class joins with `@LIBRARY.add`)
 
 
 class Ambition:
+    claims_seat = False  # (a son with this in mind isn't sent off to found a cadet line)
+    casus_belli = False  # (a ruler's active one against a realm is a cause for war)
     name = ""
     cooldown_years = 5
     reads: frozenset[str] = frozenset()
@@ -148,6 +150,7 @@ class Standing(Ambition):
 @LIBRARY.add
 class Seize(Ambition):
     """A succession plot: take the house's headship by removing those ahead in the line (up to three)."""
+    claims_seat = True
 
     name, cooldown_years = "Seize", 10
     reads = frozenset({"house", "headship", "holder", "rule", "children", "father", "mother", "sex", "status",
@@ -288,6 +291,7 @@ class Expand(Ambition):
     """A ruler wants a neighbour's border places (S8 §9): their plot is raids across the line, souring the
     relation to hostile, and the ambition itself is a casus belli (`war.casus_belli`). Won when a place
     claimed at its forming (`claims`) is held by the ruler's realm."""
+    casus_belli = True
 
     name, cooldown_years = "Expand", 12
     reads = frozenset({"ids:polity", "ruler", "holder", "ended", "ids:relation", "a", "b", "kind", "stance", "ids:route",

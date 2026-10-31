@@ -55,7 +55,6 @@ EXPOSED = EventType("people.scheme_exposed", 1, roles={"scheme": (1, 1), "owner"
 LOST = EventType("people.accomplice_lost", 1, roles={"scheme": (1, 1), "accomplice": (1, 1)}, payload={},
                  dead_roles=("accomplice",))
 EVENT_TYPES = (BEGUN, REPLANNED, ENDED, EXPOSED, LOST, ties.TIE_ENDED)
-HARMS = ("dead:", "shamed:")
 
 READS = frozenset({"owner", "ambition", "target", "plan", "step", "retries", "replans", "accomplices", "state",
                    "plots", "class", "grievances", "wound", "favour", "ties", "a", "b", "spouse", "mother", "father",
@@ -70,7 +69,7 @@ def _plots(ctx, person: str, scheme: str, add: bool) -> None:
 
 
 def _victims(ctx, steps) -> set[str]:
-    return {st["target"] for st in steps if st["target"] and ctx.pools.actions[st["action"]].achieves.startswith(HARMS)}
+    return {st["target"] for st in steps if st["target"] and ctx.pools.actions[st["action"]].harms}
 
 
 def _involved(ctx, scheme: str) -> list[str]:
@@ -196,7 +195,7 @@ def _exposed(ctx, scheme: str, owner: str, amb: str, action: str, aimed_at: str 
     if ctx.get(amb, "state") == "active":
         resolve(ctx, amb, "thwarted", causes=(Cause("event", event.id),))
     if victim and ctx.get(victim, "offices"):  # (S8 §9: a plot against an office holder goes before the ruler)
-        grave = 1.0 if any(ctx.pools.actions[s["action"]].achieves.startswith(("dead:", "seized:"))
+        grave = 1.0 if any(ctx.pools.actions[s["action"]].grave
                            for s in ctx.get(scheme, "plan") or []) else 0.3
         courts.trial(ctx, owner, victim, event.id, grave=grave, scheme=scheme)
 

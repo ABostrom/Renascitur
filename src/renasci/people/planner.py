@@ -22,8 +22,10 @@ them to the simulation; every fact and every odds is a recorded read through `Ct
 from __future__ import annotations
 
 import heapq
+from collections.abc import Callable
 from dataclasses import dataclass
 
+from renasci.core.pools import pools
 from renasci.people.actions import ACTIONS, FAVOURED, HEARD, SHAMED
 from renasci.people.ambitions import trait
 
@@ -155,42 +157,106 @@ def plan_for(ctx, owner: str, goals, scheme: str | None = None) -> Plan | None:
     return plan(goals, actions=ctx.pools.actions, depth=depth, fact=fact, odds=odds, candidates=candidates, possible=possible)
 
 
+@dataclass(frozen=True)
+class Goal:
+    """A kind of planner tag: whether `kind:ref` is already true for an owner. A tag with no goal is never true yet."""
+
+    kind: str
+    check: Callable
+    reads: frozenset = frozenset()
+
+    @property
+    def name(self) -> str:
+        return self.kind
+
+
+GOALS = pools.define("goals")
+
+
+def goal(kind: str, reads=()):
+    """Register a base goal: `check(ctx, owner, ref, scheme)`."""
+    def add(check):
+        GOALS.add(Goal(kind, check, frozenset(reads)))
+        return check
+    return add
+
+
+@goal("tie")
+def _tie(ctx, owner, ref, scheme):
+    return ref in _people_of(ctx, owner)
+
+
+@goal("heard")
+def _heard(ctx, owner, ref, scheme):
+    return float(ctx.get(owner, "favour") or 0.0) >= HEARD
+
+
+@goal("favoured")
+def _favoured(ctx, owner, ref, scheme):
+    return float(ctx.get(owner, "favour") or 0.0) >= FAVOURED
+
+
+@goal("married")
+def _married(ctx, owner, ref, scheme):
+    return ctx.get(owner, "spouse") is not None
+
+
+@goal("dead")
+def _dead(ctx, owner, ref, scheme):
+    return ctx.exists(ref) and ctx.status(ref) == "dead"
+
+
+@goal("shamed")
+def _shamed(ctx, owner, ref, scheme):  # in disgrace (Shame is how it gets there)
+    return ctx.exists(ref) and float(ctx.get(ref, "favour") or 0.0) < SHAMED
+
+
+@goal("holds")
+def _holds(ctx, owner, ref, scheme):  # (the owner has the object in hand)
+    return ctx.exists(ref) and ctx.kind(ref) == "object" and ctx.get(ref, "owner") == owner
+
+
+@goal("rallied")
+def _rallied(ctx, owner, ref, scheme):  # (a house head of the realm won to the scheme)
+    return bool(scheme) and any(ctx.get(ctx.get(ctx.get(p, "house"), "headship"), "holder") == p
+                                for p in ctx.get(scheme, "accomplices") or [] if ctx.get(p, "house"))
+
+
+@goal("seceded")
+def _seceded(ctx, owner, ref, scheme):  # (the owner's house is no longer the realm's)
+    house = ctx.get(owner, "house")
+    return ctx.exists(ref) and ctx.kind(ref) == "polity" and bool(house) \
+        and house not in (ctx.get(ref, "members") or [])
+
+
+@goal("hostile")
+def _hostile(ctx, owner, ref, scheme):  # (the realm the owner rules is hostile to, or at war with, `ref`)
+    from renasci.people.ambitions import ruled
+    from renasci.relations import rel_id
+
+    mine = ruled(ctx, owner)
+    rid = rel_id(mine, ref) if mine and mine != ref else None
+    return bool(rid) and ctx.exists(rid) and ctx.get(rid, "stance") in ("hostile", "war")
+
+
+@goal("seized")
+def _seized(ctx, owner, ref, scheme):  # (the owner holds an office taken from them)
+    return any(ctx.get(o, "deposed") == ref for o in ctx.get(owner, "offices") or [])
+
+
+@goal("accomplice")
+def _accomplice(ctx, owner, ref, scheme):  # only a scheme has accomplices; a fresh plan recruits first
+    return bool(scheme and ctx.get(scheme, "accomplices"))
+
+
+GOALS.freeze()
+
+
 def holds(ctx, owner: str, tag: str, scheme: str | None = None) -> bool:
     """Whether a planner tag is true of the world for `owner` now (a recorded read)."""
     kind, _, ref = tag.partition(":")
-    if kind == "tie":
-        return ref in _people_of(ctx, owner)
-    if kind == "heard":
-        return float(ctx.get(owner, "favour") or 0.0) >= HEARD
-    if kind == "favoured":
-        return float(ctx.get(owner, "favour") or 0.0) >= FAVOURED
-    if kind == "married":
-        return ctx.get(owner, "spouse") is not None
-    if kind == "dead":
-        return ctx.exists(ref) and ctx.status(ref) == "dead"
-    if kind == "shamed":  # in disgrace (Shame is how it gets there)
-        return ctx.exists(ref) and float(ctx.get(ref, "favour") or 0.0) < SHAMED
-    if kind == "holds":  # (the owner has the object in hand)
-        return ctx.exists(ref) and ctx.kind(ref) == "object" and ctx.get(ref, "owner") == owner
-    if kind == "rallied":  # (a house head of the realm won to the scheme)
-        return bool(scheme) and any(ctx.get(ctx.get(ctx.get(p, "house"), "headship"), "holder") == p
-                                    for p in ctx.get(scheme, "accomplices") or [] if ctx.get(p, "house"))
-    if kind == "seceded":  # (the owner's house is no longer the realm's)
-        house = ctx.get(owner, "house")
-        return ctx.exists(ref) and ctx.kind(ref) == "polity" and bool(house) \
-            and house not in (ctx.get(ref, "members") or [])
-    if kind == "hostile":  # (the realm the owner rules is hostile to, or at war with, `ref`)
-        from renasci.people.ambitions import ruled
-        from renasci.relations import rel_id
-
-        mine = ruled(ctx, owner)
-        rid = rel_id(mine, ref) if mine and mine != ref else None
-        return bool(rid) and ctx.exists(rid) and ctx.get(rid, "stance") in ("hostile", "war")
-    if kind == "seized":  # (the owner holds an office taken from them)
-        return any(ctx.get(o, "deposed") == ref for o in ctx.get(owner, "offices") or [])
-    if kind == "accomplice":  # only a scheme has accomplices; a fresh plan recruits first
-        return bool(scheme and ctx.get(scheme, "accomplices"))
-    return False
+    found = ctx.pools.goals.get(kind)
+    return bool(found and found.check(ctx, owner, ref, scheme))
 
 
 def _people_of(ctx, owner: str) -> list[str]:
