@@ -105,7 +105,30 @@ def judge(claim: dict, events, houses: dict | None = None, log: Log | None = Non
         return _caused(by_id, args, also_stated=True, houses=houses)
     if pred in WAR_FACTS:
         return _war_fact(events, pred, args)
+    if pred in ("owns", "made"):
+        return _object_fact(events, pred, args)
     return "unknown", []
+
+
+OWNING = {"object.given": "owner", "object.inherited": "owner", "object.found": "finder", "object.stolen": "thief",
+          "object.unearthed": "finder", "object.lost": None, "object.destroyed": None}
+
+
+def _object_fact(events, pred, args):
+    """`made`: the object's making names `by`. `owns`: its latest change of hands names `by` (lost or destroyed:
+    nobody)."""
+    o, last = args["object"], None
+    for e in events:
+        if o not in (e["roles"].get("object") or []):
+            continue
+        if pred == "made" and e["type"] == "object.made":
+            return ("true" if args["by"] in (e["roles"].get("maker") or []) else "false"), [e["id"]]
+        if pred == "owns" and e["type"] in OWNING:
+            last = e
+    if last is None:
+        return "unknown", []
+    role = OWNING[last["type"]]
+    return ("true" if role and args["by"] in (last["roles"].get(role) or []) else "false"), [last["id"]]
 
 
 # (pred: [(event type, the payload field naming the war or treaty, the role naming who)])

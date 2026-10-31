@@ -68,8 +68,16 @@ class Ripple:
             by = self.params.get("by")
             if isinstance(by, bool) or not isinstance(by, (int, float)) or not 0 < by <= 1:
                 raise ValueError(f"favour ripple {self.id} needs params.by in (0, 1], got {by!r}")
-        if self.kind == "plant" and not isinstance(self.params.get("claim"), dict):
-            raise ValueError(f"plant ripple {self.id} needs params.claim")
+        if self.kind == "plant" and not isinstance(self.params.get("claim"), dict) \
+                and not isinstance(self.params.get("object"), dict):
+            raise ValueError(f"plant ripple {self.id} needs params.claim (a rumour) or params.object (a thing)")
+        if self.kind == "plant" and isinstance(self.params.get("object"), dict):
+            o = self.params["object"]
+            if not isinstance(o.get("type"), str) or not isinstance(o.get("material"), str):
+                raise ValueError(f"plant ripple {self.id}: an object needs a type and a material")
+            q = o.get("quality", 0.5)
+            if isinstance(q, bool) or not isinstance(q, (int, float)) or not 0 <= q <= 1:
+                raise ValueError(f"plant ripple {self.id}: an object's quality must be in [0, 1], got {q!r}")
         share = self.params.get("share", 0.2)
         if self.kind == "plant" and (isinstance(share, bool) or not isinstance(share, (int, float)) or not 0 < share <= 1):
             raise ValueError(f"plant ripple {self.id}: share must be in (0, 1], got {share!r}")
