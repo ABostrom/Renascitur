@@ -16,7 +16,7 @@ from renasci.core.calendar import Date
 from renasci.core.canon import canonical
 
 CAUSE_KINDS = ("event", "activation", "pin", "ripple", "state", "ambition", "belief", "drive", "scheme", "wound")
-SOURCE_KINDS = ("system", "action", "pin", "ripple", "lod", "scenario")
+SOURCE_KINDS = ("system", "action", "pin", "ripple", "lod", "scenario", "reaction")
 VISIBILITIES = ("public", "secret")
 PAYLOAD_TYPES = ("str", "int", "float", "bool", "id", "ids", "json")
 

@@ -55,6 +55,9 @@ class _WithNewborns:
         return "active" if entity in self._new else self._store.status(entity)
 
 
+MOST_REACTIONS = 8  # (reactions to reactions, this deep: past it, a loop)
+
+
 class Ctx:
     def __init__(self, engine, system, activation: Activation):
         self._engine = engine
@@ -74,6 +77,10 @@ class Ctx:
         self._series: list[dict] = []  # buffered likewise
         self._pin_causes: list = []  # pins that guarded someone here; the next event is caused by them
         self._guard_rows: list[dict] = []
+        self._due: list = []  # (events waiting for their reactions, when the activation has finished)
+        self._reaction = None  # (the reaction running, and the event it answers: what it emits is caused by that)
+        self._reacting: tuple = ()
+        self._depth = 0
         self._lucky: set = set()  # (kind, owner, ripple) logged in this scope: one row each, with its next event
 
     # ------------------------------------------------------------ declarations
@@ -256,14 +263,17 @@ class Ctx:
         `{"child": [("person", {"village": v})]}`. Their ids are causal, `entity_id(event, role, i)`,
         and they are created by this event (each kind needs `new:<kind>` in `writes`).
         """
-        if self._engine.strict and type not in {t.name for t in self.system.event_types} \
+        if self._reaction:
+            if type not in self._reaction.emits:
+                raise UndeclaredAccess(f"reaction {self._reaction.name} emitted {type!r} without declaring it")
+        elif self._engine.strict and type not in {t.name for t in self.system.event_types} \
                 and type not in self._engine.pools.event_types:
             raise UndeclaredAccess(f"{self.system.name} emitted {type!r} without declaring it")
         key = (actor, purpose)
         occurrence = self._occurrences.get(key, 0)
         self._occurrences[key] = occurrence + 1
         eid = event_id(self.system.name, actor, purpose, self.today, occurrence, self.activation.id)
-        all_causes = tuple(sorted(set(causes) | set(self.activation.causes) | set(self._pin_causes)))
+        all_causes = tuple(sorted(set(causes) | set(self.activation.causes) | set(self._pin_causes) | set(self._reacting)))
         self._pin_causes = []
         roles = {r: tuple(m) for r, m in roles.items()}
         births = []
@@ -279,7 +289,8 @@ class Ctx:
                 births.append((kind, ids[-1], fields))
             roles[role] = tuple(ids)
         event = Event(eid, self.today, type, roles, place, all_causes, payload or {},
-                      Source("system", self.system.name), visibility, activation=self.activation.id)
+                      Source("reaction", self._reaction.name) if self._reaction else Source("system", self.system.name),
+                      visibility, activation=self.activation.id)
         if births:
             # Validate everything, with the newborns treated as existing, before any write.
             store = self._engine.store
@@ -300,7 +311,22 @@ class Ctx:
         for h in self.hinges:  # close calls decided before this event are what it turned on
             if h["event"] is None:
                 h["event"] = event.id
+        if event.type in self._engine.reactions:
+            self._due.append((event, self._depth + 1))
         return event
+
+    def run_reactions(self) -> None:
+        """Answer this activation's events, now its system has finished with them (see `core.pools.Reaction`), each
+        reaction starting clean: nothing it draws or asks reaches the next one."""
+        while self._due:
+            event, depth = self._due.pop(0)
+            if depth > MOST_REACTIONS:
+                raise ValueError(f"reactions to {event.type!r} are nested past {MOST_REACTIONS}: a loop?")
+            for reaction in self._engine.reactions[event.type]:
+                self._reaction, self._depth, self._reacting, self._event = reaction, depth, (Cause("event", event.id),), event.id
+                reaction.run(self, event)
+                self._pin_causes, self._guard_rows = [], []
+        self._reaction, self._depth, self._reacting = None, 0, ()
 
     # ------------------------------------------------------------ level of detail
 
@@ -523,6 +549,8 @@ class Ctx:
         more (a scheme's steps carry the scheme and its ambition): every event the follow-up emits
         inherits them.
         """
+        if self._reaction:
+            raise ValueError(f"reaction {self._reaction.name} can't schedule a follow-up: it has no system to hear it")
         base = (Cause("event", self._event),) if self._event else self.activation.causes
         parent = self.activation.id if self._scope is None else f"{self.activation.id}#{self._scope}"
         causes = tuple(dict.fromkeys((*base, Cause("activation", parent), *causes)))

@@ -21,12 +21,13 @@ import os
 import re
 import sys
 from collections.abc import Callable, Iterator, Mapping
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 BASE = "base"
 EXTENSION = re.compile(r"[A-Za-z_][A-Za-z0-9_]*(\.[A-Za-z_][A-Za-z0-9_]*)*")
-HOMES = ("renasci.people.actions", "renasci.people.ambitions", "renasci.marks")  # (what defines the base pools: see `base`)
+HOMES = ("renasci.people.actions", "renasci.people.ambitions", "renasci.people.planner", "renasci.marks")  # (what defines the base pools: see `base`)
 
 
 def _name(entry: Any) -> str:
@@ -125,6 +126,24 @@ class Pools(Mapping):
 
 pools = Pools()
 pools.define("event_types").freeze()  # (those extensions add; the engine's own stay with their systems for now)
+pools.define("reactions").freeze()  # (authored beats: see `Reaction`)
+
+
+@dataclass(frozen=True)
+class Reaction:
+    """An authored beat: when an event of type `on` happens, `run(ctx, event)`, once the activation that emitted it has
+    finished, so the world has taken it in (the dead are dead). It may emit only the types in `emits`; what it emits is
+    caused by that event, and its source says it was a reaction, so a run shows which beats were authored. `reads` and
+    `writes` are granted for the run. Several on one event run in name order. It can't schedule a follow-up, and
+    can't answer `engine.*` or `ripple.*` events, which no activation emits. For deliberate story: world mechanics
+    read conditions (vision spec §2)."""
+
+    name: str
+    on: str
+    run: Callable
+    reads: frozenset = frozenset()
+    writes: frozenset = frozenset()
+    emits: tuple = ()
 
 
 def base() -> Pools:

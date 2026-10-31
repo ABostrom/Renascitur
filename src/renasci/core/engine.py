@@ -77,6 +77,7 @@ class Engine:
         self.hinge_margin = float(hinge_margin)  # a draw with stakes is a hinge only if it was this close
         self.pools = base_pools  # this run's pools; `extend` swaps in its own set (#162)
         self.extensions: list = []  # [[name, source digest], ...]
+        self.reactions: dict = {}  # event type: [Reaction, ...], in name order
         self.granted_reads: frozenset = frozenset()  # what extensions' entries declare they read and write
         self.granted_writes: frozenset = frozenset()
         self.odds_hooks: list = []  # (ctx, p, purpose, owner) -> (p, cause or None): ripples, director
@@ -123,6 +124,13 @@ class Engine:
         self.granted_writes = frozenset().union(*(getattr(e, "writes", ()) for e in entries))
         for t in self.pools.event_types.values():
             self._register(t)
+        self.reactions = {}
+        for r in self.pools.reactions.values():
+            if r.on.startswith(("engine.", "ripple.")):
+                raise ValueError(f"reaction {r.name}: {r.on} isn't emitted by an activation, so it can't be answered")
+            for t in (r.on, *r.emits):
+                self.registry.get(t)  # (refuses an unknown type)
+            self.reactions.setdefault(r.on, []).append(r)
 
     def _register(self, t: EventType) -> None:
         try:
@@ -404,6 +412,7 @@ class Engine:
 
     def finish(self, ctx: Ctx) -> None:
         """Keep what a completed activation produced besides events and writes: hinges and reads."""
+        ctx.run_reactions()
         self._note_activation(ctx.activation)
         self.hinges.extend(ctx.hinges)
         self.timeseries.extend(ctx._series)

@@ -319,7 +319,8 @@ def cadet(ctx, house: str, office: str, holder: str) -> None:
     line_sex = "f" if via == "mother" else "m"  # (who passes the house on to their children)
 
     def plotting(p) -> bool:
-        return any(ctx.get(a, "class") == "Seize" for a in ctx.get(p, "ambitions") or [])
+        return any(getattr(ctx.pools.ambitions.get(ctx.get(a, "class")), "claims_seat", False)
+                   for a in ctx.get(p, "ambitions") or [])
 
     sons = [c for c in ctx.get(holder, "children") or []
             if c != heir and ctx.status(c) == "active" and ctx.get(c, "house") == house and not ctx.get(c, "offices")
