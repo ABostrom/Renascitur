@@ -89,12 +89,14 @@ def balance(store, settlement: str, material: str) -> int:
     return g["initial"] + g["produced"] + g["traded_in"] - (stock + g["used"] + g["traded_out"] + g["destroyed"])
 
 
-def cast(engine, settlements: list[str], crafts: dict) -> None:
-    """Every town's stock and goods ledger, empty at the start."""
+def cast(engine, settlements: list[str], crafts: dict, initial: dict | None = None) -> None:
+    """Every town's stock and goods ledger: empty at the start, but for `initial` ({material: {town: n}}, a
+    famine world's stores: S10 #129)."""
     for m in sorted(crafts.get("materials") or {}):
-        engine.cast_column(f"stock:{m}", "int64", settlements, [0] * len(settlements))
+        start = [int((initial or {}).get(m, {}).get(s, 0)) for s in settlements]
+        engine.cast_column(f"stock:{m}", "int64", settlements, start)
         for f in FLOWS:
-            engine.cast_column(f"goods:{m}:{f}", "int64", settlements, [0] * len(settlements))
+            engine.cast_column(f"goods:{m}:{f}", "int64", settlements, start if f == "initial" else [0] * len(settlements))
 
 
 def hand(ctx, o: str, frm: str | None, to: str | None) -> None:

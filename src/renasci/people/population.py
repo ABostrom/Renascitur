@@ -171,6 +171,34 @@ class Population(System):
                                    "notables": len(ctx.get(s, "residents"))})
 
 
+def kill(ctx, settlement: str, rates: list[float], purpose: str) -> tuple[dict, int]:
+    """Deaths among the masses beyond their usual (famine, plague: S10 #129): each band loses a binomial share at
+    its rate in `rates` (one per band, both sexes), their allele copies leaving by a hypergeometric draw, from
+    the settlement's `purpose` stream. Returns the column changes and the number dead; the caller emits the
+    event that explains them, then writes the changes."""
+    from renasci.people.life import world
+
+    _, catalogue, _ = world(ctx)
+    allele_cols = [allele_column(lo.id, v) for lo in catalogue.loci for v in lo.variants]
+    state = ctx.read_columns(settlement, [*BAND_COLUMNS, *allele_cols, "flow:died"])
+    rng = ctx.rng(purpose, settlement)
+    changes, died = {}, 0
+    for sex in SEXES:
+        for b in range(BANDS):
+            c = band_column(sex, b)
+            d = rng.binomial(int(state[c]), float(rates[b])) if rates[b] > 0 else 0
+            changes[c] = int(state[c]) - d
+            died += d
+    if not died:
+        return {}, 0
+    for lo in catalogue.loci:
+        cols = [allele_column(lo.id, v) for v in lo.variants]
+        copies = [int(state[c]) for c in cols]
+        changes.update(zip(cols, [c - r for c, r in zip(copies, rng.hypergeometric(copies, 2 * died))]))
+    changes["flow:died"] = int(state["flow:died"]) + died
+    return changes, died
+
+
 # ---------------------------------------------------------------- promotion and demotion
 
 

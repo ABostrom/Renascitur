@@ -42,6 +42,8 @@ def people_ruleset(name: str, scenario: dict, version: int = 1) -> Ruleset:
         from renasci import ecology
 
         systems += (ecology.climate_system()(),)
+        if scenario["params"]["ecology"].get("famine") is not None:  # (S10 §3, #129; {} for the defaults)
+            systems += (ecology.famine_system()(),)
     if scenario.get("geography"):  # journeys need routes (S4 §5)
         systems += (Migration(),)
         if scenario["geography"].get("changes"):  # the map by year (S4 §8, #81)
