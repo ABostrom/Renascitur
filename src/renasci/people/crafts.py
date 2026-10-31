@@ -72,7 +72,7 @@ EVENT_TYPES = (YIELD, MADE, GIVEN, INHERITED, LOST, FOUND, DEED, NAMED_T, STOLEN
 READS = frozenset({"ids:settlement", "residents", "region", "born", "job", "skills", "wealth", "ties", "a", "b",
                    "kind", "journey", "possessions", "yield_carry", "stock:*", "goods:*", "job:*",
                    "ids:object", "owner", "status", "fell", "children", "spouse", "place", "lost", "fame", "deeds",
-                   "exploits", "name", "type"}) | beliefs.PERCEIVE_READS | stocks.READS
+                   "exploits", "name", "type", "ids:route", "ends", "open"}) | beliefs.PERCEIVE_READS | stocks.READS
 WRITES = frozenset({"stock:*", "goods:*", "new:object", "owner", "wealth", "possessions", "yield_carry",
                     "place", "lost", "fame", "deeds", "exploits", "name", "status", "destroyed"}) \
     | beliefs.PERCEIVE_WRITES | stocks.WRITES
@@ -326,9 +326,10 @@ class Crafts(System):
 
     def find(self, ctx, o, rate, years) -> None:
         place = ctx.get(o, "place")
-        if not place or ctx.kind(place) != "settlement":
+        if not place:
             return
-        here = [p for p in sorted(ctx.get(place, "residents") or [])
+        towns = [place] if ctx.kind(place) == "settlement" else self.road_from(ctx, place)  # (a ruin's, a road away)
+        here = [p for t in towns for p in sorted(ctx.get(t, "residents") or [])
                 if age_years(ctx.calendar, ctx.get(p, "born"), ctx.today) >= ADULT and not ctx.get(p, "journey")]
         p = min(1.0, rate * (1.0 + 3.0 * float(ctx.get(o, "fame") or 0.0)))
         if not here or not ctx.chance(over(p, years), "find", owner=o):
@@ -338,7 +339,12 @@ class Crafts(System):
                       payload={"place": place})
         self._hand(ctx, o, None, finder)
         ctx.set(o, "lost", None)
-        seen(ctx, ev.id, place, [finder], beliefs.claim("owns", object=o, by=finder))
+        seen(ctx, ev.id, ctx.get(finder, "place"), [finder], beliefs.claim("owns", object=o, by=finder))
+
+    def road_from(self, ctx, place) -> list[str]:
+        towns = set(ctx.ids("settlement"))
+        return sorted({e for r in ctx.ids("route") if place in (ctx.get(r, "ends") or []) and ctx.get(r, "open") is not False
+                       for e in ctx.get(r, "ends") if e in towns})
 
     def deeds(self, ctx, person) -> None:
         exploits = list(ctx.get(person, "exploits") or [])
