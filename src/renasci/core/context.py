@@ -89,6 +89,11 @@ class Ctx:
             raise ValueError(f"{self.system.name} wrote {name!r} before emitting an event to explain it")
         return self._event
 
+    @property
+    def current_event(self) -> str | None:
+        """The event that writes are attributed to."""
+        return self._event
+
     def _note(self, key: tuple[str, str], value, text: str | None = None) -> None:
         """Record a read and a digest of the value seen (the first time, i.e. before own writes).
         `text` is the value's canonical JSON when the caller already has it."""
@@ -520,7 +525,7 @@ class Ctx:
         """
         base = (Cause("event", self._event),) if self._event else self.activation.causes
         parent = self.activation.id if self._scope is None else f"{self.activation.id}#{self._scope}"
-        causes = tuple(base) + (Cause("activation", parent),) + tuple(causes)
+        causes = tuple(dict.fromkeys((*base, Cause("activation", parent), *causes)))
         try:
             when = self.calendar.add(self.today, after)
         except AgeBoundaryError:
