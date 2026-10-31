@@ -69,14 +69,14 @@ def _plots(ctx, person: str, scheme: str, add: bool) -> None:
     ctx.set(person, "plots", sorted(have | {scheme} if add else have - {scheme}))
 
 
-def _victims(steps) -> set[str]:
-    return {st["target"] for st in steps if st["target"] and A.ACTIONS[st["action"]].achieves.startswith(HARMS)}
+def _victims(ctx, steps) -> set[str]:
+    return {st["target"] for st in steps if st["target"] and ctx.pools.actions[st["action"]].achieves.startswith(HARMS)}
 
 
 def _involved(ctx, scheme: str) -> list[str]:
     """The people a scheme touches (a polity it's aimed at, an Expand's, keeps no `plots`)."""
     target = ctx.get(scheme, "target")
-    people = {*([target] if target else []), *(ctx.get(scheme, "accomplices") or []), *_victims(ctx.get(scheme, "plan") or [])}
+    people = {*([target] if target else []), *(ctx.get(scheme, "accomplices") or []), *_victims(ctx, ctx.get(scheme, "plan") or [])}
     return sorted(p for p in people if ctx.kind(p) == "person")
 
 
@@ -107,7 +107,7 @@ def begin(ctx, amb: str, owner: str) -> str | None:
 def _next(ctx, scheme: str) -> None:
     """Schedule the current step, after its action's duration."""
     step = ctx.get(scheme, "plan")[ctx.get(scheme, "step")]
-    days = A.ACTIONS[step["action"]].duration(ctx, ctx.get(scheme, "owner"), step["target"])
+    days = ctx.pools.actions[step["action"]].duration(ctx, ctx.get(scheme, "owner"), step["target"])
     ctx.schedule(Span(days=days), "step", entity=scheme,
                  payload={"scheme": scheme},
                  causes=(Cause("scheme", scheme), Cause("ambition", ctx.get(scheme, "ambition"))))
@@ -165,7 +165,7 @@ def _fail(ctx, scheme: str, owner: str, amb: str) -> None:
 
 
 def _exposed(ctx, scheme: str, owner: str, amb: str, action: str, aimed_at: str | None) -> None:
-    target = aimed_at if aimed_at in _victims([{"action": action, "target": aimed_at}]) else ctx.get(scheme, "target")
+    target = aimed_at if aimed_at in _victims(ctx, [{"action": action, "target": aimed_at}]) else ctx.get(scheme, "target")
     if target and ctx.kind(target) == "polity":  # (a plot against a realm: its ruler is the one wronged)
         target = ctx.get(ctx.get(target, "ruler"), "holder") if ctx.get(target, "ruler") else None
     elif target and ctx.kind(target) == "object":  # (a plot to steal a thing: its holder is the one wronged)
@@ -196,7 +196,7 @@ def _exposed(ctx, scheme: str, owner: str, amb: str, action: str, aimed_at: str 
     if ctx.get(amb, "state") == "active":
         resolve(ctx, amb, "thwarted", causes=(Cause("event", event.id),))
     if victim and ctx.get(victim, "offices"):  # (S8 §9: a plot against an office holder goes before the ruler)
-        grave = 1.0 if any(A.ACTIONS[s["action"]].achieves.startswith(("dead:", "seized:"))
+        grave = 1.0 if any(ctx.pools.actions[s["action"]].achieves.startswith(("dead:", "seized:"))
                            for s in ctx.get(scheme, "plan") or []) else 0.3
         courts.trial(ctx, owner, victim, event.id, grave=grave, scheme=scheme)
 
@@ -221,7 +221,7 @@ def step(ctx, scheme: str) -> None:
         _plots(ctx, p, scheme, False)
     plan = ctx.get(scheme, "plan")
     now = plan[ctx.get(scheme, "step")]
-    action = A.ACTIONS[now["action"]]
+    action = ctx.pools.actions[now["action"]]
     ready = all(holds(ctx, owner, r.replace("{target}", now["target"] or ""), scheme) for r in sorted(action.requires))
     outcome = A.perform(ctx, action, owner, now["target"], scheme) if ready else "impossible"
     for p in ctx.get(scheme, "accomplices") or []:  # whoever was won over is part of the plot now

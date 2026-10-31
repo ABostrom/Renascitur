@@ -195,10 +195,12 @@ def test_traits_are_read_from_the_person_under_strict_declarations():
 
 
 def test_unknown_ambition_classes_are_refused():
+    from renasci.core.pools import pools as base
     from renasci.people.ambitions import classes
 
     class Ctx:
         params = {"ambitions": ["Marry", "Conquer"]}
+        pools = base
 
     with pytest.raises(ValueError, match="Conquer"):
         classes(Ctx())

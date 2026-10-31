@@ -614,13 +614,13 @@ LIBRARY.freeze()
 
 def classes(ctx) -> dict[str, Ambition]:
     """The ambition classes this world uses (the ruleset param `ambitions`, or every known class)."""
-    names = ctx.params.get("ambitions")
+    names, known = ctx.params.get("ambitions"), ctx.pools.ambitions
     if not names:
-        return dict(sorted(LIBRARY.items()))
-    unknown = sorted(set(names) - set(LIBRARY))
+        return dict(known)
+    unknown = sorted(set(names) - set(known))
     if unknown:
-        raise ValueError(f"unknown ambition classes {unknown}; known: {sorted(LIBRARY)}")
-    return {n: LIBRARY[n] for n in sorted(names)}
+        raise ValueError(f"unknown ambition classes {unknown}; known: {sorted(known)}")
+    return {n: known[n] for n in sorted(names)}
 
 
 def resolve(ctx, amb: str, status: str, causes=()) -> None:

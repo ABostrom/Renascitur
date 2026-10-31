@@ -20,9 +20,9 @@ class World:
     start: Callable[..., Date] | None = None  # (**params) -> the first day (for casting canon, S2 §7)
     scenario: Callable[..., dict] | None = None  # (**params) -> the people scenario canon is cast into
 
-    def restore(self, checkpoint: dict, seed: int, ripples=(), pins=(), reshuffles=(), **params) -> Engine:
+    def restore(self, checkpoint: dict, seed: int, ripples=(), pins=(), reshuffles=(), extensions=(), **params) -> Engine:
         return Engine.restore(checkpoint, self.calendar, self.rulesets(**params), seed=seed, ripples=ripples, pins=pins,
-                              reshuffles=reshuffles)
+                              reshuffles=reshuffles, extensions=extensions)
 
 
 def _toy() -> World:
