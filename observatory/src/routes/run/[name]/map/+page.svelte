@@ -156,7 +156,8 @@
 <p class="crumbs">
 	<a href="/">Runs</a> › <strong>{name}</strong> › map · <a href={`/run/${encodeURIComponent(name)}/events`}>events</a> ·
 	<a href={`/run/${encodeURIComponent(name)}/stories`}>stories</a> ·
-	<a href={`/run/${encodeURIComponent(name)}/polities`}>polities</a>
+	<a href={`/run/${encodeURIComponent(name)}/polities`}>polities</a> ·
+	<a href={`/run/${encodeURIComponent(name)}/objects`}>objects</a>
 </p>
 
 {#if error}
