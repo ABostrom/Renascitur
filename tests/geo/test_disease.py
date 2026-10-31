@@ -145,8 +145,81 @@ def test_coarse_years_still_know_plague():
     assert e.check_conservation() == []
 
 
+def resistant(e, s):
+    plus = int(e.store.read_column("allele:resistance:+", [s])[0])
+    return plus / (plus + int(e.store.read_column("allele:resistance:-", [s])[0]))
+
+
+def test_resistance_is_born_and_inherited():
+    e = run(scenario(disease=False), years=25)
+    births = [x.roles["child"][0] for x in of(e, "people.birth")]
+    seen = 0
+    for child in births:
+        mine = e.store.get(child, "genome")["resistance"]
+        for copy, parent in zip(mine, ("mother", "father")):
+            who = e.store.get(child, parent)
+            if who:  # (a copy comes from that parent, whole: its origin says where it first arose)
+                assert copy in e.store.get(who, "genome")["resistance"] or copy.split("@")[1].startswith("x")
+                seen += copy.startswith("+")
+    assert seen  # (and some of them are the resistant one)
+    traits = {tuple(sorted(c[0] for c in e.store.get(c2, "genome")["resistance"])): e.store.get(c2, "traits")["resistance"]
+              for c2 in births}
+    assert traits.get(("-", "-")) == 0.0 and traits.get(("+", "-")) == 0.5
+
+
+def test_plague_leaves_a_town_hardier():
+    deadly = [{**STRIKES[0], "lethality": 0.8, "resist": {**STRIKES[0]["resist"], "spare": 1.0}}]
+    plague, clean = run(scenario(disease=deadly), years=8), run(scenario(disease=False), years=8)
+    towns = plague.store.ids("settlement")
+    assert sum(resistant(plague, s) for s in towns) > sum(resistant(clean, s) for s in towns)
+    assert plague.check_conservation() == []
+
+
+def test_a_resistant_people_lose_fewer():
+    def dead(share, seed):
+        sc = scenario(disease=[{**STRIKES[0], "lethality": 0.5}])
+        sc["catalogue"] = {**sc["catalogue"], "groups": {g: {**f, "resistance": {"+": share, "-": 1 - share}}
+                                                         for g, f in sc["catalogue"]["groups"].items()}}
+        return sum(x.payload["died"] for x in of(run(sc, seed=seed), "disease.season"))
+
+    assert sum(dead(0.9, seed) for seed in (3, 4)) < sum(dead(0.05, seed) for seed in (3, 4))
+
+
+def test_without_the_locus_there_is_no_resistance():
+    class Ctx:
+        params = {}
+
+    spec = {"resist": {"locus": "nothing", "variant": "+", "spare": 0.8}}
+    sc = scenario()
+    import renasci.people.life as life
+
+    ctx = Ctx()
+    ctx.params = life.world_params(sc["races"], sc["catalogue"])
+    assert ecology.resistant_share(ctx, "s", spec) == (0.0, {})
+    assert ecology.resistant_share(ctx, "s", {}) == (0.0, {})
+
+
+def test_a_copy_is_spared_by_how_its_carriers_fare():
+    class Ctx:
+        params = {}
+
+        def read_columns(self, s, cols):
+            return {cols[0]: 100, cols[1]: 900}
+
+    from renasci.people import life
+
+    sc = scenario()
+    ctx = Ctx()
+    ctx.params = life.world_params(sc["races"], sc["catalogue"])
+    spec = ecology.DISEASES[0]
+    share, spared = ecology.resistant_share(ctx, "s", spec)
+    assert share == 0.1 and spared["allele:resistance:+"] == pytest.approx(1 - 0.56 / 0.96)
+
+
 def test_a_catalogue_is_checked():
     crafts = renascita._scenario(None, crafts=True)["params"]["crafts"]
+    with pytest.raises(ValueError, match="resist"):
+        ecology.check({**ecology.DEFAULT, "disease": [{**ecology.DISEASES[0], "resist": {**ecology.DISEASES[0]["resist"], "spare": 1.5}}]}, crafts)
     with pytest.raises(ValueError, match="disease"):
         ecology.check({**ecology.DEFAULT, "disease": 3}, crafts)
     with pytest.raises(ValueError, match="id and a name"):

@@ -188,8 +188,8 @@ def test_a_sack_kills_the_towns_people_and_they_lie_with_its_dead(monkeypatch):
 
     killed, kill = [], population.kill
 
-    def spy(ctx, settlement, rates, purpose):
-        found = kill(ctx, settlement, rates, purpose)
+    def spy(ctx, settlement, rates, purpose, spared=None):
+        found = kill(ctx, settlement, rates, purpose, spared)
         if purpose.startswith("sack:"):
             killed.append(found[1])
         return found

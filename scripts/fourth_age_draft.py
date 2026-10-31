@@ -66,6 +66,7 @@ loci = [
     additive("constitution", "constitution", 0.15, 0.55), additive("longevity", "longevity", 0.12, 0.5),
     additive("fertility", "fertility", 0.12, 0.5), additive("wits", "wits", 0.15, 0.5),
     additive("charm", "charm", 0.15, 0.5), additive("will", "will", 0.15, 0.5), additive("temper", "temper", 0.15, 0.5),
+    additive("resistance", "resistance", 0.25, 0.1),  # (rare at first: plague makes it common, #166)
     ({"id": "gift", "variants": ["g", "n"], "model": "threshold", "threshold": 2, "mutation": 0.00001,
       "traits": {"gift": {"g": 1, "n": 0}}}, {"g": 0.12, "n": 0.88}),
 ]
@@ -74,7 +75,8 @@ catalogue = {
     "groups": {"pyrosia": {lo["id"]: f for lo, f in loci}},
     "traits": {"eye": {"base": 0}, "hair": {"base": 0}, "gift": {"base": 0},
                **{t: {"base": 0.5, "range": [0, 1]} for t in
-                  ("stature", "build", "constitution", "longevity", "fertility", "wits", "charm", "will", "temper")}},
+                  ("stature", "build", "constitution", "longevity", "fertility", "wits", "charm", "will", "temper",
+                   "resistance")}},
 }
 
 regions: dict = {}

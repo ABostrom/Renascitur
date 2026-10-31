@@ -181,11 +181,12 @@ def fell(ctx, settlement: str, dead: int) -> None:
         stocks.add(ctx, settlement, "corpses", dead)
 
 
-def kill(ctx, settlement: str, rates: list[float], purpose: str) -> tuple[dict, int]:
+def kill(ctx, settlement: str, rates: list[float], purpose: str, spared: dict | None = None) -> tuple[dict, int]:
     """Deaths among the masses beyond their usual (famine, plague: S10 #129): each band loses a binomial share at
     its rate in `rates` (one per band, both sexes), their allele copies leaving by a hypergeometric draw, from
-    the settlement's `purpose` stream. Returns the column changes and the number dead; the caller emits the
-    event that explains them, then writes the changes."""
+    the settlement's `purpose` stream. `spared`, {allele column: share}, makes those copies that much less likely to
+    be among the dead: a killer that some survive leaves the survivors' blood behind it. Returns the column changes
+    and the number dead; the caller emits the event that explains them, then writes the changes."""
     from renasci.people.life import world
 
     _, catalogue, _ = world(ctx)
@@ -204,7 +205,9 @@ def kill(ctx, settlement: str, rates: list[float], purpose: str) -> tuple[dict, 
     for lo in catalogue.loci:
         cols = [allele_column(lo.id, v) for v in lo.variants]
         copies = [int(state[c]) for c in cols]
-        changes.update(zip(cols, [c - r for c, r in zip(copies, rng.hypergeometric(copies, 2 * died))]))
+        exposed = [int(n * (1.0 - (spared or {}).get(c, 0.0))) for c, n in zip(cols, copies)]
+        pool = exposed if sum(exposed) >= 2 * died else copies
+        changes.update(zip(cols, [c - r for c, r in zip(copies, rng.hypergeometric(pool, 2 * died))]))
     changes["flow:died"] = int(state["flow:died"]) + died
     return changes, died
 
