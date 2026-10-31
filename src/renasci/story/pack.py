@@ -69,6 +69,7 @@ class Run:
     def _setup(self, name, events, state, deltas, stories, geography, manifest):
         self.name, self.events, self.state, self.geography, self.manifest = name, events, state, geography, manifest
         self.by_id = {e["id"]: e for e in events}
+        self.end_year = max((e["date"][1] for e in events), default=None)
         self.ents = {e["id"]: e for e in state["entities"]}
         self.names = Names(state, geography)
         self.history: dict[tuple[str, str], list[tuple[list, object, object]]] = {}
