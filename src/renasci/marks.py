@@ -65,6 +65,7 @@ for _mark in (
     Mark("haunted", "haunted", ("settlement",), {"corpses": 150}, {"danger": 0.2}, chance=0.5, fades=True),
     Mark("shaken", "shaken", ("person",), {"dread": 2}, {"temper": 0.2, "charm": -0.1}, fades=True, ebb=0.8),
     Mark("adept", "an adept", ("person",), {"skill": 0.9}, {"wits": 0.1}),
+    Mark("divine", "divine", (), {}, agency=True),  # (fits nothing: gods are cast with it, S11 #131)
 ):
     MARKS.add(_mark)
 MARKS.freeze()

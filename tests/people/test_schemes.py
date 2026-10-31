@@ -159,7 +159,7 @@ def test_whatever_a_dying_owners_ambitions_read_is_declared():
     from renasci.people.life import DIE_READS
 
     assert "target" in DIE_READS
-    for cls in LIBRARY.values():
+    for cls in (c for c in LIBRARY.values() if "person" in c.held_by):  # (only a person dies holding one)
         assert cls.reads <= DIE_READS | {"drives", "traits", "race", "born", "name", "ended", "ruler", "ids:polity",
                              "ids:relation", "stance", "ids:route", "ends", "seat",
                              "ids:object", "fame", "lost", "place", "father", "mother", "famine", "plots"}, cls.name  # (eligible and text aren't asked at a death)
