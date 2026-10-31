@@ -182,6 +182,31 @@ def test_a_ruler_may_fall_with_a_lost_battle():
     raise AssertionError("no ruler fell in a lost battle, on four seeds")
 
 
+def test_a_sack_kills_the_towns_people_and_they_lie_with_its_dead(monkeypatch):
+    from renasci import ecology
+    from renasci.people import population
+
+    killed, kill = [], population.kill
+
+    def spy(ctx, settlement, rates, purpose):
+        found = kill(ctx, settlement, rates, purpose)
+        if purpose.startswith("sack:"):
+            killed.append(found[1])
+        return found
+
+    monkeypatch.setattr(population, "kill", spy)
+    for seed in (5, 6, 7, 8):
+        sc = renascita._scenario(scenario(), crafts=True)
+        sc["params"].update(raze_rate=1.0, ecology={**ecology.DEFAULT, "burial": {}})
+        e = renascita.new_engine(seed=seed, scenario=sc)
+        e.run(until=CAL.add(START, Span(years=25)))
+        for s in e.store.ids("settlement"):
+            assert float(e.store.get(s, "level:corpses") or 0.0) == int(e.store.read_column("flow:died", [s])[0]), s
+        if any(killed):
+            return
+    raise AssertionError("no sack killed anyone, on four seeds")
+
+
 def test_by_default_nothing_is_razed_without_its_odds():
     e = next(forced(raze_rate=0.0))
     assert not kinds(e, "settlement.razed")

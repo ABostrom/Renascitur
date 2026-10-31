@@ -25,6 +25,7 @@ its `notable_target`.
 
 from __future__ import annotations
 
+from renasci.core import stocks
 from renasci.core.events import EventType
 from renasci.core.lod import EVENT_TYPES as LOD_TYPES
 from renasci.people.ambitions import RESOLVED as AMBITION_RESOLVED
@@ -116,8 +117,8 @@ def cast_masses(engine, settlements: dict, catalogue, races) -> None:
 class Population(System):
     name, cadence = "people.population", "seasonal"
     priority = -2  # before births and deaths of notables
-    reads = COLUMN_READS | {"ids:settlement", "race", "residents", "capacity"}
-    writes = frozenset({"pop:*", "allele:*", "flow:*"})
+    reads = COLUMN_READS | stocks.READS | {"ids:settlement", "race", "residents", "capacity"}
+    writes = frozenset({"pop:*", "allele:*", "flow:*"}) | stocks.WRITES
     event_types = (STEP,)
 
     def run(self, ctx):
@@ -163,12 +164,21 @@ class Population(System):
                     changes.update(zip(cols, copies))
                 ctx.emit("people.population", {"settlement": (s,)}, purpose="population", actor=s, place=s,
                          payload={"born": births, "died": died})
+                fell(ctx, s, died)
                 for f, delta in (("born", births), ("died", died)):
                     changes[f"flow:{f}"] = int(state[f"flow:{f}"]) + delta
                 ctx.write_columns(s, changes)
                 if yearly:
                     ctx.series(s, {"pop": {sex: [n[band_column(sex, b)] for b in range(BANDS)] for sex in SEXES},
                                    "notables": len(ctx.get(s, "residents"))})
+
+
+def fell(ctx, settlement: str, dead: int) -> None:
+    """Every death meets here, whatever the cause, under the event that explains it: the masses' by age or hunger,
+    a notable's, a sack's. With `ecology.burial` on, the dead lie in the town's `corpses` until someone buries them;
+    nothing here knows what killed them or what they will lead to (vision spec §2)."""
+    if dead and (ctx.params.get("ecology") or {}).get("burial") is not None:
+        stocks.add(ctx, settlement, "corpses", dead)
 
 
 def kill(ctx, settlement: str, rates: list[float], purpose: str) -> tuple[dict, int]:

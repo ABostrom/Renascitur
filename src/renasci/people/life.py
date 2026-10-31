@@ -20,6 +20,7 @@ from __future__ import annotations
 import functools
 import json
 
+from renasci.core import stocks
 from renasci.core.canon import canonical
 from renasci.core.events import Cause, EventType
 from renasci.core.ripples import Disguise
@@ -225,6 +226,7 @@ def die(ctx, person: str, settlement: str, cause: str, *, killer: str | None = N
         ctx.set(spouse, "spouse", None)
     houses.vacate(ctx, person)
     population.bump(ctx, settlement, died=1)  # explained by the death itself
+    population.fell(ctx, settlement, 1)
     if killer:  # (a killing across a border, or between a realm's blocs: their relation's ledger, S8 §4)
         relations.across(ctx, killer, person, "killed", death.id)
     if killer:  # an attributed killing: the victim's close kin hold it against the killer (S7 §7)
@@ -266,10 +268,11 @@ _AMBITION_WRITES = frozenset({"ambitions", "cooldowns", "state", "resolved", "sc
 DIE_EVENTS = (DEATH, NEAR_MISS, _RESOLVED, EXPLOIT) + houses.EVENT_TYPES + (ties.TIE_ENDED,) + beliefs.EVENT_TYPES
 DIE_READS = (frozenset({"born", "residents", "spouse", "status", "flow:*", "mother", "father", "children", "grievances",
                          "need", "journey", "possessions", "exploits"})
-             | houses.READS | ties.READS | _AMBITION_READS | beliefs.PERCEIVE_READS | relations.NOTE_READS)
+             | houses.READS | ties.READS | _AMBITION_READS | beliefs.PERCEIVE_READS | relations.NOTE_READS | stocks.READS)
 NOTABLE_HUNGER = 3.0  # (a notable's hazard in a town short of all its food: four times their usual; S10 #129)
 DIE_WRITES = (frozenset({"status", "residents", "spouse", "flow:*", "grievances", "wound", "need", "journey", "fell", "exploits"})
-              | houses.WRITES | ties.WRITES | _AMBITION_WRITES | beliefs.PERCEIVE_WRITES | relations.NOTE_WRITES)
+              | houses.WRITES | ties.WRITES | _AMBITION_WRITES | beliefs.PERCEIVE_WRITES | relations.NOTE_WRITES
+              | stocks.WRITES)
 
 
 class Life(System):
