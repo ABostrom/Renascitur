@@ -28,7 +28,8 @@ invariant, exact, is initial + produced + traded_in = stock + used + traded_out 
    - an owner's `exploits` (a duel won, a near miss survived: noted by S7 and `life.die`) become each of
      their objects' deeds (`object.deed`, `DEED_FAME` each); at `NAMED` fame a thing earns a name from where
      its last deed was done (`object.named`: "the Blade of Redcairn").
-   Owners of objects are kept as notables (S3's LOD spares them).
+   Owners of objects are kept as notables (S3's LOD spares them). A protected object (S1's protect ripple on
+   it) passes to an heir rather than being lost, and survives a sack (a near miss).
 
 This system is the spec's `objects` system: the only writer of an object's fields. A coarse step yields N years
 and draws "a masterwork in N years" and "found in N years".
@@ -146,13 +147,19 @@ def unearth(ctx, town: str, spec: dict, ripple: str) -> bool:
     return True
 
 
-def destroy(ctx, o: str, place: str | None, cause: str | None) -> None:
-    """An object is destroyed (a sack): gone for good (store status `dead`, `destroyed` its date)."""
+def destroy(ctx, o: str, place: str | None, cause: str | None) -> bool:
+    """An object is destroyed (a sack): gone for good (store status `dead`, `destroyed` its date). A protected
+    one (a protect ripple on it) survives, a near miss. Returns whether it was destroyed."""
+    if ctx.guarded(o):
+        ctx.emit("people.near_miss", {"survivor": (o,)}, purpose="spared", actor=o, place=place,
+                 payload={"would_have": "destroyed"}, causes=(Cause("event", cause),) if cause else ())
+        return False
     ctx.emit("object.destroyed", {"object": (o,)}, purpose="destroyed", actor=o, place=place,
              payload={"place": place}, causes=(Cause("event", cause),) if cause else ())
     hand(ctx, o, ctx.get(o, "owner"), None)
     ctx.set(o, "destroyed", ctx.today.to_json())
     ctx.set_status(o, "dead")
+    return True
 
 
 def place_name(ctx, place: str | None) -> str:
@@ -295,7 +302,7 @@ class Crafts(System):
         where = fell.get("place") or ctx.get(o, "place")
         heir = next((c for c in [*(ctx.get(owner, "children") or []), ctx.get(owner, "spouse")]
                      if c and ctx.exists(c) and ctx.status(c) == "active"), None)
-        if heir is None or (fell.get("away") and ctx.chance(lose, "lose", owner=o)):
+        if heir is None or (fell.get("away") and ctx.chance(lose, "lose", owner=o) and not ctx.guarded(o)):
             ev = ctx.emit("object.lost", {"owner": (owner,), "object": (o,)}, purpose="lost", actor=o, place=where,
                           payload={"place": where},
                           causes=(Cause("event", fell["event"]),) if fell.get("event") else ())

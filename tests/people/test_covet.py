@@ -130,3 +130,28 @@ def test_a_world_without_crafts_covets_nothing():
     e = engine(crafty=False)
     e.run(until=Date(1, 4, 0))
     assert not [x for x in kinds(e, "people.ambition_formed") if x.payload["class"] == "Covet"]
+
+
+def test_a_protected_object_survives_what_would_destroy_it():
+    from renasci.core.ripples import Ripple
+
+    probe = engine()
+    target = {}
+
+    def find(ctx):
+        target["obj"] = owned(ctx)[0]
+
+    harness(probe, find, Date(1, 6, 100), Date(1, 6, 101))
+    obj = target["obj"]
+    sc = copy.deepcopy(kin.SCENARIO)
+    sc["params"]["crafts"] = copy.deepcopy(CATALOGUE)
+    e = kin.new_engine(seed=4, scenario=sc, traits=TRAITS,
+                       ripples=[Ripple("r1", "protect", Date(1, 6, 0), obj, {"until": [1, 9, 0]})])
+
+    def burn(ctx):
+        return crafts.destroy(ctx, obj, crafts.where(ctx, obj), None)
+
+    assert harness(e, burn, Date(1, 6, 100), Date(1, 6, 101)) is False
+    assert e.store.status(obj) == "active"
+    spared = [x for x in kinds(e, "people.near_miss") if x.roles["survivor"] == (obj,)]
+    assert spared and ("ripple", "r1") in {(c.kind, c.ref) for c in spared[0].causes}
