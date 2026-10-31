@@ -19,15 +19,17 @@ verdict is a keyed draw (`polity.trial`, owned by the scheme, else the accused):
 
 from __future__ import annotations
 
+from dataclasses import dataclass
+
 from renasci import geo
 from renasci.core.events import Cause, EventType
+from renasci.core.pools import pools
 from renasci.people import life, population, travel
 from renasci.people.ambitions import trait
 
 TRIAL = EventType("polity.trial", 1, roles={"accused": (1, 1), "judge": (1, 1), "victim": (0, 1)},
                   payload={"verdict": "str", "polity": "id"})
 EVENT_TYPES = (TRIAL,) + life.DIE_EVENTS + travel.EVENT_TYPES
-VERDICTS = ("pardon", "fine", "exile", "execution")
 FINE = -0.3
 BAR_READS = frozenset({"exiled", "control", "holder"})
 READS = (BAR_READS | life.DIE_READS | travel.READS | population.COLUMN_READS
@@ -59,15 +61,102 @@ def _tie(ctx, a: str, b: str) -> str | None:
     return None
 
 
-def weights(ctx, accused: str, victim: str | None, judge: str, grave: float) -> list[float]:
-    """The verdicts' weights, in `VERDICTS` order."""
-    tie = _tie(ctx, judge, accused)
-    own = life.grieving(ctx, judge)
-    pardon = 0.4 + max(0.0, float(ctx.get(accused, "favour") or 0.0)) + (1.0 if tie in ("friend", "mentor") else 0.0) \
-        + (1.0 if accused in own else 0.0)
-    exile = 0.3 + 0.7 * grave
-    execution = grave * (0.2 + 0.8 * trait(ctx, judge, "temper")) + (0.6 * grave if victim == judge or victim in own else 0.0)
-    return [round(w, 6) for w in (pardon, 1.0, exile, execution)]
+@dataclass
+class Case:
+    """What's before the court."""
+
+    accused: str
+    victim: str | None
+    judge: str
+    grave: float
+    polity: str
+    office: str
+    owner: str  # (whose choice it is: the scheme, or the accused)
+    to: str | None = None  # (where an exile goes)
+
+
+class Verdict:
+    """One thing a court can decide. `reads` and `writes` are declared, as on any entry of a pool."""
+
+    name = ""
+    reads: frozenset = frozenset()
+    writes: frozenset = frozenset()
+
+    def weight(self, ctx, case: Case) -> float:
+        raise NotImplementedError
+
+    def possible(self, ctx, case: Case) -> bool:
+        """Can it be carried out? If not the court fines instead. (It may note what it found on the `case`.)"""
+        return True
+
+    def carry_out(self, ctx, case: Case, causes: tuple) -> None:
+        pass
+
+
+VERDICTS = pools.define("verdicts")
+
+
+@VERDICTS.add
+class Pardon(Verdict):
+    name = "pardon"
+
+    def weight(self, ctx, case):
+        tie = _tie(ctx, case.judge, case.accused)
+        return 0.4 + max(0.0, float(ctx.get(case.accused, "favour") or 0.0)) + (1.0 if tie in ("friend", "mentor") else 0.0) \
+            + (1.0 if case.accused in life.grieving(ctx, case.judge) else 0.0)
+
+
+@VERDICTS.add
+class Fine(Verdict):
+    name = "fine"
+
+    def weight(self, ctx, case):
+        return 1.0
+
+    def carry_out(self, ctx, case, causes):
+        ctx.set(case.accused, "favour", round(max(-1.0, float(ctx.get(case.accused, "favour") or 0.0) + FINE), 2))
+
+
+@VERDICTS.add
+class Exile(Verdict):
+    name = "exile"
+
+    def weight(self, ctx, case):
+        return 0.3 + 0.7 * case.grave
+
+    def possible(self, ctx, case):
+        if ctx.get(case.accused, "journey"):
+            return False
+        abroad = _abroad(ctx, case.accused, case.polity)
+        options = sorted(abroad)
+        to = ctx.choose("exile", options, owner=case.owner, weights=[abroad[s] for s in options]) if options else None
+        if to is not None and travel.has_routes(ctx) and geo.path(ctx, ctx.get(case.accused, "place"), to, case.accused) is None:
+            to = None  # (in reach, but no road there today)
+        case.to = to
+        return to is not None
+
+    def carry_out(self, ctx, case, causes):
+        ctx.set(case.accused, "exiled", {"polity": case.polity, "by": case.judge, "office": case.office,
+                                         "since": ctx.today.to_json()})
+        if travel.has_routes(ctx):
+            travel.depart(ctx, case.accused, case.to, "exile", causes=causes)
+        else:
+            travel.relocate(ctx, case.accused, case.to)
+
+
+@VERDICTS.add
+class Execution(Verdict):
+    name = "execution"
+
+    def weight(self, ctx, case):
+        wronged = case.victim == case.judge or case.victim in life.grieving(ctx, case.judge)
+        return case.grave * (0.2 + 0.8 * trait(ctx, case.judge, "temper")) + (0.6 * case.grave if wronged else 0.0)
+
+    def carry_out(self, ctx, case, causes):
+        life.die(ctx, case.accused, ctx.get(case.accused, "place"), "executed", killer=case.judge, causes=causes)
+
+
+VERDICTS.freeze()
 
 
 def _abroad(ctx, person: str, polity: str) -> dict[str, float]:
@@ -88,34 +177,19 @@ def trial(ctx, accused: str, victim: str | None, event: str | None, *, grave: fl
     if found is None or ctx.status(accused) != "active":
         return None
     polity, office, judge = found
+    case = Case(accused, victim, judge, grave, polity, office, scheme or accused)
+    known = ctx.pools.verdicts
     if verdict is None:
-        verdict = ctx.choose("verdict", list(VERDICTS), owner=scheme or accused,
-                             weights=weights(ctx, accused, victim, judge, grave), stakes=2.0,
+        verdict = ctx.choose("verdict", list(known), owner=case.owner,
+                             weights=[round(v.weight(ctx, case), 6) for v in known.values()], stakes=2.0,
                              roles={"accused": [accused], "judge": [judge]})
-    to = None
-    if verdict == "exile" and not ctx.get(accused, "journey"):
-        abroad = _abroad(ctx, accused, polity)
-        options = sorted(abroad)
-        to = ctx.choose("exile", options, owner=scheme or accused, weights=[abroad[s] for s in options]) if options else None
-        if to is not None and travel.has_routes(ctx) and geo.path(ctx, ctx.get(accused, "place"), to, accused) is None:
-            to = None  # (in reach, but no road there today)
-    if verdict == "exile" and to is None:
-        verdict = "fine"  # (nowhere to send them)
+    if not known[verdict].possible(ctx, case):
+        verdict = "fine"
     ev = ctx.emit("polity.trial", {"accused": (accused,), "judge": (judge,), "victim": (victim,) if victim else ()},
                   purpose="trial", actor=polity, place=ctx.get(accused, "place"),
                   payload={"verdict": verdict, "polity": polity},
                   causes=(Cause("event", event),) if event else ())
-    causes = (Cause("event", ev.id),)
-    if verdict == "fine":
-        ctx.set(accused, "favour", round(max(-1.0, float(ctx.get(accused, "favour") or 0.0) + FINE), 2))
-    elif verdict == "execution":
-        life.die(ctx, accused, ctx.get(accused, "place"), "executed", killer=judge, causes=causes)
-    elif verdict == "exile":
-        ctx.set(accused, "exiled", {"polity": polity, "by": judge, "office": office, "since": ctx.today.to_json()})
-        if travel.has_routes(ctx):
-            travel.depart(ctx, accused, to, "exile", causes=causes)
-        else:
-            travel.relocate(ctx, accused, to)
+    known[verdict].carry_out(ctx, case, (Cause("event", ev.id),))
     return verdict
 
 

@@ -185,8 +185,6 @@ def check(sc: dict) -> list[dict]:
 
 
 def _check_offices(sc: dict, houses: set, pids: set, fids: set) -> list[dict]:
-    from renasci.people.houses import RULES
-
     out = []
     offs = sc.get("offices") or []
     known = {f"{h}-head" for h in houses} | {o["id"] for o in offs}
