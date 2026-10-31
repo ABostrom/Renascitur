@@ -214,6 +214,105 @@ def test_an_extension_can_add_a_mark(tmp_path, monkeypatch):
     sys.modules.pop("ext_marks", None)
 
 
+def bearing(seed=3, years_=12):
+    """A sentient sword in someone's hand."""
+    sc = world()
+    e = renascita.new_engine(seed=seed, scenario=sc)
+    cast = e.events[0].id  # (any real event will do: the mark's own was before this test began)
+    bearer = next(p for p in e.store.ids("person", "active") if e.store.get(p, "place") and len(e.store.get(e.store.get(p, "place"), "residents")) > 2)
+    e.cast("object", "t:thirster", {"name": "the Thirster", "type": "blade", "material": "iron", "maker": None, "made": None,
+                                    "quality": 0.9, "owner": bearer, "place": e.store.get(bearer, "place"), "deeds": [],
+                                    "fame": 0.5, "lost": None,
+                                    "acquired": [{"id": "sentient", "since": [4, 1, 0], "event": cast, "moved": {}}]})
+    return run_on(e, years_), bearer
+
+
+def run_on(e, n):
+    e.run(until=renascita.CAL.add(renascita.START, Span(years=n)))
+    return e
+
+
+def test_a_sentient_sword_wants_and_sets_its_bearer_against_someone():
+    e, bearer = bearing()
+    formed = [x for x in of(e, "people.ambition_formed") if x.payload["class"] == "Thirst"]
+    assert formed and formed[0].roles["owner"] == ("t:thirster",)
+    whispers = of(e, "object.whispers")
+    assert whispers
+    bearer = whispers[0].roles["bearer"][0]  # (it may have passed on: a sword outlives its bearers)
+    held = e.store.get(bearer, "grievances") or []
+    assert [g for g in held if g["kind"] == "whispered"]
+    assert e.check_conservation() == []
+
+
+def test_a_grievance_a_sword_whispered_can_become_vengeance():
+    from renasci.people.ambitions import LIBRARY
+
+    assert "whispered" in LIBRARY["Vengeance"].kinds
+
+
+def test_a_thing_with_no_agency_wants_nothing():
+    from renasci.people.ambitions import agent
+
+    ctx = Yearly({})
+    ctx.fields[("o", "acquired")] = [{"id": "bloodthirsty", "event": "x1"}]
+    assert agent(ctx, "o") is None
+    ctx.fields[("o", "acquired")] = [{"id": "sentient", "event": "x2"}]
+    assert agent(ctx, "o") == "x2"
+
+
+def test_a_sword_wants_nothing_of_a_dead_bearer():
+    from renasci.people.ambitions import LIBRARY
+
+    class Dead(Yearly):
+        def status(self, entity):
+            return "dead"
+
+    ctx = Dead({})
+    ctx.fields.update({("o", "owner"): "p", ("o", "acquired"): [{"id": "sentient", "event": "x2"}]})
+    assert LIBRARY["Thirst"].eligible(ctx, "o") is None
+
+
+def test_what_a_sword_wants_comes_of_what_it_became():
+    from renasci.people.ambitions import LIBRARY
+
+    ctx = Yearly({})
+    ctx.fields.update({("o", "owner"): "p", ("o", "acquired"): [{"id": "sentient", "event": "x2"}]})
+    assert LIBRARY["Thirst"].eligible(ctx, "o").born_of == ("event", "x2")
+
+
+def test_a_thing_destroyed_gives_up_what_it_wanted():
+    from renasci.people.ambitions import Ambitions, LIBRARY
+
+    resolved = []
+
+    class Gone(Yearly):
+        def status(self, entity):
+            return "dead"
+
+        def emit(self, type, roles, **kw):
+            resolved.append(type)
+            return types.SimpleNamespace(id="e1")
+
+        def ids(self, kind, status=None):
+            return ["o"] if kind == "object" else []
+
+    ctx = Gone({})
+    ctx.fields.update({("o", "ambitions"): ["a1"], ("o", "acquired"): [{"id": "sentient", "event": "x2"}],
+                       ("a1", "owner"): "o", ("a1", "class"): "Thirst"})
+    Ambitions()._agents(ctx, dict(LIBRARY))
+    assert resolved == ["people.ambition_resolved"] and ctx.get("o", "ambitions") == []
+
+
+def test_sentience_comes_after_bloodlust():
+    assert marks.MARKS["sentient"].pre == ("bloodthirsty",) and marks.MARKS["sentient"].agency
+
+
+def test_no_person_is_offered_a_things_ambition():
+    from renasci.people.ambitions import LIBRARY
+
+    assert LIBRARY["Thirst"].held_by == ("object",) and LIBRARY["Marry"].held_by == ("person",)
+
+
 def test_marks_can_be_switched_off():
     sc = world()
     sc["params"]["marks"] = False

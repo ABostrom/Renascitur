@@ -49,6 +49,7 @@ class Mark:
     fades: bool = False
     pre: tuple[str, ...] = ()
     ebb: float = 1.0
+    agency: bool = False  # (it wants things now: see `ambitions.agent`)
 
     @property
     def reads(self) -> frozenset:
@@ -60,6 +61,7 @@ class Mark:
 MARKS = pools.define("marks", key=lambda m: m.id)
 for _mark in (
     Mark("bloodthirsty", "bloodthirsty", ("object",), {"blood": 3}, {"fame": 0.2}),
+    Mark("sentient", "sentient", ("object",), {"blood": 6}, pre=("bloodthirsty",), chance=0.1, agency=True),
     Mark("haunted", "haunted", ("settlement",), {"corpses": 150}, {"danger": 0.2}, chance=0.5, fades=True),
     Mark("shaken", "shaken", ("person",), {"dread": 2}, {"temper": 0.2, "charm": -0.1}, fades=True, ebb=0.8),
     Mark("adept", "an adept", ("person",), {"skill": 0.9}, {"wits": 0.1}),
