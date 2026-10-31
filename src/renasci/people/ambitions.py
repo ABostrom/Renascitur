@@ -35,7 +35,9 @@ FORMED = EventType("people.ambition_formed", 1, roles={"owner": (1, 1), "ambitio
                    payload={"class": "str", "text": "str"})
 RESOLVED = EventType("people.ambition_resolved", 1, roles={"owner": (1, 1), "ambition": (1, 1)},
                      payload={"status": "str"}, dead_roles=("owner",))
-EVENT_TYPES = (FORMED, RESOLVED)
+WHISPERS = EventType("object.whispers", 1, roles={"object": (1, 1), "bearer": (1, 1), "against": (1, 1)}, payload={},
+                     visibility="secret")
+EVENT_TYPES = (FORMED, RESOLVED, WHISPERS)
 ADULT = 16
 
 
@@ -57,6 +59,7 @@ LIBRARY = pools.define("ambitions")  # (a class joins with `@LIBRARY.add`)
 
 
 class Ambition:
+    held_by = ("person",)  # (the kinds of entity that can hold it: anything else needs a mark with `agency`)
     claims_seat = False  # (a son with this in mind isn't sent off to found a cadet line)
     casus_belli = False  # (a ruler's active one against a realm is a cause for war)
     name = ""
@@ -89,6 +92,9 @@ class Ambition:
 
     def text(self, ctx, owner, target) -> str:
         return self.name.lower()
+
+    def act(self, ctx, amb) -> None:
+        """What it does each year, for those who can't scheme: anything but a person."""
 
 
 @LIBRARY.add
@@ -460,6 +466,51 @@ class Leave(Ambition):
 
 
 @LIBRARY.add
+class Thirst(Ambition):
+    """A thing that wants blood, through whoever carries it. It has no hands, so it holds no scheme: it `act`s, setting
+    its bearer against someone in their town, and the bearer's own grievance does the rest (`Vengeance`)."""
+
+    name, cooldown_years, held_by = "Thirst", 5, ("object",)
+    reads = frozenset({"owner", "place", "residents", "born"})
+    whisper = 0.3  # (a year's odds of it finding the bearer's ear)
+
+    def eligible(self, ctx, thing):
+        bearer = ctx.get(thing, "owner")
+        woke = agent(ctx, thing)
+        return Formation(bearer, ("event", woke)) if bearer and woke and ctx.status(bearer) == "active" else None
+
+    def urge(self, ctx, thing):
+        return 0.5
+
+    def subgoals(self, ctx, amb):
+        return []
+
+    def satisfied(self, ctx, amb):
+        return False
+
+    def moot(self, ctx, amb):
+        return ctx.get(ctx.get(amb, "owner"), "owner") != ctx.get(amb, "target")
+
+    def text(self, ctx, owner, target):
+        return f"have {ctx.get(target, 'name') or target} draw it"
+
+    def act(self, ctx, amb) -> None:
+        from renasci.people.life import add_grievance
+
+        thing, bearer = ctx.get(amb, "owner"), ctx.get(amb, "target")
+        if ctx.status(bearer) != "active" or not ctx.chance(self.whisper, "whisper", owner=thing):
+            return
+        others = [p for p in sorted(ctx.get(ctx.get(bearer, "place"), "residents") or [])
+                  if p != bearer and ctx.status(p) == "active" and age_years(ctx.calendar, ctx.get(p, "born"), ctx.today) >= ADULT]
+        if not others:
+            return
+        victim = ctx.choose("whisper", others, owner=thing)
+        ev = ctx.emit("object.whispers", {"object": (thing,), "bearer": (bearer,), "against": (victim,)}, purpose="whisper",
+                      actor=thing, causes=(Cause("ambition", amb),))
+        add_grievance(ctx, bearer, victim, ev.id, "whispered")
+
+
+@LIBRARY.add
 class Covet(Ambition):
     """Want a famous thing someone else holds (S9 §5, #126): one in one's own town, or one famous enough to be
     known everywhere. The plot is a theft (`Steal`). Only where crafts make objects, and only once a famous one
@@ -525,7 +576,7 @@ class Vengeance(Ambition):
     """Answer an attributed harm: the killer of one's kin, or whoever plotted against one."""
 
     name, cooldown_years = "Vengeance", 8
-    kinds = ("killed", "exposed")
+    kinds = ("killed", "exposed", "whispered")
     reads = frozenset({"grievances", "status", "favour", "traits"})
 
     def _grievance(self, ctx, person):
@@ -653,6 +704,13 @@ def on_death(ctx, person: str, death_event: str) -> None:
         resolve(ctx, amb, "fulfilled" if won else "died_unfulfilled", causes=(Cause("event", death_event),))
 
 
+def agent(ctx, entity: str) -> str | None:
+    """Has this thing become something that wants (`Mark.agency`)? The event of the mark that made it so, or None."""
+    marks = ctx.pools.get("marks") or {}
+    return next((m["event"] for m in ctx.get(entity, "acquired") or []
+                 if getattr(marks.get(m["id"]), "agency", False)), None)
+
+
 READS = frozenset({"ambitions", "cooldowns", "owner", "class", "target", "status", "state", "scheme"})
 WRITES = frozenset({"ambitions", "cooldowns", "state", "resolved", "scheme", "new:ambition", "grievances", "claims"})
 
@@ -660,7 +718,7 @@ WRITES = frozenset({"ambitions", "cooldowns", "state", "resolved", "scheme", "ne
 class Ambitions(System):
     name, cadence = "people.ambitions", "yearly"
     priority = 6  # after drives (5)
-    reads = READS | frozenset({"ids:settlement", "residents", "born", "formed", "traits"}).union(
+    reads = READS | frozenset({"ids:*", "residents", "born", "formed", "traits", "acquired"}).union(
         *(a.reads for a in LIBRARY.values()))
     writes = WRITES
     event_types = EVENT_TYPES
@@ -674,6 +732,23 @@ class Ambitions(System):
                         continue
                     self._resolve(ctx, p, library)
                     self._form(ctx, p, library)
+        self._agents(ctx, library)
+
+    def _agents(self, ctx, library):
+        """Anything else that wants things: it forms ambitions as a person does, and acts on them itself. What's gone,
+        or has stopped wanting, gives its ambitions up: nothing else will."""
+        for kind in sorted({k for c in library.values() for k in c.held_by} - {"person"}):
+            with ctx.scope(kind):
+                for entity in ctx.ids(kind):
+                    wants = ctx.status(entity) == "active" and agent(ctx, entity)
+                    if not wants:
+                        for amb in list(ctx.get(entity, "ambitions") or []):
+                            resolve(ctx, amb, "abandoned")
+                        continue
+                    self._resolve(ctx, entity, library)
+                    self._form(ctx, entity, library, kind)
+                    for amb in ctx.get(entity, "ambitions") or []:
+                        library[ctx.get(amb, "class")].act(ctx, amb)
 
     @staticmethod
     def _resolve(ctx, person, library):
@@ -687,11 +762,11 @@ class Ambitions(System):
                 resolve(ctx, amb, "abandoned")
 
     @staticmethod
-    def _form(ctx, person, library):
+    def _form(ctx, person, library, kind="person"):
         held = {ctx.get(a, "class") for a in ctx.get(person, "ambitions") or []}
         cooldowns = ctx.get(person, "cooldowns") or {}
         for name, cls in library.items():
-            if name in held or cooldowns.get(name, 0) > ctx.today.year:
+            if kind not in cls.held_by or name in held or cooldowns.get(name, 0) > ctx.today.year:
                 continue
             formation = cls.eligible(ctx, person)
             if formation is None or not ctx.chance(cls.urge(ctx, person), f"form:{name}", owner=person):
