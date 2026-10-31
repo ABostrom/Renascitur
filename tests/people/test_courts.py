@@ -3,6 +3,8 @@ realm's ruler; the verdict is a pardon, a fine, exile or execution; an exile can
 ruler reigns."""
 
 import copy
+import sys
+import textwrap
 
 from renasci import kin
 from renasci.core.calendar import Date
@@ -87,6 +89,34 @@ def test_the_verdict_is_a_keyed_draw_and_the_same_seed_judges_the_same():
         return trials(e)[0].payload["verdict"]
 
     assert judge() == judge() in courts.VERDICTS
+
+
+def test_a_court_can_hand_down_an_extensions_verdict(tmp_path, monkeypatch):
+    (tmp_path / "ext_maim.py").write_text(textwrap.dedent("""
+        from renasci.people.courts import Verdict
+
+
+        class Maiming(Verdict):
+            name = "maiming"
+            writes = frozenset({"maimed"})
+
+            def weight(self, ctx, case):
+                return 1e6
+
+            def carry_out(self, ctx, case, causes):
+                ctx.set(case.accused, "maimed", True)
+
+
+        def extend(pools):
+            pools.verdicts.add(Maiming)
+    """), encoding="utf-8")
+    monkeypatch.chdir(tmp_path)
+    e = engine()
+    e.extend(["ext_maim"])
+    sys.modules.pop("ext_maim", None)
+    accused, victim = accused_and_victim(e)
+    harness(e, lambda ctx: courts.trial(ctx, accused, victim, None, grave=1.0))
+    assert trials(e)[0].payload["verdict"] == "maiming" and e.store.get(accused, "maimed") is True
 
 
 def test_a_fine_costs_favour_and_a_pardon_nothing():

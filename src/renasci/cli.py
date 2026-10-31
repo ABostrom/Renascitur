@@ -126,8 +126,9 @@ def _run(recipe, out: Path, meta: dict | None = None, canon_doc: dict | None = N
     if canon_doc is not None:
         extra = {"pins": [Pin.from_json(p) for p in canon_doc["pins"]], "canon": canon_doc["canon"],
                  "end": recipe.end}  # pins past the run's end are out of scope, not guarded
-    engine = world.new_engine(recipe.seed, ripples=recipe.ripples, **extra, **recipe.params)
+    engine = world.new_engine(recipe.seed, **extra, **recipe.params)
     engine.extend(recipe.extensions)
+    engine.apply_ripples(recipe.ripples)
     truths = recipe.params.get("truths")
     if recipe.reshuffles:
         engine.reshuffle(recipe.rng_reshuffles(world.calendar))
@@ -929,7 +930,7 @@ def cmd_graph(args) -> int:
         scenario["params"]["campaigns"] = True
     rulesets = world.rulesets(scenario=scenario) if scenario is not None else world.rulesets()
     pools = load_pools(args.extensions)
-    edges = graph.build([rs for _, rs in rulesets], pools, args.all)
+    edges = graph.build([rs.extended(**pools.machinery()) for _, rs in rulesets], pools, args.all)
     if args.check:
         print(json.dumps(graph.check(edges, set(pools.goals)), indent=1))
     if args.run:

@@ -47,6 +47,7 @@ from __future__ import annotations
 
 from renasci.core.calendar import Span
 from renasci.core.events import Cause, EventType
+from renasci.core.pools import pools
 from renasci.core.systems import System
 from renasci.people.races import age_years
 
@@ -234,13 +235,15 @@ class Election(SuccessionRule):
         return max(line, key=lambda p: (standing(ctx, p), p)) if line else None
 
 
-RULES: dict[str, SuccessionRule] = {r.name: r for r in (MalePreferencePrimogeniture(), AbsolutePrimogeniture(),
-                                                        Appointment(), Election())}
+RULES = pools.define("succession")  # (a house names its rule, which can be an extension's; a realm's office can't yet)
+for _rule in (MalePreferencePrimogeniture, AbsolutePrimogeniture, Appointment, Election):
+    RULES.add(_rule)
+RULES.freeze()
 
 
 def name_heir(ctx, office: str, holder: str) -> None:
     """Recompute the heir; emit `people.heir_named` only if it changed."""
-    rule = RULES[ctx.get(office, "rule")]
+    rule = ctx.pools.succession[ctx.get(office, "rule")]
     heir = rule.presumptive(ctx, office, holder, rule.candidates(ctx, office, holder))
     if heir != ctx.get(office, "heir"):
         ctx.emit("people.heir_named", {"holder": (holder,), "heir": (heir,) if heir else ()}, purpose="heir",
@@ -269,7 +272,7 @@ def succeed(ctx, office: str, predecessor: str | None) -> None:
     with ctx.scope(house or ctx.get(office, "polity") or office):
         if ctx.get(office, "holder") != predecessor:
             return  # already settled
-        rule = RULES[ctx.get(office, "rule")]
+        rule = ctx.pools.succession[ctx.get(office, "rule")]
         line = rule.candidates(ctx, office, predecessor)
         successor, decided = rule.choose(ctx, office, predecessor, line)
         if successor is None and line:  # (the office waits: its appointer is vacant)
@@ -307,7 +310,7 @@ def cadet(ctx, house: str, office: str, holder: str) -> None:
     size = ctx.params.get("cadet_size")
     if not size:
         return
-    rule = RULES[ctx.get(office, "rule")]
+    rule = ctx.pools.succession[ctx.get(office, "rule")]
     line = rule.candidates(ctx, office, holder)
     if len(line) + 1 < size:
         return

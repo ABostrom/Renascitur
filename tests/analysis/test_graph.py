@@ -25,6 +25,28 @@ def edges(scenario):
     return graph.build([rs for _, rs in renascita.rulesets(scenario)], base())
 
 
+def test_the_graph_shows_an_extensions_system(tmp_path, monkeypatch, capsys):
+    from renasci.cli import main
+
+    (tmp_path / "ext_bell.py").write_text(textwrap.dedent("""
+        from renasci.core.events import EventType
+        from renasci.core.systems import System
+
+
+        class Bell(System):
+            name, cadence = "beat.bell", "yearly"
+            event_types = (EventType("beat.tolled", 1, roles={"place": (1, 1)}, payload={}),)
+
+
+        def extend(pools):
+            pools.systems.add(Bell)
+    """), encoding="utf-8")
+    monkeypatch.chdir(tmp_path)
+    assert main(["graph", "--extensions", "ext_bell", "--from", "system:beat.bell", "--to", "event:beat.tolled"]) == 0
+    assert "beat.tolled" in capsys.readouterr().out
+    sys.modules.pop("ext_bell", None)
+
+
 def test_famine_reaches_plague_with_nothing_authored_on_the_way(edges):
     path = graph.emergent(edges, "system:ecology.famine", "event:disease.outbreak")
     assert path and all(e.kind in ("influence", "emit") for e in path)

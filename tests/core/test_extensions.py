@@ -249,6 +249,148 @@ def test_a_recipe_refuses_bad_extensions(bad):
         parse_recipe(recipe(extensions=bad))
 
 
+MACHINERY = """
+    from renasci.core.events import EventType
+    from renasci.core.systems import System
+    from renasci.people.courts import Verdict
+    from renasci.people.drives import Drive
+    from renasci.people.houses import SuccessionRule
+
+    TOLLED = EventType("beat.tolled", 1, roles={"place": (1, 1)}, payload={})
+
+
+    class Bell(System):
+        name, cadence = "beat.bell", "yearly"
+        reads = frozenset({"ids:settlement"})
+        event_types = (TOLLED,)
+
+        def run(self, ctx):
+            place = ctx.ids("settlement")[0]
+            ctx.emit("beat.tolled", {"place": (place,)}, purpose="toll", actor=place)
+
+
+    class Maiming(Verdict):
+        name = "maiming"
+        writes = frozenset({"maimed"})
+
+        def weight(self, ctx, case):
+            return 1000.0
+
+        def carry_out(self, ctx, case, causes):
+            ctx.set(case.accused, "maimed", True)
+
+
+    class Faith(Drive):
+        name = "faith"
+
+        def level(self, ctx, person, settlement):
+            return 0.5
+
+
+    class Tanistry(SuccessionRule):
+        name = "tanistry"
+        male_first = False
+
+
+    def extend(pools):
+        pools.systems.add(Bell)
+        pools.verdicts.add(Maiming)
+        pools.drives.add(Faith)
+        pools.succession.add(Tanistry)
+"""
+
+
+@pytest.fixture
+def machinery(tmp_path, monkeypatch):
+    (tmp_path / "ext_machinery.py").write_text(textwrap.dedent(MACHINERY), encoding="utf-8")
+    monkeypatch.chdir(tmp_path)
+    yield "ext_machinery"
+    sys.modules.pop("ext_machinery", None)
+
+
+def test_an_extension_adds_a_whole_system_to_every_ruleset(machinery):
+    e = renascita.new_engine(seed=3)
+    e.extend([machinery])
+    assert all(rs.get("beat.bell") for _, rs in e.rulesets)
+    years(e, 3)
+    assert len(of(e, "beat.tolled")) >= 2
+    assert e.check_conservation() == []
+
+
+def test_a_system_of_an_extension_is_not_granted_to_the_rest(machinery):
+    e = renascita.new_engine(seed=3)
+    e.extend([machinery])
+    assert "ids:settlement" not in e.granted_reads and "maimed" in e.granted_writes
+
+
+def test_an_extension_can_add_a_drive(machinery):
+    e = renascita.new_engine(seed=3)
+    e.extend([machinery])
+    years(e, 2)
+    person = next(p for p in e.store.ids("person", "active") if e.store.get(p, "drives"))
+    assert e.store.get(person, "drives")["faith"] == 0.5
+
+
+def test_a_house_can_name_an_extensions_succession_rule(machinery):
+    assert load([machinery]).succession["tanistry"].male_first is False
+    assert "tanistry" not in base().succession
+
+
+def test_two_disguises_for_one_ripple_are_refused(tmp_path, monkeypatch):
+    (tmp_path / "ext_twice.py").write_text(textwrap.dedent("""
+        from renasci.people.life import Illness
+
+
+        class Again(Illness):
+            name = "beat.again"
+
+
+        def extend(pools):
+            pools.disguises.add(Again)
+    """), encoding="utf-8")
+    monkeypatch.chdir(tmp_path)
+    e = renascita.new_engine(seed=3)
+    with pytest.raises(ValueError, match="two disguises"):
+        e.extend(["ext_twice"])
+    sys.modules.pop("ext_twice", None)
+
+
+DISGUISE = """
+    from renasci.core.ripples import Disguise
+
+
+    class Dream(Disguise):
+        name, handles = "beat.dream", "{kind}"
+
+        def apply(self, ctx, ripple):
+            return True
+
+
+    def extend(pools):
+        pools.disguises.add(Dream)
+"""
+
+
+def test_a_disguise_for_no_ripple_is_refused(tmp_path, monkeypatch):
+    (tmp_path / "ext_typo.py").write_text(textwrap.dedent(DISGUISE).format(kind="plnat"), encoding="utf-8")
+    monkeypatch.chdir(tmp_path)
+    with pytest.raises(ValueError, match="not a ripple kind"):
+        renascita.new_engine(seed=3).extend(["ext_typo"])
+    sys.modules.pop("ext_typo", None)
+
+
+def test_a_recipes_ripple_can_rest_on_an_extensions_disguise(tmp_path, monkeypatch):
+    from renasci.cli import main
+
+    (tmp_path / "ext_dream.py").write_text(textwrap.dedent(DISGUISE).format(kind="plant"), encoding="utf-8")
+    monkeypatch.chdir(tmp_path)
+    recipe = run_recipe(tmp_path, "dreamt", extension="ext_dream")
+    with open(recipe, "a", encoding="utf-8") as f:
+        f.write('\n[[ripple]]\nid = "r1"\nkind = "plant"\ndate = "4A 2"\ntarget = "x"\nparams = { claim = { what = "a dream" } }\n')
+    assert main(["run", recipe, "--out", str(tmp_path / "runs")]) == 0
+    sys.modules.pop("ext_dream", None)
+
+
 def test_the_pools_command_lists_every_pool():
     out = subprocess.run([sys.executable, "-X", "utf8", "-m", "renasci.cli", "pools"], capture_output=True, text=True,
                          check=True).stdout

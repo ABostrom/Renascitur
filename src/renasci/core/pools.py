@@ -26,9 +26,10 @@ from pathlib import Path
 from typing import Any
 
 BASE = "base"
+MACHINERY = ("systems", "forcers", "disguises")
 EXTENSION = re.compile(r"[A-Za-z_][A-Za-z0-9_]*(\.[A-Za-z_][A-Za-z0-9_]*)*")
 HOMES = ("renasci.people.actions", "renasci.people.ambitions", "renasci.people.planner", "renasci.marks",
-         "renasci.story.cards")  # (what defines the base pools: see `base`)
+         "renasci.story.cards", "renasci.people.courts", "renasci.people.houses", "renasci.people.drives")  # (what defines the base pools: see `base`)
 
 
 def _name(entry: Any) -> str:
@@ -100,6 +101,10 @@ class Pools(Mapping):
         self._pools[name] = Pool(name, key)
         return self._pools[name]
 
+    def machinery(self) -> dict[str, tuple]:
+        """What extensions add to the rulesets themselves, as arguments to `Ruleset.extended`."""
+        return {n: tuple(self._pools[n].values()) for n in MACHINERY}
+
     def snapshot(self) -> Pools:
         """An open copy of every pool."""
         new = Pools()
@@ -129,6 +134,9 @@ pools = Pools()
 pools.define("event_types").freeze()  # (those extensions add; the engine's own stay with their systems for now)
 pools.define("reactions").freeze()  # (authored beats: see `Reaction`)
 pools.define("links").freeze()  # (authored links in the possible graph: see `analysis.graph.Link`)
+pools.define("systems").freeze()  # (whole new mechanics, joining every ruleset: see `Engine.extend`)
+pools.define("forcers").freeze()
+pools.define("disguises").freeze()
 
 
 @dataclass(frozen=True)

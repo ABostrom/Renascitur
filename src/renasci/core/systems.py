@@ -100,6 +100,11 @@ class Ruleset:
                 raise ValueError(f"ruleset {name!r} has two disguises for {d.handles!r}")
             self._disguise_for[d.handles] = d
 
+    def extended(self, systems=(), forcers=(), disguises=()) -> Ruleset:
+        """This ruleset with more in it. A clash of name or of what's handled is refused, as it would be here."""
+        return Ruleset(self.name, self.version, self.systems + tuple(systems), self.params,
+                       self.forcers + tuple(forcers), self.disguises + tuple(disguises), self.conservation)
+
     def disguise(self, kind: str):
         return self._disguise_for.get(kind)
 

@@ -19,6 +19,7 @@ from `state_deltas`. S7 forms ambitions from them.
 from __future__ import annotations
 
 from renasci.core.events import EventType
+from renasci.core.pools import pools
 from renasci.core.systems import System
 
 UPDATE = EventType("people.drives", 1, roles={"settlement": (1, 1)}, payload={"changed": "int"})
@@ -84,7 +85,10 @@ class Status(Drive):
         return x
 
 
-DRIVES: dict[str, Drive] = {d.name: d for d in (Food(), Safety(), Belonging(), Status())}
+DRIVES = pools.define("drives")
+for _drive in (Food, Safety, Belonging, Status):
+    DRIVES.add(_drive)
+DRIVES.freeze()
 
 
 class Drives(System):
@@ -99,7 +103,7 @@ class Drives(System):
             with ctx.scope(s):
                 fresh = {}
                 for p in ctx.get(s, "residents"):
-                    now = {name: _q(d.level(ctx, p, s)) for name, d in sorted(DRIVES.items())}
+                    now = {name: _q(d.level(ctx, p, s)) for name, d in ctx.pools.drives.items()}
                     if now != (ctx.get(p, "drives") or {}):
                         fresh[p] = now
                 if not fresh:

@@ -163,8 +163,6 @@ class Seize(Ambition):
                        "drives", "traits", "offices", "extinct", "legitimacy", "deposed"})
 
     def _ahead(self, ctx, person):
-        from renasci.people.houses import RULES
-
         house = ctx.get(person, "house")
         if house is None or ctx.get(house, "extinct") is not None:
             return None
@@ -172,7 +170,7 @@ class Seize(Ambition):
         holder = ctx.get(office, "holder")
         if holder is None or holder == person or ctx.status(holder) != "active":
             return None
-        line = RULES[ctx.get(office, "rule")].candidates(ctx, office, holder)
+        line = ctx.pools.succession[ctx.get(office, "rule")].candidates(ctx, office, holder)
         if person not in line:
             return None
         return [holder] + line[:line.index(person)]

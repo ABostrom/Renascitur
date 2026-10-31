@@ -113,14 +113,23 @@ class Engine:
             self._register(t)
 
     def extend(self, names) -> None:
-        """Run with the base pools plus these extensions (#162). Before the first step: they shape history."""
+        """Run with the base pools plus these extensions (#162). Before the first step: they shape history, and
+        before `apply_ripples`, as a ripple may need an extension's disguise."""
         if not names:
             return
         if self.scheduler.now is not None:
             raise ValueError("an engine can't be extended once it has started")
         self.pools = load_pools(names)
         self.extensions = digests(names)
-        entries = [e for pool in self.pools.values() for k, e in pool.items() if pool.sources()[k] != "base"]
+        added = self.pools.machinery()
+        for d in added["disguises"]:
+            if d.handles not in ALL_RIPPLE_KINDS:
+                raise ValueError(f"disguise {d.name!r} handles {d.handles!r}, which is not a ripple kind")
+        self.rulesets = [(d, rs.extended(**added)) for d, rs in self.rulesets]
+        for t in (t for group in added.values() for s in group for t in s.event_types):
+            self._register(t)
+        entries = [e for pool in self.pools.values() for k, e in pool.items()
+                   if pool.sources()[k] != "base" and pool.name not in added]  # (those declare their own)
         self.granted_reads = frozenset().union(*(getattr(e, "reads", ()) for e in entries))
         self.granted_writes = frozenset().union(*(getattr(e, "writes", ()) for e in entries))
         for t in self.pools.event_types.values():
@@ -510,7 +519,8 @@ class Engine:
         `segments` is the run folder's closed-segment count (from `cut`): a replay truncates to it.
         Pending history must be written first, so a checkpoint and its run folder agree.
         """
-        for pool in (self.pools.actions, self.pools.ambitions):  # (behaviour; a data pool's entries are their fields)
+        behaviour = ("actions", "ambitions", "verdicts", "succession", "drives")
+        for pool in (self.pools[n] for n in behaviour if n in self.pools):  # (a data pool's entries are their fields)
             for key, entry in pool.items():
                 if vars(entry):
                     raise ValueError(f"{pool.name} entry {key} keeps instance state {sorted(vars(entry))}; "
@@ -590,7 +600,7 @@ class Engine:
             if r.date >= at:
                 engine.scheduler.push(Activation(r.date, RIPPLE_PRIORITY, "engine", "ripple", "engine",
                                                  {"ripple": r.id}, ()))
-        engine.ruleset = rulesets[engine.ruleset_index][1] if engine.ruleset_index is not None else None
+        engine.ruleset = engine.rulesets[engine.ruleset_index][1] if engine.ruleset_index is not None else None
         engine._date = engine.scheduler.now or Date.from_json(header["date"])  # restored engines are running
         return engine
 
