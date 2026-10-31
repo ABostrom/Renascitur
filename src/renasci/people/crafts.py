@@ -31,13 +31,14 @@ invariant, exact, is initial + produced + traded_in = stock + used + traded_out 
    Owners of objects are kept as notables (S3's LOD spares them). A protected object (S1's protect ripple on
    it) passes to an heir rather than being lost, and survives a sack (a near miss).
 
-This system is the spec's `objects` system: the only writer of an object's fields. A coarse step yields N years
+This system is the spec's `objects` system: the writer of an object's fields, with marks.change. A coarse step yields N years
 and draws "a masterwork in N years" and "found in N years".
 """
 
 from __future__ import annotations
 
 from renasci import ecology
+from renasci.core import stocks
 from renasci.core.events import Cause, EventType
 from renasci.core.systems import System
 from renasci.people import beliefs
@@ -71,10 +72,10 @@ EVENT_TYPES = (YIELD, MADE, GIVEN, INHERITED, LOST, FOUND, DEED, NAMED_T, STOLEN
 READS = frozenset({"ids:settlement", "residents", "region", "born", "job", "skills", "wealth", "ties", "a", "b",
                    "kind", "journey", "possessions", "yield_carry", "stock:*", "goods:*", "job:*",
                    "ids:object", "owner", "status", "fell", "children", "spouse", "place", "lost", "fame", "deeds",
-                   "exploits", "name", "type"}) | beliefs.PERCEIVE_READS
+                   "exploits", "name", "type"}) | beliefs.PERCEIVE_READS | stocks.READS
 WRITES = frozenset({"stock:*", "goods:*", "new:object", "owner", "wealth", "possessions", "yield_carry",
                     "place", "lost", "fame", "deeds", "exploits", "name", "status", "destroyed"}) \
-    | beliefs.PERCEIVE_WRITES
+    | beliefs.PERCEIVE_WRITES | stocks.WRITES
 FRIENDLY = ("friend", "mentor", "lover")
 
 
@@ -352,6 +353,7 @@ class Crafts(System):
                          causes=(Cause("event", x["event"]),))
                 deeds.append(x["event"])
                 fame = round(min(1.0, fame + DEED_FAME), 3)
+                stocks.add(ctx, o, "blood", 1.0)
             ctx.set(o, "deeds", deeds)
             ctx.set(o, "fame", fame)
             if fame >= NAMED and not ctx.get(o, "name"):

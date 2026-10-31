@@ -106,7 +106,7 @@ def test_promotion_then_demotion_restores_the_masses_exactly():
 
     class RoundTrip(System):
         name, cadence = "test.roundtrip", "yearly"
-        reads = frozenset(ruleset().systems[0].reads) | frozenset(BAND_COLUMNS) | {"residents", "genome", "born",
+        reads = frozenset().union(*(s.reads for s in ruleset().systems)) | frozenset(BAND_COLUMNS) | {"residents", "genome", "born",
                                                                                     "sex", "race", "status",
                                                                                     "ties", "a", "b", "kind"}
         writes = frozenset({"new:person", "residents", "status", "ties", "ended"}) | frozenset(BAND_COLUMNS)

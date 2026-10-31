@@ -21,7 +21,7 @@ from renasci.people.beliefs import Gossip
 
 def people_ruleset(name: str, scenario: dict, version: int = 1) -> Ruleset:
     params = world_params(scenario["races"], scenario["catalogue"], aggregates=True,
-                          **{k: v for k, v in scenario.get("params", {}).items() if k != "aggregates"})
+                          **{k: v for k, v in scenario.get("params", {}).items() if k not in ("aggregates", "marks")})
     systems = (Population(), Births(), Life(), Marriage(), Houses(), Lod(), Ties(), Drives(), Ambitions(), Schemes(),
                Minds())
     if scenario.get("params", {}).get("crafts"):  # jobs, skills and wealth (S9 §2, #123)
@@ -67,6 +67,10 @@ def people_ruleset(name: str, scenario: dict, version: int = 1) -> Ruleset:
             from renasci.campaigns import Campaigns
 
             systems += (Campaigns(),)
+    if scenario.get("params", {}).get("marks") is not False:  # (what things become: #163)
+        from renasci.marks import Marks
+
+        systems += (Marks(),)
     disguises = (Illness(),)
     if scenario.get("geography"):  # a structural ripple changes the map (#114)
         from renasci import geo

@@ -209,6 +209,7 @@ def die(ctx, person: str, settlement: str, cause: str, *, killer: str | None = N
         miss = ctx.emit("people.near_miss", {"survivor": (person,)}, purpose="near_miss", actor=person,
                         place=settlement, causes=causes, payload={"would_have": cause})
         minds.wound(ctx, person, "terror", miss.id)
+        stocks.add(ctx, person, "dread", 1.0)
         exploit(ctx, person, "survived", miss.id, settlement)
         return False
     death = ctx.emit("people.death", {"deceased": (person,), "killer": (killer,) if killer else ()}, purpose="death",
