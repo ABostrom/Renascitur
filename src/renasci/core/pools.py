@@ -5,16 +5,28 @@ sorted key order, so the order things were registered in can never reach a draw.
 refused, and a frozen pool refuses additions, so a class defined later (in a test) never leaks into a run.
 
 `Pools` is the overarching registry: every pool by name, so a new kind of content is one `define` and needs no
-new mechanism. `pools` is the base set, which modules fill as they load and then freeze. `snapshot` gives an
-open copy of everything, the seam an extension registers into without touching the base.
+new mechanism. `pools` is the base set, which modules fill as they load and then freeze.
+
+**Extensions.** An extension is a module with `extend(pools)`, named by a recipe (`extensions = ["my_beats"]`).
+`load` calls it with an open copy of the base and freezes the result, which is that engine's own set (`ctx.pools`).
+The base never changes, so one engine's extensions can't reach another, and nothing is scanned from a folder, so
+a file nobody named can't change a run.
 """
 
 from __future__ import annotations
 
+import hashlib
+import importlib
+import os
+import re
+import sys
 from collections.abc import Callable, Iterator, Mapping
+from pathlib import Path
 from typing import Any
 
 BASE = "base"
+EXTENSION = re.compile(r"[A-Za-z_][A-Za-z0-9_]*(\.[A-Za-z_][A-Za-z0-9_]*)*")
+HOMES = ("renasci.people.actions", "renasci.people.ambitions")  # (what defines the base pools: see `base`)
 
 
 def _name(entry: Any) -> str:
@@ -50,6 +62,10 @@ class Pool(Mapping):
         new._entries, new._sources = dict(self._entries), dict(self._sources)
         return new
 
+    def claim(self, keys, source: str) -> None:
+        """Record where these entries came from."""
+        self._sources.update(dict.fromkeys(keys, source))
+
     def sources(self) -> dict[str, str]:
         """Where each entry came from, by key."""
         return {k: self._sources[k] for k in self}
@@ -77,6 +93,8 @@ class Pools(Mapping):
     def define(self, name: str, key: Callable[[Any], str] = _name) -> Pool:
         if name in self._pools:
             raise ValueError(f"pool {name!r} is already defined")
+        if hasattr(type(self), name):
+            raise ValueError(f"a pool can't be named {name!r}: it would hide `Pools.{name}`")
         self._pools[name] = Pool(name, key)
         return self._pools[name]
 
@@ -106,3 +124,60 @@ class Pools(Mapping):
 
 
 pools = Pools()
+pools.define("event_types").freeze()  # (those extensions add; the engine's own stay with their systems for now)
+
+
+def base() -> Pools:
+    """The base set, whatever has been imported so far (`pools` only holds what has)."""
+    for home in HOMES:
+        importlib.import_module(home)
+    return pools
+
+
+def load(names=()) -> Pools:
+    """The base plus the named extensions, frozen: one engine's own set. Names are imported from the working
+    directory as well as the usual path."""
+    found = base().snapshot()
+    for name in names:
+        before = {n: set(found[n]) for n in found}
+        _module(name).extend(found)
+        for n in found:
+            found[n].claim(set(found[n]) - before.get(n, set()), name)
+    for n in found:
+        found[n].freeze()
+    return found
+
+
+def _module(name: str):
+    if not EXTENSION.fullmatch(name):
+        raise ValueError(f"an extension is a module name, got {name!r}")
+    here = os.getcwd()
+    sys.path.insert(0, here)
+    try:
+        module = importlib.import_module(name)
+    except ModuleNotFoundError as e:
+        raise ValueError(f"no extension named {name!r}: {e}") from None
+    finally:
+        sys.path.remove(here)
+    if not callable(getattr(module, "extend", None)):
+        raise ValueError(f"extension {name!r} has no `extend(pools)`")
+    return module
+
+
+def source_digest(name: str) -> str:
+    """A digest of an extension's source, so an edited extension is a different recipe. It covers what the
+    extension could import from beside itself: a package's whole tree, or a lone module's folder. That can flag an
+    unrelated file in that folder; it can't miss a helper."""
+    file = Path(_module(name).__file__)
+    folder = file.parent
+    files = folder.rglob("*.py") if file.name == "__init__.py" else folder.glob("*.py")
+    h = hashlib.sha256()
+    for path in sorted(files, key=lambda p: p.relative_to(folder).as_posix()):
+        h.update(path.relative_to(folder).as_posix().encode())
+        h.update(path.read_bytes().replace(b"\r\n", b"\n"))
+    return h.hexdigest()[:16]
+
+
+def digests(names) -> list[list[str]]:
+    """[[name, source digest], ...]: what a recipe and a manifest record of the extensions."""
+    return [[n, source_digest(n)] for n in names]

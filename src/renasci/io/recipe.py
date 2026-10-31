@@ -30,10 +30,11 @@ from pathlib import Path
 
 from renasci import __version__
 from renasci.core.calendar import Date
+from renasci.core.pools import EXTENSION
 from renasci.core.ripples import Ripple
 from renasci.worlds import get_world
 
-RUN_KEYS = {"name", "engine", "seed", "world", "end", "checkpoint_every_years", "full_reads"}
+RUN_KEYS = {"name", "engine", "seed", "world", "end", "checkpoint_every_years", "full_reads", "extensions"}
 # A run's name is its folder's name: one plain name, never a path, and nothing Windows treats specially.
 RUN_NAME = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,63}")
 RESERVED = re.compile(r"(con|prn|aux|nul|com[0-9]|lpt[0-9])(\..*)?", re.IGNORECASE)
@@ -62,6 +63,7 @@ class Recipe:
     full_reads: bool = False  # keep every read row (analysis runs); otherwise one digest per scope
     vault: dict | None = None  # {"path": ...}: cast the vault's canon into the run (S2 §7)
     reshuffles: tuple = ()  # ((from: Date, salt), ...): re-roll everything from the start of `from`'s quarter
+    extensions: tuple = ()  # the modules this run's pools are extended by (#162)
 
     def rng_reshuffles(self, calendar) -> tuple:
         from renasci.core.rng import Reshuffle
@@ -75,7 +77,7 @@ def parse_recipe(raw: dict) -> Recipe:
         raise ValueError(f"unknown recipe sections: {sorted(unknown)}")
     run = raw.get("run", {})
     if set(run) - RUN_KEYS or not {"name", "engine", "seed", "world", "end"} <= set(run):
-        raise ValueError(f"[run] needs {sorted(RUN_KEYS - {'checkpoint_every_years', 'full_reads'})} and allows only "
+        raise ValueError(f"[run] needs {sorted(RUN_KEYS - {'checkpoint_every_years', 'full_reads', 'extensions'})} and allows only "
                          f"{sorted(RUN_KEYS)}; got {sorted(run)}")
     check_run_name(run["name"])
     if run["engine"] != __version__:
@@ -112,13 +114,18 @@ def parse_recipe(raw: dict) -> Recipe:
     full_reads = run.get("full_reads", False)
     if type(full_reads) is not bool:
         raise ValueError("full_reads must be true or false")
+    extensions = run.get("extensions", [])
+    if not isinstance(extensions, list) or not all(isinstance(x, str) and EXTENSION.fullmatch(x) for x in extensions) \
+            or len(set(extensions)) != len(extensions):
+        raise ValueError(f"extensions must be a list of distinct module names, got {extensions!r}")
     vault = raw.get("vault")
     if vault is not None and (not isinstance(vault, dict) or set(vault) != VAULT_KEYS or not isinstance(vault["path"], str)):
         raise ValueError('[vault] is path = "<the vault folder>"')
     if vault is not None and world.scenario is None:
         raise ValueError(f"the {world.name} world has no people to cast canon into")
     return Recipe(run["name"], run["seed"], run["world"], end, every, dict(raw.get("world", {})),
-                  tuple(ripples), raw, full_reads, dict(vault) if vault else None, tuple(reshuffles))
+                  tuple(ripples), raw, full_reads, dict(vault) if vault else None, tuple(reshuffles),
+                  tuple(extensions))
 
 
 def load_recipe(path) -> Recipe:

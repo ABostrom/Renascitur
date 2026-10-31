@@ -152,7 +152,7 @@ def plan_for(ctx, owner: str, goals, scheme: str | None = None) -> Plan | None:
         return action.feasible(ctx, owner, target, scheme)
 
     depth = 2 + round(3 * trait(ctx, owner, "wits"))
-    return plan(goals, depth=depth, fact=fact, odds=odds, candidates=candidates, possible=possible)
+    return plan(goals, actions=ctx.pools.actions, depth=depth, fact=fact, odds=odds, candidates=candidates, possible=possible)
 
 
 def holds(ctx, owner: str, tag: str, scheme: str | None = None) -> bool:

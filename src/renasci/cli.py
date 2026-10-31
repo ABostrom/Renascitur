@@ -35,6 +35,7 @@ from renasci.analysis.divergence import analyse
 from renasci.analysis.latch import latch_points
 from renasci.analysis.stories import period, stories
 from renasci.core.calendar import Date
+from renasci.core.pools import digests, load as load_pools
 from renasci.io.checkpoint import load_checkpoint, save_checkpoint
 from renasci.io.recipe import load_recipe, parse_recipe
 from renasci.io.runfolder import TABLES, RunFolder, cut, flush
@@ -125,11 +126,13 @@ def _run(recipe, out: Path, meta: dict | None = None, canon_doc: dict | None = N
         extra = {"pins": [Pin.from_json(p) for p in canon_doc["pins"]], "canon": canon_doc["canon"],
                  "end": recipe.end}  # pins past the run's end are out of scope, not guarded
     engine = world.new_engine(recipe.seed, ripples=recipe.ripples, **extra, **recipe.params)
+    engine.extend(recipe.extensions)
     if recipe.reshuffles:
         engine.reshuffle(recipe.rng_reshuffles(world.calendar))
     engine.full_reads = recipe.full_reads
     folder = RunFolder.create(out / recipe.name, {"recipe": recipe.raw, "complete": False,
-                                                  "calendar": world.calendar.to_json(), **(meta or {})})
+                                                  "calendar": world.calendar.to_json(),
+                                                  **_built_with(engine), **(meta or {})})
     if canon_doc is not None:
         _write_canon(folder.path, canon_doc)
     _write_geography(folder.path, world, recipe.params)
@@ -141,6 +144,11 @@ def _run(recipe, out: Path, meta: dict | None = None, canon_doc: dict | None = N
 def cmd_replay(args) -> int:
     _replay(Path(args.run), load_recipe(args.recipe), Path(args.out), args.from_)
     return 0
+
+
+def _built_with(engine) -> dict:
+    """What a manifest records of a run's pools."""
+    return {"pools": (engine.pools if engine.extensions else load_pools()).describe(), "extensions": engine.extensions}
 
 
 def _replay(run: Path, new, out: Path, from_: str | None = None, rerun: bool = False, meta: dict | None = None) -> Path:
@@ -157,6 +165,8 @@ def _replay(run: Path, new, out: Path, from_: str | None = None, rerun: bool = F
     if without_name_and_ripples(old.raw) != without_name_and_ripples(new.raw):
         raise ValueError("a replay may only change ripples, reshuffles, the run name and full_reads; "
                          "for anything else, `renasci run`")
+    if base.manifest["meta"].get("extensions", []) != digests(new.extensions):
+        raise ValueError("an extension's source has changed since this run; for that, `renasci run`")
     if from_:
         target = world.calendar.parse(from_)
     else:
@@ -194,10 +204,11 @@ def _replay(run: Path, new, out: Path, from_: str | None = None, rerun: bool = F
                 print(f"note: the vault has changed since {base.path.name} was cast; the replay uses the canon it was "
                       "cast from (canon.json)")
     engine = world.restore(cp, new.seed, ripples=new.ripples, pins=pins,
-                           reshuffles=new.rng_reshuffles(world.calendar), **new.params)
+                           reshuffles=new.rng_reshuffles(world.calendar), extensions=new.extensions, **new.params)
     engine.full_reads = new.full_reads
     folder = RunFolder.fork(base.path, out / new.name, keep=mark["segment"] + 1,
                             meta={"recipe": new.raw, "complete": False, "calendar": world.calendar.to_json(),
+                                  **_built_with(engine),
                                   "replayed_from": {"run": base.path.name, "at": mark["before"]}, **(meta or {})})
     if canon_doc is not None:
         _write_canon(folder.path, canon_doc)
@@ -890,9 +901,16 @@ def cmd_observe(args) -> int:
     return 0
 
 
+def cmd_pools(args) -> int:
+    print(json.dumps(load_pools(args.extensions).describe(), indent=1))
+    return 0
+
+
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(prog="renasci", description="The Renascitur History Engine")
     sub = parser.add_subparsers(dest="command", required=True)
+    p = sub.add_parser("pools", help="list every pool's entries and where each came from")
+    p.add_argument("extensions", nargs="*", help="extensions to include")
     p = sub.add_parser("run", help="run a recipe into a run folder")
     p.add_argument("recipe")
     p.add_argument("--out", default="runs")
@@ -1040,7 +1058,7 @@ def main(argv=None) -> int:
     p.add_argument("--out", default="runs/_bench")
     args = parser.parse_args(argv)
     try:
-        commands = {"run": cmd_run, "replay": cmd_replay, "diff": cmd_diff, "inspect": cmd_inspect, "bench": cmd_bench, "latch": cmd_latch, "stories": cmd_stories, "claims": cmd_claims, "pack": cmd_pack, "chronicle": cmd_chronicle, "check-prose": cmd_check_prose, "brief": cmd_brief, "mcp": cmd_mcp, "ripple": cmd_ripple, "map": cmd_map, "vault": cmd_vault,
+        commands = {"pools": cmd_pools, "run": cmd_run, "replay": cmd_replay, "diff": cmd_diff, "inspect": cmd_inspect, "bench": cmd_bench, "latch": cmd_latch, "stories": cmd_stories, "claims": cmd_claims, "pack": cmd_pack, "chronicle": cmd_chronicle, "check-prose": cmd_check_prose, "brief": cmd_brief, "mcp": cmd_mcp, "ripple": cmd_ripple, "map": cmd_map, "vault": cmd_vault,
                     "observe": cmd_observe}
         return commands[args.command](args)
     except (ValueError, FileExistsError, FileNotFoundError) as err:

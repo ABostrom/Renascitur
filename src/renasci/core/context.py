@@ -62,6 +62,7 @@ class Ctx:
         self.activation = activation
         self.today = activation.date
         self.calendar = engine.calendar
+        self.pools = engine.pools  # (this run's own: the base plus its extensions, #162)
         self.params = json.loads(canonical(engine.ruleset.params))  # a private copy
         self._reads: dict[tuple[str, str], None] = {}  # unscoped: inform everything this activation does
         self._scope: str | None = None
@@ -78,11 +79,11 @@ class Ctx:
     # ------------------------------------------------------------ declarations
 
     def _may_read(self, name: str) -> None:
-        if self._engine.strict and not declared(name, self.system.reads):
+        if self._engine.strict and not declared(name, self.system.reads) and not declared(name, self._engine.granted_reads):
             raise UndeclaredAccess(f"{self.system.name} read {name!r} without declaring it")
 
     def _may_write(self, name: str) -> str:
-        if not declared(name, self.system.writes):
+        if not declared(name, self.system.writes) and not declared(name, self._engine.granted_writes):
             raise UndeclaredAccess(f"{self.system.name} wrote {name!r} without declaring it")
         if self._event is None:
             raise ValueError(f"{self.system.name} wrote {name!r} before emitting an event to explain it")
@@ -250,7 +251,8 @@ class Ctx:
         `{"child": [("person", {"village": v})]}`. Their ids are causal, `entity_id(event, role, i)`,
         and they are created by this event (each kind needs `new:<kind>` in `writes`).
         """
-        if self._engine.strict and type not in {t.name for t in self.system.event_types}:
+        if self._engine.strict and type not in {t.name for t in self.system.event_types} \
+                and type not in self._engine.pools.event_types:
             raise UndeclaredAccess(f"{self.system.name} emitted {type!r} without declaring it")
         key = (actor, purpose)
         occurrence = self._occurrences.get(key, 0)
@@ -265,7 +267,8 @@ class Ctx:
                 raise ValueError(f"role {role!r} is both given and created")
             ids = []
             for i, (kind, fields) in enumerate(specs):
-                if f"new:{kind}" not in self.system.writes:
+                if not declared(f"new:{kind}", self.system.writes) \
+                        and not declared(f"new:{kind}", self._engine.granted_writes):
                     raise UndeclaredAccess(f"{self.system.name} created a {kind!r} without declaring new:{kind}")
                 ids.append(entity_id(eid, role, i))
                 births.append((kind, ids[-1], fields))
@@ -298,7 +301,7 @@ class Ctx:
 
     def _check_writes(self, *names: str) -> None:
         for name in names:
-            if not declared(name, self.system.writes):
+            if not declared(name, self.system.writes) and not declared(name, self._engine.granted_writes):
                 raise UndeclaredAccess(f"{self.system.name} wrote {name!r} without declaring it")
 
     def _take(self, aggregate: str, column: str | None, columns: dict | None) -> dict[str, int]:

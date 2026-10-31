@@ -17,6 +17,7 @@ from renasci.core.calendar import Calendar, Date
 from renasci.core.canon import canonical, digest
 from renasci.core.determinism import check_environment, versions
 from renasci.core.context import Ctx, UndeclaredAccess
+from renasci.core.pools import digests, load as load_pools, pools as base_pools
 from renasci.core.events import Cause, CauseIndex, Event, EventType, Registry, Source
 from renasci.core.ids import CAST_STARTS, event_id
 from renasci.core.lod import EVENT_TYPES as LOD_TYPES
@@ -74,6 +75,10 @@ class Engine:
         self.full_reads = True
         self.hinges: list[dict] = []  # close calls with stakes: the source data for latch points
         self.hinge_margin = float(hinge_margin)  # a draw with stakes is a hinge only if it was this close
+        self.pools = base_pools  # this run's pools; `extend` swaps in its own set (#162)
+        self.extensions: list = []  # [[name, source digest], ...]
+        self.granted_reads: frozenset = frozenset()  # what extensions' entries declare they read and write
+        self.granted_writes: frozenset = frozenset()
         self.odds_hooks: list = []  # (ctx, p, purpose, owner) -> (p, cause or None): ripples, director
         self.dropped: list[str] = []
         self.ruleset: Ruleset | None = None
@@ -103,6 +108,20 @@ class Engine:
     def register_event_types(self, types) -> None:
         """Register event types for systems added after the engine was built (tools and tests)."""
         for t in types:
+            self._register(t)
+
+    def extend(self, names) -> None:
+        """Run with the base pools plus these extensions (#162). Before the first step: they shape history."""
+        if not names:
+            return
+        if self.scheduler.now is not None:
+            raise ValueError("an engine can't be extended once it has started")
+        self.pools = load_pools(names)
+        self.extensions = digests(names)
+        entries = [e for pool in self.pools.values() for k, e in pool.items() if pool.sources()[k] != "base"]
+        self.granted_reads = frozenset().union(*(getattr(e, "reads", ()) for e in entries))
+        self.granted_writes = frozenset().union(*(getattr(e, "writes", ()) for e in entries))
+        for t in self.pools.event_types.values():
             self._register(t)
 
     def _register(self, t: EventType) -> None:
@@ -453,6 +472,7 @@ class Engine:
 
         cal = self.calendar
         return {
+            **({"extensions": self.extensions} if self.extensions else {}),
             "engine": __version__, "versions": versions(), "seed": self.seed, "strict": self.strict, "hinge_margin": self.hinge_margin,
             "calendar": {"ages": [[a.index, a.abbrev, a.name, a.last_year] for a in cal.ages],
                          "months": cal.months, "seasons": cal.seasons},
@@ -480,6 +500,11 @@ class Engine:
         `segments` is the run folder's closed-segment count (from `cut`): a replay truncates to it.
         Pending history must be written first, so a checkpoint and its run folder agree.
         """
+        for pool in (self.pools.actions, self.pools.ambitions):  # (behaviour; a data pool's entries are their fields)
+            for key, entry in pool.items():
+                if vars(entry):
+                    raise ValueError(f"{pool.name} entry {key} keeps instance state {sorted(vars(entry))}; "
+                                     "entries must be stateless, with all state in the store")
         if any(self.pending().values()):
             raise ValueError("flush pending history to the run folder before checkpointing")
         if self.odds_hooks:
@@ -504,7 +529,8 @@ class Engine:
     @classmethod
     def restore(cls, checkpoint: dict, calendar: Calendar, rulesets: list[tuple[Date, Ruleset]],
                 seed: int, strict: bool = True, reshuffles: tuple[Reshuffle, ...] = (),
-                hinge_margin: float = 0.05, pins=(), ripples=(), resolution: ResolutionPolicy | None = None) -> Engine:
+                hinge_margin: float = 0.05, pins=(), ripples=(), resolution: ResolutionPolicy | None = None,
+                extensions=()) -> Engine:
         """Rebuild an engine from a checkpoint and the recipe (including its pins) that produced it.
 
         Ripples dated before the checkpoint must be exactly the original run's. Ripples on or after
@@ -516,6 +542,7 @@ class Engine:
                              "engine changed, replay from scenario")
         engine = cls(calendar, seed, rulesets, strict=strict, reshuffles=reshuffles, hinge_margin=hinge_margin,
                      resolution=resolution)
+        engine.extend(extensions)
         engine.apply_pins(pins, cast=False)
         recipe = engine.recipe()
         if digest(recipe, size=16) != header["recipe_hash"]:
