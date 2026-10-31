@@ -46,6 +46,11 @@ and an outbreak cites them. In a town's `disease`, `{id: {sick, immune, event}}`
 town's sick share is its `ill`: the sick don't work or bury, so plague starves itself of hands. An outbreak ends when
 nobody is sick. A town remembers: its `immunity`, `{id: [immune, tick]}`, fades by `wane` a season and is reckoned
 when the next outbreak comes. A coarse step has no seasons, so a town it strikes has one wave and it's over.
+
+A sick town sends it on: down each open route, and with each traveller on the road, a draw at its sick share (`ROADS`)
+adds to the destination's `carried:<id>` stock. Each one brought has a chance of taking hold (`TAKES`), once, at the
+destination's next step, and adds nothing to a town already sick: an
+outbreak cites what carried it, so a plague's path can be walked town by town. Travel knows nothing of any of this.
 """
 
 from __future__ import annotations
@@ -70,10 +75,12 @@ DISEASES: list = [{"id": "flux", "name": "the flux", "beta": 1.4, "lethality": 0
                    "tires": 0.8, "base": 0.0005, "filth": 0.5}]  # (a draft: spread a season, who dies of it, seasons
 # sick, the share of the immune who lose it a season, how its spread weakens each season as people learn to shun the
 # sick, a town's odds of an outbreak, and how much the dead lying per head add)
-MOST_LIKELY = 0.5  # (a town's odds of an outbreak in a season never pass this)
+MOST_LIKELY = 0.5  # (a town's odds of breeding an outbreak in a season never pass this; arrivals add their own)
 SEED = 0.005  # (the share of a town first sick)
 FEVERED = 1.0  # (a town short of all its food catches it this much more readily)
 WAVE = 0.4  # (the share a coarse step's outbreak strikes)
+ROADS = 2.0  # (the odds of it going down a road, or with a traveller, per share of the town sick)
+TAKES = 0.3  # (the odds that one who brings it to a town starts an outbreak there)
 ABLE = 0.6  # (the share of a town's people fit to work)
 SPARE = 0.5  # (at most this share of the able are taken from their work to bury the dead)
 WEAK = 0.5  # (how much of its strength a town short of all its food loses)
@@ -165,6 +172,11 @@ def outbreak_odds(spec: dict, dead: float, people: int) -> float:
     return min(MOST_LIKELY, float(spec["base"]) + float(spec["filth"]) * filth)
 
 
+def arrival_odds(carried: float) -> float:
+    """A town's chance of an outbreak from those who have brought it since its last step (pure)."""
+    return 1.0 - (1.0 - TAKES) ** carried
+
+
 def catching(beta: float, sick: int, people: int, hunger: float) -> float:
     """A susceptible person's chance of catching it this season (pure)."""
     if not sick or not people:
@@ -194,7 +206,7 @@ def disease_system():
         priority = 2  # (after burial: what's still lying is what breeds it)
         reads = DISEASE_READS | life.DIE_READS
         writes = DISEASE_WRITES | life.DIE_WRITES
-        event_types = (OUTBREAK, SEASON_SICK, ENDED_SICK, *life.DIE_EVENTS)
+        event_types = (OUTBREAK, SEASON_SICK, ENDED_SICK, PASSED, *life.DIE_EVENTS)
 
         def handle(self, ctx, activation):
             houses.handle_succession(ctx, activation)  # (the follow-up `life.die` schedules)
@@ -221,7 +233,9 @@ def disease_system():
                         elif self.strikes(ctx, s, spec, people, seasons):
                             ev = ctx.emit("disease.outbreak", {"settlement": (s,)}, purpose=f"outbreak:{d}", actor=s,
                                           place=s, payload={"disease": d, "name": spec["name"]},
-                                          causes=stocks.because(ctx, s, "corpses", 3))
+                                          causes=(*stocks.because(ctx, s, f"carried:{d}", 3),
+                                                  *stocks.because(ctx, s, "corpses", 3)))
+                            stocks.fade(ctx, s, f"carried:{d}", 1.0)
                             first = min(max(1, int(people * SEED)), people)
                             held, at = (ctx.get(s, "immunity") or {}).get(d, (0, 0))
                             kept = min(remembered(int(held), float(spec["wane"]), tick(ctx) - int(at)), people - first)
@@ -229,6 +243,10 @@ def disease_system():
                             ctx.set(s, "disease", dict(state))
                             if seasons > 1:
                                 self.wave(ctx, s, spec, state, people, ev.id)
+                        elif stocks.level(ctx, s, f"carried:{d}"):  # (it came, and didn't take)
+                            ctx.emit("disease.passed", {"settlement": (s,)}, purpose=f"passed:{d}", actor=s, place=s,
+                                     payload={"disease": d}, causes=stocks.because(ctx, s, f"carried:{d}", 3))
+                            stocks.fade(ctx, s, f"carried:{d}", 1.0)
                     people = population.masses(ctx, s)
                     ill = round(min(1.0, sum(v["sick"] for v in state.values()) / people), 6) if people else 0.0
                     if ill != float(ctx.get(s, "ill") or 0.0) and ctx.current_event:
@@ -238,7 +256,21 @@ def disease_system():
             if people <= 0:
                 return False
             p = outbreak_odds(spec, stocks.level(ctx, s, "corpses"), people)
-            return ctx.chance(1.0 - (1.0 - p) ** seasons, f"outbreak:{spec['id']}", owner=s)
+            brought = arrival_odds(stocks.level(ctx, s, f"carried:{spec['id']}"))
+            return ctx.chance(1.0 - (1.0 - p) ** seasons * (1.0 - brought), f"outbreak:{spec['id']}", owner=s)
+
+        def onward(self, ctx, s, spec, sick, people) -> None:
+            """Who it goes with: the roads out, and those setting out (under this season's event)."""
+            d, towns = spec["id"], set(ctx.ids("settlement"))
+            ways = []
+            for r in ctx.ids("route"):
+                ends = ctx.get(r, "ends") or []
+                if s in ends and ctx.get(r, "open") is not False:
+                    ways += [e for e in ends if e != s and e in towns]
+            ways += [ctx.get(p, "journey")["to"] for p in sorted(ctx.get(s, "residents") or []) if ctx.get(p, "journey")]
+            for to in sorted(ways):
+                if ctx.chance(min(1.0, ROADS * sick / people), f"carry:{d}:{to}", owner=s):
+                    stocks.add(ctx, to, f"carried:{d}", 1.0)
 
         def wave(self, ctx, s, spec, state, people, event) -> None:
             changes, died = population.kill(ctx, s, [WAVE * float(spec["lethality"])] * BANDS, f"wave:{spec['id']}")
@@ -267,12 +299,15 @@ def disease_system():
             ctx.emit("disease.season", {"settlement": (s,)}, purpose=f"sick:{d}", actor=s, place=s,
                      payload={"disease": d, "sick": sick + new - out, "new": new, "died": died, "people": people},
                      causes=(Cause("event", now["event"]),))
+            stocks.fade(ctx, s, f"carried:{d}", 1.0)  # (it's here already: what's brought adds nothing)
             if died:
                 ctx.write_columns(s, changes)
                 population.fell(ctx, s, died)
             left = people - died
             state[d] = {**now, "age": age + 1, "sick": max(0, min(sick + new - out, left)),
                         "immune": max(0, min(immune + out - died - lost, left)), "event": now["event"]}
+            if people:
+                self.onward(ctx, s, spec, sick, people)
             over = not state[d]["sick"]
             if over:
                 self.ended(ctx, s, state, d)
@@ -519,7 +554,8 @@ OUTBREAK = EventType("disease.outbreak", 1, roles={"settlement": (1, 1)}, payloa
 SEASON_SICK = EventType("disease.season", 1, roles={"settlement": (1, 1)},
                         payload={"disease": "str", "sick": "int", "new": "int", "died": "int", "people": "int"})
 ENDED_SICK = EventType("disease.ended", 1, roles={"settlement": (1, 1)}, payload={"disease": "str"})
-DISEASE_READS = stocks.READS | frozenset({"ids:settlement", "residents", "race", "hunger", "disease", "ill", "journey", "immunity",
+PASSED = EventType("disease.passed", 1, roles={"settlement": (1, 1)}, payload={"disease": "str"})
+DISEASE_READS = stocks.READS | frozenset({"ids:settlement", "ids:route", "ends", "open", "residents", "race", "hunger", "disease", "ill", "journey", "immunity",
                                           "pop:*", "allele:*", "flow:*"})
 DISEASE_WRITES = stocks.WRITES | frozenset({"disease", "ill", "immunity", "pop:*", "allele:*", "flow:*"})
 BEGAN = EventType("famine.began", 1, roles={"settlement": (1, 1)}, payload={"short": "float"})
