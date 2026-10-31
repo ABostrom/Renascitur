@@ -21,6 +21,8 @@ from renasci.core.scheduler import CADENCES
 
 
 class System:
+    feeds: tuple = ()  # (the stocks it moves and uses, by name: `level:*` can't say, and `renasci graph` needs to)
+    uses: tuple = ()
     name: str = ""
     cadence: str = "on_demand"
     priority: int = 0

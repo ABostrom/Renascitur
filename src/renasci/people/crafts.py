@@ -175,6 +175,7 @@ def place_name(ctx, place: str | None) -> str:
 
 
 class Crafts(System):
+    feeds = ("blood",)
     name, cadence = "people.crafts", "yearly"
     priority = 5  # (after people.work: this year's workers and skills)
     reads, writes, event_types = READS, WRITES, EVENT_TYPES

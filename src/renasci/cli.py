@@ -901,6 +901,43 @@ def cmd_observe(args) -> int:
     return 0
 
 
+def cmd_graph(args) -> int:
+    from renasci import ecology
+    from renasci.analysis import graph
+
+    if bool(args.from_) != bool(args.to):
+        raise ValueError("a route needs both --from and --to")
+    world = get_world(args.world)
+    wants = {k: True for k, on in (("crafts", args.crafts or args.ecology), ("polities", args.polities),
+                                   ("beliefs", args.beliefs)) if on}
+    if wants and (world.scenario is None or args.world != "fourth_age"):
+        raise ValueError(f"--crafts, --ecology, --polities and --beliefs are for the fourth_age world, not {args.world}")
+    scenario = world.scenario(**wants) if world.scenario else None
+    if args.ecology:
+        scenario["params"]["ecology"] = {**ecology.DEFAULT, "famine": {}}
+    if args.polities:
+        scenario["params"]["campaigns"] = True
+    rulesets = world.rulesets(scenario=scenario) if scenario is not None else world.rulesets()
+    pools = load_pools(args.extensions)
+    edges = graph.build([rs for _, rs in rulesets], pools, args.all)
+    if args.check:
+        print(json.dumps(graph.check(edges, set(pools.goals)), indent=1))
+    if args.run:
+        rows = RunFolder.open(args.run).read("events")
+        print(json.dumps(graph.overlay(rows, edges), indent=1))
+    if args.from_ and args.to:
+        find = graph.emergent if args.emergent else graph.route
+        known = {e.a for e in edges} | {e.b for e in edges}
+        for name in (graph.node(args.from_), graph.node(args.to)):
+            if name not in known:
+                raise ValueError(f"{name} isn't in this graph")
+        path = find(edges, graph.node(args.from_), graph.node(args.to))
+        print(graph.text(path) if path else f"no route from {args.from_} to {args.to}")
+    if not (args.check or args.run or (args.from_ and args.to)):
+        print(json.dumps([e.__dict__ for e in edges], indent=1))
+    return 0
+
+
 def cmd_pools(args) -> int:
     print(json.dumps(load_pools(args.extensions).describe(), indent=1))
     return 0
@@ -909,6 +946,19 @@ def cmd_pools(args) -> int:
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(prog="renasci", description="The Renascitur History Engine")
     sub = parser.add_subparsers(dest="command", required=True)
+    p = sub.add_parser("graph", help="what can lead to what: routes, checks, and what a run did (analysis.graph)")
+    p.add_argument("--world", default="fourth_age")
+    p.add_argument("--from", dest="from_", help="a node, such as system:ecology.famine or a bare event type")
+    p.add_argument("--to")
+    p.add_argument("--emergent", action="store_true", help="only routes nothing authored")
+    p.add_argument("--check", action="store_true", help="goals nothing achieves, links with nothing behind them")
+    p.add_argument("--run", help="a run folder: how often each cause fired, and links that never did")
+    p.add_argument("--all", action="store_true", help="include the fields nearly everything touches")
+    p.add_argument("--crafts", action="store_true", help="with the crafts catalogue")
+    p.add_argument("--ecology", action="store_true", help="with the draft ecology (and crafts)")
+    p.add_argument("--polities", action="store_true", help="with polities and campaigns")
+    p.add_argument("--beliefs", action="store_true", help="with beliefs")
+    p.add_argument("--extensions", nargs="*", default=[], help="extensions to include")
     p = sub.add_parser("pools", help="list every pool's entries and where each came from")
     p.add_argument("extensions", nargs="*", help="extensions to include")
     p = sub.add_parser("run", help="run a recipe into a run folder")
@@ -1058,7 +1108,7 @@ def main(argv=None) -> int:
     p.add_argument("--out", default="runs/_bench")
     args = parser.parse_args(argv)
     try:
-        commands = {"pools": cmd_pools, "run": cmd_run, "replay": cmd_replay, "diff": cmd_diff, "inspect": cmd_inspect, "bench": cmd_bench, "latch": cmd_latch, "stories": cmd_stories, "claims": cmd_claims, "pack": cmd_pack, "chronicle": cmd_chronicle, "check-prose": cmd_check_prose, "brief": cmd_brief, "mcp": cmd_mcp, "ripple": cmd_ripple, "map": cmd_map, "vault": cmd_vault,
+        commands = {"graph": cmd_graph, "pools": cmd_pools, "run": cmd_run, "replay": cmd_replay, "diff": cmd_diff, "inspect": cmd_inspect, "bench": cmd_bench, "latch": cmd_latch, "stories": cmd_stories, "claims": cmd_claims, "pack": cmd_pack, "chronicle": cmd_chronicle, "check-prose": cmd_check_prose, "brief": cmd_brief, "mcp": cmd_mcp, "ripple": cmd_ripple, "map": cmd_map, "vault": cmd_vault,
                     "observe": cmd_observe}
         return commands[args.command](args)
     except (ValueError, FileExistsError, FileNotFoundError) as err:

@@ -125,6 +125,7 @@ def crush(ctx, realm: str, rebels: str, cause: str) -> str:
 
 
 class War(System):
+    feeds = ("corpses", "dread")
     """Wars declared, fought a year at a time, and ended (see the module doc)."""
 
     name, cadence, priority = "polity.war", "yearly", 2  # (after polity.diplomacy)

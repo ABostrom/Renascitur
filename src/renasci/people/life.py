@@ -277,6 +277,7 @@ DIE_WRITES = (frozenset({"status", "residents", "spouse", "flow:*", "grievances"
 
 
 class Life(System):
+    feeds = ("corpses", "dread")
     name, cadence = "people.life", "seasonal"
     reads = frozenset({"ids:settlement", "residents", "born", "sex", "race", "hunger"}) | DIE_READS
     writes = DIE_WRITES
@@ -309,6 +310,7 @@ class Illness(Disguise):
     """doom, disguised: a sudden illness (the means a latch point suggests for a near miss)."""
 
     name, handles = "people.illness", "doom"
+    feeds = ("corpses", "dread")
     reads = DIE_READS | frozenset({"place"})
     writes = DIE_WRITES
     event_types = DIE_EVENTS

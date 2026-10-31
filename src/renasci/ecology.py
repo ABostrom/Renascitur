@@ -234,6 +234,7 @@ def disease_system():
         """Sickness in a town (see the module doc)."""
 
         name, cadence = "ecology.disease", "seasonal"
+        feeds, uses = ("corpses", "carried", "dread"), ("corpses", "carried")
         priority = 2  # (after burial: what's still lying is what breeds it)
         reads = DISEASE_READS | life.DIE_READS
         writes = DISEASE_WRITES | life.DIE_WRITES
@@ -382,6 +383,7 @@ def burial_system():
         of what killed them; whatever reads `corpses` or `labour` needs to know nothing of it."""
 
         name, cadence = "ecology.burial", "seasonal"
+        feeds, uses = ("corpses",), ("corpses",)
         priority = 1  # (before the harvest: who buries doesn't reap)
         reads = stocks.READS | frozenset({"ids:settlement", "residents", "hunger", "labour", "buried_at", "ill", "pop:*"})
         writes = stocks.WRITES | frozenset({"labour", "buried_at"})
@@ -616,6 +618,7 @@ def famine_system():
 
     class Famine(System):
         name, cadence = "ecology.famine", "seasonal"
+        feeds = ("corpses",)
         priority = 3  # (after the weather and the harvest)
         reads, writes, event_types = FAMINE_READS, FAMINE_WRITES, (EATEN, BEGAN, ENDED)
 

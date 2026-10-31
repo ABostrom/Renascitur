@@ -52,11 +52,19 @@ def _write(ctx, entity: str, name: str, value: float, sources: dict) -> None:
     ctx.set(entity, f"why:{name}", _keep(sources))
 
 
+def _note(ctx, name: str) -> None:
+    """Record which system moved which stock, to hold `System.feeds` to the truth (`Engine.fed`)."""
+    system = getattr(ctx, "system", None)
+    if system is not None:
+        ctx.note_stock(name.split(":")[0])
+
+
 def add(ctx, entity: str, name: str, amount: float) -> None:
     """Add to a stock, under the event being written (emit first, as for any write)."""
     _check(name, amount)
     if not amount:
         return
+    _note(ctx, name)
     sources = dict(ctx.get(entity, f"why:{name}") or {})
     event = ctx.current_event
     sources[event] = sources.get(event, 0.0) + amount
@@ -69,6 +77,7 @@ def take(ctx, entity: str, name: str, amount: float) -> float:
     have = level(ctx, entity, name)
     if not have or not amount:
         return 0.0
+    _note(ctx, name)
     taken = have if have - amount < FLOOR else amount
     left = 1.0 - taken / have
     sources = {e: a * left for e, a in (ctx.get(entity, f"why:{name}") or {}).items()}
