@@ -42,7 +42,8 @@ Claim the ticket by adding `in-progress` and posting a short `🤖` comment.
 - **build**:
   - Use `superpowers:test-driven-development`. Branch `ticket/<n>-<slug>` off `feat/history-engine`.
     Use Python 3.12 via `uv`.
-  - Make the full suite pass, and use `superpowers:verification-before-completion`.
+  - Make the full suite pass (`uv run pytest -q -n 10`, about 17 minutes), and use
+    `superpowers:verification-before-completion`.
   - Run a code-review subagent on the diff. Fix the real findings and note any you left.
   - Merge `--no-ff` into `feat/history-engine`, push, delete the branch, comment (what changed, the
     test summary, and any decisions you made), then close.
