@@ -37,6 +37,7 @@ and draws "a masterwork in N years" and "found in N years".
 
 from __future__ import annotations
 
+from renasci import ecology
 from renasci.core.events import Cause, EventType
 from renasci.core.systems import System
 from renasci.people import beliefs
@@ -196,7 +197,10 @@ class Crafts(System):
         masses = ctx.read_columns(s, [f"job:{j}" for j in jobs]) if ctx.params.get("aggregates") and jobs else {}
         notables = [ctx.get(p, "job") for p in ctx.get(s, "residents") if not ctx.get(p, "journey")]
         made, carry = {}, dict(ctx.get(s, "yield_carry") or {})
+        reaped = ecology.material(ctx.params)  # (S10 #127: reaped at the harvest instead)
         for m in sorted(mats):
+            if m == reaped:
+                continue
             spec = mats[m]
             rate = float(spec.get("yield", {}).get(region, spec.get("yield", {}).get("*", 0.0)))
             workers = sum(int(masses.get(f"job:{j}", 0)) + notables.count(j) for j in spec.get("by", []))

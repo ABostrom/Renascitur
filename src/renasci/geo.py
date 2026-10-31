@@ -308,20 +308,31 @@ def upheaval():
 
     A ripple `{"kind": "structural", "target": <route>, "params": {"open"/"days", "why"}}` closes, reopens
     or re-times the route (a pass closes); `{"target": <place>, "params": {"region", "why"}}` moves a place
-    into another region, and `{"control": <polity or null>}` hands it to a polity (S8). A harvest failing waits
-    for S10's harvests."""
+    into another region, and `{"control": <polity or null>}` hands it to a polity (S8); `{"target": <region>,
+    "params": {"harvest": true, "factor", "until"?, "why"}}` blights its harvests (S10 #127: their factor
+    capped up to `until`, by default the next harvest only; it shows as a failed harvest, `ecology`). A world
+    without ecology refuses it."""
     from renasci.core.ripples import Disguise
 
     class Upheaval(Disguise):
         name, handles = "geo.upheaval", "structural"
-        reads, writes = CHANGE_READS | frozenset({"region"}), CHANGE_WRITES
+        reads, writes = CHANGE_READS | frozenset({"region"}), CHANGE_WRITES | frozenset({"blight"})
         event_types = (changed_type(),)
 
         def apply(self, ctx, ripple) -> bool:
             p, target = ripple.params, ripple.target
             if not ctx.exists(target):
                 return False
-            if "region" in p or "control" in p:  # (a place or a settlement into a region, or to a polity)
+            if p.get("harvest"):  # (a blight on the region's harvests)
+                if ctx.kind(target) != "region" or not ctx.params.get("ecology"):
+                    return False
+                from renasci import ecology
+
+                ev = ctx.emit("geo.changed", {"site": (target,)}, purpose="blight", actor=target,
+                              payload={"why": p.get("why", ""), "change": {"blight": target, "factor": p["factor"],
+                                                                           "until": p.get("until")}})
+                ctx.set(target, "blight", ecology.blight(ctx, p["factor"], ripple.until, ev.id))
+            elif "region" in p or "control" in p:  # (a place or a settlement into a region, or to a polity)
                 if ctx.kind(target) not in ("place", "settlement"):
                     return False
                 if "region" in p and (not ctx.exists(p["region"]) or ctx.kind(p["region"]) != "region"):

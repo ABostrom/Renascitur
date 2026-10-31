@@ -87,8 +87,19 @@ class Ripple:
             days = self.params.get("days", 1)
             if isinstance(days, bool) or not isinstance(days, int) or days < 1:
                 raise ValueError(f"structural ripple {self.id}: days must be a positive whole number")
-        if self.kind == "structural" and not ({"open", "days", "region", "control"} & set(self.params)):
-            raise ValueError(f"structural ripple {self.id} needs params.open, days, region or control")
+        if self.kind == "structural" and self.params.get("harvest"):  # (S10 #127: a blight on a region's harvest)
+            f = self.params.get("factor")
+            if isinstance(f, bool) or not isinstance(f, (int, float)) or not 0 <= f <= 1:
+                raise ValueError(f"structural ripple {self.id}: a harvest's factor must be in [0, 1], got {f!r}")
+            if "until" in self.params:
+                try:
+                    until = self.until
+                except Exception as err:
+                    raise ValueError(f"structural ripple {self.id}: until must be a date, got {self.params['until']!r}") from err
+                if until < self.date:
+                    raise ValueError(f"structural ripple {self.id}: until is before its date")
+        if self.kind == "structural" and not ({"open", "days", "region", "control", "harvest"} & set(self.params)):
+            raise ValueError(f"structural ripple {self.id} needs params.open, days, region, control or harvest")
         if self.kind == "structural" and "control" in self.params and self.params["control"] is not None \
                 and not isinstance(self.params["control"], str):
             raise ValueError(f"structural ripple {self.id}: control must be a polity id or null")
