@@ -30,7 +30,7 @@ from renasci.core.events import Cause, EventType
 from renasci.core.systems import System
 
 WEIGHTS = {"killed": -0.15, "exposed": -0.1, "marriage": 0.12, "incident": -0.1, "betrayal": -0.5, "treaty": 0.1,
-           "pact": 0.015, "war": -0.12, "raid": -0.15}  # (pact: a trade treaty that holds, each year; with trade it settles under friendly)
+           "pact": 0.015, "war": -0.12, "raid": -0.15, "trade": 0.004}  # (pact: a trade treaty that holds, each year; with trade it settles under friendly)
 STANCES = ((0.6, "allied"), (0.25, "friendly"), (-0.25, "neutral"), (-0.55, "cold"))  # else hostile
 FADE = 0.9  # (trust a year on, before what happened that year)
 TRADE = 0.012  # per open border route, up to TRADE_CAP a year: trade alone settles at neutral (10 x the cap, under
@@ -268,8 +268,11 @@ class Diplomacy(System):
         shared = sum(1 for c in sorted(thirds) if stances.get(frozenset((a, c))) in hostile
                      and stances.get(frozenset((b, c))) in hostile)
         trading = stance not in ("cold", "hostile", "war")  # (enemies don't trade: they raid)
-        trade = min(TRADE_CAP, TRADE * sum(1 for r in routes if ctx.get(r, "open") is not False)) if trading else 0.0
-        once = sum(e["weight"] for e in ledger if not e.get("recurring"))  # (what happened, once)
+        if ctx.params.get("trade"):  # (S9's real trade: its flows, in the ledger, as a year's pull, capped as the flat one)
+            trade = min(TRADE_CAP, sum(e["weight"] for e in ledger if e["kind"] == "trade")) if trading else 0.0
+        else:
+            trade = min(TRADE_CAP, TRADE * sum(1 for r in routes if ctx.get(r, "open") is not False)) if trading else 0.0
+        once = sum(e["weight"] for e in ledger if not e.get("recurring") and e["kind"] != "trade")  # (what happened, once)
         yearly = sum(e["weight"] for e in ledger if e.get("recurring")) + SHARED_ENEMY * shared + trade  # (a year's pull)
         moved = once + yearly * (1 - FADE ** years) / (1 - FADE)  # (years=1: once + yearly)
         new = round(max(-1.0, min(1.0, trust * FADE ** years + moved)), 6)

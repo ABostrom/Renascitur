@@ -76,7 +76,8 @@ def world_params(races: list, catalogue: dict, house_from: str = "father", kin_d
                  flee_days: int | None = None, migration_rate: float | None = None,
                  beliefs: bool | None = None, routing: bool | dict | None = None,
                  cadet_size: int | None = None, cadet_rate: float = 0.05, campaigns: bool | None = None,
-                 raze_rate: float | None = None, battle_fall: float | None = None, crafts: dict | None = None) -> dict:
+                 raze_rate: float | None = None, battle_fall: float | None = None, crafts: dict | None = None,
+                 trade: bool | None = None) -> dict:
     """Ruleset params for the people systems, checked now rather than at the first activation."""
     if type(kin_degree) is not int or kin_degree < 0:
         raise ValueError("kin_degree must be a non-negative int")
@@ -122,6 +123,12 @@ def world_params(races: list, catalogue: dict, house_from: str = "father", kin_d
         if type(campaigns) is not bool:
             raise ValueError(f"campaigns must be true or false, got {campaigns!r}")
         params["campaigns"] = campaigns
+    if trade is not None:  # (S9 §4, #125: realms' trust from real trade; only when set)
+        if type(trade) is not bool:
+            raise ValueError(f"trade must be true or false, got {trade!r}")
+        if trade and not (crafts or {}).get("materials"):
+            raise ValueError("trade: true needs a crafts catalogue with materials (something to trade)")
+        params["trade"] = trade
     if crafts is not None:  # (S9 §2, #123: jobs, skills and wealth; only when set)
         from renasci.people.work import check
 
