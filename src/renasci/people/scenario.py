@@ -322,6 +322,10 @@ class _Builder:
             raise ValueError("polities: " + "; ".join(f"{f['kind']}: {f['message']}" for f in bad))
         control = polities.control_of(self.sc)
         settlements = {s["id"]: s for s in self.sc["settlements"]}
+        from renasci.night import DEFAULT as NIGHT
+
+        night = (self.sc.get("params") or {}).get("night")
+        wards = {} if night is None else {"wards": float(night.get("wards", NIGHT["wards"]))}
         for spec in self.sc["settlements"]:
             self.commoners(spec)
         heads = {}
@@ -342,7 +346,7 @@ class _Builder:
                 "residents": sorted(residents[s]),
                 "capacity": None if capacity is None else capacity + max(0, extra),
                 "notable_target": None if target is None else target + max(0, extra),
-                "danger": spec.get("danger", 0.0), **({"control": control.get(s)} if control else {})})
+                "danger": spec.get("danger", 0.0), **({"control": control.get(s)} if control else {}), **wards})
         cast_masses(self.e, {s: (spec["race"], spec["genome_group"], spec.get("masses", 0), len(residents[s]))
                              for s, spec in settlements.items()}, self.cat, self.races)
         if (self.sc.get("params") or {}).get("crafts"):  # (S9: the masses' job columns, #123)

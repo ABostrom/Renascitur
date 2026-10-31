@@ -71,6 +71,10 @@ def people_ruleset(name: str, scenario: dict, version: int = 1) -> Ruleset:
         from renasci.marks import Marks
 
         systems += (Marks(),)
+    if scenario.get("params", {}).get("night") is not None:  # (S10 §5, #130; {} is the defaults)
+        from renasci.night import Night
+
+        systems += (Night(),)
     if scenario.get("pantheon"):  # (gods: S11 #131)
         from renasci.people.ambitions import Power
 

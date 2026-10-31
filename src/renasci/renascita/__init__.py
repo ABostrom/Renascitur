@@ -38,7 +38,7 @@ FRONTIER: dict = json.loads((Path(__file__).parent / "frontier_clans.json").read
 
 
 def _scenario(scenario: dict | None, scale: int = 1, beliefs: bool | None = None, polities: bool | str | None = None,
-              crafts: bool | None = None, truths: str | None = None) -> dict:
+              crafts: bool | None = None, truths: str | None = None, night: bool | None = None) -> dict:
     """The scenario (the draft unless given), with every settlement's population times `scale` (#75: M1
     scale is about ten times the draft), beliefs on or off when `beliefs` says (S12 §1a: a recipe's
     `[world] beliefs = true`), and the draft polities (the Empire, its Imperial House and council blocs:
@@ -81,6 +81,8 @@ def _scenario(scenario: dict | None, scale: int = 1, beliefs: bool | None = None
         raise ValueError(f"crafts must be true or false, got {crafts!r}")
     if crafts:  # (S9 #123: the draft trades)
         sc["params"] = {**sc.get("params", {}), "crafts": copy.deepcopy(CRAFTS)}
+    if night:  # (S10 §5, #130)
+        sc["params"] = {**sc.get("params", {}), "night": {}}
     if truths:  # (what this world starts with: renasci.truths, #165)
         from renasci import truths as hard
 
@@ -117,10 +119,10 @@ def _with_scripts(rs):
 
 def new_engine(seed: int = 1234, ripples=(), pins=(), scenario: dict | None = None, canon: dict | None = None,
                end=None, scale: int = 1, beliefs: bool | None = None, polities: bool | str | None = None,
-               crafts: bool | None = None, truths: str | None = None) -> Engine:
+               crafts: bool | None = None, truths: str | None = None, night: bool | None = None) -> Engine:
     """The Fourth Age at the scenario's start, synthesised from the (draft) scenario with any canon placed
     (`renasci.people.casting`), before anything runs."""
-    sc = _scenario(scenario, scale, beliefs, polities, crafts, truths)
+    sc = _scenario(scenario, scale, beliefs, polities, crafts, truths, night)
     e = Engine(CAL, seed=seed, rulesets=rulesets(sc))
     synthesise(e, sc, seed, canon)
     e.apply_pins(pins, end=end)  # (pins past the run's `end` are out of scope)
