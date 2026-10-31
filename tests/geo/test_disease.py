@@ -92,6 +92,28 @@ def test_an_outbreak_cites_the_deaths_behind_it():
     assert {types[c.ref] for c in out.causes if c.kind == "event"} & {"people.population", "people.death", "goods.eaten"}
 
 
+def test_one_who_brings_it_may_start_it():
+    assert ecology.arrival_odds(0.0) == 0.0
+    assert ecology.arrival_odds(1.0) == pytest.approx(ecology.TAKES)
+    assert ecology.arrival_odds(1.0) < ecology.arrival_odds(3.0) < 1
+
+
+def test_a_plague_walks_the_roads_and_its_path_can_be_read():
+    e = run(scenario(disease=[{**STRIKES[0], "base": 0.02}]), years=10)
+    by_id = {x.id: x for x in e.events}
+    spread = [x for x in of(e, "disease.outbreak") for c in x.causes
+              if c.kind == "event" and c.ref in by_id and by_id[c.ref].type == "disease.season"
+              and by_id[c.ref].roles["settlement"] != x.roles["settlement"]]
+    assert spread
+
+
+def test_the_carried_is_spent_whether_it_takes_or_not():
+    e = run(scenario(disease=[{**STRIKES[0], "base": 0.02}]), years=10)
+    assert of(e, "disease.passed")
+    for s in e.store.ids("settlement"):
+        assert (e.store.get(s, "level:carried:flux") or 0.0) < 4  # (a season's worth at most: nothing piles up)
+
+
 def test_the_sick_cannot_work():
     assert ecology.able_share(0.0, 0.0, 0.5) == 0.5
 
