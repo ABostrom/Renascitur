@@ -3,6 +3,7 @@
 import json
 from pathlib import Path
 import threading
+import time
 import urllib.error
 import urllib.request
 
@@ -207,7 +208,7 @@ def test_observe_defaults_to_the_committed_build(monkeypatch):
     from renasci.cli import main as cli_main
 
     seen = {}
-    monkeypatch.setattr(observe, "serve", lambda app, runs, port, open_browser, launch, recipes=None, vault=None, edit_map=None, maps=None:
+    monkeypatch.setattr(observe, "serve", lambda app, runs, port, open_browser, launch, truths=None, recipes=None, vault=None, edit_map=None, maps=None:
                         seen.update(app=app, launch=launch, vault=vault))
     cli_main(["observe", "--no-browser"])
     from pathlib import Path
@@ -250,7 +251,7 @@ def launch_headers(base):
 
 def test_the_launcher_is_off_unless_asked_for(served):
     base, _ = served
-    assert call(base, "/api/capabilities") == (200, {"launch": False, "propose": False, "edit_map": None})
+    assert call(base, "/api/capabilities") == (200, {"launch": False, "propose": False, "forge": False, "edit_map": None})
     assert call(base, "/api/launch", {"run": "tiny", "rank": 1}, launch_headers(base))[0] == 405
 
 
@@ -267,7 +268,7 @@ def launcher(tmp_path_factory, served):
 
 def test_a_launch_must_come_from_the_observatory_itself(launcher):
     base = launcher
-    assert call(base, "/api/capabilities") == (200, {"launch": True, "propose": False, "edit_map": None})
+    assert call(base, "/api/capabilities") == (200, {"launch": True, "propose": False, "forge": False, "edit_map": None})
     body = {"run": "tiny", "rank": 1}
     assert call(base, "/api/launch", body, {**launch_headers(base), "Origin": "http://evil.example"})[0] == 403
     no_header = {k: v for k, v in launch_headers(base).items() if k != "X-Renasci-Launch"}
@@ -476,8 +477,8 @@ def promoter(tmp_path_factory):
 
 def test_capabilities_say_whether_promoting_is_possible(promoter, served):
     base, _, _ = promoter
-    assert call(base, "/api/capabilities") == (200, {"launch": True, "propose": True, "edit_map": None})
-    assert call(served[0], "/api/capabilities") == (200, {"launch": False, "propose": False, "edit_map": None})
+    assert call(base, "/api/capabilities") == (200, {"launch": True, "propose": True, "forge": False, "edit_map": None})
+    assert call(served[0], "/api/capabilities") == (200, {"launch": False, "propose": False, "forge": False, "edit_map": None})
 
 
 def test_an_event_is_promoted_with_the_causes_ticked_and_the_note_appears_in_the_vault(promoter):
@@ -604,3 +605,79 @@ def test_a_check_takes_more_than_a_launch_but_not_without_end(launcher):
     except (ConnectionError, urllib.error.URLError):
         pass  # (the server refused and closed before the client finished sending: refused all the same)
     assert call(launcher, "/api/check", {"run": "tiny", "text": "x"}, {**launch_headers(launcher), "Origin": "http://evil.example"})[0] == 403
+
+
+@pytest.fixture(scope="module")
+def forge(tmp_path_factory, served):
+    _, runs = served
+    app = tmp_path_factory.mktemp("app3")
+    (app / "index.html").write_text("<!doctype html>", encoding="utf-8")
+    truths = tmp_path_factory.mktemp("truths") / "world.json"
+    server = make_server(app, runs, port=0, launch=True, truths=truths)
+    threading.Thread(target=server.serve_forever, daemon=True).start()
+    yield f"http://127.0.0.1:{server.server_address[1]}", truths
+    server.shutdown()
+
+
+def test_the_forge_is_off_without_a_truth_file(launcher):
+    assert call(launcher, "/api/truths")[0] == 404
+    assert call(launcher, "/api/keep", {"run": "tiny", "entity": "e1"}, launch_headers(launcher))[0] == 400
+
+
+def test_the_forge_shows_its_truths_and_is_on_with_one(forge):
+    base, truths = forge
+    assert call(base, "/api/capabilities")[1]["forge"] is True
+    assert call(base, "/api/truths") == (200, {})
+    truths.write_text('{"objects": []}', encoding="utf-8")
+    assert call(base, "/api/truths") == (200, {"objects": []})
+
+
+@pytest.mark.parametrize("body", [{"run": "../tiny", "what": "person"}, {"run": "tiny"}, {"run": "tiny", "what": "Bad-Name"},
+                                  {"run": "tiny", "what": "person", "count": 0}, {"run": "tiny", "what": "person", "extra": 1},
+                                  {"run": "tiny", "what": "person", "filters": {"bad key": "x"}},
+                                  {"run": "tiny", "what": "person", "filters": {"house": "x" * 100}}])
+def test_a_forge_search_is_validated(forge, body):
+    assert call(forge[0], "/api/gen", body, launch_headers(forge[0]))[0] == 400
+
+
+@pytest.mark.parametrize("body", [{"run": "tiny"}, {"run": "../tiny", "entity": "e1"}, {"run": "tiny", "entity": "a b"}, ["x"]])
+def test_keeping_is_validated(forge, body):
+    assert call(forge[0], "/api/keep", body, launch_headers(forge[0]))[0] == 400
+
+
+def finished(base, job):
+    for _ in range(600):
+        now = next(j for j in call(base, "/api/jobs")[1] if j["id"] == job["id"])
+        if now["state"] != "running":
+            return now
+        time.sleep(0.1)
+    raise AssertionError(f"the job never finished: {job}")
+
+
+def test_every_job_the_server_starts_can_finish():
+    import renasci.observe as observe
+
+    assert {"latch", "run", "replay", "propose", "ripple", "gen", "keep", *observe.DOCUMENTS} <= set(observe.MADE)
+
+
+def test_a_forge_search_runs_as_a_real_job_and_leaves_its_cards(forge, served):
+    base, _ = forge
+    status, job = call(base, "/api/gen", {"run": "tiny", "what": "village"}, launch_headers(base))
+    assert status == 202
+    now = finished(base, job)
+    assert now["state"] == "done", now
+    assert call(base, "/runs/tiny/analysis/cards/last.json")[0] == 200
+
+
+def test_keeping_what_cannot_be_kept_fails_as_a_job_and_says_why(forge):
+    base, _ = forge
+    status, job = call(base, "/api/keep", {"run": "tiny", "entity": "nobody"}, launch_headers(base))
+    assert status == 202
+    now = finished(base, job)
+    assert now["state"] == "failed" and "isn't in that run" in now["output"]
+
+
+def test_a_forge_request_must_come_from_the_observatory(forge):
+    base = forge[0]
+    body = {"run": "tiny", "what": "person"}
+    assert call(base, "/api/gen", body, {**launch_headers(base), "Origin": "http://evil.example"})[0] == 403

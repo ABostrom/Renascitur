@@ -97,6 +97,7 @@ JOB_SECONDS = 3600  # a what-if that takes longer than an hour is stopped
 # What each kind of job prints when it has made its run folder (the folder's name in group 1).
 MADE = {"latch": r"^latch: launched (\S+)$", "run": r"^run (\S+): ", "replay": r"^replayed (\S+) from ",
         "propose": r"^wrote (.+?) \(canon: proposed", "ripple": r"^ripple: launched (\S+)$",
+        "gen": r"^cards: (\d+) found", "keep": r"^kept (\S+) in ",
         **{d: rf"^{d}: .* -> (.+)$" for d in DOCUMENTS}}
 ENTITY = re.compile(r"[A-Za-z0-9][A-Za-z0-9:_.-]{0,127}")  # a run's entity or event id
 CAUSE = re.compile(r"[a-z]+:[A-Za-z0-9:_.-]{1,160}")  # kind:ref, as an event records it
@@ -179,12 +180,16 @@ class Jobs:
             return [dict(j) for j in self.jobs]
 
 
+WORD = re.compile(r"[a-z][a-z_]{0,31}")
+
+
 class Handler(BaseHTTPRequestHandler):
     server_version = "renasci-observe"
     protocol_version = "HTTP/1.1"  # keep-alive: the Observatory asks for many small files
 
     def __init__(self, *args, app: Path, runs: Path, jobs: Jobs | None = None, recipes: Path | None = None,
-                 vault: Path | None = None, map_files=None, **kw):
+                 vault: Path | None = None, map_files=None, truths: Path | None = None, **kw):
+        self.truths = truths.resolve() if truths is not None else None
         self.map_files = map_files  # (renasci.mapedit.MapFiles with --edit-map; else None: no editor)
         self.vault = vault.resolve() if vault is not None and vault.is_dir() else None
         self.recipes = recipes.resolve() if recipes is not None else None
@@ -231,6 +236,7 @@ class Handler(BaseHTTPRequestHandler):
         if path == "/api/capabilities":
             body = json.dumps({"launch": self.jobs is not None,
                                "propose": self.jobs is not None and self.vault is not None,
+                               "forge": self.jobs is not None and self.truths is not None,
                                "edit_map": self.map_files.world if self.map_files else None}).encode("utf-8")
             return self._send(HTTPStatus.OK, body, "application/json", head_only)
         if path == "/api/recipes":
@@ -240,6 +246,11 @@ class Handler(BaseHTTPRequestHandler):
             return self._send(HTTPStatus.OK, body, "application/json", head_only=head_only)
         if path in ("/api/map", "/api/map/base.png"):
             return self._map_get(path, head_only)
+        if path == "/api/truths":
+            if self.jobs is None or self.truths is None:
+                return self._send(HTTPStatus.NOT_FOUND, b"the Forge is off", "text/plain", head_only=head_only)
+            body = self.truths.read_bytes() if self.truths.exists() else b"{}"
+            return self._send(HTTPStatus.OK, body, "application/json", head_only=head_only)
         if path == "/api/jobs":
             body = json.dumps(self.jobs.list() if self.jobs else []).encode("utf-8")
             return self._send(HTTPStatus.OK, body, "application/json", head_only)
@@ -360,6 +371,7 @@ class Handler(BaseHTTPRequestHandler):
             return self._map_write(route)
         builders = {"/api/launch": self._launch_argv, "/api/run": self._run_argv, "/api/replay": self._replay_argv,
                     "/api/propose": self._propose_argv, "/api/ripple": self._ripple_argv,
+                    "/api/gen": self._gen_argv, "/api/keep": self._keep_argv,
                     "/api/pack": partial(self._story_argv, "pack"), "/api/chronicle": partial(self._story_argv, "chronicle"),
                     "/api/brief": partial(self._story_argv, "brief")}
         if self.jobs is not None and route == "/api/check":
@@ -472,6 +484,40 @@ class Handler(BaseHTTPRequestHandler):
             argv += ["--cause", c]
         return argv, {"job": "propose", "run": body["run"], "entity": entity, "causes": causes}
 
+    def _gen_argv(self, body) -> tuple[list[str], dict]:
+        """`renasci gen <what> --run <run> --save ...`: the Forge's cards, left in the run's analysis/cards/."""
+        keys = {"run", "what", "filters", "seed", "count", "notable"}
+        if not isinstance(body, dict) or not {"run", "what"} <= set(body) or set(body) - keys:
+            raise ValueError(f"a search is {{run, what}} and optionally filters, seed, count, notable; got {body!r}")
+        folder, what, filters = self._run_folder(body["run"]), body["what"], body.get("filters", {})
+        seed, count = body.get("seed", 0), body.get("count", 12)
+        if not isinstance(what, str) or not WORD.fullmatch(what):
+            raise ValueError("what is a generator's name")
+        if type(seed) is not int or type(count) is not int or not 1 <= count <= 100:
+            raise ValueError("seed is a whole number, and count from 1 to 100")
+        if not isinstance(filters, dict) or len(filters) > 10 or not all(
+                isinstance(k, str) and WORD.fullmatch(k) and isinstance(v, str) and len(v) <= 64 for k, v in filters.items()):
+            raise ValueError("filters map a filter's name to a short value")
+        argv = [sys.executable, "-m", "renasci.cli", "gen", what, "--run", str(folder), "--save", "--seed", str(seed),
+                "--count", str(count)]
+        for key, value in sorted(filters.items()):
+            argv += [f"--where={key}={value}"]
+        if body.get("notable") is True:
+            argv.append("--notable")
+        return argv, {"job": "gen", "run": body["run"], "what": what}
+
+    def _keep_argv(self, body) -> tuple[list[str], dict]:
+        """`renasci keep <run> <entity> --to <truths>`: into the truth file this server was given."""
+        if not isinstance(body, dict) or set(body) != {"run", "entity"}:
+            raise ValueError(f"keeping is {{run, entity}}; got {body!r}")
+        if self.truths is None:
+            raise ValueError("this server has no truth file (start it with --truths)")
+        folder, entity = self._run_folder(body["run"]), body["entity"]
+        if not isinstance(entity, str) or not ENTITY.fullmatch(entity):
+            raise ValueError("entity must be a run's entity id")
+        return [sys.executable, "-m", "renasci.cli", "keep", str(folder), entity, "--to", str(self.truths)], \
+            {"job": "keep", "run": body["run"], "entity": entity}
+
     @staticmethod
     def _pov(pov) -> str:
         if pov != "omniscient" and (not isinstance(pov, str) or not ENTITY.fullmatch(pov)):
@@ -553,7 +599,7 @@ class Handler(BaseHTTPRequestHandler):
 
 
 def make_server(app, runs, port: int = 8765, launch: bool = False, recipes=None, vault=None, edit_map=None,
-                maps=None) -> ThreadingHTTPServer:
+                maps=None, truths=None) -> ThreadingHTTPServer:
     map_files = None
     if edit_map is not None:  # (the map editor: the geography file and its world's private layers)
         from renasci.mapedit import MapFiles
@@ -562,13 +608,15 @@ def make_server(app, runs, port: int = 8765, launch: bool = False, recipes=None,
         map_files = MapFiles(edit_map, Path(maps) / edit_map.stem / "private")
     handler = partial(Handler, app=Path(app), runs=Path(runs), jobs=Jobs(Path(runs)) if launch else None,
                       recipes=Path(recipes) if recipes is not None else None,
-                      vault=Path(vault) if vault is not None else None, map_files=map_files)
+                      vault=Path(vault) if vault is not None else None, map_files=map_files,
+                      truths=Path(truths) if truths is not None else None)
     return ThreadingHTTPServer(("127.0.0.1", port), handler)
 
 
 def serve(app, runs, port: int = 8765, open_browser: bool = True, launch: bool = False, recipes=None,
-          vault=None, edit_map=None, maps=None) -> None:
-    server = make_server(app, runs, port, launch=launch, recipes=recipes, vault=vault, edit_map=edit_map, maps=maps)
+          vault=None, edit_map=None, maps=None, truths=None) -> None:
+    server = make_server(app, runs, port, launch=launch, recipes=recipes, vault=vault, edit_map=edit_map, maps=maps,
+                         truths=truths)
     if edit_map is not None:
         print(f"Editing the map {Path(edit_map).resolve()} at /edit (its private layers in "
               f"{Path(maps) / Path(edit_map).stem / 'private'})")

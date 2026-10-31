@@ -6,7 +6,8 @@ nothing out of thin air: a thing worth having has a past. All of it comes from t
 the event behind each line; the rest (kin, wants, place) is the state the run ended in, not yet cited. A life can be
 long, so `history` keeps its first and last lines, without the talk, and `told` says how many there were.
 
-Picking is seeded and depends on nothing else: the same run, filters and seed give the same cards. Filters take a
+Picking is seeded and depends on nothing else: the same run, filters and seed give the same cards. With `notable`, the
+ones with the most to tell come first: marks, enemies, grievances and how much happened to them. Filters take a
 short name (`--race dwarf` for `r:dwarf`). `--age` is the living's age where the run ends, `30-50` or `30-` or `30`, so
 it leaves out the dead; ask for them with `--status dead`. When nothing fits, the answer says which filter to loosen and
 how many that would find.
@@ -87,6 +88,12 @@ class Generator:
     def card(self, run, entity: str, fields: dict) -> dict:
         raise NotImplementedError
 
+    def notable(self, run, entity: str, fields: dict) -> float:
+        """How much there is to tell."""
+        return 5 * len(fields.get("acquired") or []) + 3 * len(fields.get("grievances") or []) \
+            + 3 * len(fields.get("possessions") or []) + float(fields.get("fame") or 0.0) * 10 \
+            + len(run.involves.get(entity, [])) / 10
+
 
 class Person(Generator):
     name, kind, takes = "person", "person", ("race", "house", "age", "job", "mark", "status")
@@ -164,7 +171,7 @@ def _rank(seed: int, entity: str) -> str:
     return hashlib.sha256(f"{seed}:{entity}".encode()).hexdigest()
 
 
-def generate(run, generators, name: str, wants: dict, seed: int = 0, count: int = 1) -> dict:
+def generate(run, generators, name: str, wants: dict, seed: int = 0, count: int = 1, notable: bool = False) -> dict:
     """Cards of a kind from a run. `wants` holds the filters given; `closest` says what loosening one would find."""
     if name not in generators:
         raise ValueError(f"no generator {name!r}; there are {sorted(generators)}")
@@ -181,7 +188,7 @@ def generate(run, generators, name: str, wants: dict, seed: int = 0, count: int 
             passed = gen.fits(run, entity, e["fields"], wanted)
             scored.append((entity, e, {k: passed[k] for k in wanted}))
     found = [(i, e) for i, e, p in scored if all(p.values())]
-    found.sort(key=lambda x: _rank(seed, x[0]))
+    found.sort(key=lambda x: (-gen.notable(run, x[0], x[1]["fields"]) if notable else 0, _rank(seed, x[0])))
     out = {"found": len(found), "cards": [gen.card(run, i, e["fields"]) for i, e in found[:count]]}
     if not found:
         out["closest"] = {k: sum(1 for _, _, p in scored if all(v for f, v in p.items() if f != k)) for k in wanted}

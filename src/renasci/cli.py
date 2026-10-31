@@ -907,7 +907,7 @@ def cmd_observe(args) -> int:
             raise ValueError(f"no geography file {args.edit_map}")
         _refuse_unless_ignored((maps / Path(args.edit_map).stem / "private").resolve())
     serve(args.app, args.runs, port=args.port, open_browser=not args.no_browser, launch=args.allow_launch,
-          recipes=args.recipes, vault=args.vault, edit_map=args.edit_map, maps=maps)
+          recipes=args.recipes, vault=args.vault, edit_map=args.edit_map, maps=maps, truths=args.truths)
     return 0
 
 
@@ -970,7 +970,14 @@ def cmd_gen(args) -> int:
         if not eq:
             raise ValueError(f"--where is key=value, not {pair!r}")
         wants[key] = value
-    found = cards.generate(Run(args.run), load_pools(args.extensions).generators, args.what, wants, args.seed, args.count)
+    found = cards.generate(Run(args.run), load_pools(args.extensions).generators, args.what, wants, args.seed, args.count,
+                           args.notable)
+    if args.save:  # (for the Forge: the page reads it from the run folder)
+        folder = Path(args.run) / "analysis" / "cards"
+        folder.mkdir(parents=True, exist_ok=True)
+        (folder / "last.json").write_text(json.dumps(found, ensure_ascii=False), encoding="utf-8")
+        print(f"cards: {found['found']} found")
+        return 0
     sys.stdout.buffer.write(json.dumps(found, indent=1, ensure_ascii=False).encode("utf-8") + b"\n")
     sys.stdout.flush()
     return 0
@@ -1005,6 +1012,8 @@ def main(argv=None) -> int:
     for name in ("race", "house", "age", "job", "mark", "status", "type", "fame", "lost", "region"):
         p.add_argument(f"--{name}")
     p.add_argument("--where", action="append", default=[], help="key=value, for a generator's own filters")
+    p.add_argument("--notable", action="store_true", help="those with the most to tell first")
+    p.add_argument("--save", action="store_true", help="also write them to the run's analysis/cards/last.json")
     p.add_argument("--extensions", nargs="*", default=[], help="extensions to include")
     p = sub.add_parser("keep", help="keep a thing from a run as a hard truth in a truth file (renasci.truths)")
     p.add_argument("run")
@@ -1145,6 +1154,8 @@ def main(argv=None) -> int:
     p.add_argument("--recipes", default="recipes", help="the recipes the Observatory may launch (with --allow-launch)")
     p.add_argument("--vault", default=None,
                    help="a vault the Observatory may write proposed notes into (with --allow-launch; never by default)")
+    p.add_argument("--truths", default=None,
+                   help="a truth file the Forge may keep things into (with --allow-launch; never by default)")
     p.add_argument("--edit-map", default=None,
                    help="a geography file to edit at /edit (S5), with its world's private layers in --maps")
     p.add_argument("--maps", default=None, help="the maps folder (default: the repo's maps/)")

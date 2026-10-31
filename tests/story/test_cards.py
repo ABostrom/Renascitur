@@ -128,3 +128,17 @@ def test_the_command_refuses_nonsense(m4):
     assert main(["gen", "person", "--run", str(m4), "--count", "0"]) == 1
     assert main(["gen", "person", "--run", str(m4), "--where", "nope"]) == 1
     assert main(["gen", "person", "--run", str(m4), "--where", "fame=1"]) == 1  # (not a filter it takes)
+
+
+def test_notable_puts_those_with_the_most_to_tell_first(m4run, generators):
+    found = cards.generate(m4run, generators, "person", {}, count=5, notable=True)
+    every = cards.generate(m4run, generators, "person", {}, count=10_000)
+    tells = sorted(c["told"] for c in every["cards"])
+    assert found["cards"][0]["told"] > tells[len(tells) // 2]
+
+
+def test_the_command_saves_cards_for_the_forge(m4):
+    from renasci.cli import main
+
+    assert main(["gen", "person", "--run", str(m4), "--save", "--notable", "--where=age=20-"]) == 0  # (the job's line)
+    assert json.loads((m4 / "analysis" / "cards" / "last.json").read_text(encoding="utf-8"))["cards"]
