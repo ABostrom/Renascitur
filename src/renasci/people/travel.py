@@ -21,7 +21,7 @@ repair, not a model; a switch to a ruleset without migration leaves such a trave
 from __future__ import annotations
 
 from renasci import geo
-from renasci.core.calendar import Date, Span
+from renasci.core.calendar import AgeBoundaryError, Date, Span
 from renasci.core.events import EventType
 from renasci.core.systems import System
 from renasci.people import beliefs, population
@@ -49,7 +49,7 @@ def destinations(ctx, home: str, max_days: int, who: str | None = None) -> dict[
 
 
 def depart(ctx, person: str, to: str, why: str, causes=()) -> int | None:
-    """Set out for `to`; returns the journey's days, or None (no path, already there, already travelling)."""
+    """Set out for `to`; returns the journey's days, or None (no path, already there, already travelling, or no time left)."""
     if ctx.get(person, "journey"):
         return None
     home = ctx.get(person, "place")
@@ -57,7 +57,10 @@ def depart(ctx, person: str, to: str, why: str, causes=()) -> int | None:
     if found is None:
         return None
     days, path = found
-    arrive_on = ctx.calendar.add(ctx.today, Span(days=days))
+    try:
+        arrive_on = ctx.calendar.add(ctx.today, Span(days=days))
+    except AgeBoundaryError:  # (it would end past the age's last day: nobody sets out on it)
+        return None
     ctx.emit("people.depart", {"traveller": (person,), "origin": (home,), "destination": (to,)}, purpose="depart",
              actor=person, place=home, payload={"days": days, "why": why}, causes=causes)
     ctx.set(person, "journey", {"from": home, "to": to, "path": path, "depart": ctx.today.to_json(),

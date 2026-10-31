@@ -16,7 +16,7 @@ import json
 import math
 from contextlib import contextmanager
 
-from renasci.core.calendar import Span
+from renasci.core.calendar import AgeBoundaryError, Span
 from renasci.core.canon import canonical, digest, digest_text
 from renasci.core.choice import match, scored
 from renasci.core.events import Cause, Event, Source
@@ -509,8 +509,9 @@ class Ctx:
         return outcome
 
     def schedule(self, after: Span, purpose: str, *, entity: str | None = None, payload: dict | None = None,
-                 priority: int | None = None, causes=()) -> Activation:
-        """Schedule a follow-up for this system.
+                 priority: int | None = None, causes=()) -> Activation | None:
+        """Schedule a follow-up for this system. One due past the age's last day falls away (None): time ends
+        there, as it does for a cadence.
 
         It is caused by this activation, and by the last event emitted here (or, if none, by this
         activation's own causes), so taint flows to it even when no event was emitted. `causes` adds
@@ -520,8 +521,12 @@ class Ctx:
         base = (Cause("event", self._event),) if self._event else self.activation.causes
         parent = self.activation.id if self._scope is None else f"{self.activation.id}#{self._scope}"
         causes = tuple(base) + (Cause("activation", parent),) + tuple(causes)
+        try:
+            when = self.calendar.add(self.today, after)
+        except AgeBoundaryError:
+            return None
         activation = Activation(
-            self.calendar.add(self.today, after),
+            when,
             self.system.priority if priority is None else priority,
             entity or self.activation.entity, purpose, self.system.name, payload or {}, causes,
         )
