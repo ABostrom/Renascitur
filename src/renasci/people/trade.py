@@ -12,23 +12,27 @@ stopping at the first town: `beliefs.neighbour_settlements`):
 - one `trade.flow` event per pair a year (what moved, which way), then the goods ledger: `traded_out` at the
   giver, `traded_in` at the taker, so the ledger still balances.
 
-A coarse step moves N years of flow at once (the cap times N). The merchants' cut and S8's trade pull from
-real flows (`trade: true`) are later.
+The merchants at either end share `CUT` of the goods' value (their wealth). With `trade: true`, a flow between
+two realms is a ledger entry ("trade") on their relation, and S8's flat border-route pull gives way to it. A
+coarse step moves N years of flow at once (the cap times N).
 """
 
 from __future__ import annotations
 
+from renasci import relations
 from renasci.core.events import EventType
 from renasci.core.systems import System
 from renasci.people.beliefs import neighbour_settlements
 from renasci.people.population import masses
 
 RATE, CAP, MERCHANT = 0.25, 40, 20
-FLOW = EventType("trade.flow", 1, roles={"from": (1, 1), "to": (1, 1)}, payload={"moved": "json", "back": "json"})
+CUT = 0.05  # (the merchants' share of the goods' value, split between those at either end)
+FLOW = EventType("trade.flow", 1, roles={"from": (1, 1), "to": (1, 1)},
+                 payload={"moved": "json", "back": "json", "merchants": "json", "cut": "float"})
 EVENT_TYPES = (FLOW,)
 READS = frozenset({"ids:settlement", "ids:route", "ends", "days", "open", "vialux", "residents", "job", "control",
-                   "ids:relation", "a", "b", "kind", "stance", "pop:*", "stock:*", "goods:*"})
-WRITES = frozenset({"stock:*", "goods:*"})
+                   "ids:relation", "a", "b", "kind", "stance", "wealth", "pop:*", "stock:*", "goods:*"})     | relations.NOTE_READS
+WRITES = frozenset({"stock:*", "goods:*", "wealth"}) | relations.NOTE_WRITES
 
 
 def flow(stock_a: int, pop_a: int, stock_b: int, pop_b: int, cap: int, years: int = 1) -> int:
@@ -77,8 +81,8 @@ class Trade(System):
     def exchange(self, ctx, a, b, days, mats, years) -> None:
         if at_war(ctx, a, b):
             return
-        merchants = sum(1 for s in (a, b) for p in ctx.get(s, "residents") if ctx.get(p, "job") == "merchant")
-        cap = int(years * (CAP + MERCHANT * merchants) / (1 + days / 10))
+        traders = sorted(p for s in (a, b) for p in ctx.get(s, "residents") if ctx.get(p, "job") == "merchant")
+        cap = int(years * (CAP + MERCHANT * len(traders)) / (1 + days / 10))
         heads = {s: (masses(ctx, s) if ctx.params.get("aggregates") else 0) + len(ctx.get(s, "residents")) for s in (a, b)}
         stock = {s: ctx.read_columns(s, [f"stock:{m}" for m in mats]) for s in (a, b)}
         moved, back = {}, {}
@@ -93,8 +97,16 @@ class Trade(System):
                 back[m] = n
         if not moved and not back:
             return
-        ctx.emit("trade.flow", {"from": (a,), "to": (b,)}, purpose=f"flow:{b}", actor=a, place=a,
-                 payload={"moved": moved, "back": back})
+        values = {m: float(spec.get("value", 1)) for m, spec in ((ctx.params.get("crafts") or {}).get("materials") or {}).items()}
+        cut = round(CUT * sum(values.get(m, 1.0) * n for goods in (moved, back) for m, n in goods.items()), 2) if traders else 0.0
+        ev = ctx.emit("trade.flow", {"from": (a,), "to": (b,)}, purpose=f"flow:{b}", actor=a, place=a,
+                      payload={"moved": moved, "back": back, "merchants": traders, "cut": cut})
+        for p in traders:  # (the merchants who carried it take their share)
+            ctx.set(p, "wealth", round(float(ctx.get(p, "wealth") or 0.0) + cut / len(traders), 2))
+        if ctx.params.get("trade"):  # (S8: realms grow trust from what passes between them, not a flat pull)
+            pa, pb = ctx.get(a, "control"), ctx.get(b, "control")
+            if pa and pb and pa != pb:
+                relations.note(ctx, pa, pb, "trade", ev.id)
         for giver, taker, goods in ((a, b, moved), (b, a, back)):
             if not goods:
                 continue

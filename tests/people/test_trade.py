@@ -64,3 +64,28 @@ def test_a_coarse_step_closes_the_gap_as_its_years_would():
     one = trade.flow(1000, 10, 0, 10, cap=10**6, years=1)
     ten = trade.flow(1000, 10, 0, 10, cap=10**6, years=10)
     assert one < ten <= 500
+
+
+def test_merchants_take_a_cut_of_what_passes(traded):
+    paid = [x for x in traded.events if x.type == "trade.flow" and x.payload["merchants"]]
+    assert paid
+    values = {m: s["value"] for m, s in traded.rulesets[0][1].params["crafts"]["materials"].items()}
+    for x in paid:
+        worth = sum(values[m] * n for goods in (x.payload["moved"], x.payload["back"]) for m, n in goods.items())
+        assert x.payload["cut"] == round(trade.CUT * worth, 2) > 0
+        for m in x.payload["merchants"]:
+            assert traded.store.get(m, "job") == "merchant" or traded.store.status(m) != "active"
+
+
+def test_with_trade_on_realms_grow_trust_from_what_passes_between_them():
+    sc = renascita._scenario(None, polities="frontier", crafts=True)
+    sc["relations"] = [{**r, "stance": "neutral", "trust": 0.0} for r in sc["relations"]]
+    sc["params"]["campaigns"] = False
+    sc["params"]["trade"] = True
+    e = renascita.new_engine(seed=4, scenario=sc)
+    e.run(until=renascita.CAL.add(renascita.START, Span(years=4)))
+    flows = {x.id for x in e.events if x.type == "trade.flow"}
+    drifts = [x for x in e.events if x.type == "polity.drift"]
+    moved = [d for d in drifts if {c.ref for c in d.causes if c.kind == "event"} & flows]
+    assert moved and all(d.payload["moved"] > 0 for d in moved)  # (trust moved, up, by trade itself)
+    assert all(d.payload["moved"] <= 0.03 for d in moved)  # (capped as the old flat pull)
