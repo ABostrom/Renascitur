@@ -53,6 +53,43 @@ def test_a_sword_lies_lost_until_someone_a_road_away_finds_it():
     assert found and e.store.get("t:thirsting", "owner")
 
 
+def kept_person(**over):
+    return {"id": "t:ulf", "name": "Ulf", "race": renascita.SCENARIO["races"][0]["id"], "sex": "m", "age": 40,
+            "home": renascita.SCENARIO["settlements"][0]["id"], **over}
+
+
+def with_people(*people):
+    return renascita.new_engine(seed=3, scenario=truths.apply(renascita.SCENARIO, {"people": list(people)}))
+
+
+def test_a_kept_person_lives_where_the_file_says_at_that_age():
+    e = with_people(kept_person())
+    home = kept_person()["home"]
+    assert e.store.get("t:ulf", "name") == "Ulf" and e.store.get("t:ulf", "place") == home
+    assert "t:ulf" in e.store.get(home, "residents") and e.store.status("t:ulf") == "active"
+    assert renascita.START.year - e.store.get("t:ulf", "born")[1] in (40, 41)
+    years(e, 2)
+    assert e.check_conservation() == []
+
+
+def test_a_kept_persons_blood_and_nature_come_with_them():
+    plain = with_people(kept_person())
+    genome, traits = plain.store.get("t:ulf", "genome"), {**plain.store.get("t:ulf", "traits"), "temper": 0.99}
+    e = with_people(kept_person(id="t:other", genome=genome, traits=traits))
+    assert e.store.get("t:other", "genome") == genome and e.store.get("t:other", "traits")["temper"] == 0.99
+
+
+def test_keeping_a_person_writes_a_truth_a_new_world_can_hold():
+    e = years(renascita.new_engine(seed=3), 1)
+    person = next(p for p in e.store.ids("person", "active") if e.store.get(p, "place"))
+    fields = {k: e.store.get(person, k) for k in ("name", "race", "sex", "place", "born", "house", "genome", "traits")}
+    state = {"entities": [{"id": person, "kind": "person", "status": "active", "fields": fields}]}
+    section, entry = truths.keep(state, person, "r1", fields["born"][1] + 33)
+    assert section == "people" and entry["age"] == 33 and entry["from"] == "r1"
+    with_e = with_people(entry)
+    assert with_e.store.get(entry["id"], "name") == fields["name"]
+
+
 def test_a_truth_replays_the_same():
     a, b = years(engine(), 2), years(engine(), 2)
     assert [x.id for x in a.events] == [x.id for x in b.events]
@@ -68,6 +105,12 @@ def test_a_truth_replays_the_same():
     ({"objects": [{**BLADE, "material": "starlight"}]}, "made of"),
     ({"objects": [{**BLADE, "place": "v:nowhere"}]}, "nowhere"),
     ({"places": None}, "truth file"),
+    ({"people": [kept_person(sex="x")]}, "a person has"),
+    ({"people": [kept_person(race="r:nobody")]}, "a person has"),
+    ({"people": [kept_person(home="v:nowhere")]}, "lives nowhere"),
+    ({"people": [kept_person(age=-1)]}, "age"),
+    ({"people": [kept_person(house="h:none")]}, "house"),
+    ({"people": [kept_person(), kept_person()]}, "differ"),
     ({"places": [{**VILLAGE, "race": "r:nothing"}]}, "race"),
     ({"places": [{**VILLAGE, "masses": -1}]}, "masses"),
 ])

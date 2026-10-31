@@ -37,10 +37,12 @@ describe('the Forge', () => {
 		expect(await forge.enabled()).toBe(false);
 	});
 
-	it('keeps only what still exists, and things', () => {
+	it('keeps only what still exists: things and people', () => {
 		expect(keepable(card({ kind: 'object', status: 'active' }))).toBe(true);
 		expect(keepable(card({ kind: 'object', status: 'dead' }))).toBe(false);
+		expect(keepable(card({ status: 'active' }))).toBe(true);
 		expect(keepable(card({}))).toBe(false);
+		expect(keepable(card({ kind: 'house', status: 'active' }))).toBe(false);
 	});
 
 	it('leaves out empty facts', () => {

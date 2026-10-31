@@ -955,9 +955,9 @@ def cmd_keep(args) -> int:
     from renasci import truths
 
     run = Path(args.run)
-    _open_complete(run)
+    rf = _open_complete(run)
     state = json.loads(gzip.decompress((run / "state.json.gz").read_bytes()))
-    section, entry = truths.keep(state, args.entity, run.name)
+    section, entry = truths.keep(state, args.entity, run.name, max(e["date"][1] for e in rf.read("events")))
     truths.add(args.to, section, entry)
     print(f"kept {args.entity} in {args.to}")
     return 0

@@ -57,7 +57,9 @@ def _person(name, sex, born, race, place, genome, catalogue, house=None, mother=
 class _Builder:
     def __init__(self, engine, scenario: dict, seed: int, canon=None):
         self.e, self.sc = engine, scenario
-        self.canon = canon or {"people": {}, "heads": {}}
+        base = canon or {"people": {}, "heads": {}}
+        kept = {p["id"]: p for p in scenario.get("kept_people") or []}  # (hard truths, placed as canon is: #165)
+        self.canon = {**base, "people": {**base["people"], **kept}}
         self.cal, self.today = engine.calendar, engine.start
         self.races = {r["id"]: Race.from_json(r) for r in scenario["races"]}
         self.cat = Catalogue.from_json(scenario["catalogue"])
@@ -251,7 +253,7 @@ class _Builder:
             race = self.races[c.get("race") or spec["race"]]
             rng = self.stream("canon", cid)
             sex = c.get("sex") or ("m" if rng.random() < race.male else "f")
-            born = c.get("born")
+            born = _born(self.today, c["age"], int(rng.integers(0, self.cal.days_per_year))) if "age" in c else c.get("born")
             kids = sorted(k["born"] for k in canon.values() if cid in (k.get("father"), k.get("mother")) and k.get("born"))
             if born is None and kids:  # a parent: old enough at their first child's birth
                 lo = race.fertile[0] if sex == "f" else race.marriage[0]
@@ -271,9 +273,11 @@ class _Builder:
                 genome, _ = inherit(self.cat, mg, fg, self.genome_streams(cid), f"f:{group}", unknown=unknown)
             else:
                 genome = founder(self.cat, group, self.genome_streams(cid), f"f:{group}")
-            self.people[cid] = _person(c.get("name") or cid, sex, born, race.id, home, genome, self.cat,
+            self.people[cid] = _person(c.get("name") or cid, sex, born, race.id, home, c.get("genome") or genome, self.cat,
                                        house=c.get("house") if c.get("house") in houses else None,
                                        mother=mother, father=father)
+            if c.get("traits"):
+                self.people[cid]["traits"] = c["traits"]
             for parent in (mother, father):
                 if parent:
                     self.people[parent]["children"].append(cid)

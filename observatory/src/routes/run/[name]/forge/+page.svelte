@@ -115,7 +115,7 @@
 				{#if keepable(chosen)}
 					<button disabled={busy} onclick={() => chosen && keep(chosen)}>Keep</button>
 				{:else}
-					<p>Only things can be kept so far.</p>
+					<p>Only things and people can be kept so far.</p>
 				{/if}
 			{/if}
 		</section>
@@ -123,8 +123,9 @@
 		<aside>
 			<h2>World truths</h2>
 			{#each truths.objects ?? [] as o}<p>{o.name ?? o.type} <small>{o.place}</small></p>{/each}
+			{#each truths.people ?? [] as p}<p>{p.name} <small>{p.age}, {p.home}</small></p>{/each}
 			{#each truths.places ?? [] as p}<p>{p.name} <small>{p.kind}</small></p>{/each}
-			{#if !truths.objects?.length && !truths.places?.length}<p>Nothing kept yet.</p>{/if}
+			{#if !truths.objects?.length && !truths.people?.length && !truths.places?.length}<p>Nothing kept yet.</p>{/if}
 			<p><small>To run a world with these, name the file in a recipe: <code>[world] truths</code>.</small></p>
 		</aside>
 	</div>
