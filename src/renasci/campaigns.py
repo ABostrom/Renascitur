@@ -55,6 +55,7 @@ ROUTED = 0.15
 SHUT_IN = 0.3  # (an army this much smaller than its foe, in a town its side holds, stays behind the walls)
 RELIEVE = 0.6  # (a defender marches to relieve a town only with at least this much of the attacker's strength)
 SIEGE = 0.2
+STARVE = 2.0  # (a siege's odds rise by this much for a town short of all its food)
 RAZE, SACK_DEATH, BATTLE_FALL = 0.25, 0.3, 0.1
 SACK_DESTROY = 0.3  # (each object in a sacked town: S9 #126)
 
@@ -65,6 +66,12 @@ SIEGE_T = EventType("polity.siege", 1, roles={"besieger": (1, 1), "held_by": (1,
                     payload={"war": "id", "place": "id", "seasons": "int", "outcome": "str"})
 RAZED = EventType("settlement.razed", 1, roles={"settlement": (1, 1), "by": (1, 1)}, payload={"war": "id"})
 EVENT_TYPES = (CAMPAIGN, BATTLE, SIEGE_T, RAZED, _DESTROYED) + WAR_EVENTS + lines.EVENT_TYPES + travel.EVENT_TYPES
+
+
+def siege_odds(seasons: int, size: int, garrison: int, hunger: float = 0.0) -> float:
+    """A season's chance a besieged town falls: likelier the longer the siege, the bigger the army against the
+    garrison, and the hungrier the town (pure)."""
+    return min(0.9, SIEGE * seasons * size / (size + garrison) * (1.0 + STARVE * hunger))
 
 
 def enabled(ctx) -> bool:
@@ -112,7 +119,7 @@ class Campaigns(System):
     """A war's seasons (see the module doc)."""
 
     name, cadence, priority = "polity.campaigns", "seasonal", 3  # (after polity.war's yearly declarations)
-    reads = War.reads | geo.READS | travel.READS | frozenset({"armies", "razed", "journey", "ids:object", "owner",
+    reads = War.reads | geo.READS | travel.READS | frozenset({"armies", "razed", "journey", "ids:object", "owner", "hunger",
                                                              "possessions"})
     writes = War.writes | travel.WRITES | frozenset({"armies", "razed", "owner", "possessions", "place", "status",
                                                         "destroyed"})
@@ -281,7 +288,8 @@ class Campaigns(System):
         place = army["at"]
         army["siege"] = int(army.get("siege") or 0) + 1
         garrison = 5 + len(ctx.get(place, "residents") or []) + sum(a["size"] for a in inside)
-        p = min(0.9, SIEGE * army["siege"] * army["size"] / (army["size"] + garrison))
+        famine = (ctx.params.get("ecology") or {}).get("famine") is not None  # (S10 #129: hunger opens gates)
+        p = siege_odds(army["siege"], army["size"], garrison, float(ctx.get(place, "hunger") or 0.0) if famine else 0.0)
         fell = ctx.chance(p, f"siege:{place}", owner=war, stakes=1.5)
         ev = ctx.emit("polity.siege", {"besieger": (att,), "held_by": (holder,)}, purpose=f"siege:{place}", actor=war,
                       place=place, payload={"war": war, "place": place, "seasons": army["siege"],

@@ -128,3 +128,68 @@ def test_a_coarse_step_reaps_usual_years_past_its_first_and_leaves_no_hunger():
             assert x.payload["factor"] >= 0.8 * ecology.MEAN  # (one year's weather of five)
     assert all(not e.store.get(s, "hunger") for s in e.store.ids("settlement"))
     assert e.check_conservation() == []
+
+
+# ---------------------------------------------------------------- responses (slice 2)
+
+
+@pytest.fixture(scope="module")
+def long_starved():
+    return blighted(years=4, harvests=4)
+
+
+def test_a_famine_leaves_its_notables_hungry(long_starved):
+    from renasci.people.drives import Food
+
+    e = long_starved
+    assert e.store.get(TOWN, "famine")  # (four failed harvests: still starving)
+    hungry = [p for p in e.store.get(TOWN, "residents") if (e.store.get(p, "drives") or {}).get("food", 1.0) <= Food.STARVING]
+    assert hungry
+
+
+def test_the_hungry_want_to_leave_and_some_flee(long_starved):
+    e = long_starved
+    formed = [x for x in e.events if x.type == "people.ambition_formed" and x.payload["class"] == "Leave"]
+    assert formed
+    began = {}
+    for x in e.events:
+        if x.type == "famine.began":
+            began.setdefault(x.roles["settlement"][0], x.date)
+    for x in formed:  # (only where a famine was on)
+        town = x.roles["target"][0]
+        assert town in began and began[town] <= x.date
+    leaving = [x for x in e.events if x.type == "people.ambition_resolved" and x.payload["status"] == "fulfilled"
+               and e.store.get(x.roles["ambition"][0], "class") == "Leave"]
+    assert leaving  # (someone got out)
+
+
+def test_without_famine_nobody_forms_leave():
+    sc_free = renascita._scenario(None, crafts=True)
+    sc_free["params"]["ecology"] = dict(ecology.DEFAULT)
+    free = renascita.new_engine(seed=3, scenario=sc_free)
+    free.run(until=renascita.CAL.add(renascita.START, Span(years=3)))
+    assert not [x for x in free.events if x.type == "people.ambition_formed" and x.payload["class"] == "Leave"]
+
+
+def test_hunger_hastens_a_siege():
+    from renasci import campaigns
+
+    fed = campaigns.siege_odds(seasons=2, size=40, garrison=30, hunger=0.0)
+    starving = campaigns.siege_odds(seasons=2, size=40, garrison=30, hunger=0.8)
+    assert fed < starving <= 0.9
+    assert campaigns.siege_odds(seasons=2, size=40, garrison=30) == fed  # (no famine, no change)
+
+
+def test_a_starving_seat_stirs_a_rising():
+    from renasci.people.ambitions import Secede
+
+    class Ctx:
+        params = {"ecology": {"famine": {}}}
+
+        def __init__(self, famine):
+            self.f = {"p": {"house": "h", "traits": {}}, "h": {"seat": "s"}, "s": {"famine": famine}}
+
+        def get(self, e, k):
+            return self.f.get(e, {}).get(k)
+
+    assert Secede().urge(Ctx({"since": [4, 1, 0]}), "p") > Secede().urge(Ctx(None), "p")

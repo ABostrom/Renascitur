@@ -5,7 +5,8 @@ starter set reads only what exists so far; deeper systems (food and harvests in 
 and S8) will feed them later without changing their shape.
 
 - `food`: how crowded the settlement is (masses + notables against its capacity, or notables alone in a
-  world without aggregates), until S10 has food.
+  world without aggregates); in a famine world (S10 #129), no more than `Food.STARVING` while the town is in
+  famine.
 - `safety`: one minus the settlement's `danger` (0 when unset).
 - `belonging`: a spouse, living children, and the strength of one's ties.
 - `status`: one's house and its rank, offices held, and being an heir is S7's to add.
@@ -36,16 +37,20 @@ class Drive:
 
 
 class Food(Drive):
-    name, reads = "food", frozenset({"capacity", "residents", "pop:*"})
+    name, reads = "food", frozenset({"capacity", "residents", "pop:*", "famine"})
+    STARVING = 0.2  # (a famine's hunger: S10 #129)
 
     def level(self, ctx, person, settlement):
         from renasci.people.population import masses
 
         capacity = ctx.get(settlement, "capacity")
-        if not capacity:
-            return 1.0
-        people = len(ctx.get(settlement, "residents")) + (masses(ctx, settlement) if ctx.params.get("aggregates") else 0)
-        return 1.2 - people / capacity  # comfortable below ~40% full, hungry when full
+        level = 1.0
+        if capacity:
+            people = len(ctx.get(settlement, "residents")) + (masses(ctx, settlement) if ctx.params.get("aggregates") else 0)
+            level = 1.2 - people / capacity  # comfortable below ~40% full, hungry when full
+        if (ctx.params.get("ecology") or {}).get("famine") is not None and ctx.get(settlement, "famine"):
+            level = min(level, self.STARVING)
+        return level
 
 
 class Safety(Drive):
