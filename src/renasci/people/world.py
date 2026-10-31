@@ -44,6 +44,8 @@ def people_ruleset(name: str, scenario: dict, version: int = 1) -> Ruleset:
         systems += (ecology.climate_system()(),)
         if scenario["params"]["ecology"].get("burial") is not False:  # (the living and their dead: #128)
             systems += (ecology.burial_system()(),)
+        if scenario["params"]["ecology"].get("disease") is not False:  # (sickness: #128)
+            systems += (ecology.disease_system()(),)
         if scenario["params"]["ecology"].get("famine") is not None:  # (S10 §3, #129; {} for the defaults)
             systems += (ecology.famine_system()(),)
     if scenario.get("geography"):  # journeys need routes (S4 §5)

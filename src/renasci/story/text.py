@@ -12,7 +12,7 @@ from __future__ import annotations
 BOOKKEEPING = {
     "people.population", "people.drives", "people.minds", "people.ties", "belief.reinforced", "belief.shares",
     "belief.faded", "engine.cast", "engine.cast_column", "lod.promote", "lod.demote", "people.scheme_replanned",
-    "burial.season",
+    "burial.season", "disease.season",
 }
 
 
