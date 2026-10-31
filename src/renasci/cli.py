@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import dataclasses
 import datetime
 import gzip
 import json
@@ -127,6 +128,7 @@ def _run(recipe, out: Path, meta: dict | None = None, canon_doc: dict | None = N
                  "end": recipe.end}  # pins past the run's end are out of scope, not guarded
     engine = world.new_engine(recipe.seed, ripples=recipe.ripples, **extra, **recipe.params)
     engine.extend(recipe.extensions)
+    truths = recipe.params.get("truths")
     if recipe.reshuffles:
         engine.reshuffle(recipe.rng_reshuffles(world.calendar))
     engine.full_reads = recipe.full_reads
@@ -136,6 +138,8 @@ def _run(recipe, out: Path, meta: dict | None = None, canon_doc: dict | None = N
     if canon_doc is not None:
         _write_canon(folder.path, canon_doc)
     _write_geography(folder.path, world, recipe.params)
+    if truths:  # (a run keeps its own copy, as it keeps its canon)
+        shutil.copyfile(truths, folder.path / "truths.json")
     _finish(engine, folder, recipe)
     print(f"run {recipe.name}: {folder.manifest['segments']} segments, state {folder.manifest['meta']['state_hash']}")
     return folder.path
@@ -165,6 +169,12 @@ def _replay(run: Path, new, out: Path, from_: str | None = None, rerun: bool = F
     if without_name_and_ripples(old.raw) != without_name_and_ripples(new.raw):
         raise ValueError("a replay may only change ripples, reshuffles, the run name and full_reads; "
                          "for anything else, `renasci run`")
+    kept = base.path / "truths.json"
+    if kept.exists():
+        given = Path(new.params.get("truths") or kept)
+        if given.exists() and given.read_bytes() != kept.read_bytes():
+            raise ValueError("the truth file has changed since this run; for that, `renasci run`")
+        new = dataclasses.replace(new, params={**new.params, "truths": str(kept)})
     if base.manifest["meta"].get("extensions", []) != digests(new.extensions):
         raise ValueError("an extension's source has changed since this run; for that, `renasci run`")
     if from_:
@@ -938,6 +948,18 @@ def cmd_graph(args) -> int:
     return 0
 
 
+def cmd_keep(args) -> int:
+    from renasci import truths
+
+    run = Path(args.run)
+    _open_complete(run)
+    state = json.loads(gzip.decompress((run / "state.json.gz").read_bytes()))
+    section, entry = truths.keep(state, args.entity, run.name)
+    truths.add(args.to, section, entry)
+    print(f"kept {args.entity} in {args.to}")
+    return 0
+
+
 def cmd_pools(args) -> int:
     print(json.dumps(load_pools(args.extensions).describe(), indent=1))
     return 0
@@ -959,6 +981,10 @@ def main(argv=None) -> int:
     p.add_argument("--polities", action="store_true", help="with polities and campaigns")
     p.add_argument("--beliefs", action="store_true", help="with beliefs")
     p.add_argument("--extensions", nargs="*", default=[], help="extensions to include")
+    p = sub.add_parser("keep", help="keep a thing from a run as a hard truth in a truth file (renasci.truths)")
+    p.add_argument("run")
+    p.add_argument("entity")
+    p.add_argument("--to", required=True, help="the truth file: a recipe names it with [world] truths")
     p = sub.add_parser("pools", help="list every pool's entries and where each came from")
     p.add_argument("extensions", nargs="*", help="extensions to include")
     p = sub.add_parser("run", help="run a recipe into a run folder")
@@ -1108,7 +1134,7 @@ def main(argv=None) -> int:
     p.add_argument("--out", default="runs/_bench")
     args = parser.parse_args(argv)
     try:
-        commands = {"graph": cmd_graph, "pools": cmd_pools, "run": cmd_run, "replay": cmd_replay, "diff": cmd_diff, "inspect": cmd_inspect, "bench": cmd_bench, "latch": cmd_latch, "stories": cmd_stories, "claims": cmd_claims, "pack": cmd_pack, "chronicle": cmd_chronicle, "check-prose": cmd_check_prose, "brief": cmd_brief, "mcp": cmd_mcp, "ripple": cmd_ripple, "map": cmd_map, "vault": cmd_vault,
+        commands = {"keep": cmd_keep, "graph": cmd_graph, "pools": cmd_pools, "run": cmd_run, "replay": cmd_replay, "diff": cmd_diff, "inspect": cmd_inspect, "bench": cmd_bench, "latch": cmd_latch, "stories": cmd_stories, "claims": cmd_claims, "pack": cmd_pack, "chronicle": cmd_chronicle, "check-prose": cmd_check_prose, "brief": cmd_brief, "mcp": cmd_mcp, "ripple": cmd_ripple, "map": cmd_map, "vault": cmd_vault,
                     "observe": cmd_observe}
         return commands[args.command](args)
     except (ValueError, FileExistsError, FileNotFoundError) as err:

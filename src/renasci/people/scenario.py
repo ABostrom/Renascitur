@@ -349,6 +349,10 @@ class _Builder:
 
             from renasci import ecology
 
+            from renasci import truths
+
+            for o in self.sc.get("objects") or []:  # (what the world starts with: #165)
+                self.e.cast("object", o["id"], truths.object_fields(o, self.e.start.to_json()))
             crafts.cast(self.e, sorted(settlements), self.sc["params"]["crafts"],
                         ecology.stores(self.sc["params"], {s: spec.get("masses", 0) + len(residents[s])
                                                            for s, spec in settlements.items()}))

@@ -108,6 +108,8 @@ def parse_recipe(raw: dict) -> Recipe:
         q = cal.canonical_tick(d)[2]
         start = Date(d.age, d.year, -(-q * cal.days_per_year // 4))  # (the start of its quarter: what's re-rolled)
         reshuffles.append((start, r["salt"]))
+    if not isinstance(raw.get("world", {}).get("truths", ""), str):
+        raise ValueError("[world] truths is the path of a truth file")
     every = run.get("checkpoint_every_years", 10)
     if type(every) is not int or every < 1:
         raise ValueError("checkpoint_every_years must be a positive int")
@@ -132,6 +134,8 @@ def load_recipe(path) -> Recipe:
     """A recipe file; a relative [vault] path is relative to the recipe, not to where it's run from."""
     with Path(path).open("rb") as f:
         recipe = parse_recipe(tomllib.load(f))
+    if recipe.params.get("truths") and not Path(recipe.params["truths"]).is_absolute():
+        recipe.params["truths"] = str((Path(path).parent / recipe.params["truths"]).resolve())
     if recipe.vault and not Path(recipe.vault["path"]).is_absolute():
         resolved = {"path": str((Path(path).parent / recipe.vault["path"]).resolve())}
         object.__setattr__(recipe, "vault", resolved)
