@@ -134,6 +134,7 @@ pools = Pools()
 pools.define("event_types").freeze()  # (those extensions add; the engine's own stay with their systems for now)
 pools.define("reactions").freeze()  # (authored beats: see `Reaction`)
 pools.define("links").freeze()  # (authored links in the possible graph: see `analysis.graph.Link`)
+pools.define("wording").freeze()  # (how an event reads: see `Wording`)
 pools.define("systems").freeze()  # (whole new mechanics, joining every ruleset: see `Engine.extend`)
 pools.define("forcers").freeze()
 pools.define("disguises").freeze()
@@ -156,6 +157,15 @@ class Reaction:
     emits: tuple = ()
 
 
+@dataclass(frozen=True)
+class Wording:
+    """How an event type reads in the story layer: `text(event, names)` is one line (`story.text.Names`). An event
+    with none still reads, generically."""
+
+    name: str  # (the event type)
+    text: Callable
+
+
 def base() -> Pools:
     """The base set, whatever has been imported so far (`pools` only holds what has)."""
     for home in HOMES:
@@ -175,6 +185,20 @@ def load(names=()) -> Pools:
     for n in found:
         found[n].freeze()
     return found
+
+
+def of_run(manifest: dict, also=()) -> Pools:
+    """The pools a finished run was made with, to read it by, plus any `also`. An extension that won't load is left
+    out, with a note, and its events read generically: a run stays readable without its source, whatever broke."""
+    kept: list[str] = []
+    for name in [*(n for n, _ in (manifest.get("meta") or {}).get("extensions", [])), *also]:
+        try:
+            load([*kept, name])
+        except Exception as e:
+            print(f"renasci: reading without extension {name}: {e}", file=sys.stderr)
+        else:
+            kept.append(name)
+    return load(kept)
 
 
 def _module(name: str):

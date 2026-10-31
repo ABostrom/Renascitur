@@ -36,7 +36,7 @@ from renasci.analysis.divergence import analyse
 from renasci.analysis.latch import latch_points
 from renasci.analysis.stories import period, stories
 from renasci.core.calendar import Date
-from renasci.core.pools import digests, load as load_pools
+from renasci.core.pools import digests, load as load_pools, of_run
 from renasci.io.checkpoint import load_checkpoint, save_checkpoint
 from renasci.io.recipe import load_recipe, parse_recipe
 from renasci.io.runfolder import TABLES, RunFolder, cut, flush
@@ -280,7 +280,7 @@ def cmd_latch(args) -> int:
     raw = rf.manifest["meta"]["recipe"]
     world = get_world(raw["run"]["world"])
     state = json.loads(gzip.decompress((run / "state.json.gz").read_bytes()))
-    points = latch_points(list(rf.read("events")), list(rf.read("hinges")), state,
+    points = latch_points(list(rf.read("events")), list(rf.read("hinges")), state, known=of_run(rf.manifest),
                           days_per_year=world.calendar.days_per_year)
     (run / "analysis").mkdir(exist_ok=True)
     (run / "analysis" / "latch.json").write_text(json.dumps({"run": run.name, "points": points}, indent=1),
@@ -312,8 +312,9 @@ def cmd_latch(args) -> int:
                                       "person": point["person"]}})
     code = _diff(run, path)
     if (run / "analysis" / "stories.json").exists():  # so the what-if's stories sit next to the baseline's
-        found = stories(list(RunFolder.open(path).read("events")),
-                        json.loads(gzip.decompress((path / "state.json.gz").read_bytes())))
+        folder = RunFolder.open(path)
+        found = stories(list(folder.read("events")), json.loads(gzip.decompress((path / "state.json.gz").read_bytes())),
+                        of_run(folder.manifest))
         (path / "analysis" / "stories.json").write_text(json.dumps({"run": path.name, **found}, indent=1),
                                                         encoding="utf-8")
     print(f"latch: launched {path.name}")
@@ -364,8 +365,9 @@ def cmd_ripple(args) -> int:
     path = _replay(run, recipe, out, rerun=True, meta={"ripple_of": {"run": run.name, "ripple": rid}})
     code = _diff(run, path)
     if (run / "analysis" / "stories.json").exists():  # (so its stories sit next to the parent's)
-        found = stories(list(RunFolder.open(path).read("events")),
-                        json.loads(gzip.decompress((path / "state.json.gz").read_bytes())))
+        folder = RunFolder.open(path)
+        found = stories(list(folder.read("events")), json.loads(gzip.decompress((path / "state.json.gz").read_bytes())),
+                        of_run(folder.manifest))
         (path / "analysis" / "stories.json").write_text(json.dumps({"run": path.name, **found}, indent=1),
                                                         encoding="utf-8")
     print(f"ripple: launched {path.name}")
@@ -516,7 +518,7 @@ def cmd_stories(args) -> int:
     run = Path(args.run)
     rf = _open_complete(run)
     state = json.loads(gzip.decompress((run / "state.json.gz").read_bytes()))
-    found = stories(list(rf.read("events")), state)
+    found = stories(list(rf.read("events")), state, of_run(rf.manifest))
     (run / "analysis").mkdir(exist_ok=True)
     (run / "analysis" / "stories.json").write_text(json.dumps({"run": run.name, **found}, indent=1), encoding="utf-8")
     lo = args.from_ if args.from_ is not None else args.to
@@ -971,7 +973,8 @@ def cmd_gen(args) -> int:
         if not eq:
             raise ValueError(f"--where is key=value, not {pair!r}")
         wants[key] = value
-    found = cards.generate(Run(args.run), load_pools(args.extensions).generators, args.what, wants, args.seed, args.count,
+    run = Run(args.run)
+    found = cards.generate(run, of_run(run.manifest, args.extensions).generators, args.what, wants, args.seed, args.count,
                            args.notable)
     if args.save:  # (for the Forge: the page reads it from the run folder)
         folder = Path(args.run) / "analysis" / "cards"
