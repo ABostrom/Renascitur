@@ -27,6 +27,7 @@ from pathlib import Path
 
 from renasci.analysis.truth import Log, judge
 from renasci.core.canon import canonical
+from renasci.core.pools import of_run
 from renasci.people import beliefs as B
 from renasci.story.text import Names, claim_text, noun, reading
 from renasci.story.trace import origin
@@ -71,7 +72,8 @@ class Run:
         self.by_id = {e["id"]: e for e in events}
         self.end_year = max((e["date"][1] for e in events), default=None)
         self.ents = {e["id"]: e for e in state["entities"]}
-        self.names = Names(state, geography)
+        known = of_run(manifest)
+        self.names = Names(state, geography, known.wording)
         self.history: dict[tuple[str, str], list[tuple[list, object, object]]] = {}
         for d in deltas:  # (in the order they happened)
             if d["field"] in DELTA_FIELDS:
@@ -92,7 +94,7 @@ class Run:
         if stories is None:
             from renasci.analysis.stories import stories as find
 
-            stories = find(events, state)
+            stories = find(events, state, known)
         self.stories = stories
         self.houses = {i: e["fields"]["house"] for i, e in self.ents.items()
                        if e["kind"] == "person" and e["fields"].get("house")}

@@ -19,7 +19,8 @@ BOOKKEEPING = {
 class Names:
     """What every entity and place in a run is called (a person's house after their name, when they have one)."""
 
-    def __init__(self, state: dict, geography: dict | None = None):
+    def __init__(self, state: dict, geography: dict | None = None, wording=None):
+        self.wording = wording or {}  # (extensions' own lines, by event type: `core.pools.Wording`)
         self.names: dict[str, str] = {p["id"]: p["name"] for p in (geography or {}).get("places", []) if p.get("name")}
         self.names |= {r["id"]: r["name"] for r in (geography or {}).get("regions", []) if r.get("name")}
         ents = {e["id"]: e for e in state.get("entities", [])}
@@ -146,7 +147,8 @@ def reading(ev: dict, names: Names, by_id: dict | None = None) -> str | None:
     heard (its claim), naming an event in the claim by its noun (`by_id`: the run's events)."""
     if ev["type"] in BOOKKEEPING or ev["type"].startswith("ripple."):
         return None
-    t = TEMPLATES.get(ev["type"])
+    own = names.wording.get(ev["type"])
+    t = own.text if own else TEMPLATES.get(ev["type"])
     if t is not None:
         try:
             line = t(ev, names)

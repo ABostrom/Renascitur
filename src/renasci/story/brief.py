@@ -45,13 +45,14 @@ def _latch(run: Run) -> list[dict]:
     if run.folder is None:
         return []
     from renasci.analysis.latch import latch_points
+    from renasci.core.pools import of_run
     from renasci.io.runfolder import RunFolder
 
     cal = run.manifest.get("meta", {}).get("calendar")
     if not cal:
         return []
     return latch_points(run.events, list(RunFolder.open(run.folder).read("hinges")), run.state,
-                        days_per_year=Calendar.from_json(cal).days_per_year, limit=10 ** 6)
+                        days_per_year=Calendar.from_json(cal).days_per_year, limit=10 ** 6, known=of_run(run.manifest))
 
 
 class Who:

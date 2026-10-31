@@ -60,6 +60,8 @@ LIBRARY = pools.define("ambitions")  # (a class joins with `@LIBRARY.add`)
 
 class Ambition:
     held_by = ("person",)  # (the kinds of entity that can hold it: anything else needs a mark with `agency`)
+    stakes = 1.0  # (how much it matters to a story: arcs and latch points rank by it)
+    titles = {"*": "The {class} of {owner}"}  # (an arc's title by outcome; {owner} {target} {house} {class})
     claims_seat = False  # (a son with this in mind isn't sent off to found a cadet line)
     casus_belli = False  # (a ruler's active one against a realm is a cause for war)
     name = ""
@@ -99,6 +101,8 @@ class Ambition:
 
 @LIBRARY.add
 class Marry(Ambition):
+    titles = {"fulfilled": "The marriage of {owner}", "*": "{owner}'s courtship"}
+
     name, cooldown_years = "Marry", 3
     reads = frozenset({"spouse", "drives", "race", "born"})
 
@@ -128,6 +132,9 @@ class Marry(Ambition):
 
 @LIBRARY.add
 class Standing(Ambition):
+    stakes = 1.5
+    titles = {"fulfilled": "The rise of {owner} at court", "*": "{owner}'s bid for favour"}
+
     name, cooldown_years = "Standing", 6
     reads = frozenset({"house", "drives", "favour", "name"})
 
@@ -155,6 +162,9 @@ class Standing(Ambition):
 
 @LIBRARY.add
 class Seize(Ambition):
+    stakes = 3.0
+    titles = {"fulfilled": "How {owner} took the seat of House {house}", "*": "{owner}'s plot for the seat of House {house}"}
+
     """A succession plot: take the house's headship by removing those ahead in the line (up to three)."""
     claims_seat = True
 
@@ -571,6 +581,9 @@ class Covet(Ambition):
 
 @LIBRARY.add
 class Vengeance(Ambition):
+    stakes = 2.0
+    titles = {"fulfilled": "{owner}'s revenge on {target}", "*": "{owner}'s long revenge"}
+
     """Answer an attributed harm: the killer of one's kin, or whoever plotted against one."""
 
     name, cooldown_years = "Vengeance", 8
@@ -618,6 +631,8 @@ class Vengeance(Ambition):
 
 @LIBRARY.add
 class Protect(Vengeance):
+    titles = {"*": "{owner} stands guard against {target}"}
+
     """Strike first at whoever plotted against one's own (a kin's exposed plot)."""
 
     name, cooldown_years = "Protect", 8

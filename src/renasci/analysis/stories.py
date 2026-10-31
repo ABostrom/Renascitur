@@ -20,7 +20,7 @@ more than half of a house's notables alive in its span, for a house with 4+ arcs
 links go first; among equally weak links, the one between arcs furthest apart in years (a generation
 apart before a decade apart), then the one that splits most evenly (`partition`). A saga takes the title of its most salient arc.
 
-**Titles** come from per-class templates (`TITLES`, data); an arc whose blow killed someone is named
+**Titles** come from each ambition's `titles`; an arc whose blow killed someone is named
 for the killing. `period(found, lo, hi)` answers "what flows through these years".
 
 Pure: `stories(events, state)` takes the run's events and final state and returns JSON-ready data;
@@ -29,22 +29,17 @@ Pure: `stories(events, state)` takes the run's events and final state and return
 
 from __future__ import annotations
 
-STAKES = {"Seize": 3.0, "Vengeance": 2.0, "Protect": 2.0, "Standing": 1.5, "Marry": 1.0}
+from renasci.core.pools import base
+from renasci.people.ambitions import Ambition
+
 MAX_ARCS, MAX_PEOPLE = 12, 40
 HOUSE_ARCS = 4  # a house with this many arcs is protected from being swallowed
-KILLS = {"Poison": "poisoning", "Assassinate": "murder", "Duel": "fatal duel"}
-TITLES = {
-    "Marry": {"fulfilled": "The marriage of {owner}", "*": "{owner}'s courtship"},
-    "Standing": {"fulfilled": "The rise of {owner} at court", "*": "{owner}'s bid for favour"},
-    "Seize": {"fulfilled": "How {owner} took the seat of House {house}", "*": "{owner}'s plot for the seat of House {house}"},
-    "Vengeance": {"fulfilled": "{owner}'s revenge on {target}", "*": "{owner}'s long revenge"},
-    "Protect": {"*": "{owner} stands guard against {target}"},
-    "*": {"*": "The {class} of {owner}"},
-}
 
 
-def stories(events: list[dict], state: dict) -> dict:
-    """Arcs and sagas (JSON-ready, deterministic)."""
+def stories(events: list[dict], state: dict, known=None) -> dict:
+    """Arcs and sagas (JSON-ready, deterministic). `known`: the run's pools (`of_run`), for its extensions' words."""
+    known = known or base()
+    kills = {n: a.killing for n, a in known.actions.items() if a.killing}
     ents = {e["id"]: e for e in state["entities"]}
 
     def get(entity, name):
@@ -93,7 +88,7 @@ def stories(events: list[dict], state: dict) -> dict:
         violent, killed, struck = 0, None, set()
         for b in mine:
             ev = by_id[b]
-            if ev["type"] == "people.action" and ev["payload"]["action"] in KILLS \
+            if ev["type"] == "people.action" and ev["payload"]["action"] in kills \
                     and ev["payload"]["outcome"] == "success":
                 violent += 1  # a blow struck (a guarded target may yet live)
                 struck.add(b)
@@ -111,17 +106,17 @@ def stories(events: list[dict], state: dict) -> dict:
         years = [by_id[b]["date"][1] for b in mine] or [get(amb, "formed")[1]]
         resolved = get(amb, "resolved")
         span = [get(amb, "formed")[1], max(years + ([resolved[0][1]] if resolved else []))]
-        salience = STAKES.get(cls, 1.0) + 2.0 * violent + 0.1 * len(people) + (1.0 if head else 0.5 if house else 0.0)
+        ambition = known.ambitions.get(cls, Ambition())
+        salience = ambition.stakes + 2.0 * violent + 0.1 * len(people) + (1.0 if head else 0.5 if house else 0.0)
         if killed:
-            title = f"The {KILLS[killed[0]]} of {full(killed[1])}"
+            title = f"The {kills[killed[0]]} of {full(killed[1])}"
         else:
-            templates = TITLES.get(cls, TITLES["*"])
-            template = templates.get(state_, templates["*"])
+            template = ambition.titles.get(state_) or ambition.titles.get("*") or Ambition.titles["*"]
             title = template.format(owner=full(owner), target=full(get(amb, "target")),
                                     house=get(house, "name") or house or "?", **{"class": cls})
         target = get(amb, "target")
         timeline = [{"event": b, "date": by_id[b]["date"], "type": by_id[b]["type"],
-                     "turn": _turn(by_id[b], full, deaths)} for b in mine]
+                     "turn": _turn(by_id[b], full, deaths, kills)} for b in mine]
         progress = [{"scheme": sc, "state": get(sc, "state"), "step": get(sc, "step"), "steps": len(get(sc, "plan") or []),
                      "plan": [st["action"] for st in get(sc, "plan") or []]} for sc in sorted(schemes_of.get(amb, []))]
         arcs.append({"id": f"arc:{amb}", "ambition": amb, "owner": owner, "class": cls, "target": target,
@@ -134,11 +129,11 @@ def stories(events: list[dict], state: dict) -> dict:
     return {"arcs": arcs, "sagas": _sagas(arcs, by_id, ents, deaths)}
 
 
-def _turn(ev: dict, full, deaths) -> str | None:
+def _turn(ev: dict, full, deaths, kills) -> str | None:
     """A beat's line on the story river, if it is a turning point (a killing, a death, an exposure, a seat
     changing hands, the end)."""
     t, roles, pay = ev["type"], ev["roles"], ev["payload"]
-    if t == "people.action" and pay["action"] in KILLS and pay["outcome"] == "success":
+    if t == "people.action" and pay["action"] in kills and pay["outcome"] == "success":
         victim = (roles.get("target") or [None])[0]
         died = victim in deaths and any(tuple(c) == ("event", ev["id"]) for c in deaths[victim]["causes"])
         return f"{pay['action']} on {full(victim)}" + ("" if died else " (survived)")

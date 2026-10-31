@@ -391,6 +391,54 @@ def test_a_recipes_ripple_can_rest_on_an_extensions_disguise(tmp_path, monkeypat
     sys.modules.pop("ext_dream", None)
 
 
+def test_an_extension_reads_in_its_own_words(beats, tmp_path):
+    from renasci.cli import main
+    from renasci.core.pools import of_run
+    from renasci.io.runfolder import RunFolder
+    from renasci.story.pack import Run
+    from renasci.story.text import reading
+
+    with open("ext_beats.py", "a", encoding="utf-8") as f:
+        f.write(textwrap.dedent("""
+            from renasci.core.pools import Wording
+
+            Oath.stakes, Oath.titles = 9.0, {"*": "The oath of {owner}"}
+            _extend = extend
+
+
+            def extend(pools):
+                _extend(pools)
+                pools.wording.add(Wording("beat.sworn", lambda ev, n: f"{n.full(ev['roles']['who'][0])} swore"))
+        """))
+    out = tmp_path / "runs"
+    assert main(["run", run_recipe(tmp_path, "worded", end="4A 8"), "--out", str(out)]) == 0
+    folder = RunFolder.open(out / "worded")
+    assert of_run(folder.manifest).ambitions["Oath"].stakes == 9.0
+    run = Run(out / "worded")
+    sworn = next(e for e in run.events if e["type"] == "beat.sworn")
+    assert reading(sworn, run.names).endswith("swore")
+    arcs = [a for a in run.stories["arcs"] if a["class"] == "Oath"]
+    assert arcs and arcs[0]["title"].startswith("The oath of ") and arcs[0]["salience"] >= 9.0
+
+
+def test_a_run_stays_readable_without_its_extension(beats, tmp_path, capsys):
+    from renasci.core.pools import of_run
+
+    (tmp_path / "ext_broken.py").write_text("from renasci.people.planner import Gone\n", encoding="utf-8")
+    (tmp_path / "ext_stale.py").write_text("def extend(pools):\n    pools.nosuch.add(1)\n", encoding="utf-8")
+    names = ["ext_gone", "ext_broken", "ext_stale", "ext_beats"]
+    found = of_run({"meta": {"extensions": [[n, "abc"] for n in names]}})
+    assert "Marry" in found.ambitions and "Oath" in found.ambitions  # (what still loads keeps its words)
+    assert "reading without extension ext_stale" in capsys.readouterr().err
+    sys.modules.pop("ext_stale", None)
+
+
+def test_presentation_lives_on_the_entry():
+    known = base()
+    assert known.ambitions["Seize"].stakes == 3.0 and "fulfilled" in known.ambitions["Marry"].titles
+    assert known.actions["Poison"].killing == "poisoning" and known.actions["Duel"].killing
+
+
 def test_the_pools_command_lists_every_pool():
     out = subprocess.run([sys.executable, "-X", "utf8", "-m", "renasci.cli", "pools"], capture_output=True, text=True,
                          check=True).stdout

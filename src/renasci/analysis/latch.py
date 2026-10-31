@@ -21,8 +21,9 @@ from __future__ import annotations
 import math
 
 from renasci.core.calendar import Date
+from renasci.core.pools import base
+from renasci.people.ambitions import Ambition
 
-STAKES = {"Seize": 3.0, "Vengeance": 2.0, "Protect": 2.0, "Standing": 1.5, "Marry": 1.0}
 PROTECT_YEARS = 10
 LIMIT = 25  # points kept in latch.json, per kind
 VIOLENT = ("people.action",)
@@ -32,8 +33,9 @@ STORY = ("people.action", "people.ambition_formed", "people.scheme_begun", "peop
 
 
 def latch_points(events: list[dict], hinges: list[dict], state: dict, *, days_per_year: int,
-                 limit: int = LIMIT) -> list[dict]:
-    """Ranked latch points (dicts, JSON-ready)."""
+                 limit: int = LIMIT, known=None) -> list[dict]:
+    """Ranked latch points (dicts, JSON-ready). `known`: the run's pools (`of_run`)."""
+    known = known or base()
     entities = {e["id"]: e for e in state["entities"]}
 
     def field(entity, name):
@@ -67,7 +69,7 @@ def latch_points(events: list[dict], hinges: list[dict], state: dict, *, days_pe
         for amb in sorted(ambs):
             cls = field(amb, "class")
             progress = max((s["step"] / len(s["plan"]) for s in schemes_of.get(amb, []) if s.get("plan")), default=0.0)
-            score += STAKES.get(cls, 1.0) * (1.0 + youth) * (1.0 + progress)
+            score += known.ambitions.get(cls, Ambition()).stakes * (1.0 + youth) * (1.0 + progress)
             why.append(f"{cls}" + (f" ({round(progress * 100)}% through a scheme)" if progress else ""))
         arcs = aimed_at.get(person, 0)
         score += 0.5 * arcs

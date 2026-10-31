@@ -65,6 +65,7 @@ def _alive(ctx, person) -> bool:
 
 
 class Action:
+    killing = ""  # (what a story calls it when it kills: "The {killing} of X")
     name = ""
     requires: frozenset[str] = frozenset()
     achieves = ""
@@ -208,6 +209,7 @@ class Court(Action):
 
 
 class Poison(Action):
+    killing = "poisoning"
     name, requires, achieves, secrecy, duration_days, stakes = "Poison", frozenset({"accomplice"}), "dead:{target}", 0.5, 120, 2.0
     present = True
 
@@ -223,6 +225,7 @@ class Poison(Action):
 
 
 class Assassinate(Action):
+    killing = "murder"
     name, requires, achieves, secrecy, duration_days, stakes = ("Assassinate", frozenset({"accomplice"}),
                                                                  "dead:{target}", 0.4, 90, 2.0)
     present = True
@@ -239,6 +242,7 @@ class Assassinate(Action):
 
 
 class Duel(Action):
+    killing = "fatal duel"
     """An open challenge. Winning kills the other, by a known hand; losing kills or shames the challenger."""
 
     name, achieves, duration_days, stakes = "Duel", "dead:{target}", 30, 2.0
