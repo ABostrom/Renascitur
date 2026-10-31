@@ -175,9 +175,9 @@ class Population(System):
 
 def fell(ctx, settlement: str, dead: int) -> None:
     """Every death meets here, whatever the cause, under the event that explains it: the masses' by age or hunger,
-    a notable's, a sack's. With `ecology.burial` on, the dead lie in the town's `corpses` until someone buries them;
+    a notable's, a sack's. In a world with an ecology, the dead lie in the town's `corpses` until someone buries them;
     nothing here knows what killed them or what they will lead to (vision spec §2)."""
-    if dead and (ctx.params.get("ecology") or {}).get("burial") is not None:
+    if dead and ctx.params.get("ecology") and ctx.params["ecology"].get("burial") is not False:
         stocks.add(ctx, settlement, "corpses", dead)
 
 
