@@ -38,6 +38,7 @@ from __future__ import annotations
 
 from renasci.core.events import Cause, EventType
 from renasci.core.systems import System
+from renasci.people import beliefs
 from renasci.people.races import age_years
 from renasci.relations import over
 
@@ -62,13 +63,16 @@ DEED = EventType("object.deed", 1, roles={"owner": (1, 1), "object": (1, 1)}, pa
 NAMED_T = EventType("object.named", 1, roles={"object": (1, 1)}, payload={"name": "str"})
 STOLEN = EventType("object.stolen", 1, roles={"thief": (1, 1), "from": (1, 1), "object": (1, 1)}, payload={})
 DESTROYED = EventType("object.destroyed", 1, roles={"object": (1, 1)}, payload={"place": "json"})
-EVENT_TYPES = (YIELD, MADE, GIVEN, INHERITED, LOST, FOUND, DEED, NAMED_T, STOLEN, DESTROYED)
+UNEARTHED = EventType("object.unearthed", 1, roles={"finder": (1, 1), "object": (1, 1)}, payload={"place": "id"})
+EVENT_TYPES = (YIELD, MADE, GIVEN, INHERITED, LOST, FOUND, DEED, NAMED_T, STOLEN, DESTROYED, UNEARTHED) \
+    + beliefs.EVENT_TYPES
 READS = frozenset({"ids:settlement", "residents", "region", "born", "job", "skills", "wealth", "ties", "a", "b",
                    "kind", "journey", "possessions", "yield_carry", "stock:*", "goods:*", "job:*",
                    "ids:object", "owner", "status", "fell", "children", "spouse", "place", "lost", "fame", "deeds",
-                   "exploits", "name", "type"})
+                   "exploits", "name", "type"}) | beliefs.PERCEIVE_READS
 WRITES = frozenset({"stock:*", "goods:*", "new:object", "owner", "wealth", "possessions", "yield_carry",
-                    "place", "lost", "fame", "deeds", "exploits", "name", "status", "destroyed"})
+                    "place", "lost", "fame", "deeds", "exploits", "name", "status", "destroyed"}) \
+    | beliefs.PERCEIVE_WRITES
 FRIENDLY = ("friend", "mentor", "lover")
 
 
@@ -108,12 +112,38 @@ def where(ctx, o: str) -> str | None:
     return ctx.get(owner, "place") if owner else ctx.get(o, "place")
 
 
+def seen(ctx, event: str, place: str | None, participants, claim: dict, secret: bool = False) -> None:
+    """Those in an object's event (and a town's bystanders) take its claim on (S6; only with beliefs)."""
+    if beliefs.enabled(ctx):
+        beliefs.perceive(ctx, event, place, [p for p in participants if p], claim, secret=secret)
+
+
 def take(ctx, o: str, thief: str, cause: str | None) -> None:
-    """A theft succeeded (S7's Steal): the object is the thief's."""
+    """A theft succeeded (S7's Steal): the object is the thief's. Only the thief knows: the town still believes
+    the old owner has it."""
     frm = ctx.get(o, "owner")
-    ctx.emit("object.stolen", {"thief": (thief,), "from": (frm,), "object": (o,)}, purpose="stolen", actor=o,
-             place=ctx.get(o, "place"), causes=(Cause("event", cause),) if cause else ())
+    ev = ctx.emit("object.stolen", {"thief": (thief,), "from": (frm,), "object": (o,)}, purpose="stolen", actor=o,
+                  place=ctx.get(o, "place"), causes=(Cause("event", cause),) if cause else (), visibility="secret")
     hand(ctx, o, frm, thief)
+    seen(ctx, ev.id, None, [thief], beliefs.claim("owns", object=o, by=thief), secret=True)
+
+
+def unearth(ctx, town: str, spec: dict, ripple: str) -> bool:
+    """A planted object turns up in `town` (S1's plant ripple, S9 #126), found by someone living there."""
+    grown = [p for p in sorted(ctx.get(town, "residents"))
+             if age_years(ctx.calendar, ctx.get(p, "born"), ctx.today) >= ADULT and not ctx.get(p, "journey")]
+    if not grown:
+        return False
+    finder = ctx.choose("finder", grown, owner=ripple)
+    fields = {"name": spec.get("name"), "type": spec["type"], "material": spec["material"], "maker": None,
+              "made": None, "quality": float(spec.get("quality", 0.5)), "owner": None, "place": town, "deeds": [],
+              "fame": float(spec.get("fame", 0.0)), "lost": None}
+    ev = ctx.emit("object.unearthed", {"finder": (finder,)}, purpose="unearthed", actor=town, place=town,
+                  payload={"place": town}, creates={"object": [("object", fields)]})
+    o = ev.roles["object"][0]
+    hand(ctx, o, None, finder)
+    seen(ctx, ev.id, town, [finder], beliefs.claim("owns", object=o, by=finder))
+    return True
 
 
 def destroy(ctx, o: str, place: str | None, cause: str | None) -> None:
@@ -211,6 +241,7 @@ class Crafts(System):
         obj = ev.roles["object"][0]
         now = ctx.read_columns(s, [f"stock:{m}", f"goods:{m}:used"])
         ctx.write_columns(s, {f"stock:{m}": int(now[f"stock:{m}"]) - cost, f"goods:{m}:used": int(now[f"goods:{m}:used"]) + cost})
+        seen(ctx, ev.id, s, [maker], beliefs.claim("made", object=obj, by=maker))  # (after the making's own writes)
         self.first_owner(ctx, s, maker, obj, m, cost, quality, cat, ev.id)
 
     def first_owner(self, ctx, s, maker, obj, material, cost, quality, cat, cause) -> None:
@@ -226,13 +257,14 @@ class Crafts(System):
         value = float((cat.get("materials") or {}).get(material, {}).get("value", 1))
         asked = 0.0 if owner == maker else round(cost * (1.0 + quality) * value, 2)
         price = round(min(asked, float(ctx.get(owner, "wealth") or 0.0)), 2)  # (what they can pay, no more)
-        ctx.emit("object.given", {"giver": (maker,) if owner != maker else (), "owner": (owner,), "object": (obj,)},
-                 purpose="given", actor=obj, place=s, payload={"price": price}, causes=(Cause("event", cause),))
+        given = ctx.emit("object.given", {"giver": (maker,) if owner != maker else (), "owner": (owner,), "object": (obj,)},
+                         purpose="given", actor=obj, place=s, payload={"price": price}, causes=(Cause("event", cause),))
         ctx.set(obj, "owner", owner)
         ctx.set(owner, "possessions", sorted((ctx.get(owner, "possessions") or []) + [obj]))
         if price:
             ctx.set(owner, "wealth", round(float(ctx.get(owner, "wealth") or 0.0) - price, 2))
             ctx.set(maker, "wealth", round(float(ctx.get(maker, "wealth") or 0.0) + price, 2))
+        seen(ctx, given.id, s, [owner, maker], beliefs.claim("owns", object=obj, by=owner))
 
     # ------------------------------------------------------------ biographies (S9 §5, #126)
 
@@ -271,10 +303,11 @@ class Crafts(System):
             ctx.set(o, "place", where)
             ctx.set(o, "lost", ctx.today.to_json())
             return
-        ctx.emit("object.inherited", {"from": (owner,), "owner": (heir,), "object": (o,)}, purpose="inherited",
-                 actor=o, place=ctx.get(heir, "place"),
-                 causes=(Cause("event", fell["event"]),) if fell.get("event") else ())
+        ev = ctx.emit("object.inherited", {"from": (owner,), "owner": (heir,), "object": (o,)}, purpose="inherited",
+                      actor=o, place=ctx.get(heir, "place"),
+                      causes=(Cause("event", fell["event"]),) if fell.get("event") else ())
         self._hand(ctx, o, owner, heir)
+        seen(ctx, ev.id, ctx.get(heir, "place"), [heir], beliefs.claim("owns", object=o, by=heir))
 
     def find(self, ctx, o, rate, years) -> None:
         place = ctx.get(o, "place")
@@ -286,10 +319,11 @@ class Crafts(System):
         if not here or not ctx.chance(over(p, years), "find", owner=o):
             return
         finder = ctx.choose("finder", here, owner=o)
-        ctx.emit("object.found", {"finder": (finder,), "object": (o,)}, purpose="found", actor=o, place=place,
-                 payload={"place": place})
+        ev = ctx.emit("object.found", {"finder": (finder,), "object": (o,)}, purpose="found", actor=o, place=place,
+                      payload={"place": place})
         self._hand(ctx, o, None, finder)
         ctx.set(o, "lost", None)
+        seen(ctx, ev.id, place, [finder], beliefs.claim("owns", object=o, by=finder))
 
     def deeds(self, ctx, person) -> None:
         exploits = list(ctx.get(person, "exploits") or [])

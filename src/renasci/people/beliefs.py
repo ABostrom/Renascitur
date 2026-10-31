@@ -212,6 +212,30 @@ class Betrayed(Predicate):
         return f"{names.get(args['by'], args['by'])} broke faith"
 
 
+class Owns(Predicate):
+    """`by` holds `object` (S9 #126: who has the blade now; a theft leaves the town believing the old owner)."""
+
+    name, args, base_salience = "owns", ("object", "by"), 0.4
+
+    def topic(self, args):
+        return f"owns:{args['object']}"
+
+    def text(self, args, names):
+        return f"{names.get(args['by'], args['by'])} has {names.get(args['object'], args['object'])}"
+
+
+class Made(Predicate):
+    """`by` made `object`."""
+
+    name, args, base_salience = "made", ("object", "by"), 0.3
+
+    def topic(self, args):
+        return f"made:{args['object']}"
+
+    def text(self, args, names):
+        return f"{names.get(args['by'], args['by'])} made {names.get(args['object'], args['object'])}"
+
+
 def predicates() -> dict[str, Predicate]:
     found, todo = {}, list(Predicate.__subclasses__())
     while todo:
@@ -781,6 +805,12 @@ def seeded(shares: dict, c: dict, share: float) -> dict:
     return _normalised(shares)
 
 
+def plant_for(claims: bool, objects: bool) -> "PlantRumour":
+    """The plant disguise for a world: rumours where it has beliefs, things where it has crafts (S9 #126)."""
+    cls = {(True, False): PlantRumour, (False, True): PlantThing, (True, True): PlantEither}[(claims, objects)]
+    return cls()
+
+
 class PlantRumour(Disguise):
     """The people world's `plant` disguise (#114): a rumour starts in a town's talk.
 
@@ -790,13 +820,27 @@ class PlantRumour(Disguise):
     beliefs, and only a claim the world's predicates know. (Planting an object waits for S9's objects.)"""
 
     name, handles = "people.rumour", "plant"
-    reads = frozenset({"shares", "ids:settlement"})
-    writes = frozenset({"shares"})
-    event_types = (RUMOUR,)
+    reads = frozenset({"shares", "ids:settlement", "residents", "born", "journey", "owner", "possessions",
+                       "place"}) | PERCEIVE_READS
+    writes = frozenset({"shares", "new:object", "owner", "possessions", "place"}) | PERCEIVE_WRITES
 
-    @staticmethod
-    def check_ripple(ripple) -> None:
-        """Refuse a claim the world's predicates can't read, before the run."""
+    @property
+    def event_types(self):  # (an object planted is `object.unearthed`: S9 #126)
+        from renasci.people.crafts import UNEARTHED
+
+        return (RUMOUR, UNEARTHED) + EVENT_TYPES
+
+    claims, objects = True, False  # (what this world can plant: rumours with beliefs, things with crafts; see `plant_for`)
+
+    def check_ripple(self, ripple) -> None:
+        """Refuse, before the run, a plant this world can't take: a rumour without beliefs, a thing without
+        crafts, or a claim the world's predicates can't read."""
+        if "object" in ripple.params:
+            if not self.objects:
+                raise ValueError(f"plant ripple {ripple.id}: this world has no crafts, so no objects to plant")
+            return
+        if not self.claims:
+            raise ValueError(f"plant ripple {ripple.id}: this world has no beliefs, so no rumours to plant")
         c = ripple.params["claim"]
         try:
             claim(c["pred"], **c["args"])
@@ -804,8 +848,14 @@ class PlantRumour(Disguise):
             raise ValueError(f"plant ripple {ripple.id}: {c!r} isn't a claim this world knows ({e})") from None
 
     def apply(self, ctx, ripple) -> bool:
-        c, share = ripple.params["claim"], ripple.params.get("share", 0.2)
         town = ripple.target
+        if "object" in ripple.params:  # (S9 #126: a thing turns up in a town, found by someone living there)
+            if not ctx.params.get("crafts") or town not in ctx.ids("settlement"):
+                return False
+            from renasci.people import crafts
+
+            return crafts.unearth(ctx, town, ripple.params["object"], ripple.id)
+        c, share = ripple.params["claim"], ripple.params.get("share", 0.2)
         if not enabled(ctx) or town not in ctx.ids("settlement"):
             return False
         c = claim(c["pred"], **c["args"])  # (its canonical form)
@@ -816,3 +866,15 @@ class PlantRumour(Disguise):
                  payload={"claim": c, "key": k, "share": held})
         ctx.set(town, "shares", shares)
         return True
+
+
+class PlantThing(PlantRumour):
+    """The plant disguise in a world of things without beliefs: objects only."""
+
+    claims, objects = False, True
+
+
+class PlantEither(PlantRumour):
+    """The plant disguise in a world with both beliefs and things."""
+
+    claims, objects = True, True

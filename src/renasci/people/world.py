@@ -56,10 +56,11 @@ def people_ruleset(name: str, scenario: dict, version: int = 1) -> Ruleset:
         from renasci import geo
 
         disguises += (geo.upheaval()(),)
-    if scenario.get("params", {}).get("beliefs"):  # a planted rumour needs a town's talk (#114)
-        from renasci.people.beliefs import PlantRumour
+    if scenario.get("params", {}).get("beliefs") or scenario.get("params", {}).get("crafts"):  # a planted rumour
+        # needs a town's talk (#114); a planted thing, a world of things (S9 #126)
+        from renasci.people.beliefs import plant_for
 
-        disguises += (PlantRumour(),)
+        disguises += (plant_for(bool(scenario["params"].get("beliefs")), bool(scenario["params"].get("crafts"))),)
     return Ruleset(name, version, systems,
                    params=params, forcers=FORCERS, disguises=disguises,
                    conservation=conservation(Catalogue.from_json(scenario["catalogue"])))
