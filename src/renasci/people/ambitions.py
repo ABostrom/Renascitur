@@ -400,6 +400,66 @@ class Secede(Ambition):
         return f"break free of {ctx.get(target, 'name') or target}"
 
 
+class Covet(Ambition):
+    """Want a famous thing someone else holds (S9 §5, #126): one in one's own town, or one famous enough to be
+    known everywhere. The plot is a theft (`Steal`). Only where crafts make objects, and only once a famous one
+    exists (so it draws nothing before)."""
+
+    name, cooldown_years = "Covet", 10
+    reads = frozenset({"ids:object", "fame", "owner", "lost", "place", "status", "traits", "drives", "spouse",
+                       "children", "father", "mother"})
+    FAME, RENOWN = 0.5, 0.9  # (famous enough to covet; famous enough to be known beyond one's town)
+
+    def _wanted(self, ctx, person):
+        if not ctx.params.get("crafts"):
+            return None
+        from renasci.people.crafts import where
+
+        here, best = ctx.get(person, "place"), None
+        household = {ctx.get(person, k) for k in ("spouse", "father", "mother")} | set(ctx.get(person, "children") or [])
+        for o in ctx.ids("object"):
+            if ctx.status(o) != "active":
+                continue
+            owner, fame = ctx.get(o, "owner"), float(ctx.get(o, "fame") or 0.0)
+            if owner in (None, person) or owner in household or ctx.status(owner) != "active" or fame < self.FAME \
+                    or (where(ctx, o) != here and fame < self.RENOWN):
+                continue  # (one's own household's things are one's own, near enough)
+            if best is None or (fame, o) > best:
+                best = (fame, o)
+        return best[1] if best else None
+
+    def eligible(self, ctx, person):
+        o = self._wanted(ctx, person)
+        if o is None:
+            return None
+        status = (ctx.get(person, "drives") or {}).get("status", 1.0)
+        if trait(ctx, person, "temper") < 0.6 and status >= 0.5:
+            return None
+        return Formation(o, ("drive", "status"))
+
+    def urge(self, ctx, person):
+        return 0.03 + 0.1 * trait(ctx, person, "temper")
+
+    def subgoals(self, ctx, amb):
+        return [frozenset({f"holds:{ctx.get(amb, 'target')}"})]
+
+    def keeps(self, ctx, amb):  # (while a plot runs; else while it's still this thing they want)
+        if ctx.get(amb, "scheme") is not None:
+            return True
+        f = self.eligible(ctx, ctx.get(amb, "owner"))
+        return f is not None and f.target == ctx.get(amb, "target")
+
+    def satisfied(self, ctx, amb):
+        return ctx.get(ctx.get(amb, "target"), "owner") == ctx.get(amb, "owner")
+
+    def moot(self, ctx, amb):  # (destroyed, or lost to everyone)
+        t = ctx.get(amb, "target")
+        return ctx.status(t) != "active" or (ctx.get(amb, "scheme") is None and ctx.get(t, "lost") is not None)
+
+    def text(self, ctx, owner, target):
+        return f"have {ctx.get(target, 'name') or 'a famous ' + str(ctx.get(target, 'type'))}"
+
+
 class Vengeance(Ambition):
     """Answer an attributed harm: the killer of one's kin, or whoever plotted against one."""
 
@@ -490,7 +550,7 @@ class Ruin(Ambition):
         return f"see {ctx.get(target, 'name') or target} brought low"
 
 
-STARTER = (Expand(), Marry(), Protect(), Ruin(), Secede(), Seize(), Standing(), Usurp(), Vengeance())
+STARTER = (Covet(), Expand(), Marry(), Protect(), Ruin(), Secede(), Seize(), Standing(), Usurp(), Vengeance())
 
 
 LIBRARY: dict[str, Ambition] = {a.name: a for a in STARTER}

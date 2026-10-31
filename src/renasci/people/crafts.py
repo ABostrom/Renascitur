@@ -60,13 +60,15 @@ LOST = EventType("object.lost", 1, roles={"owner": (1, 1), "object": (1, 1)}, pa
 FOUND = EventType("object.found", 1, roles={"finder": (1, 1), "object": (1, 1)}, payload={"place": "id"})
 DEED = EventType("object.deed", 1, roles={"owner": (1, 1), "object": (1, 1)}, payload={"deed": "str", "kind": "str"})
 NAMED_T = EventType("object.named", 1, roles={"object": (1, 1)}, payload={"name": "str"})
-EVENT_TYPES = (YIELD, MADE, GIVEN, INHERITED, LOST, FOUND, DEED, NAMED_T)
+STOLEN = EventType("object.stolen", 1, roles={"thief": (1, 1), "from": (1, 1), "object": (1, 1)}, payload={})
+DESTROYED = EventType("object.destroyed", 1, roles={"object": (1, 1)}, payload={"place": "json"})
+EVENT_TYPES = (YIELD, MADE, GIVEN, INHERITED, LOST, FOUND, DEED, NAMED_T, STOLEN, DESTROYED)
 READS = frozenset({"ids:settlement", "residents", "region", "born", "job", "skills", "wealth", "ties", "a", "b",
                    "kind", "journey", "possessions", "yield_carry", "stock:*", "goods:*", "job:*",
                    "ids:object", "owner", "status", "fell", "children", "spouse", "place", "lost", "fame", "deeds",
                    "exploits", "name", "type"})
 WRITES = frozenset({"stock:*", "goods:*", "new:object", "owner", "wealth", "possessions", "yield_carry",
-                    "place", "lost", "fame", "deeds", "exploits", "name"})
+                    "place", "lost", "fame", "deeds", "exploits", "name", "status", "destroyed"})
 FRIENDLY = ("friend", "mentor", "lover")
 
 
@@ -87,6 +89,40 @@ def cast(engine, settlements: list[str], crafts: dict) -> None:
         engine.cast_column(f"stock:{m}", "int64", settlements, [0] * len(settlements))
         for f in FLOWS:
             engine.cast_column(f"goods:{m}:{f}", "int64", settlements, [0] * len(settlements))
+
+
+def hand(ctx, o: str, frm: str | None, to: str | None) -> None:
+    """An object moves from one holder to another (either may be None): their possessions follow. Only this
+    module writes object fields; other systems call `take` and `destroy`."""
+    if frm and ctx.exists(frm):
+        ctx.set(frm, "possessions", [x for x in ctx.get(frm, "possessions") or [] if x != o])
+    ctx.set(o, "owner", to)
+    if to:
+        ctx.set(to, "possessions", sorted((ctx.get(to, "possessions") or []) + [o]))
+        ctx.set(o, "place", ctx.get(to, "place"))
+
+
+def where(ctx, o: str) -> str | None:
+    """Where an object is: with its owner, or where it lies."""
+    owner = ctx.get(o, "owner")
+    return ctx.get(owner, "place") if owner else ctx.get(o, "place")
+
+
+def take(ctx, o: str, thief: str, cause: str | None) -> None:
+    """A theft succeeded (S7's Steal): the object is the thief's."""
+    frm = ctx.get(o, "owner")
+    ctx.emit("object.stolen", {"thief": (thief,), "from": (frm,), "object": (o,)}, purpose="stolen", actor=o,
+             place=ctx.get(o, "place"), causes=(Cause("event", cause),) if cause else ())
+    hand(ctx, o, frm, thief)
+
+
+def destroy(ctx, o: str, place: str | None, cause: str | None) -> None:
+    """An object is destroyed (a sack): gone for good (store status `dead`, `destroyed` its date)."""
+    ctx.emit("object.destroyed", {"object": (o,)}, purpose="destroyed", actor=o, place=place,
+             payload={"place": place}, causes=(Cause("event", cause),) if cause else ())
+    hand(ctx, o, ctx.get(o, "owner"), None)
+    ctx.set(o, "destroyed", ctx.today.to_json())
+    ctx.set_status(o, "dead")
 
 
 def place_name(ctx, place: str | None) -> str:
@@ -210,6 +246,8 @@ class Crafts(System):
                 with ctx.scope(p):
                     self.deeds(ctx, p)
         for o in ctx.ids("object"):
+            if ctx.status(o) != "active":
+                continue  # (destroyed)
             with ctx.scope(o):
                 owner = ctx.get(o, "owner")
                 if owner and ctx.status(owner) != "active":
@@ -218,13 +256,7 @@ class Crafts(System):
                     self.find(ctx, o, find, years)
 
     def _hand(self, ctx, o, frm, to) -> None:
-        """An object moves from one holder to another (either may be None): their possessions follow."""
-        if frm and ctx.exists(frm):
-            ctx.set(frm, "possessions", [x for x in ctx.get(frm, "possessions") or [] if x != o])
-        ctx.set(o, "owner", to)
-        if to:
-            ctx.set(to, "possessions", sorted((ctx.get(to, "possessions") or []) + [o]))
-            ctx.set(o, "place", ctx.get(to, "place"))
+        hand(ctx, o, frm, to)
 
     def bequeath(self, ctx, o, owner, lose) -> None:
         fell = ctx.get(owner, "fell") or {}

@@ -28,7 +28,7 @@ import math
 
 from renasci.core.events import Cause, EventType
 from renasci import geo
-from renasci.people import beliefs, courts, families, houses, life, minds, population, travel
+from renasci.people import beliefs, courts, crafts, families, houses, life, minds, population, travel
 from renasci import lines, relations, war
 from renasci.people.ambitions import governed, ruled, throne, trait
 from renasci.people.races import age_years
@@ -539,6 +539,38 @@ class Revolt(Action):
         courts.trial(ctx, actor, ctx.get(ctx.get(target, "ruler"), "holder"), event, grave=1.0, scheme=scheme)
 
 
+class Steal(Action):
+    """Take a coveted object from its holder (S9 §5, #126): secret, in person. The object changes hands
+    through `crafts.take` (the crafts module writes object fields)."""
+
+    name, achieves, secrecy, duration_days, stakes = "Steal", "holds:{target}", 0.5, 60, 1.5
+    present = True
+    reads = frozenset({"owner", "lost", "status", "place", "journey"})
+
+    def road(self, ctx, actor, target) -> int | None:
+        """To where its holder is now (an object goes where its owner goes)."""
+        if target is None or not travel.has_routes(ctx):
+            return 0
+        here, there = ctx.get(actor, "place"), crafts.where(ctx, target)
+        if not there or here == there:
+            return 0
+        found = geo.path(ctx, here, there, actor)
+        return None if found is None else found[0]
+
+    def possible(self, ctx, actor, target, scheme):
+        if not _alive(ctx, actor) or not target or not ctx.exists(target) or ctx.kind(target) != "object":
+            return False
+        owner = ctx.get(target, "owner")
+        return ctx.status(target) == "active" and ctx.get(target, "lost") is None and owner not in (None, actor) \
+            and _alive(ctx, owner) and not ctx.get(owner, "journey") and not ctx.get(actor, "journey")
+
+    def odds(self, ctx, actor, target, scheme):
+        return 0.3 + 0.4 * trait(ctx, actor, "wits")
+
+    def succeed(self, ctx, actor, target, scheme, event):
+        crafts.take(ctx, target, actor, event)
+
+
 class Flee(Action):
     """Leave home: by road to any settlement within `flee_days` (S4 §5), else, in a world without routes,
     at once to another settlement of the region. The step is the decision; the journey takes the road's days."""
@@ -616,10 +648,11 @@ READS = (life.DIE_READS | families.Marriage.reads | population.COLUMN_READS | fr
     "spouse", "mother", "father", "ids:settlement", "offices", "plan", "step"}) | travel.READS | courts.BAR_READS)
 WRITES = (life.DIE_WRITES | families.Marriage.writes | travel.WRITES
           | frozenset({"favour", "wound", "need", "accomplices", "state", "holder", "legitimacy", "deposed", "offices",
-                       "heir", "new:polity", "members", "new:war", "new:relation", "stance"})
+                       "heir", "new:polity", "members", "new:war", "new:relation", "stance", "owner", "possessions",
+                       "place"})
           | geo.CHANGE_WRITES | lines.WRITES)  # (a revolt: a realm, a war)
 READS = READS | geo.CHANGE_READS | lines.READS
-EVENT_TYPES = ((ACTION, SEIZED, COUP_FOILED, RAID, SECEDED) + life.DIE_EVENTS + (families.MARRIAGE,) + population.LOD_TYPES
+EVENT_TYPES = ((ACTION, SEIZED, COUP_FOILED, RAID, SECEDED, crafts.STOLEN) + life.DIE_EVENTS + (families.MARRIAGE,) + population.LOD_TYPES
                + travel.EVENT_TYPES + (war.DECLARED, war.STANCE, geo.changed_type(), lines.LINE))
 
 

@@ -168,6 +168,8 @@ def _exposed(ctx, scheme: str, owner: str, amb: str, action: str, aimed_at: str 
     target = aimed_at if aimed_at in _victims([{"action": action, "target": aimed_at}]) else ctx.get(scheme, "target")
     if target and ctx.kind(target) == "polity":  # (a plot against a realm: its ruler is the one wronged)
         target = ctx.get(ctx.get(target, "ruler"), "holder") if ctx.get(target, "ruler") else None
+    elif target and ctx.kind(target) == "object":  # (a plot to steal a thing: its holder is the one wronged)
+        target = ctx.get(target, "owner")
     victim = target if target and ctx.status(target) == "active" else None
     event = ctx.emit("people.scheme_exposed", {"scheme": (scheme,), "owner": (owner,),
                                                "target": (victim,) if victim else ()},

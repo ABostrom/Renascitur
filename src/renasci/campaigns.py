@@ -43,6 +43,7 @@ from renasci import geo, lines, treaties
 from renasci.core.events import Cause, EventType
 from renasci.core.systems import System
 from renasci.people import life, travel
+from renasci.people.crafts import DESTROYED as _DESTROYED  # (a sack may burn what a town held)
 from renasci.war import EVENT_TYPES as WAR_EVENTS, EXHAUSTED, War, strength
 
 SEASON_DAYS = 90
@@ -55,6 +56,7 @@ SHUT_IN = 0.3  # (an army this much smaller than its foe, in a town its side hol
 RELIEVE = 0.6  # (a defender marches to relieve a town only with at least this much of the attacker's strength)
 SIEGE = 0.2
 RAZE, SACK_DEATH, BATTLE_FALL = 0.25, 0.3, 0.1
+SACK_DESTROY = 0.3  # (each object in a sacked town: S9 #126)
 
 CAMPAIGN = EventType("polity.campaign", 1, roles={"party": (2, 64)}, payload={"war": "id", "armies": "json"})
 BATTLE = EventType("polity.battle", 1, roles={"winner": (1, 1), "loser": (1, 1)},
@@ -62,7 +64,7 @@ BATTLE = EventType("polity.battle", 1, roles={"winner": (1, 1), "loser": (1, 1)}
 SIEGE_T = EventType("polity.siege", 1, roles={"besieger": (1, 1), "held_by": (1, 1)},
                     payload={"war": "id", "place": "id", "seasons": "int", "outcome": "str"})
 RAZED = EventType("settlement.razed", 1, roles={"settlement": (1, 1), "by": (1, 1)}, payload={"war": "id"})
-EVENT_TYPES = (CAMPAIGN, BATTLE, SIEGE_T, RAZED) + WAR_EVENTS + lines.EVENT_TYPES + travel.EVENT_TYPES
+EVENT_TYPES = (CAMPAIGN, BATTLE, SIEGE_T, RAZED, _DESTROYED) + WAR_EVENTS + lines.EVENT_TYPES + travel.EVENT_TYPES
 
 
 def enabled(ctx) -> bool:
@@ -110,8 +112,10 @@ class Campaigns(System):
     """A war's seasons (see the module doc)."""
 
     name, cadence, priority = "polity.campaigns", "seasonal", 3  # (after polity.war's yearly declarations)
-    reads = War.reads | geo.READS | travel.READS | frozenset({"armies", "razed", "journey"})
-    writes = War.writes | travel.WRITES | frozenset({"armies", "razed"})
+    reads = War.reads | geo.READS | travel.READS | frozenset({"armies", "razed", "journey", "ids:object", "owner",
+                                                             "possessions"})
+    writes = War.writes | travel.WRITES | frozenset({"armies", "razed", "owner", "possessions", "place", "status",
+                                                        "destroyed"})
     event_types = EVENT_TYPES
 
     def handle(self, ctx, activation):
@@ -258,6 +262,13 @@ class Campaigns(System):
                    and not ctx.get(s, "razed") and s not in threatened]  # (not a town the enemy is marching on)
         refuge = _nearest(ctx, place, refuges) if travel.has_routes(ctx) else None
         why = (Cause("event", rz.id),)
+        if ctx.params.get("crafts"):  # (what the town held may burn with it)
+            from renasci.people import crafts
+
+            for o in ctx.ids("object"):
+                if ctx.status(o) == "active" and crafts.where(ctx, o) == place \
+                        and ctx.chance(SACK_DESTROY, f"burn:{o}", owner=war):
+                    crafts.destroy(ctx, o, place, rz.id)
         for p in sorted(ctx.get(place, "residents") or []):
             if ctx.status(p) != "active" or ctx.get(p, "journey"):
                 continue
