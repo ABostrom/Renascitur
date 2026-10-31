@@ -267,13 +267,14 @@ DIE_EVENTS = (DEATH, NEAR_MISS, _RESOLVED, EXPLOIT) + houses.EVENT_TYPES + (ties
 DIE_READS = (frozenset({"born", "residents", "spouse", "status", "flow:*", "mother", "father", "children", "grievances",
                          "need", "journey", "possessions", "exploits"})
              | houses.READS | ties.READS | _AMBITION_READS | beliefs.PERCEIVE_READS | relations.NOTE_READS)
+NOTABLE_HUNGER = 3.0  # (a notable's hazard in a town short of all its food: four times their usual; S10 #129)
 DIE_WRITES = (frozenset({"status", "residents", "spouse", "flow:*", "grievances", "wound", "need", "journey", "fell", "exploits"})
               | houses.WRITES | ties.WRITES | _AMBITION_WRITES | beliefs.PERCEIVE_WRITES | relations.NOTE_WRITES)
 
 
 class Life(System):
     name, cadence = "people.life", "seasonal"
-    reads = frozenset({"ids:settlement", "residents", "born", "sex", "race"}) | DIE_READS
+    reads = frozenset({"ids:settlement", "residents", "born", "sex", "race", "hunger"}) | DIE_READS
     writes = DIE_WRITES
     event_types = DIE_EVENTS
 
@@ -282,14 +283,20 @@ class Life(System):
 
     def run(self, ctx):
         races, _, _ = world(ctx)
+        famine = (ctx.params.get("ecology") or {}).get("famine") is not None
         for settlement in ctx.ids("settlement"):
             with ctx.scope(settlement):
+                hunger = float(ctx.get(settlement, "hunger") or 0.0) if famine else 0.0  # (S10 #129)
                 for person in ctx.get(settlement, "residents"):
                     race = races[ctx.get(person, "race")]
                     age = age_years(ctx.calendar, ctx.get(person, "born"), ctx.today)
-                    q = quarterly(race.mortality[ctx.get(person, "sex")][band(age)])
+                    usual = quarterly(race.mortality[ctx.get(person, "sex")][band(age)])
+                    q = min(1.0, usual * (1.0 + NOTABLE_HUNGER * hunger)) if hunger else usual
                     stakes = 1.0 + len(ctx.get(person, "ambitions") or [])  # a life with plans in it (S7 §8)
                     if not ctx.chance(q, "death", owner=person, stakes=stakes, roles={"deceased": [person]}):
+                        continue
+                    if hunger and ctx.chance((q - usual) / q, "hunger", owner=person):  # (a death hunger brought)
+                        die(ctx, person, settlement, "hunger")
                         continue
                     die(ctx, person, settlement, "old age" if age >= 60 else "infancy" if age < 5 else "illness")
 

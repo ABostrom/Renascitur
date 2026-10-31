@@ -20,7 +20,18 @@ param, `DEFAULT` for a start): `{"climate": {region | "*": {"spread"}}, "persist
 
 Harvests carry their fractions year to year (S9's `yield_carry`), so fine and coarse agree.
 
-A coarse step draws one season's weather and reaps N years at once (at that weather) when it covers a harvest.
+A coarse step draws one season's weather and reaps N years at once when it covers a harvest: one year at that
+weather, the rest at a usual year's `MEAN` (spec §7).
+
+**Famine** (S10 §3, #129; with `ecology.famine`: `{"eat", "stores"}`, `FAMINE` for a start). Towns begin with
+`stores` years of the harvest material (the ledger's `initial`). `ecology.famine` (seasonal, after the
+weather; one scope per settlement): its people (masses and notables) eat `eat` a head a year, a season's share,
+from stock (`used`; `goods.eaten`); stores past `keep` years' eating spoil (`destroyed`). Short of it, the `short` share left hungry kills the masses at
+`hunger_rates` (the young and the old first: `population.kill`), and raises notables' hazards (`people.life`
+reads the town's `hunger`: last season's, as `people.life` runs first; a fine season's only, so a coarse
+step's dead are its masses'). A town is in famine from a season short by `BEGIN` (`famine.began`, caused by its
+last harvest) until one short by no more than `END` (`famine.ended`). Trade (S9) carries food downhill to the
+hungry by itself.
 """
 
 from __future__ import annotations
@@ -32,7 +43,13 @@ from renasci.core.events import Cause, EventType
 
 PERSIST = 0.5  # (the share of last season's anomaly that carries)
 FAILED = 0.6  # (a harvest below this share of a usual year has failed)
+MEAN = 0.92  # (a harvest's mean factor at a spread of 1: a coarse step's years past its first)
 NOTABLE = 1.5  # (an anomaly this many spreads out gets a name)
+FAMINE: dict = {"eat": 0.8, "stores": 1.0, "keep": 1.5}  # (a head eats this much a year; towns start with a
+# year's stores; what is kept past `keep` years' eating spoils)
+HUNGER = 0.08  # (the masses' extra deaths a season, in a town short of all its food, in the hardiest bands)
+FRAIL = 2.0  # (the young, under 5, and the old, 60 and over, die of it this many times as readily)
+BEGIN, END = 0.25, 0.05  # (a famine begins with a season this short, and ends with one no shorter than this)
 DEFAULT: dict = {"climate": {"*": {"spread": 1.0}}, "persist": PERSIST,
                  "harvest": {"season": "Autumn", "material": "food"}}
 
@@ -44,7 +61,7 @@ FAILED_TYPE = EventType("harvest.failed", 1, roles={"settlement": (1, 1)},
 EVENT_TYPES = (SEASON, REAPED, FAILED_TYPE)
 READS = frozenset({"ids:region", "ids:settlement", "region", "climate", "blight", "residents", "job", "journey",
                    "yield_carry", "job:*", "stock:*", "goods:*"})
-WRITES = frozenset({"climate", "blight", "yield_carry", "stock:*", "goods:*"})
+WRITES = frozenset({"climate", "blight", "yield_carry", "harvest", "stock:*", "goods:*"})
 
 
 def check(eco: dict, crafts: dict | None) -> None:
@@ -66,6 +83,35 @@ def check(eco: dict, crafts: dict | None) -> None:
         raise ValueError("ecology.harvest needs a season: Spring, Summer, Autumn or Winter")
     if h.get("material") not in ((crafts or {}).get("materials") or {}):
         raise ValueError(f"ecology.harvest's material {h.get('material')!r} isn't among the crafts materials")
+    f = eco.get("famine")
+    if f is not None:
+        if not isinstance(f, dict):
+            raise ValueError("ecology.famine is {eat, stores}")
+        for k in ("eat", "stores", "keep"):
+            v = f.get(k, FAMINE[k])
+            if isinstance(v, bool) or not isinstance(v, (int, float)) or v < 0:
+                raise ValueError(f"ecology.famine.{k} must be a non-negative number, got {v!r}")
+        if f.get("keep", FAMINE["keep"]) < f.get("stores", FAMINE["stores"]):
+            raise ValueError("ecology.famine.keep must be at least its stores (or the first stores spoil at once)")
+
+
+def stores(params: dict, heads: dict) -> dict:
+    """A famine world's stores at the start ({material: {town: n}}: `stores` years of eating for its `heads`)."""
+    eco = params.get("ecology") or {}
+    if eco.get("famine") is None:
+        return {}
+    f = {**FAMINE, **eco["famine"]}
+    return {eco["harvest"]["material"]: {s: math.ceil(n * f["eat"] * f["stores"]) for s, n in heads.items()}}
+
+
+def hunger_rates(short: float, seasons: int = 1) -> list[float]:
+    """The masses' extra death rate by band over `seasons`, for a town `short` (0..1) of its food (pure)."""
+    from renasci.people.races import BANDS, BAND_YEARS
+
+    def frail(b):
+        return FRAIL if b * BAND_YEARS < 5 or b * BAND_YEARS >= 60 else 1.0
+
+    return [round(1.0 - (1.0 - min(1.0, HUNGER * short * frail(b))) ** seasons, 6) for b in range(BANDS)]
 
 
 def anomaly(last: float, shock: float, persist: float = PERSIST, spread: float = 1.0) -> float:
@@ -179,6 +225,8 @@ def climate_system():
 
         def reap(self, ctx, s, r, w, m, spec, years) -> None:
             f, causes = factor(w["warm"], w["wet"]), [Cause("event", w["event"])]
+            if years > 1:  # (a coarse step: this weather's year, then usual ones)
+                f = round((f + (years - 1) * MEAN) / years, 4)
             b = w.get("blight")
             if b:  # (a blighted harvest, or that share of a coarse step's)
                 f = round((b["years"] * min(f, b["factor"]) + (years - b["years"]) * f) / years, 4)
@@ -194,12 +242,83 @@ def climate_system():
             due = workers * rate * years * f + float(carry.get(m, 0.0))
             n = int(due)  # (whole units; the fraction carries to the next harvest)
             carry[m] = round(due - n, 6)
-            ctx.emit("harvest.failed" if f < FAILED else "harvest.reaped", {"settlement": (s,)}, purpose="harvest",
+            ev = ctx.emit("harvest.failed" if f < FAILED else "harvest.reaped", {"settlement": (s,)}, purpose="harvest",
                      actor=s, place=s, payload={"produced": n, "factor": f}, causes=tuple(causes))
             ctx.set(s, "yield_carry", {k: v for k, v in sorted(carry.items()) if v})
+            ctx.set(s, "harvest", ev.id)  # (the cause of a famine that follows)
             if n:
                 now = ctx.read_columns(s, [f"stock:{m}", f"goods:{m}:produced"])
                 ctx.write_columns(s, {f"stock:{m}": int(now[f"stock:{m}"]) + n,
                                       f"goods:{m}:produced": int(now[f"goods:{m}:produced"]) + n})
 
     return Climate
+
+
+EATEN = EventType("goods.eaten", 1, roles={"settlement": (1, 1)},
+                  payload={"eaten": "int", "need": "int", "short": "float", "died": "int", "spoiled": "int"})
+BEGAN = EventType("famine.began", 1, roles={"settlement": (1, 1)}, payload={"short": "float"})
+ENDED = EventType("famine.ended", 1, roles={"settlement": (1, 1)}, payload={"since": "json"})
+FAMINE_READS = frozenset({"ids:settlement", "residents", "race", "famine", "harvest", "hunger", "pop:*", "allele:*",
+                          "flow:*", "stock:*", "goods:*"})
+FAMINE_WRITES = frozenset({"famine", "hunger", "pop:*", "allele:*", "flow:*", "stock:*", "goods:*"})
+
+
+def famine_system():
+    """The `ecology.famine` system (built on use)."""
+    from renasci.core.systems import System
+    from renasci.people import population
+
+    class Famine(System):
+        name, cadence = "ecology.famine", "seasonal"
+        priority = 3  # (after the weather and the harvest)
+        reads, writes, event_types = FAMINE_READS, FAMINE_WRITES, (EATEN, BEGAN, ENDED)
+
+        def run(self, ctx):
+            self.step(ctx, 1)
+
+        def coarse_fallback(self, ctx, years: int) -> None:
+            self.step(ctx, 4 * years)
+
+        def step(self, ctx, seasons: int) -> None:
+            eco = ctx.params["ecology"]
+            f, m = {**FAMINE, **eco["famine"]}, eco["harvest"]["material"]
+            for s in sorted(ctx.ids("settlement")):
+                with ctx.scope(s):
+                    self.eat(ctx, s, m, float(f["eat"]), float(f["keep"]), seasons)
+
+        def eat(self, ctx, s, m, eat, keep, seasons) -> None:
+            heads = population.masses(ctx, s) + len(ctx.get(s, "residents"))
+            need = math.ceil(heads * eat * seasons / 4)
+            if not need:  # (an emptied town: nobody left to starve)
+                famine = ctx.get(s, "famine")
+                if famine:
+                    ctx.emit("famine.ended", {"settlement": (s,)}, purpose="famine", actor=s, place=s,
+                             payload={"since": famine["since"]}, causes=(Cause("event", famine["event"]),))
+                    ctx.set(s, "famine", None)
+                    ctx.set(s, "hunger", 0.0)
+                return
+            g = ctx.read_columns(s, [f"stock:{m}", f"goods:{m}:used", f"goods:{m}:destroyed"])
+            eaten = min(int(g[f"stock:{m}"]), need)
+            short = round(1.0 - eaten / need, 4)
+            spoiled = max(0, int(g[f"stock:{m}"]) - eaten - math.ceil(heads * eat * keep))
+            changes, died = population.kill(ctx, s, hunger_rates(short, seasons), "hunger") if short else ({}, 0)
+            ctx.emit("goods.eaten", {"settlement": (s,)}, purpose="eaten", actor=s, place=s,
+                     payload={"eaten": eaten, "need": need, "short": short, "died": died, "spoiled": spoiled})
+            ctx.write_columns(s, {**changes, f"stock:{m}": int(g[f"stock:{m}"]) - eaten - spoiled,
+                                  f"goods:{m}:used": int(g[f"goods:{m}:used"]) + eaten,
+                                  f"goods:{m}:destroyed": int(g[f"goods:{m}:destroyed"]) + spoiled})
+            hunger = short if seasons == 1 else 0.0  # (notables' hazard is a fine season's; a coarse step's dead
+            if hunger or ctx.get(s, "hunger"):           # are its masses')
+                ctx.set(s, "hunger", hunger)
+            famine = ctx.get(s, "famine")
+            if not famine and short >= BEGIN:
+                harvest = ctx.get(s, "harvest")
+                ev = ctx.emit("famine.began", {"settlement": (s,)}, purpose="famine", actor=s, place=s,
+                              payload={"short": short}, causes=(Cause("event", harvest),) if harvest else ())
+                ctx.set(s, "famine", {"since": ctx.today.to_json(), "event": ev.id})
+            elif famine and short <= END:
+                ctx.emit("famine.ended", {"settlement": (s,)}, purpose="famine", actor=s, place=s,
+                         payload={"since": famine["since"]}, causes=(Cause("event", famine["event"]),))
+                ctx.set(s, "famine", None)
+
+    return Famine
