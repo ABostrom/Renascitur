@@ -1,7 +1,8 @@
 """Cards: a person, a thing, a town or a house with a real past, found in a finished run (#165).
 
 `renasci gen person --run runs/m4 --house medani --age 30-50` finds what fits and writes a card: who they are, their
-kin, what they've become, what they want, who hates them, what they carry, and what happened to them. It generates
+kin, what they've become, what they want and believe, who hates them, what they carry, what happened to them, and
+`hooks`, the unresolved things a story could pick up. It generates
 nothing out of thin air: a thing worth having has a past. All of it comes from the run, and `history` and `marks` cite
 the event behind each line; the rest (kin, wants, place) is the state the run ended in, not yet cited. A life can be
 long, so `history` keeps its first and last lines, without the talk, and `told` says how many there were.
@@ -22,6 +23,7 @@ from __future__ import annotations
 import hashlib
 
 from renasci.core.pools import pools
+from renasci.story import pack
 from renasci.story.text import reading
 
 GENERATORS = pools.define("generators")
@@ -95,6 +97,36 @@ class Generator:
             + len(run.involves.get(entity, [])) / 10
 
 
+def _wants(run, entity: str, f: dict) -> list[str]:
+    """What they're after now, as it was said when they set out (the latest of each kind of ambition)."""
+    said = {}
+    for e in run.involves.get(entity, []):
+        ev = run.by_id[e]
+        if ev["type"] == "people.ambition_formed":
+            said[ev["payload"]["class"]] = ev["payload"]["text"]
+    active = {run.ents[a]["fields"].get("class") for a in f.get("ambitions") or [] if a in run.ents}
+    return [said[c] for c in sorted(active & set(said))]
+
+
+def _believes(run, entity: str) -> list[dict]:
+    """What they believe, and whether it's so: what's false first, as that's what a story can use."""
+    if not run.ents[entity]["fields"].get("beliefs"):
+        return []
+    rows = pack._belief_rows(run, entity, pack._beliefs_of(run, entity, run.events[-1]["date"]), verdicts=True)
+    rows.sort(key=lambda r: (r["truth"] != "false", -r["conf"], r["key"]))
+    return [{"text": r["text"], "truth": r["truth"], "conf": r["conf"]} for r in rows[:SHOWN // 2]]
+
+
+def hooks(card: dict) -> list[str]:
+    """Where someone could pick this person up: what's unresolved about them, drawn only from the card."""
+    out = [f"Wants to {w}" for w in card["wants"]]
+    out += [f"Believes, wrongly, that {b['text']}" for b in card["believes"] if b["truth"] == "false"]
+    out += [f"Holds {g['against']['name']} to blame ({g['kind']})" for g in card["grievances"] if g["against"]]
+    out += [f"Has an enemy in {e['name']}" for e in card["enemies"]]
+    out += [f"Carries {c['name']}" for c in card["carries"] if c["name"]]
+    return out
+
+
 class Person(Generator):
     name, kind, takes = "person", "person", ("race", "house", "age", "job", "mark", "status")
 
@@ -115,16 +147,18 @@ class Person(Generator):
 
         ties = [run.ents[t]["fields"] for t in f.get("ties") or [] if t in run.ents]
         foes = sorted(t["b"] if t.get("a") == entity else t.get("a") for t in ties if t.get("kind") == "enemy" and not t.get("ended"))
-        return {"kind": "person", "id": entity, "name": run.names.full(entity), "status": run.ents[entity]["status"],
+        card = {"kind": "person", "id": entity, "name": run.names.full(entity), "status": run.ents[entity]["status"],
                 "born": f.get("born"), "race": f.get("race"), "sex": f.get("sex"), "house": f.get("house"), "job": f.get("job"),
                 "place": f.get("place"), "traits": f.get("traits") or {}, "marks": _marks(f),
                 "kin": {"mother": who(f.get("mother")), "father": who(f.get("father")), "spouse": who(f.get("spouse")),
                         "children": [who(c) for c in f.get("children") or []]},
-                "wants": f.get("wants") or [], "wound": f.get("wound"), "grievances": f.get("grievances") or [],
+                "wants": _wants(run, entity, f), "wound": f.get("wound"), "believes": _believes(run, entity),
+                "grievances": [{**g, "against": who(g.get("against"))} for g in f.get("grievances") or []],
                 "enemies": [who(p) for p in foes], "carries": [{"id": o, "name": run.ents[o]["fields"].get("name"),
                                                                  "type": run.ents[o]["fields"].get("type")}
                                                                 for o in f.get("possessions") or [] if o in run.ents],
                 **_told(run, entity)}
+        return {**card, "hooks": hooks(card)}
 
 
 class Thing(Generator):
