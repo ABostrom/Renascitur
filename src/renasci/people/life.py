@@ -77,7 +77,7 @@ def world_params(races: list, catalogue: dict, house_from: str = "father", kin_d
                  beliefs: bool | None = None, routing: bool | dict | None = None,
                  cadet_size: int | None = None, cadet_rate: float = 0.05, campaigns: bool | None = None,
                  raze_rate: float | None = None, battle_fall: float | None = None, crafts: dict | None = None,
-                 trade: bool | None = None) -> dict:
+                 trade: bool | None = None, ecology: dict | None = None) -> dict:
     """Ruleset params for the people systems, checked now rather than at the first activation."""
     if type(kin_degree) is not int or kin_degree < 0:
         raise ValueError("kin_degree must be a non-negative int")
@@ -129,6 +129,11 @@ def world_params(races: list, catalogue: dict, house_from: str = "father", kin_d
         if trade and not (crafts or {}).get("materials"):
             raise ValueError("trade: true needs a crafts catalogue with materials (something to trade)")
         params["trade"] = trade
+    if ecology is not None:  # (S10 §2, #127: weather and harvests; only when set)
+        from renasci import ecology as eco
+
+        eco.check(ecology, crafts)
+        params["ecology"] = ecology
     if crafts is not None:  # (S9 §2, #123: jobs, skills and wealth; only when set)
         from renasci.people.work import check
 

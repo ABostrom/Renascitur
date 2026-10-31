@@ -36,6 +36,12 @@ def people_ruleset(name: str, scenario: dict, version: int = 1) -> Ruleset:
                 from renasci.people.trade import Trade
 
                 systems += (Trade(),)
+    if scenario.get("params", {}).get("ecology"):  # weather and harvests (S10 §2, #127)
+        if not scenario.get("geography"):
+            raise ValueError("ecology needs geography: weather falls on regions")
+        from renasci import ecology
+
+        systems += (ecology.climate_system()(),)
     if scenario.get("geography"):  # journeys need routes (S4 §5)
         systems += (Migration(),)
         if scenario["geography"].get("changes"):  # the map by year (S4 §8, #81)
