@@ -32,6 +32,12 @@ reads the town's `hunger`: last season's, as `people.life` runs first; a fine se
 step's dead are its masses'). A town is in famine from a season short by `BEGIN` (`famine.began`, caused by its
 last harvest) until one short by no more than `END` (`famine.ended`). Trade (S9) carries food downhill to the
 hungry by itself.
+
+`ecology.burial` (seasonal, before the harvest; `{"burial": false}` turns it off): every death lies in the town's
+`corpses` stock (`population.fell`). The town's able hands, fewer when hungry, bury what they can, up to `SPARE` of
+them; the share they take is its `labour`, which comes off that season's harvest, as hunger does. What's left rots
+by the season, slowly in winter. Time it didn't see (a coarse step) has done that work: only a season's share of the
+pile is still lying, so a focus window doesn't open on years of ordinary dead. A coarse step takes no labour.
 """
 
 from __future__ import annotations
@@ -50,6 +56,11 @@ FAMINE: dict = {"eat": 0.8, "stores": 1.0, "keep": 1.5}  # (a head eats this muc
 # year's stores; what is kept past `keep` years' eating spoils)
 HUNGER = 0.08  # (the masses' extra deaths a season, in a town short of all its food, in the hardiest bands)
 FRAIL = 2.0  # (the young, under 5, and the old, 60 and over, die of it this many times as readily)
+BURIAL: dict = {"bury": 4.0, "rot": 0.3, "winter": 0.05}  # (bodies a pair of hands buries a season; the share of
+# what's left that rots away a season, and in a season that keeps them)
+ABLE = 0.6  # (the share of a town's people fit to work)
+SPARE = 0.5  # (at most this share of the able are taken from their work to bury the dead)
+WEAK = 0.5  # (how much of its strength a town short of all its food loses)
 BEGIN, END = 0.25, 0.05  # (a famine begins with a season this short, and ends with one no shorter than this)
 DEFAULT: dict = {"climate": {"*": {"spread": 1.0}}, "persist": PERSIST,
                  "harvest": {"season": "Autumn", "material": "food"}}
@@ -61,7 +72,7 @@ FAILED_TYPE = EventType("harvest.failed", 1, roles={"settlement": (1, 1)},
                         payload={"produced": "int", "factor": "float"})
 EVENT_TYPES = (SEASON, REAPED, FAILED_TYPE)
 READS = frozenset({"ids:region", "ids:settlement", "region", "climate", "blight", "residents", "job", "journey",
-                   "yield_carry", "job:*", "stock:*", "goods:*"})
+                   "yield_carry", "job:*", "stock:*", "goods:*", "labour", "hunger", "pop:*"})
 WRITES = frozenset({"climate", "blight", "yield_carry", "harvest", "stock:*", "goods:*"})
 
 
@@ -84,8 +95,14 @@ def check(eco: dict, crafts: dict | None) -> None:
         raise ValueError("ecology.harvest needs a season: Spring, Summer, Autumn or Winter")
     if h.get("material") not in ((crafts or {}).get("materials") or {}):
         raise ValueError(f"ecology.harvest's material {h.get('material')!r} isn't among the crafts materials")
-    if eco.get("burial") is not None and not isinstance(eco["burial"], dict):
-        raise ValueError("ecology.burial is a catalogue: {} for the defaults")
+    b = eco.get("burial", {})
+    if b is not False and not isinstance(b, dict):
+        raise ValueError("ecology.burial is {bury, rot, winter}, false for none, or absent for the defaults")
+    for k, v in (b or {}).items():
+        if k not in BURIAL or isinstance(v, bool) or not isinstance(v, (int, float)) or v < 0 \
+                or (k != "bury" and v > 1):
+            raise ValueError(f"ecology.burial.{k} must be one of {sorted(BURIAL)}: a non-negative number, a share "
+                             f"for rot and winter; got {v!r}")
     f = eco.get("famine")
     if f is not None:
         if not isinstance(f, dict):
@@ -96,6 +113,68 @@ def check(eco: dict, crafts: dict | None) -> None:
                 raise ValueError(f"ecology.famine.{k} must be a non-negative number, got {v!r}")
         if f.get("keep", FAMINE["keep"]) < f.get("stores", FAMINE["stores"]):
             raise ValueError("ecology.famine.keep must be at least its stores (or the first stores spoil at once)")
+
+
+def burying(dead: float, able: float, bury: float) -> tuple[float, float]:
+    """A season's burial: the share of the able it takes, and the bodies they bury (pure). It can't take more than
+    `SPARE` of them, so a town with too many dead leaves some lying."""
+    if not dead or not able or not bury:
+        return 0.0, 0.0
+    hands = min(able * SPARE, dead / bury)
+    return round(hands / able, 6), min(dead, hands * bury)
+
+
+def able_share(labour: float, hunger: float) -> float:
+    """The share of a town's work left once its dead and its hunger have had theirs (pure)."""
+    return (1.0 - labour) * (1.0 - WEAK * hunger)
+
+
+def burial_system():
+    from renasci.core.systems import System
+    from renasci.people.population import masses
+
+    class Burial(System):
+        """The living and their dead (vision spec §1, #128): each town's able hands bury what they can, and every
+        hand burying is one not working. What's left lies in `corpses`, rotting away by the season. It knows nothing
+        of what killed them; whatever reads `corpses` or `labour` needs to know nothing of it."""
+
+        name, cadence = "ecology.burial", "seasonal"
+        priority = 1  # (before the harvest: who buries doesn't reap)
+        reads = stocks.READS | frozenset({"ids:settlement", "residents", "hunger", "labour", "buried_at", "pop:*"})
+        writes = stocks.WRITES | frozenset({"labour", "buried_at"})
+        event_types = (BURIED,)
+
+        def run(self, ctx):
+            self.step(ctx, fine=True)
+
+        def coarse_fallback(self, ctx, years: int) -> None:
+            self.step(ctx, fine=False)
+
+        def step(self, ctx, fine: bool) -> None:
+            spec = {**BURIAL, **((ctx.params.get("ecology") or {}).get("burial") or {})}
+            season = ctx.calendar.season(ctx.today)
+            tick = ctx.today.year * 4 + season
+            rot = float(spec["winter" if season == 3 else "rot"])
+            for s in ctx.ids("settlement"):
+                with ctx.scope(s):
+                    dead, was = stocks.level(ctx, s, "corpses"), float(ctx.get(s, "labour") or 0.0)
+                    if not dead and not was:
+                        continue
+                    lying = dead / max(1, tick - int(ctx.get(s, "buried_at") or tick - 1))  # (see the module doc)
+                    people = len(ctx.get(s, "residents")) + masses(ctx, s)
+                    hunger = float(ctx.get(s, "hunger") or 0.0) if fine else 0.0
+                    share, buried = burying(lying, people * ABLE * (1.0 - WEAK * hunger), float(spec["bury"]))
+                    share = share if fine else 0.0
+                    ctx.emit("burial.season", {"settlement": (s,)}, purpose="burial", actor=s, place=s,
+                             payload={"buried": round(buried, 3), "left": round(lying - buried, 3), "labour": share},
+                             causes=stocks.because(ctx, s, "corpses", 3))
+                    if share != was:
+                        ctx.set(s, "labour", share)
+                    ctx.set(s, "buried_at", tick)
+                    stocks.take(ctx, s, "corpses", dead - lying + buried)
+                    stocks.fade(ctx, s, "corpses", rot)
+
+    return Burial
 
 
 def stores(params: dict, heads: dict) -> dict:
@@ -201,7 +280,7 @@ def climate_system():
                 r = ctx.get(s, "region")
                 if r in weather:
                     with ctx.scope(s):
-                        self.reap(ctx, s, r, weather[r], h["material"], spec, years)
+                        self.reap(ctx, s, r, weather[r], h["material"], spec, years, coarse)
 
         def weather(self, ctx, r, eco, season) -> dict:
             c = eco.get("climate") or {}
@@ -226,7 +305,9 @@ def climate_system():
             ctx.set(r, "blight", {**b, "harvests": int(b["harvests"]) - k})
             return {"factor": float(b["factor"]), "years": k, "event": b["event"]}
 
-        def reap(self, ctx, s, r, w, m, spec, years) -> None:
+        def reap(self, ctx, s, r, w, m, spec, years, coarse=False) -> None:
+            from renasci.people import population
+
             f, causes = factor(w["warm"], w["wet"]), [Cause("event", w["event"])]
             if years > 1:  # (a coarse step: this weather's year, then usual ones)
                 f = round((f + (years - 1) * MEAN) / years, 4)
@@ -238,7 +319,14 @@ def climate_system():
             jobs = list(spec.get("by", []))
             masses = ctx.read_columns(s, [f"job:{j}" for j in jobs]) if ctx.params.get("aggregates") and jobs else {}
             notables = [ctx.get(p, "job") for p in ctx.get(s, "residents") if not ctx.get(p, "journey")]
-            workers = sum(int(masses.get(f"job:{j}", 0)) + notables.count(j) for j in jobs)
+            hands = sum(int(v) for v in masses.values())
+            if hands:  # (the year's jobs were counted before this year's dead)
+                every = list((ctx.params.get("crafts") or {}).get("jobs") or {})
+                held = sum(int(v) for v in ctx.read_columns(s, [f"job:{j}" for j in every]).values())
+                hands *= min(1.0, population.masses(ctx, s) / held)
+            workers = hands + sum(notables.count(j) for j in jobs)
+            if not coarse:  # (labour and hunger are a fine season's)
+                workers *= able_share(float(ctx.get(s, "labour") or 0.0), float(ctx.get(s, "hunger") or 0.0))
             if not workers or not rate:
                 return
             carry = dict(ctx.get(s, "yield_carry") or {})
@@ -259,6 +347,8 @@ def climate_system():
 
 EATEN = EventType("goods.eaten", 1, roles={"settlement": (1, 1)},
                   payload={"eaten": "int", "need": "int", "short": "float", "died": "int", "spoiled": "int"})
+BURIED = EventType("burial.season", 1, roles={"settlement": (1, 1)},
+                   payload={"buried": "float", "left": "float", "labour": "float"})
 BEGAN = EventType("famine.began", 1, roles={"settlement": (1, 1)}, payload={"short": "float"})
 ENDED = EventType("famine.ended", 1, roles={"settlement": (1, 1)}, payload={"since": "json"})
 FAMINE_READS = frozenset({"ids:settlement", "residents", "race", "famine", "harvest", "hunger", "pop:*", "allele:*",

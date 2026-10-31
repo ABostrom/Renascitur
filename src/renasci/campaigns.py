@@ -26,7 +26,7 @@ Each season, for each live war (`polity.campaigns`, seasonal, `ctx.scope(war)`):
    (`geo.apply_change`) and loses the army inside; a polity left with no settlement falls (`War.fall`).
    A town that falls may be **sacked** (`raze_rate`, default `RAZE`): `settlement.razed`, the town marked
    `razed` (once: a ruin isn't sacked again; nothing yet rebuilds it); each notable living there is killed in
-   the sack (`SACK_DEATH`), its masses too in a world that keeps its dead (`SACK_MASSES`), or flees by road to the nearest town their side still holds that no enemy army
+   the sack (`SACK_DEATH`), its masses too (`SACK_MASSES`), or flees by road to the nearest town their side still holds that no enemy army
    is marching on (`people.depart`, "fled the sack"); with nowhere to go, they stay.
 5. **A lost battle** may cost the loser's ruler their life (`battle_fall`, default `BATTLE_FALL`): "fell in
    battle", through `life.die`, so a guarded ruler survives (a near miss).
@@ -59,14 +59,14 @@ SIEGE = 0.2
 STARVE = 2.0  # (a siege's odds rise by this much for a town short of all its food)
 RAZE, SACK_DEATH, BATTLE_FALL = 0.25, 0.3, 0.1
 SACK_DESTROY = 0.3  # (each object in a sacked town: S9 #126)
-SACK_MASSES = 0.15  # (the town's people killed in a sack; only in a world that keeps its dead: vision spec §7)
+SACK_MASSES = 0.15  # (the town's people killed in a sack)
 
 CAMPAIGN = EventType("polity.campaign", 1, roles={"party": (2, 64)}, payload={"war": "id", "armies": "json"})
 BATTLE = EventType("polity.battle", 1, roles={"winner": (1, 1), "loser": (1, 1)},
                    payload={"war": "id", "place": "id", "losses": "json"})
 SIEGE_T = EventType("polity.siege", 1, roles={"besieger": (1, 1), "held_by": (1, 1)},
                     payload={"war": "id", "place": "id", "seasons": "int", "outcome": "str"})
-RAZED = EventType("settlement.razed", 1, roles={"settlement": (1, 1), "by": (1, 1)}, payload={"war": "id"})
+RAZED = EventType("settlement.razed", 1, roles={"settlement": (1, 1), "by": (1, 1)}, payload={"war": "id", "died": "int"})
 EVENT_TYPES = (CAMPAIGN, BATTLE, SIEGE_T, RAZED, _DESTROYED) + WAR_EVENTS + lines.EVENT_TYPES + travel.EVENT_TYPES
 
 
@@ -264,18 +264,19 @@ class Campaigns(System):
 
     def raze(self, ctx, war, place, by, holder, cause, threatened=frozenset()) -> None:
         """A sack (see the module doc)."""
+        changes, dead = {}, 0
+        if ctx.params.get("aggregates"):  # (the town's people)
+            changes, dead = population.kill(ctx, place, [SACK_MASSES] * BANDS, f"sack:{place}")
         rz = ctx.emit("settlement.razed", {"settlement": (place,), "by": (by,)}, purpose=f"razed:{place}", actor=war,
-                      place=place, payload={"war": war}, causes=(Cause("event", cause),))
+                      place=place, payload={"war": war, "died": dead}, causes=(Cause("event", cause),))
         ctx.set(place, "razed", ctx.today.to_json())
+        if dead:
+            ctx.write_columns(place, changes)
+            population.fell(ctx, place, dead)
         refuges = [s for s in ctx.ids("settlement") if s != place and ctx.get(s, "control") == holder
                    and not ctx.get(s, "razed") and s not in threatened]  # (not a town the enemy is marching on)
         refuge = _nearest(ctx, place, refuges) if travel.has_routes(ctx) else None
         why = (Cause("event", rz.id),)
-        if (ctx.params.get("ecology") or {}).get("burial") is not None and ctx.params.get("aggregates"):
-            changes, dead = population.kill(ctx, place, [SACK_MASSES] * BANDS, f"sack:{place}")  # (the town's people)
-            if dead:
-                ctx.write_columns(place, changes)
-                population.fell(ctx, place, dead)
         if ctx.params.get("crafts"):  # (what the town held may burn with it)
             from renasci.people import crafts
 

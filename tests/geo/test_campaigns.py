@@ -197,12 +197,15 @@ def test_a_sack_kills_the_towns_people_and_they_lie_with_its_dead(monkeypatch):
     monkeypatch.setattr(population, "kill", spy)
     for seed in (5, 6, 7, 8):
         sc = renascita._scenario(scenario(), crafts=True)
-        sc["params"].update(raze_rate=1.0, ecology={**ecology.DEFAULT, "burial": {}})
+        sc["params"].update(raze_rate=1.0, ecology={**ecology.DEFAULT, "burial": {"bury": 0, "rot": 0, "winter": 0}})
         e = renascita.new_engine(seed=seed, scenario=sc)
         e.run(until=CAL.add(START, Span(years=25)))
         for s in e.store.ids("settlement"):
             assert float(e.store.get(s, "level:corpses") or 0.0) == int(e.store.read_column("flow:died", [s])[0]), s
+        assert e.check_conservation() == []
         if any(killed):
+            razed = next(x for x in kinds(e, "settlement.razed") if x.payload["died"])
+            assert razed.id in e.store.get(razed.roles["settlement"][0], "why:corpses")
             return
     raise AssertionError("no sack killed anyone, on four seeds")
 
