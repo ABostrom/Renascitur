@@ -251,7 +251,7 @@ class Lod(System):
     name, cadence = "people.lod", "yearly"
     reads = COLUMN_READS | {"ids:settlement", "residents", "notable_target", "house", "offices", "spouse", "children",
                             "born", "status", "sex", "genome", "race", "ties", "a", "b", "kind", "ambitions", "scheme",
-                            "owner", "class", "state", "cooldowns", "favour", "plots"}
+                            "owner", "class", "state", "cooldowns", "favour", "plots", "possessions"}
     writes = frozenset({"pop:*", "allele:*", "flow:*", "residents", "status", "ties", "ended",
                         "ambitions", "cooldowns", "state", "resolved", "scheme"})
     event_types = LOD_TYPES + (TIE_ENDED, AMBITION_RESOLVED)
@@ -284,6 +284,8 @@ class Lod(System):
             return False  # someone scheming is never demoted (master spec §5.10); a mere wish isn't enough
         if ctx.get(p, "plots"):
             return False  # nor the target or accomplice of a live scheme
+        if ctx.get(p, "possessions"):
+            return False  # nor one who holds a thing with a story (S9 #126)
         if age_years(ctx.calendar, ctx.get(p, "born"), ctx.today) < races[ctx.get(p, "race")].marriage[0]:
             return False
         return not any(ctx.status(c) == "active" and age_years(ctx.calendar, ctx.get(c, "born"), ctx.today) < 16
