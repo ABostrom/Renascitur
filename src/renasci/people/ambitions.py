@@ -480,10 +480,10 @@ class Leave(Ambition):
 
 class Divine(Ambition):
     """What a god wants (S11 §2). A god has no hands either: each year it may spend `power` on one `deed`. Power is what
-    keeps gods few and slow; until faith feeds it (#132) it returns by itself (`Power`)."""
+    keeps gods few and slow, and it comes of faith (`Power`), which comes of what a town has seen a god do."""
 
     held_by, cooldown_years = ("deity",), 20
-    reads = frozenset({"power", "rivals", "born", "favour", "level:dread", "why:dread"})
+    reads = frozenset({"power", "rivals", "born", "favour", "place"}) | stocks.READS
     cost, odds = 0.2, 0.3
 
     def urge(self, ctx, god):
@@ -533,6 +533,8 @@ class Champion(Divine):
     def deed(self, ctx, god, target, because):
         ctx.emit("deity.blessed", {"deity": (god,), "person": (target,)}, purpose="bless", actor=god, causes=because)
         _favour(ctx, target, 0.1)
+        if ctx.get(target, "place"):  # (their town saw it)
+            stocks.add(ctx, ctx.get(target, "place"), f"faith:{god}", 1.0)
 
 
 @LIBRARY.add
@@ -559,7 +561,7 @@ class Smite(Divine):
 
 @LIBRARY.add
 class Spread(Divine):
-    """A god makes itself known to a town. What a sign does to belief comes with faith (#132)."""
+    """A god makes itself known to a town, and the town keeps faith."""
 
     name, cost = "Spread", 0.1
 
@@ -572,6 +574,7 @@ class Spread(Divine):
 
     def deed(self, ctx, god, target, because):
         ctx.emit("deity.omen", {"deity": (god,), "place": (target,)}, purpose="omen", actor=god, place=target, causes=because)
+        stocks.add(ctx, target, f"faith:{god}", 1.0)
 
 
 @LIBRARY.add
@@ -828,29 +831,36 @@ def agent(ctx, entity: str) -> str | None:
 POWER_CAP = 1.0
 READS = frozenset({"ambitions", "cooldowns", "owner", "class", "target", "status", "state", "scheme"})
 WRITES = frozenset({"ambitions", "cooldowns", "state", "resolved", "scheme", "new:ambition", "grievances", "claims",
-                    "power", "favour", "level:dread", "why:dread"})
+                    "power", "favour"}) | stocks.WRITES
 
 
 class Power(System):
-    """A god's strength comes back with the years, up to `POWER_CAP`. Only in a world with a pantheon."""
+    """A god's strength comes of the faith kept in it, up to `POWER_CAP`, and faith lapses unless it's fed (S11 §3). A little
+    comes regardless, so a forgotten god can still stir. Only in a world with a pantheon."""
 
     name, cadence = "divine.power", "yearly"
-    reads = frozenset({"ids:deity", "power"})
-    writes = frozenset({"power"})
+    feeds, uses = ("faith",), ("faith",)
+    reads = frozenset({"ids:deity", "ids:settlement", "power"}) | stocks.READS
+    writes = frozenset({"power"}) | stocks.WRITES
     event_types = (RENEWED,)
-    gain = 0.1
+    stir, per_faith, lapse = 0.02, 0.02, 0.1
 
     def run(self, ctx):
         for god in ctx.ids("deity", "active"):
-            now = float(ctx.get(god, "power") or 0.0)
-            if now < POWER_CAP:
-                with ctx.scope(god):
-                    ctx.emit("deity.renewed", {"deity": (god,)}, purpose="power", actor=god)
-                    ctx.set(god, "power", round(min(POWER_CAP, now + self.gain), 6))
+            with ctx.scope(god):
+                now = float(ctx.get(god, "power") or 0.0)
+                keeping = [s for s in ctx.ids("settlement") if stocks.level(ctx, s, f"faith:{god}")]
+                if now >= POWER_CAP and not keeping:
+                    continue
+                kept = sum(stocks.level(ctx, s, f"faith:{god}") for s in keeping)
+                ctx.emit("deity.renewed", {"deity": (god,)}, purpose="power", actor=god)
+                ctx.set(god, "power", round(min(POWER_CAP, now + self.stir + self.per_faith * kept), 6))
+                for s in keeping:
+                    stocks.fade(ctx, s, f"faith:{god}", self.lapse)
 
 
 class Ambitions(System):
-    feeds = ("dread",)
+    feeds = ("dread", "faith")
     name, cadence = "people.ambitions", "yearly"
     priority = 6  # after drives (5)
     reads = READS | frozenset({"ids:*", "residents", "born", "formed", "traits", "acquired"}).union(

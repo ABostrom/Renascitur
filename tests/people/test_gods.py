@@ -102,3 +102,20 @@ def test_a_god_does_not_go_after_a_dead_champion():
 def test_a_god_stays_with_its_chosen_until_they_are_gone():
     ctx = Stub({("am", "target"): "p"}, dead=("p",))
     assert LIBRARY["Champion"].moot(ctx, "am") and LIBRARY["Champion"].keeps(ctx, "am")
+
+
+def test_a_town_keeps_faith_in_what_it_has_seen():
+    e = world(years=12)
+    seen = {x.place for x in of(e, "deity.omen")}
+    assert seen and any(e.store.get(s, "level:faith:g:ash") or e.store.get(s, "level:faith:g:dawn") for s in seen)
+
+
+def test_faith_is_what_lets_a_god_act(monkeypatch):
+    from renasci.people.ambitions import Power
+
+    def deeds(e):
+        return sum(len(of(e, k)) for k in ("deity.blessed", "deity.omen", "deity.cursed"))
+
+    kept = deeds(world(years=20))
+    monkeypatch.setattr(Power, "per_faith", 0.0)
+    assert deeds(world(years=20)) < kept
