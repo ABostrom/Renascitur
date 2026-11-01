@@ -25,7 +25,8 @@ sex are required; `genome` and `traits`, as `renasci keep` writes them, carry ov
 
 A run keeps a copy of its truth file (`truths.json`), as it keeps its canon: a replay uses that copy, and refuses a file
 that has changed since. `renasci keep` gives what it keeps an id of its own, so a re-run that makes the same thing again
-makes a twin, not a clash. It keeps objects and people, whose kin, marks and memories stay in the run they came from.
+makes a twin, not a clash. It keeps objects, with what they've become, and people, whose kin, marks and memories stay in the run they came from.
+`renasci handoff` keeps everything that outlives a run at once: how one age hands down to the next.
 A town is already in the world it came from.
 
 A **god** in `pantheon` wants things and acts on the world from the first day, spending its `power` (S11):
@@ -143,9 +144,11 @@ def _village(p: dict, settlements: list) -> dict:
             "capacity": (masses + VILLAGE["commoners"]) * 3, "notable_target": VILLAGE["notable_target"], "danger": float(p.get("danger", 0.0))}
 
 
-def object_fields(o: dict, start: list) -> dict:
-    """What a truth's object is cast with: lying lost, with nobody's name on it yet."""
-    return {"name": o.get("name"), "type": o["type"], "material": o["material"], "maker": None, "made": None,
+def object_fields(o: dict, start: list, cast: str | None = None) -> dict:
+    """What a truth's object is cast with: lying lost, with nobody's name on it yet. What it became (`marks`) comes with
+    it, resting on its casting (`cast`, the event): what made it so is in the world it came from."""
+    return {"acquired": [{"id": m, "since": start, "event": cast, "moved": {}} for m in o.get("marks", [])],
+            "name": o.get("name"), "type": o["type"], "material": o["material"], "maker": None, "made": None,
             "quality": float(o.get("quality", 0.8)), "owner": None, "place": o["place"], "deeds": [],
             "fame": float(o.get("fame", 0.0)), "lost": start, "origin": o.get("from")}
 
@@ -170,7 +173,15 @@ def keep(state: dict, entity: str, run: str, year: int | None = None) -> tuple[s
     place = (owner["fields"].get("place") if owner else None) or f["place"]
     slug = re.sub(r"[^a-z0-9]+", "-", str(f.get("name") or f"{f['type']}-{entity}").lower()).strip("-")
     return "objects", {"id": f"t:{slug}", "name": f.get("name"), "type": f["type"], "material": f["material"],
-                       "quality": f.get("quality", 0.8), "fame": f.get("fame", 0.0), "place": place, "from": run}
+                       "quality": f.get("quality", 0.8), "fame": f.get("fame", 0.0), "place": place, "from": run,
+                       "marks": [m["id"] for m in f.get("acquired") or []]}
+
+
+def handed_down(state: dict, fame: float) -> list[str]:
+    """What outlives a run (master spec: things outlive their ages): the things still in the world that are remembered
+    or have become something."""
+    return sorted(e["id"] for e in state["entities"] if e["kind"] == "object" and e.get("status") == "active"
+                  and (float(e["fields"].get("fame") or 0.0) >= fame or e["fields"].get("acquired")))
 
 
 def add(path, section: str, entry: dict) -> None:

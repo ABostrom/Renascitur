@@ -3,6 +3,7 @@
 import gzip
 import json
 import textwrap
+import types
 
 import pytest
 
@@ -88,6 +89,36 @@ def test_keeping_a_person_writes_a_truth_a_new_world_can_hold():
     assert section == "people" and entry["age"] == 33 and entry["from"] == "r1"
     with_e = with_people(entry)
     assert with_e.store.get(entry["id"], "name") == fields["name"]
+
+
+def thing(fame=0.0, status="active", acquired=()):
+    return {"id": "o1", "kind": "object", "status": status, "fields": {
+        "name": "the Thirster", "type": "blade", "material": "iron", "place": "v:port-ardere", "fame": fame,
+        "acquired": list(acquired), "owner": None}}
+
+
+@pytest.mark.parametrize("entity, kept", [
+    (thing(fame=0.5), True), (thing(fame=0.1), False), (thing(fame=0.5, status="dead"), False),
+    (thing(acquired=[{"id": "sentient"}]), True)])
+def test_what_outlives_a_run_is_what_is_remembered_or_became_something(entity, kept):
+    assert truths.handed_down({"entities": [entity]}, 0.3) == (["o1"] if kept else [])
+
+
+def test_what_a_thing_became_comes_with_it_into_the_next_age():
+    _, entry = truths.keep({"entities": [thing(acquired=[{"id": "sentient"}])]}, "o1", "r1")
+    assert entry["marks"] == ["sentient"]
+    fields = truths.object_fields(entry, [4, 1, 0], "e1")
+    assert fields["acquired"] == [{"id": "sentient", "since": [4, 1, 0], "event": "e1", "moved": {}}]
+
+
+def test_a_marked_thing_wakes_up_in_the_new_world():
+    from renasci.people.ambitions import agent
+
+    e = engine({**DOC, "objects": [{**DOC["objects"][0], "marks": ["sentient"]}]})
+    cast = e.store.get("t:thirsting", "acquired")
+    assert cast[0]["id"] == "sentient" and cast[0]["event"] in {x.id for x in e.events}
+    ctx = types.SimpleNamespace(pools=e.pools, get=e.store.get)
+    assert agent(ctx, "t:thirsting") == cast[0]["event"]
 
 
 def test_a_truth_replays_the_same():
