@@ -963,6 +963,24 @@ def cmd_keep(args) -> int:
     return 0
 
 
+def cmd_handoff(args) -> int:
+    from renasci import truths
+
+    run = Path(args.run)
+    _open_complete(run)
+    state = json.loads(gzip.decompress((run / "state.json.gz").read_bytes()))
+    have = {o["id"] for o in truths.load(args.to).get("objects", [])} if Path(args.to).exists() else set()
+    kept = 0
+    for entity in truths.handed_down(state, args.fame):
+        section, entry = truths.keep(state, entity, run.name)
+        if entry["id"] not in have:
+            have.add(entry["id"])
+            truths.add(args.to, section, entry)
+            kept += 1
+    print(f"handed down {kept} things to {args.to}")
+    return 0
+
+
 def cmd_gen(args) -> int:
     from renasci.story import cards
     from renasci.story.pack import Run
@@ -1023,6 +1041,11 @@ def main(argv=None) -> int:
     p.add_argument("run")
     p.add_argument("entity")
     p.add_argument("--to", required=True, help="the truth file: a recipe names it with [world] truths")
+    p = sub.add_parser("handoff", help="keep everything that outlives a run in a truth file, for the next age")
+    p.add_argument("run")
+    p.add_argument("--to", required=True, help="the truth file")
+    p.add_argument("--fame", type=float, default=0.3, help="things this famous are remembered (marked things always are)")
+
     p = sub.add_parser("pools", help="list every pool's entries and where each came from")
     p.add_argument("extensions", nargs="*", help="extensions to include")
     p = sub.add_parser("run", help="run a recipe into a run folder")
@@ -1174,7 +1197,7 @@ def main(argv=None) -> int:
     p.add_argument("--out", default="runs/_bench")
     args = parser.parse_args(argv)
     try:
-        commands = {"gen": cmd_gen, "keep": cmd_keep, "graph": cmd_graph, "pools": cmd_pools, "run": cmd_run, "replay": cmd_replay, "diff": cmd_diff, "inspect": cmd_inspect, "bench": cmd_bench, "latch": cmd_latch, "stories": cmd_stories, "claims": cmd_claims, "pack": cmd_pack, "chronicle": cmd_chronicle, "check-prose": cmd_check_prose, "brief": cmd_brief, "mcp": cmd_mcp, "ripple": cmd_ripple, "map": cmd_map, "vault": cmd_vault,
+        commands = {"gen": cmd_gen, "keep": cmd_keep, "handoff": cmd_handoff, "graph": cmd_graph, "pools": cmd_pools, "run": cmd_run, "replay": cmd_replay, "diff": cmd_diff, "inspect": cmd_inspect, "bench": cmd_bench, "latch": cmd_latch, "stories": cmd_stories, "claims": cmd_claims, "pack": cmd_pack, "chronicle": cmd_chronicle, "check-prose": cmd_check_prose, "brief": cmd_brief, "mcp": cmd_mcp, "ripple": cmd_ripple, "map": cmd_map, "vault": cmd_vault,
                     "observe": cmd_observe}
         return commands[args.command](args)
     except (ValueError, FileExistsError, FileNotFoundError) as err:
