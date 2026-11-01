@@ -55,7 +55,7 @@ def strength(people: int, hands: int, ill: float, hunger: float, corpses: float)
 class Night(System):
     name, cadence = "night", "seasonal"
     priority = 3  # (after burial and sickness: it finds the town as they left it)
-    feeds, uses = ("aberrant", "corpses", "dread"), ("aberrant", "corpses")
+    feeds, uses = ("aberrant", "corpses", "dread", "faith"), ("aberrant", "corpses")
     reads = life.DIE_READS | stocks.READS | frozenset({"ids:settlement", "region", "danger", "wards", "ward_failed", "ill",
                                                        "hunger", "residents", "journey", "pop:*", "allele:*", "flow:*"})
     writes = life.DIE_WRITES | stocks.WRITES | frozenset({"wards", "ward_failed", "pop:*", "allele:*", "flow:*"})

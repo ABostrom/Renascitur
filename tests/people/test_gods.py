@@ -3,7 +3,9 @@
 import pytest
 
 from renasci import renascita, truths
+from renasci.analysis import truth
 from renasci.core.calendar import Span
+from renasci.core.ripples import Ripple
 from renasci.people.ambitions import LIBRARY
 from renasci.story.text import Names, reading
 
@@ -119,3 +121,33 @@ def test_faith_is_what_lets_a_god_act(monkeypatch):
     kept = deeds(world(years=20))
     monkeypatch.setattr(Power, "per_faith", 0.0)
     assert deeds(world(years=20)) < kept
+
+
+def ripple_world(*ripples, years=2):
+    sc = truths.apply(renascita.SCENARIO, {"pantheon": [{"id": "g:ash", "name": "Ash", "domains": ["death"]}]})
+    e = renascita.new_engine(seed=3, scenario=sc)
+    e.apply_ripples(ripples)
+    e.run(until=renascita.CAL.add(renascita.START, Span(years=years)))
+    return e
+
+
+def target():
+    e = renascita.new_engine(seed=3)
+    return next(p for p in e.store.ids("person", "active") if e.store.get(p, "place"))
+
+
+def test_a_doom_falls_to_a_god_and_the_town_keeps_faith():
+    who = target()
+    e = ripple_world(Ripple("r1", "doom", renascita.CAL.add(renascita.START, Span(years=1)), who))
+    death = next(x for x in of(e, "people.death") if x.roles["deceased"] == (who,))
+    assert death.roles["attributed_to"] == ("g:ash",)
+    assert any(c.kind == "ripple" for c in death.causes)
+    assert e.store.get(death.place, "level:faith:g:ash")
+
+
+def test_the_truth_judge_takes_a_gods_hand_as_a_cause():
+    assert "attributed_to" in truth.AGENT_ROLES
+
+
+def test_a_plain_death_is_nobodys_doing(run):
+    assert all(not x.roles.get("attributed_to") for x in of(run, "people.death"))

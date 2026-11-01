@@ -121,7 +121,7 @@ class Campaigns(System):
     """A war's seasons (see the module doc)."""
 
     name, cadence, priority = "polity.campaigns", "seasonal", 3  # (after polity.war's yearly declarations)
-    feeds = ("corpses", "dread")
+    feeds = ("corpses", "dread", "faith")
     reads = War.reads | geo.READS | travel.READS | population.COLUMN_READS | frozenset({
         "armies", "razed", "journey", "ids:object", "owner", "hunger", "possessions"})
     writes = War.writes | travel.WRITES | frozenset({"armies", "razed", "owner", "possessions", "place", "status",
