@@ -32,8 +32,9 @@ from renasci.people.races import Race, age_years, band, days_since, quarterly
 
 BIRTH = EventType("people.birth", 1, roles={"mother": (1, 1), "father": (0, 1), "child": (1, 2)},
                   payload={"twin": "bool", "mutations": "int"})
-DEATH = EventType("people.death", 1, roles={"deceased": (1, 1), "killer": (0, 1)}, payload={"age": "int", "cause": "str"})
-NEAR_MISS = EventType("people.near_miss", 1, roles={"survivor": (1, 1)}, payload={"would_have": "str"})
+DEATH = EventType("people.death", 1, roles={"deceased": (1, 1), "killer": (0, 1), "attributed_to": (0, 1)}, payload={"age": "int", "cause": "str"})
+NEAR_MISS = EventType("people.near_miss", 1, roles={"survivor": (1, 1), "attributed_to": (0, 1)},
+                      payload={"would_have": "str"})
 EVENT_TYPES = (BIRTH, DEATH, NEAR_MISS)
 from renasci.people.ambitions import RESOLVED as _RESOLVED  # noqa: E402  (die resolves ambitions)
 from renasci.people import minds  # noqa: E402  (die and near misses strike wounds)
@@ -201,22 +202,42 @@ def exploit(ctx, person: str, kind: str, event: str, place: str | None) -> None:
 KIN_CONF = 0.8  # how surely the victim's close kin take in how they died (S6: above the grievance bar)
 
 
+def credited(ctx, domains: frozenset, owner: str) -> tuple:
+    """The author's hand, as a world with gods reads it (S11 §4): the god a sign falls to, or nobody. It costs the god
+    nothing, and the town keeps faith for it. Those whose domains fit are likelier."""
+    gods = ctx.ids("deity", "active")
+    if not gods:
+        return ()
+    god = ctx.choose("credit", gods, owner=owner,
+                     weights=[3.0 if domains & set(ctx.get(g, "domains") or []) else 1.0 for g in gods])
+    return (god,)
+
+
+def _thanks(ctx, god: tuple, place: str | None) -> None:
+    if god and place:
+        stocks.add(ctx, place, f"faith:{god[0]}", 1.0)
+
+
 def die(ctx, person: str, settlement: str, cause: str, *, killer: str | None = None, causes=(),
-        cover: bool = False, knew=()) -> bool:
+        cover: bool = False, knew=(), smitten: bool = False) -> bool:
     """A death and what it undoes: the record, the settlement's roster, the spouse's marriage.
 
-    Someone guarded (a protect ripple, a pin) survives instead: a near miss, and terror (S7 §7).
-    Returns whether they died."""
+    Someone guarded (a protect ripple, a pin) survives instead: a near miss, and terror (S7 §7). `smitten`: the author's
+    own hand did it, which a world with gods puts down to one. Returns whether they died."""
     if ctx.guarded(person):
-        miss = ctx.emit("people.near_miss", {"survivor": (person,)}, purpose="near_miss", actor=person,
+        god = credited(ctx, SPARES, person)
+        miss = ctx.emit("people.near_miss", {"survivor": (person,), "attributed_to": god}, purpose="near_miss", actor=person,
                         place=settlement, causes=causes, payload={"would_have": cause})
+        _thanks(ctx, god, settlement)
         minds.wound(ctx, person, "terror", miss.id)
         stocks.add(ctx, person, "dread", 1.0)
         exploit(ctx, person, "survived", miss.id, settlement)
         return False
-    death = ctx.emit("people.death", {"deceased": (person,), "killer": (killer,) if killer else ()}, purpose="death",
-                     actor=person, place=settlement, causes=causes,
+    god = credited(ctx, SMITES, person) if smitten else ()
+    death = ctx.emit("people.death", {"deceased": (person,), "killer": (killer,) if killer else (), "attributed_to": god},
+                     purpose="death", actor=person, place=settlement, causes=causes,
                      payload={"age": age_years(ctx.calendar, ctx.get(person, "born"), ctx.today), "cause": cause})
+    _thanks(ctx, god, settlement)
     ctx.set_status(person, "dead")
     if ctx.params.get("crafts") and ctx.get(person, "possessions"):  # (S9 #126: where they fell, for what they held)
         ctx.set(person, "fell", {"place": settlement, "event": death.id, "cause": cause,
@@ -270,8 +291,9 @@ _AMBITION_READS = frozenset({"ambitions", "cooldowns", "owner", "class", "state"
 _AMBITION_WRITES = frozenset({"ambitions", "cooldowns", "state", "resolved", "scheme"})
 DIE_EVENTS = (DEATH, NEAR_MISS, _RESOLVED, EXPLOIT) + houses.EVENT_TYPES + (ties.TIE_ENDED,) + beliefs.EVENT_TYPES
 DIE_READS = (frozenset({"born", "residents", "spouse", "status", "flow:*", "mother", "father", "children", "grievances",
-                         "need", "journey", "possessions", "exploits"})
+                         "need", "journey", "possessions", "exploits", "ids:deity", "domains"})
              | houses.READS | ties.READS | _AMBITION_READS | beliefs.PERCEIVE_READS | relations.NOTE_READS | stocks.READS)
+SPARES, SMITES = frozenset({"healing", "life", "light"}), frozenset({"death", "war", "shadow"})  # (whose work it looks like)
 NOTABLE_HUNGER = 3.0  # (a notable's hazard in a town short of all its food: four times their usual; S10 #129)
 DIE_WRITES = (frozenset({"status", "residents", "spouse", "flow:*", "grievances", "wound", "need", "journey", "fell", "exploits"})
               | houses.WRITES | ties.WRITES | _AMBITION_WRITES | beliefs.PERCEIVE_WRITES | relations.NOTE_WRITES
@@ -279,7 +301,7 @@ DIE_WRITES = (frozenset({"status", "residents", "spouse", "flow:*", "grievances"
 
 
 class Life(System):
-    feeds = ("corpses", "dread")
+    feeds = ("corpses", "dread", "faith")
     name, cadence = "people.life", "seasonal"
     reads = frozenset({"ids:settlement", "residents", "born", "sex", "race", "hunger"}) | DIE_READS
     writes = DIE_WRITES
@@ -312,7 +334,7 @@ class Illness(Disguise):
     """doom, disguised: a sudden illness (the means a latch point suggests for a near miss)."""
 
     name, handles = "people.illness", "doom"
-    feeds = ("corpses", "dread")
+    feeds = ("corpses", "dread", "faith")
     reads = DIE_READS | frozenset({"place"})
     writes = DIE_WRITES
     event_types = DIE_EVENTS
@@ -320,7 +342,7 @@ class Illness(Disguise):
     def apply(self, ctx, ripple):
         if not ctx.exists(ripple.target) or ctx.status(ripple.target) != "active":
             return False
-        die(ctx, ripple.target, ctx.get(ripple.target, "place"), "a sudden illness")
+        die(ctx, ripple.target, ctx.get(ripple.target, "place"), "a sudden illness", smitten=True)
         return True  # (a guarded target survives it: a near miss is still the doom's outcome)
 
     def handle(self, ctx, activation):

@@ -254,7 +254,7 @@ def step(ctx, scheme: str) -> None:
 
 
 class Schemes(System):
-    feeds = ("corpses", "dread")
+    feeds = ("corpses", "dread", "faith")
     name, cadence = "people.schemes", "yearly"
     priority = 7  # after ambitions (6)
     reads = (READS | A.READS | ambitions.Ambitions.reads | houses.READS

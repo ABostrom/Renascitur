@@ -49,7 +49,7 @@ class WardFailure(Disguise):
     """inject, scripted: the ward failure (see the module doc)."""
 
     name, handles = "renascita.ward_failure", "inject"
-    feeds = ("corpses", "dread")
+    feeds = ("corpses", "dread", "faith")
     reads = (life.DIE_READS | beliefs.PERCEIVE_READS | beliefs.ARRIVAL_READS | frozenset(
         {"ids:office", "ids:house", "holder", "house", "headship", "offices", "residents", "born", "place", "status",
          "spouse", "shares", "journey"}))

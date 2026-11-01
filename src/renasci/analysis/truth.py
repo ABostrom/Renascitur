@@ -17,7 +17,7 @@ blames the agent's house for what the agent did (`houses`: person -> house, from
 from __future__ import annotations
 
 
-AGENT_ROLES = ("actor", "killer", "ordered_by")
+AGENT_ROLES = ("actor", "killer", "ordered_by", "attributed_to")
 DEPTH = 3
 
 

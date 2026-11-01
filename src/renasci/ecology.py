@@ -234,7 +234,7 @@ def disease_system():
         """Sickness in a town (see the module doc)."""
 
         name, cadence = "ecology.disease", "seasonal"
-        feeds, uses = ("corpses", "carried", "dread"), ("corpses", "carried")
+        feeds, uses = ("corpses", "carried", "dread", "faith"), ("corpses", "carried")
         priority = 2  # (after burial: what's still lying is what breeds it)
         reads = DISEASE_READS | life.DIE_READS
         writes = DISEASE_WRITES | life.DIE_WRITES
